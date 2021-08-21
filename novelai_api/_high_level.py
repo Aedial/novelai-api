@@ -3,6 +3,9 @@ from novelai_api.utils import get_access_key, get_encryption_key
 
 from hashlib import sha256
 
+from base64 import b64decode
+import json
+
 from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
 
 class High_Level:
@@ -31,7 +34,7 @@ class High_Level:
 		key = get_access_key(email, password)
 		return await self._parent.low_level.register(recapcha, key, hashed_email, giftkey)
 
-	async def login(self, email: str, password: str) -> Union[bool, NovelAIError]:
+	async def login(self, email: str, password: str) -> Union[Dict[str, str], NovelAIError]:
 		"""
 		Log in to the account
 
@@ -45,3 +48,21 @@ class High_Level:
 
 		access_key = get_access_key(email, password)
 		return await self._parent.low_level.login(access_key)
+
+	async def get_keystore(self) -> Union[Dict[str, Any], NovelAIError]:
+		keystore = await self._parent.low_level.get_keystore()
+
+		# TODO: add enum for error
+		if type(keystore) is not dict:
+			return NovelAIError(0, f"Expected type 'dict' for get_keystore, but got '{type(keystore)}'")
+
+		if "keystore" not in keystore:
+			return NovelAIError(0, f"Expected key 'keystore' in the keystore object")
+		
+		if type(keystore["keystore"]) is not str:
+			return NovelAIError(0, f"Expected type 'str' for the item of keystore, but got '{type(keystore['keystore'])}'")
+
+		try:
+			return json.loads(b64decode(keystore["keystore"]).decode())
+		except json.JSONDecodeError as e:
+			return NovelAIError(0, e.msg)
