@@ -56,9 +56,12 @@ async def request(self: "NovelAI_API", request_method: MethodDescriptorType, end
 		headers["Authorization"] = f"Bearer {self._token}"
 
 	try:
-		async with request_method(url, data = data, headers = headers) as rsp:
-			return (rsp, await treat_response(rsp))
-
+		if type(data) is dict:	# data transforms dict in str
+			async with request_method(url, json = data, headers = headers) as rsp:
+				return (rsp, await treat_response(rsp))
+		else:
+			async with request_method(url, data = data, headers = headers) as rsp:
+				return (rsp, await treat_response(rsp))
 	except (ClientError, HttpProcessingError) as e:
 		# FIXME: when are these errors triggered ? raise_as_error ?
 		return NovelAIError(0, "Unknown error")
@@ -279,7 +282,10 @@ class Low_Level:
 		# TODO: put the option for tokenized input
 		params["use_string"] = True
 
-		rsp, content = await post(self._parent, "/ai/generate", { "input": input, "model": model, "parameters": params })
+		a = { "input": input, "model": model, "parameters": params }
+		print(a)
+
+		rsp, content = await post(self._parent, "/ai/generate", a)
 		return treat_response_object(rsp, content, 201)
 
 	async def generate_stream(self):
