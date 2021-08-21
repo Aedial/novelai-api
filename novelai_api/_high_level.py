@@ -27,7 +27,7 @@ class High_Level:
 		assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
 		assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
 
-		hashed_email = sha256(email) if send_mail else None
+		hashed_email = sha256(email.encode()).hexdigest() if send_mail else None
 		key = get_access_key(email, password)
 		return await self._parent.low_level.register(recapcha, key, hashed_email, giftkey)
 
