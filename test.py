@@ -1,11 +1,10 @@
 from novelai_api import NovelAI_API
 from aiohttp import ClientSession
+
 from enum import Enum
 from random import randrange
 from argparse import ArgumentParser
-
 from logging import Logger
-
 from typing import List, Tuple, NoReturn, Dict, Set, Coroutine
 
 from sys import version_info
@@ -51,7 +50,6 @@ functions_not_used: Set[NovelAIEnum] = set((NovelAIEnum.REGISTER, NovelAIEnum.CH
 functions_no_side_effect: Set[NovelAIEnum] = set((NovelAIEnum.IS_REACHABLE, NovelAIEnum.LOGIN, NovelAIEnum.PRIORITY, NovelAIEnum.PRIORITY, NovelAIEnum.KEYSTORE_GET, NovelAIEnum.DOWNLOAD_OBJECTS, NovelAIEnum.DOWNLOAD_OBJECT, NovelAIEnum.SETTINGS_GET, NovelAIEnum.GENERATE, NovelAIEnum.MODULES_GET, NovelAIEnum.MODULE_GET))
 functions_need_no_logged: Set[NovelAIEnum] = set((NovelAIEnum.IS_REACHABLE, NovelAIEnum.REGISTER, NovelAIEnum.LOGIN, NovelAIEnum.REQUEST_ACCOUNT_RECOVERY, NovelAIEnum.RECOVER_ACCOUNT))
 
-
 async def main():
 	is_logged: bool = False
 
@@ -88,13 +86,13 @@ async def main():
 			action: NovelAIEnum = list(choice)[randrange(0, len(choice))]
 
 			if action == NovelAIEnum.IS_REACHABLE:
-				print("NovelAI is reachable" if await api.is_reachable else "NovelAI is not reachable")
+				print("NovelAI is reachable" if await api.low_level.is_reachable() else "NovelAI is not reachable")
 			elif action == NovelAIEnum.REGISTER:
 				# TODO
 				pass
 			elif action == NovelAIEnum.LOGIN:
 				username, password = login_info[randrange(0, len(login_info))]
-				l = await api.login(username, password)
+				l = await api.high_level.login(username, password)
 				if l:
 					print(f"Logged with {username}")
 					is_logged = True
@@ -113,11 +111,11 @@ async def main():
 				# TODO
 				pass
 			elif action == NovelAIEnum.SUBSCRIPTION:
-				print(f"Subscription = {await api.subscription}")
+				print(f"Subscription = {await api.low_level.get_subscription()}")
 			elif action == NovelAIEnum.PRIORITY:
-				print(f"Priority = {await api.priority}")
+				print(f"Priority = {await api.low_level.get_priority()}")
 			elif action == NovelAIEnum.KEYSTORE_GET:
-				print(f"Keystore = {await api.keystore}")
+				print(f"Keystore = {await api.low_level.get_keystore()}")
 			elif action == NovelAIEnum.KEYSTORE_SET:
 				# TODO
 				pass
@@ -137,7 +135,7 @@ async def main():
 				# TODO
 				pass
 			elif action == NovelAIEnum.SETTINGS_GET:
-				print(f"Settings = {await api.settings}")
+				print(f"Settings = {await api.low_level.get_settings()}")
 			elif action == NovelAIEnum.SETTINGS_SET:
 				# TODO
 				pass
