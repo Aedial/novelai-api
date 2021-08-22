@@ -132,7 +132,7 @@ class Low_Level:
 
 		return rsp
 
-	async def login(self, access_key: str) -> Union[bool, NovelAIError]:
+	async def login(self, access_key: str) -> Union[Dict[str, str], NovelAIError]:
 		"""
 		Log in to the account
 

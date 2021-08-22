@@ -5,6 +5,7 @@ from enum import Enum
 from random import randrange
 from argparse import ArgumentParser
 from logging import Logger
+from os.path import join
 from typing import List, Tuple, NoReturn, Dict, Set, Coroutine
 
 from sys import version_info
@@ -43,9 +44,6 @@ class NovelAIEnum(Enum):
 	MODULE_GET					= 24
 	DELETE_MODULE				= 25
 
-login_info: Tuple[Tuple[str, str]] = (
-)
-
 functions_not_used: Set[NovelAIEnum] = set((NovelAIEnum.REGISTER, NovelAIEnum.CHANGE_ACCESS_KEY, NovelAIEnum.REQUEST_ACCOUNT_RECOVERY, NovelAIEnum.RECOVER_ACCOUNT, NovelAIEnum.DELETE_ACCOUNT, NovelAIEnum.BIND_SUBSCRIPTION, NovelAIEnum.CHANGE_SUBSCRIPTION))
 functions_no_side_effect: Set[NovelAIEnum] = set((NovelAIEnum.IS_REACHABLE, NovelAIEnum.LOGIN, NovelAIEnum.PRIORITY, NovelAIEnum.PRIORITY, NovelAIEnum.KEYSTORE_GET, NovelAIEnum.DOWNLOAD_OBJECTS, NovelAIEnum.DOWNLOAD_OBJECT, NovelAIEnum.SETTINGS_GET, NovelAIEnum.GENERATE, NovelAIEnum.MODULES_GET, NovelAIEnum.MODULE_GET))
 functions_need_no_logged: Set[NovelAIEnum] = set((NovelAIEnum.IS_REACHABLE, NovelAIEnum.REGISTER, NovelAIEnum.LOGIN, NovelAIEnum.REQUEST_ACCOUNT_RECOVERY, NovelAIEnum.RECOVER_ACCOUNT))
@@ -58,6 +56,19 @@ async def main():
 	parser.add_argument("--side-effect", help = "Are the tests allowed to have side effect on the test", type = bool, default = False)
 	parser.add_argument("-l", "--login", help = "Is login allowed", type = bool, default = True)
 	args = parser.parse_args()
+
+	# retrieve credentials
+	login_info: List[Tuple[str, str]] = []
+	if args.login:
+		if args.side_effect:
+			filename = join("credentials", "creds_can_login.txt")
+		else:
+			filename = join("credentials", "creds_can_login.txt")
+
+		with open(filename) as f:
+			for line in f.read().splitlines():
+				username, password = line.split(',')
+				login_info.append((username, password))
 
 	assert not args.login or len(login_info) != 0, "'login_info' can't be empty if login is allowed"
 
@@ -115,7 +126,7 @@ async def main():
 			elif action == NovelAIEnum.PRIORITY:
 				print(f"Priority = {await api.low_level.get_priority()}")
 			elif action == NovelAIEnum.KEYSTORE_GET:
-				print(f"Keystore = {await api.low_level.get_keystore()}")
+				print(f"Keystore = {await api.high_level.get_keystore()}")
 			elif action == NovelAIEnum.KEYSTORE_SET:
 				# TODO
 				pass
@@ -146,8 +157,11 @@ async def main():
 				# TODO
 				pass
 			elif action == NovelAIEnum.GENERATE:
-				# TODO
-				pass
+				print(await api.low_level.generate("***", "6B-v3", {
+					"temperature": 1,
+					"min_length": 10,
+					"max_length": 30
+				}))
 			elif action == NovelAIEnum.TRAIN_MODULE:
 				# TODO
 				pass
