@@ -1,8 +1,10 @@
+from typing import Any
+
 class NovelAIError:
-	status: int
+	status: Any
 	message: str
 
-	def __init__(self, status: int, message: str) -> None:
+	def __init__(self, status: Any, message: str) -> None:
 		self.status = status
 		self.message = message
 
