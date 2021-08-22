@@ -282,10 +282,9 @@ class Low_Level:
 		# TODO: put the option for tokenized input
 		params["use_string"] = True
 
-		a = { "input": input, "model": model, "parameters": params }
-		print(a)
+		args = { "input": input, "model": model, "parameters": params }
 
-		rsp, content = await post(self._parent, "/ai/generate", a)
+		rsp, content = await post(self._parent, "/ai/generate", args)
 		return treat_response_object(rsp, content, 201)
 
 	async def generate_stream(self):
