@@ -4,4 +4,4 @@ dist/
 
 novelai_api/__pycache__
 
-tests/credentials/*
+credentials/*
