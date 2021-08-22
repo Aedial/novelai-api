@@ -1,2 +1,7 @@
+build/
+dist/
+*.egg-info/
+
 novelai_api/__pycache__
-credentials/*
+
+tests/credentials/*
