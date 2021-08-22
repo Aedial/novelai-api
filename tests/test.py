@@ -1,6 +1,8 @@
 from novelai_api import NovelAI_API
 from aiohttp import ClientSession
 
+from novelai_api.utils import get_encryption_key
+
 from enum import Enum
 from random import randrange
 from argparse import ArgumentParser
@@ -126,7 +128,7 @@ async def main():
 			elif action == NovelAIEnum.PRIORITY:
 				print(f"Priority = {await api.low_level.get_priority()}")
 			elif action == NovelAIEnum.KEYSTORE_GET:
-				print(f"Keystore = {await api.high_level.get_keystore()}")
+				print(f"Keystore = {await api.high_level.get_keystore(get_encryption_key(username, password))}")
 			elif action == NovelAIEnum.KEYSTORE_SET:
 				# TODO
 				pass
