@@ -5,7 +5,7 @@ from logging import Logger
 from os.path import join
 from asyncio import run
 
-filename = join("credentials", "creds_simple_test.txt")
+filename = join("credentials", "creds_example.txt")
 with open(filename) as f:
 	username, password = f.read().split(',')
 
