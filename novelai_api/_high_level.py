@@ -10,7 +10,7 @@ from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, MethodDesc
 
 class High_Level:
 	_parent: "NovelAI_API"
-
+	
 	def __init__(self, parent: "NovelAI_API"):
 		self._parent = parent
 
@@ -47,10 +47,34 @@ class High_Level:
 		assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
 
 		access_key = get_access_key(email, password)
-		return await self._parent.low_level.login(access_key)
+		rsp = await self._parent.low_level.login(access_key)
 
-	async def get_keystore(self, key: bytes) -> Union[Dict[str, Any], NovelAIError]:
+		if type(rsp) is NovelAIError:
+			return rsp
+
+		if "accessToken" not in rsp:
+			return NovelAIError(0, f"Expected key 'accessToken' in the login object")
+
+		if type(rsp["accessToken"]) is not str:
+			return NovelAIError(0, f"Expected type 'str' for access token, but got type '{type(rsp['accessToken'])}'")
+
+		self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
+
+		return rsp
+
+	async def get_keystore(self, key: bytes) -> Union[Dict[str, Dict[str, bytes]], NovelAIError]:
+		"""
+		Retrieve the keystore and decrypt it in a readable manner.
+		The keystore is the mapping of meta -> encryption key of each object.
+
+		:param key: Account,s encryption key
+		
+		:return: Keystore in the form { "keys": { "<meta>": <key> } }
+		"""
+
 		keystore = await self._parent.low_level.get_keystore()
+		if type(keystore) is NovelAIError:
+			return keystore
 
 		# TODO: add enum for error
 		if type(keystore) is not dict:
@@ -67,12 +91,18 @@ class High_Level:
 		except json.JSONDecodeError as e:
 			return NovelAIError(0, e.msg)
 
+		if "version" not in keystore:
+			return NovelAIError(0, f"Expected key 'version' in the keystore object")
+
+#		if type("keystore") 
+
 		if "nonce" not in keystore:
-			return NovelAIError(0, f"Expected key 'nonce' in the keystore object")			
+			return NovelAIError(0, f"Expected key 'nonce' in the keystore object")
 
 		if "sdata" not in keystore:
 			return NovelAIError(0, f"Expected key 'sdata' in the keystore object")
 
+		version = keystore["version"]
 		nonce = bytes(keystore["nonce"])
 		sdata = bytes(keystore["sdata"])
 
@@ -104,7 +134,25 @@ class High_Level:
 
 		# here, the data should be all valid
 
+		json_data["version"] = version
+		json_data["nonce"] = nonce
+
 		return json_data
+
+	async def set_keystore(self, keystore: Dict[str, Dict[str, bytes]], key: bytes):
+		assert type(keystore) is dict, f"Expected type 'dict' for keystore, but got '{type(keystore)}'"
+
+		keys = keystore["keys"]
+		assert type(keys) is dict, f"Expected type 'dict' for keystore, but got '{type(keys)}'"
+
+		for key in keys:
+			assert type(key) is str, f"Expected type 'str' for a key of the keystore, but got '{type(key)}'"
+			assert type(keys[key]) is bytes, f"Expected type 'bytes' for an item of the keystore, but got '{type(keys[key])}'"
+
+			keys[key] = list(keys[key])
+
+#		json_data = json.dumps(keystore)
+#		encrypted_data, nonce = encrypt()
 
 	async def download_stories(self) -> Union[Dict[str, List[Dict[str, Union[str, int]]]], NovelAIError]:
 		stories = await self._parent.low_level.download_objects("stories")
