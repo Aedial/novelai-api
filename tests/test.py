@@ -55,8 +55,8 @@ async def main():
 
 	parser = ArgumentParser()
 	parser.add_argument("-n", help = "Number of iterations for the test", type = int, default = 100)
-	parser.add_argument("--side-effect", help = "Are the tests allowed to have side effect on the test", type = bool, default = False)
-	parser.add_argument("-l", "--login", help = "Is login allowed", type = bool, default = True)
+	parser.add_argument("--side-effect", help = "Are the tests allowed to have side effect on the test", action = "store_true")
+	parser.add_argument("-l", "--login", help = "Is login allowed", action = "store_true")
 	args = parser.parse_args()
 
 	# retrieve credentials
