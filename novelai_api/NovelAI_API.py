@@ -16,15 +16,12 @@ class NovelAI_API:
 	_logger: Logger
 	_session: ClientSession
 
-	# Base headers (for user agent, etc)
-	base_headers: Dict = {}
-
 	### Low Level Public API
 	low_level: Low_Level
 	high_level: High_Level
 
 	# === Operators === #
-	def __init__(self, session: ClientSession, username: Optional[str] = None, password: Optional[str] = None, logger: Optional[Logger] = None):
+	def __init__(self, session: ClientSession, logger: Optional[Logger] = None):
 		# API parts
 		self.low_level = Low_Level(self)
 		self.high_level = High_Level(self)
@@ -37,9 +34,3 @@ class NovelAI_API:
 			self._logger.addHandler(NullHandler())
 		else:
 			self._logger = logger
-
-		if username is not None and password is not None:
-			self.high_level.login(username, password)
-		# if no username and password is given, it'll probably be a late connection
-		elif (username is None) ^ (password is None):
-			self._logger.warning(f"Username ({username}) or password ({password}) is not set. This is probably an error")
