@@ -3,7 +3,7 @@ from argon2 import low_level
 
 from hashlib import blake2b
 from base64 import urlsafe_b64encode, b64encode, b64decode
-from binascii import b2a_base64
+import json
 
 from nacl.secret import SecretBox
 from nacl.exceptions import CryptoError
@@ -45,6 +45,17 @@ def decrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	except CryptoError:
 		return None
 
+def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = None) -> Union[str, None]:
+	box = SecretBox(key)
+
+	if type(data) is not bytes:
+		data = data.encode()
+
+	try:
+		return box.encrypt(data, nonce = nonce).decode()
+	except CryptoError:
+		return None
+
 def decrypt_stories(stories: Union[List[Dict[str, Any]]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
 	"""
 	Decrypt the data of each story in :ref: stories
@@ -72,7 +83,11 @@ def decrypt_stories(stories: Union[List[Dict[str, Any]]], keystore: Dict[str, Di
 
 			data = decrypt_data(b64decode(story["data"]), key)
 			if data is not None:
-				story["data"] = data
-				story["decrypted"] = True
+				try:
+					data = json.loads(data)
+					story["data"] = data
+					story["decrypted"] = True
+				except json.JSONDecodeError:
+					story["decrypted"] = False
 			else:
 				story["decrypted"] = False

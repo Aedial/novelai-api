@@ -189,10 +189,10 @@ class Low_Level:
 		rsp, content = await self.get("/user/keystore")
 		return treat_response_object(rsp, content, 200)
 
-	async def set_keystore(self, value: str) -> Union[bool, NovelAIError]:
-		assert type(value) is str, f"Expected type 'str' for keystore, but got type '{type(value)}'"
+	async def set_keystore(self, keystore: Dict[str, str]) -> Union[bool, NovelAIError]:
+		assert type(keystore) is str, f"Expected type 'str' for keystore, but got type '{type(keystore)}'"
 
-		rsp, content = await self.put("/user/keystore", { "keystore": value })
+		rsp, content = await self.put("/user/keystore", keystore)
 		return treat_response_object(rsp, content, 200)
 
 	async def download_objects(self, object_type: str) -> Union[Dict[str, List[Dict[str, Union[str, int]]]], NovelAIError]:

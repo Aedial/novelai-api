@@ -1,0 +1,22 @@
+{ 
+	"type": "object",
+	"properties": {
+		"objects": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "string" },
+					"type": { "type": "string" },
+					"meta": { "type": "string" },
+					"data": { "type": "string" },
+					"lastUpdatedAt": { "type": "integer" }
+				},
+				"requires": [ "id", "type", "meta", "data", "lastUpdatedAt" ],
+				"additionalProperties": false
+			}
+		}
+	},
+	"required": [ "objects" ],
+	"additionalProperties": false
+}
