@@ -45,12 +45,13 @@ def decrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	except CryptoError:
 		return None
 
-def decrypt_stories(stories: Union[List[Dict[str, Any]], Tuple[Dict[str, Any]], Dict[str, Any]], key: bytes, keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
+def decrypt_stories(stories: Union[List[Dict[str, Any]]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
 	"""
 	Decrypt the data of each story in :ref: stories
 	If a story has already been decrypted, it won't be decrypted a second type
 
 	:param stories: Story or list of stories to decrypt
+	:param keystore: Keystore retrieved with the get_keystore method
 	"""
 
 	# 1 story

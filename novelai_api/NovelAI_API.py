@@ -22,10 +22,6 @@ class NovelAI_API:
 
 	# === Operators === #
 	def __init__(self, session: ClientSession, logger: Optional[Logger] = None):
-		# API parts
-		self.low_level = Low_Level(self)
-		self.high_level = High_Level(self)
-
 		# variable passing
 		self._session = session
 
@@ -34,3 +30,7 @@ class NovelAI_API:
 			self._logger.addHandler(NullHandler())
 		else:
 			self._logger = logger
+
+		# API parts
+		self.low_level = Low_Level(self)
+		self.high_level = High_Level(self)
