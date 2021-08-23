@@ -21,7 +21,7 @@ class High_Level:
 			with open(join("schemas", filename)) as f:
 				self._schemas[splitext(filename)[0]] = json.loads(f.read())
 
-	async def register(self, recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None) -> Union[bool, NovelAIError]:
+	async def register(self, recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None) -> bool:
 		"""
 		Register a new account
 
@@ -31,7 +31,7 @@ class High_Level:
 		:param send_mail: Send the mail (hashed and used for recovery)
 		:param giftkey: Giftkey
 
-		:return: True if success, NovelAIError otherwise
+		:return: True if success
 		"""
 
 		assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
@@ -41,38 +41,31 @@ class High_Level:
 		key = get_access_key(email, password)
 		return await self._parent.low_level.register(recapcha, key, hashed_email, giftkey)
 
-	async def login(self, email: str, password: str) -> Union[Dict[str, str], NovelAIError]:
+	async def login(self, email: str, password: str) -> Dict[str, str]:
 		"""
 		Log in to the account
 
 		:param email: Email of the account (username)
 		:param password: Password of the account
 
-		:return: True on success, NovelAIError otherwise
+		:return: True on success
 		"""
 		assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
 		assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
 
 		access_key = get_access_key(email, password)
 		rsp = await self._parent.low_level.login(access_key)
-
-		if type(rsp) is NovelAIError:
-			return rsp
-
-		try:
-			validate(rsp, self._schemas["schema_login"])
-		except ValidationError as e:
-			return NovelAIError(0, e)
+		validate(rsp, self._schemas["schema_login"])
 
 		self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
 		return rsp
 
-	async def get_keystore(self, key: bytes) -> Union[Dict[str, Dict[str, bytes]], NovelAIError]:
+	async def get_keystore(self, key: bytes) -> Dict[str, Dict[str, bytes]]:
 		"""
 		Retrieve the keystore and decrypt it in a readable manner.
 		The keystore is the mapping of meta -> encryption key of each object.
-		If this function throws a NovelAIError repeatedly at you,
+		If this function throws errors repeatedly at you,
 		check your internet connection or the integreity of your keystore.
 		Losing your keystore, or overwriting it means losing all content on the account.
 
@@ -82,43 +75,20 @@ class High_Level:
 		"""
 
 		keystore = await self._parent.low_level.get_keystore()
-		if type(keystore) is NovelAIError:
-			return keystore
-
-		try:
-			validate(keystore, self._schemas["schema_keystore_b64"])
-		except ValidationError as e:		# base64 encrypted keystore invalid
-			return NovelAIError(0, e)
+		validate(keystore, self._schemas["schema_keystore_b64"])
 
 		# TODO: check if keystore is actually valid b64 ?
 
-		try:
-			keystore = json.loads(b64decode(keystore["keystore"]).decode())
-		except json.JSONDecodeError as e:	# malformed encrypted keystore
-			return NovelAIError(0, e)
-
-		try:
-			validate(keystore, self._schemas["schema_keystore_encrypted"])
-		except ValidationError as e:		# encrypted keystore invalid
-			return NovelAIError(0, e)
+		keystore = json.loads(b64decode(keystore["keystore"]).decode())
+		validate(keystore, self._schemas["schema_keystore_encrypted"])
 
 		version = keystore["version"]
 		nonce = bytes(keystore["nonce"])
 		sdata = bytes(keystore["sdata"])
 
 		data = decrypt_data(sdata, key, nonce)
-		if data is None:					# decryption failed
-			return NovelAIError(0, "Failed to decrypt keystore")
-
-		try:
-			json_data = json.loads(data)
-		except json.JSONDecodeError as e:	# malformed decrypted keystore
-			return NovelAIError(0, e)
-
-		try:
-			validate(json_data, self._schemas["schema_keystore_decrypted"])
-		except ValidationError as e:		# decrypted keystore invalid
-			return NovelAIError(0, e)
+		json_data = json.loads(data)
+		validate(json_data, self._schemas["schema_keystore_decrypted"])
 
 		keys = json_data["keys"]
 		for key in keys:
@@ -134,10 +104,7 @@ class High_Level:
 
 	async def set_keystore(self, keystore: Dict[str, Dict[str, bytes]], key: bytes):
 		# FIXME: find what type is 'bytes'
-#		try:
-#			validate(keystore, self._schemas["schema_keystore_setter"])
-#		except ValidationError as e:		# encrypted keystore invalid
-#			return NovelAIError(0, e)
+#		validate(keystore, self._schemas["schema_keystore_setter"])
 
 		version = keystore["version"]
 		del keystore["version"]
@@ -163,13 +130,8 @@ class High_Level:
 
 		self._parent.low_level.set_keystore(keystore)
 
-
-	async def download_stories(self) -> Union[Dict[str, List[Dict[str, Union[str, int]]]], NovelAIError]:
+	async def download_stories(self) -> Dict[str, List[Dict[str, Union[str, int]]]]:
 		stories = await self._parent.low_level.download_objects("stories")
-
-		try:
-			validate(stories, self._schemas["schema_encrypted_stories"])
-		except ValidationError as e:		# encrypted stories invalid
-			return NovelAIError(0, e)
+		validate(stories, self._schemas["schema_encrypted_stories"])
 
 		return stories["objects"]
