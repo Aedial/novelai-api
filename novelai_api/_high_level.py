@@ -1,18 +1,25 @@
 from novelai_api.NovelAIError import NovelAIError
-from novelai_api.utils import get_access_key, get_encryption_key, decrypt_data
+from novelai_api.utils import get_access_key, get_encryption_key, decrypt_data, encrypt_data
 
 from hashlib import sha256
-
-from base64 import b64decode, b64encode
-import json
-
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, MethodDescriptorType
+from base64 import b64decode, b64encode
+
+import json
+from jsonschema import validate, ValidationError
+from os import listdir
+from os.path import join, splitext
 
 class High_Level:
 	_parent: "NovelAI_API"
-	
+	_schemas: Dict[str, Dict[str, Any]] = {}
+
 	def __init__(self, parent: "NovelAI_API"):
 		self._parent = parent
+
+		for filename in listdir("schemas"):
+			with open(join("schemas", filename)) as f:
+				self._schemas[splitext(filename)[0]] = json.loads(f.read())
 
 	async def register(self, recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None) -> Union[bool, NovelAIError]:
 		"""
@@ -52,11 +59,10 @@ class High_Level:
 		if type(rsp) is NovelAIError:
 			return rsp
 
-		if "accessToken" not in rsp:
-			return NovelAIError(0, f"Expected key 'accessToken' in the login object")
-
-		if type(rsp["accessToken"]) is not str:
-			return NovelAIError(0, f"Expected type 'str' for access token, but got type '{type(rsp['accessToken'])}'")
+		try:
+			validate(rsp, self._schemas["schema_login"])
+		except ValidationError as e:
+			return NovelAIError(0, e)
 
 		self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
@@ -66,8 +72,11 @@ class High_Level:
 		"""
 		Retrieve the keystore and decrypt it in a readable manner.
 		The keystore is the mapping of meta -> encryption key of each object.
+		If this function throws a NovelAIError repeatedly at you,
+		check your internet connection or the integreity of your keystore.
+		Losing your keystore, or overwriting it means losing all content on the account.
 
-		:param key: Account,s encryption key
+		:param key: Account's encryption key
 		
 		:return: Keystore in the form { "keys": { "<meta>": <key> } }
 		"""
@@ -76,63 +85,47 @@ class High_Level:
 		if type(keystore) is NovelAIError:
 			return keystore
 
-		# TODO: add enum for error
-		if type(keystore) is not dict:
-			return NovelAIError(0, f"Expected type 'dict' for get_keystore, but got '{type(keystore)}'")
+		try:
+			validate(keystore, self._schemas["schema_keystore_b64"])
+		except ValidationError as e:		# base64 encrypted keystore invalid
+			return NovelAIError(0, e)
 
-		if "keystore" not in keystore:
-			return NovelAIError(0, f"Expected key 'keystore' in the keystore object")
-		
-		if type(keystore["keystore"]) is not str:
-			return NovelAIError(0, f"Expected type 'str' for the item of keystore, but got '{type(keystore['keystore'])}'")
+		# TODO: check if keystore is actually valid b64 ?
 
 		try:
 			keystore = json.loads(b64decode(keystore["keystore"]).decode())
-		except json.JSONDecodeError as e:
-			return NovelAIError(0, e.msg)
+		except json.JSONDecodeError as e:	# malformed encrypted keystore
+			return NovelAIError(0, e)
 
-		if "version" not in keystore:
-			return NovelAIError(0, f"Expected key 'version' in the keystore object")
-
-#		if type("keystore") 
-
-		if "nonce" not in keystore:
-			return NovelAIError(0, f"Expected key 'nonce' in the keystore object")
-
-		if "sdata" not in keystore:
-			return NovelAIError(0, f"Expected key 'sdata' in the keystore object")
+		try:
+			validate(keystore, self._schemas["schema_keystore_encrypted"])
+		except ValidationError as e:		# encrypted keystore invalid
+			return NovelAIError(0, e)
 
 		version = keystore["version"]
 		nonce = bytes(keystore["nonce"])
 		sdata = bytes(keystore["sdata"])
 
 		data = decrypt_data(sdata, key, nonce)
-		if data is None:
+		if data is None:					# decryption failed
 			return NovelAIError(0, "Failed to decrypt keystore")
 
 		try:
 			json_data = json.loads(data)
-		except json.JSONDecodeError as e:
-			return NovelAIError(0, e.msg)
+		except json.JSONDecodeError as e:	# malformed decrypted keystore
+			return NovelAIError(0, e)
 
-		if "keys" not in json_data:
-			NovelAIError(0, "Expected key 'keys' in the decrypted keystore")
+		try:
+			validate(json_data, self._schemas["schema_keystore_decrypted"])
+		except ValidationError as e:		# decrypted keystore invalid
+			return NovelAIError(0, e)
 
 		keys = json_data["keys"]
-
-		if type(keys) is not dict:
-			return NovelAIError(0, "Invalid keys in decrypted keystore")
-
 		for key in keys:
-			if type(key) is not str:
-				return NovelAIError(0, "Invalid item in decrypted keystore")
-
-			if type(keys[key]) is not list:
-				return NovelAIError(0, "Invalid item in decrypted keystore")
-
 			keys[key] = bytes(keys[key])
 
-		# here, the data should be all valid
+		# here, the data should be all valid. Still possible to be false (while valid),
+		# but it would be incredibly rare
 
 		json_data["version"] = version
 		json_data["nonce"] = nonce
@@ -140,35 +133,43 @@ class High_Level:
 		return json_data
 
 	async def set_keystore(self, keystore: Dict[str, Dict[str, bytes]], key: bytes):
-		assert type(keystore) is dict, f"Expected type 'dict' for keystore, but got '{type(keystore)}'"
+		# FIXME: find what type is 'bytes'
+#		try:
+#			validate(keystore, self._schemas["schema_keystore_setter"])
+#		except ValidationError as e:		# encrypted keystore invalid
+#			return NovelAIError(0, e)
+
+		version = keystore["version"]
+		del keystore["version"]
+		nonce = keystore["nonce"]
+		del keystore["nonce"]
 
 		keys = keystore["keys"]
-		assert type(keys) is dict, f"Expected type 'dict' for keystore, but got '{type(keys)}'"
-
 		for key in keys:
-			assert type(key) is str, f"Expected type 'str' for a key of the keystore, but got '{type(key)}'"
-			assert type(keys[key]) is bytes, f"Expected type 'bytes' for an item of the keystore, but got '{type(keys[key])}'"
-
 			keys[key] = list(keys[key])
 
-#		json_data = json.dumps(keystore)
-#		encrypted_data, nonce = encrypt()
+		json_data = json.dumps(keystore)
+		encrypted_data = encrypt_data(json_data, key, nonce)
+
+		keystore = {
+			"version": version,
+			"nonce": list(nonce),
+			"sdata": list(encrypted_data)
+		}
+
+		keystore = { "keystore": b64encode(json.dumps(keystore)).decode() }
+
+		raise NotImplementedError("This method has not been tested and shouldn't be used. You have been warned")
+
+		self._parent.low_level.set_keystore(keystore)
+
 
 	async def download_stories(self) -> Union[Dict[str, List[Dict[str, Union[str, int]]]], NovelAIError]:
 		stories = await self._parent.low_level.download_objects("stories")
 
-		# TODO: add enum for error
-		if type(stories) is not dict:
-			return NovelAIError(0, f"Expected type 'dict' for stories, but got '{type(stories)}'")
-
-		if "objects" not in stories:
-			return NovelAIError(0, f"Expected key 'objects' in the stories object")
-
-		if type(stories["objects"]) is not list:
-			return NovelAIError(0, f"Expected type 'list' for the item of stories, but got '{type(stories['objects'])}'")
-
-		for story in stories["objects"]:
-			assert type(story) is dict, f"Expected type 'dict' for the items in stories, but got '{type(story)}'"
-			story["decrypted"] = False
+		try:
+			validate(stories, self._schemas["schema_encrypted_stories"])
+		except ValidationError as e:		# encrypted stories invalid
+			return NovelAIError(0, e)
 
 		return stories["objects"]
