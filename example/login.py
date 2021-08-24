@@ -1,8 +1,11 @@
+from sys import version_info, path
+from os.path import join, abspath, dirname
+path.insert(0, abspath(join(dirname(__file__), '..')))
+
 from novelai_api import NovelAI_API
 from aiohttp import ClientSession
 
 from logging import Logger
-from os.path import join
 from asyncio import run
 
 filename = join("credentials", "creds_example.txt")

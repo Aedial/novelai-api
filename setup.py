@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name = "novelai-api",
-    version = "0.4",
+    version = "0.5",
     author = "Arthus Leroy",
     author_email = "arthus.leroy@epita.fr",
     url = "https://github.com/arthus-leroy/novelai-api/",
@@ -32,5 +32,6 @@ setuptools.setup(
 		"aiohttp",
 		"argon2-cffi",
 		"pynacl",
+        "jsonschema"
 	]
 )

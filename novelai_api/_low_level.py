@@ -177,7 +177,7 @@ class Low_Level:
 		return treat_response_object(rsp, content, 200)
 
 	async def set_keystore(self, keystore: Dict[str, str]) -> bool:
-		assert type(keystore) is str, f"Expected type 'str' for keystore, but got type '{type(keystore)}'"
+		assert type(keystore) is dict, f"Expected type 'dicy' for keystore, but got type '{type(keystore)}'"
 
 		rsp, content = await self.put("/user/keystore", keystore)
 		return treat_response_object(rsp, content, 200)
