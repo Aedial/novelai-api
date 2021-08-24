@@ -1,3 +1,7 @@
+from sys import version_info, path
+from os.path import join, abspath, dirname
+path.insert(0, abspath(join(dirname(__file__), '..')))
+
 from novelai_api import NovelAI_API
 from aiohttp import ClientSession
 
@@ -7,10 +11,8 @@ from enum import Enum
 from random import randrange
 from argparse import ArgumentParser
 from logging import Logger
-from os.path import join
 from typing import List, Tuple, NoReturn, Dict, Set, Coroutine
 
-from sys import version_info
 if version_info >= (3, 7):
 	from asyncio import run
 else:
@@ -55,15 +57,16 @@ async def main():
 
 	parser = ArgumentParser()
 	parser.add_argument("-n", help = "Number of iterations for the test", type = int, default = 100)
-	parser.add_argument("--side-effect", help = "Are the tests allowed to have side effect on the test", action = "store_true")
-	parser.add_argument("-l", "--login", help = "Is login allowed", action = "store_true")
+	parser.add_argument("--side-effect", help = "Are the tests allowed to have side effect on the account", action = "store_true")
+	parser.add_argument("--no-login", help = "Is login disabled", action = "store_true")
+	# add field for email and password (for github CI secret)
 	args = parser.parse_args()
 
 	# retrieve credentials
 	login_info: List[Tuple[str, str]] = []
-	if args.login:
+	if not args.no_login:
 		if args.side_effect:
-			filename = join("credentials", "creds_can_login.txt")
+			filename = join("credentials", "creds_side_effect.txt")
 		else:
 			filename = join("credentials", "creds_can_login.txt")
 
@@ -72,7 +75,7 @@ async def main():
 				username, password = line.split(',')
 				login_info.append((username, password))
 
-	assert not args.login or len(login_info) != 0, "'login_info' can't be empty if login is allowed"
+	assert args.no_login or len(login_info) != 0, "'login_info' can't be empty if login is allowed"
 
 	logger = Logger("NovelAI")
 	async with ClientSession() as session:
@@ -85,7 +88,7 @@ async def main():
 			if not args.side_effect:
 				choice.intersection_update(functions_no_side_effect)
 
-			if not args.login:
+			if args.no_login:
 				choice.discard(NovelAIEnum.LOGIN)
 
 			if not is_logged:

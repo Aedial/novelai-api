@@ -7,8 +7,10 @@ from base64 import b64decode, b64encode
 
 import json
 from jsonschema import validate, ValidationError
-from os import listdir
+from os import listdir, urandom
 from os.path import join, splitext
+
+from nacl.secret import SecretBox
 
 class High_Level:
 	_parent: "NovelAI_API"
@@ -75,9 +77,14 @@ class High_Level:
 		"""
 
 		keystore = await self._parent.low_level.get_keystore()
+		if "keystore" in keystore and keystore["keystore"] is None:	# keystore is null when empty
+			return { "version": 2, "nonce": urandom(SecretBox.NONCE_SIZE), "keys": [] }
+
 		validate(keystore, self._schemas["schema_keystore_b64"])
 
 		# TODO: check if keystore is actually valid b64 ?
+
+		print(json.dumps(keystore))
 
 		keystore = json.loads(b64decode(keystore["keystore"]).decode())
 		validate(keystore, self._schemas["schema_keystore_encrypted"])
@@ -87,6 +94,7 @@ class High_Level:
 		sdata = bytes(keystore["sdata"])
 
 		data = decrypt_data(sdata, key, nonce)
+		print(data)
 		json_data = json.loads(data)
 		validate(json_data, self._schemas["schema_keystore_decrypted"])
 
@@ -102,36 +110,62 @@ class High_Level:
 
 		return json_data
 
-	async def set_keystore(self, keystore: Dict[str, Dict[str, bytes]], key: bytes):
+	async def set_keystore(self, keystore: Dict[str, Dict[str, bytes]], key: bytes) -> bytes:
 		# FIXME: find what type is 'bytes'
 #		validate(keystore, self._schemas["schema_keystore_setter"])
 
-		version = keystore["version"]
-		del keystore["version"]
-		nonce = keystore["nonce"]
-		del keystore["nonce"]
+		if "keys" in keystore and len(keystore["keys"]) == 0:
+			keystore = { "keystore": "" }
+		else:
+			version = keystore["version"]
+			del keystore["version"]
+			nonce = keystore["nonce"]
+			del keystore["nonce"]
 
-		keys = keystore["keys"]
-		for key in keys:
-			keys[key] = list(keys[key])
+			keys = keystore["keys"]
+			for key in keys:
+				keys[key] = list(keys[key])
 
-		json_data = json.dumps(keystore)
-		encrypted_data = encrypt_data(json_data, key, nonce)
+			json_data = json.dumps(keystore)
+			print(json_data)
+			encrypted_data = encrypt_data(json_data, key, nonce)
 
-		keystore = {
-			"version": version,
-			"nonce": list(nonce),
-			"sdata": list(encrypted_data)
-		}
+			keystore = {
+				"version": version,
+				"nonce": list(nonce),
+				"sdata": list(encrypted_data)
+			}
 
-		keystore = { "keystore": b64encode(json.dumps(keystore)).decode() }
+			print(json.dumps(keystore))
 
-		raise NotImplementedError("This method has not been tested and shouldn't be used. You have been warned")
+			keystore = { "keystore": b64encode(json.dumps(keystore)).decode() }
 
-		self._parent.low_level.set_keystore(keystore)
+			raise NotImplementedError("This method has not been tested and shouldn't be used. You have been warned")
 
-	async def download_stories(self) -> Dict[str, List[Dict[str, Union[str, int]]]]:
+		return await self._parent.low_level.set_keystore(keystore)
+
+	async def download_user_stories(self) -> Dict[str, Dict[str, Union[str, int]]]:
 		stories = await self._parent.low_level.download_objects("stories")
 		validate(stories, self._schemas["schema_encrypted_stories"])
 
 		return stories["objects"]
+
+	async def download_user_story_contents(self) -> Dict[str, Dict[str, Union[str, int]]]:
+		story_contents = await self._parent.low_level.download_objects("storycontent")
+		validate(story_contents, self._schemas["schema_encrypted_stories"])
+
+		return story_contents["objects"]
+
+	async def download_user_presets(self) -> List[Dict[str, Union[str, int]]]:
+		presets = await self._parent.low_level.download_objects("presets")
+		validate(presets, self._schemas["schema_encrypted_stories"])
+
+		return presets["objects"]
+
+	async def download_user_modules(self) -> List[Dict[str, Union[str, int]]]:
+		modules = await self._parent.low_level.download_objects("aimodules")
+		validate(modules, self._schemas["schema_encrypted_stories"])
+
+		return modules["objects"]
+
+	# TODO: encryption and upload

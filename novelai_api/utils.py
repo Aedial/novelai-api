@@ -56,38 +56,56 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	except CryptoError:
 		return None
 
-def decrypt_stories(stories: Union[List[Dict[str, Any]]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
+def decrypt_user_data(items: Union[List[Dict[str, Any]]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
 	"""
-	Decrypt the data of each story in :ref: stories
-	If a story has already been decrypted, it won't be decrypted a second type
+	Decrypt the data of each item in :ref: items
+	If a item has already been decrypted, it won't be decrypted a second type
 
-	:param stories: Story or list of stories to decrypt
+	:param items: Item or list of items to decrypt
 	:param keystore: Keystore retrieved with the get_keystore method
 	"""
 
-	# 1 story
-	if type(stories) is not list and type(stories) is not tuple:
-		stories = [stories]
+	# 1 item
+	if type(items) is not list and type(items) is not tuple:
+		items = [items]
 
-	for story in stories:
-		assert type(story) is dict, f"Expected type 'dict' for story of 'stories', got type '{type(story)}'"
+	for item in items:
+		assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
 
-		if not story.get("decrypted", False):
+		if not item.get("decrypted", False):
 			# FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-			assert "data" in story, f"Expected key 'data' in story"
-			assert "meta" in story, f"Expected key 'meta' in story"
+			assert "data" in item, f"Expected key 'data' in item"
+			assert "meta" in item, f"Expected key 'meta' in item"
 
-			meta = story["meta"]
+			meta = item["meta"]
 			assert meta in keystore["keys"]
 			key = keystore["keys"][meta]
 
-			data = decrypt_data(b64decode(story["data"]), key)
+			data = decrypt_data(b64decode(item["data"]), key)
 			if data is not None:
 				try:
 					data = json.loads(data)
-					story["data"] = data
-					story["decrypted"] = True
+					item["data"] = data
+					item["decrypted"] = True
 				except json.JSONDecodeError:
-					story["decrypted"] = False
+					item["decrypted"] = False
 			else:
-				story["decrypted"] = False
+				item["decrypted"] = False
+
+def map_meta_to_stories(stories: List[Dict[str, Union[str, int]]]) -> Dict[str, Dict[str, Union[str, int]]]:
+	data = {}
+	for story in stories:
+		data[story["meta"]] = story
+
+	return data
+
+def assign_content_to_story(stories: Dict[str, Dict[str, Union[str, int]]], story_contents: List[Dict[str, Union[str, int]]]) -> NoReturn:
+	for story_content in story_contents:
+		meta = story_content["meta"]
+
+		if meta in stories and story_content["decrypted"] and stories[meta]["decrypted"]:
+			stories[meta]["content"] = story_content
+
+# TODO: story tree builder
+
+# TODO: something to clear the data that couldn't be decrypted from the list ?
