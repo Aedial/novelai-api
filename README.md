@@ -4,6 +4,10 @@ Python API for the NovelAI REST API
 The module is intended to be used by developers as a help for using NovelAI's REST API.
 
 
+## Prerequisites:
+For loging in, credentials are needed. They should be placed into /credentials/<filename>.txt with <filename> depending on the script to execute.
+
+
 ### Examples:
 The examples are in the example folder. Each example is working and can be used as a test.
 Each example can be called with `python <name>.py`.
