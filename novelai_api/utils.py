@@ -51,12 +51,12 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	if type(data) is not bytes:
 		data = data.encode()
 
-	try:
-		return box.encrypt(data, nonce = nonce).decode()
-	except CryptoError:
-		return None
+#	try:
+	return box.encrypt(data, nonce = nonce).decode()
+#	except CryptoError:
+#		return None
 
-def decrypt_user_data(items: Union[List[Dict[str, Any]]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
+def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
 	"""
 	Decrypt the data of each item in :ref: items
 	If a item has already been decrypted, it won't be decrypted a second type
@@ -78,33 +78,47 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]]], keystore: Dict[str, Di
 			assert "meta" in item, f"Expected key 'meta' in item"
 
 			meta = item["meta"]
-			assert meta in keystore["keys"]
-			key = keystore["keys"][meta]
+#			assert meta in keystore["keys"]
+			if meta in keystore["keys"]:
+				key = keystore["keys"][meta]
 
-			data = decrypt_data(b64decode(item["data"]), key)
-			if data is not None:
-				try:
-					data = json.loads(data)
-					item["data"] = data
-					item["decrypted"] = True
-				except json.JSONDecodeError:
-					item["decrypted"] = False
-			else:
-				item["decrypted"] = False
+				data = decrypt_data(b64decode(item["data"]), key)
+				if data is not None:
+					try:
+						data = json.loads(data)
+						item["data"] = data
+						item["decrypted"] = True
+						continue
 
-def map_meta_to_stories(stories: List[Dict[str, Union[str, int]]]) -> Dict[str, Dict[str, Union[str, int]]]:
+					except json.JSONDecodeError:
+						pass
+
+			item["decrypted"] = False
+
+def map_meta_to_stories(stories: Union[List[Dict[str, Any]], Dict[str, Any]]) -> Dict[str, Dict[str, Union[str, int]]]:
 	data = {}
 	for story in stories:
 		data[story["meta"]] = story
 
 	return data
 
-def assign_content_to_story(stories: Dict[str, Dict[str, Union[str, int]]], story_contents: List[Dict[str, Union[str, int]]]) -> NoReturn:
+def assign_content_to_story(stories: Dict[str, Dict[str, Union[str, int]]], story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+	assert type(stories) is dict, "Stories must be mapped, before being associated with their content"
+
+	if type(story_contents) is not list and type(story_contents) is not tuple:
+		story_contents = [story_contents]
+
 	for story_content in story_contents:
 		meta = story_content["meta"]
 
 		if meta in stories and story_content["decrypted"] and stories[meta]["decrypted"]:
 			stories[meta]["content"] = story_content
+
+def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
+	for i in range(len(items)):
+		if items[i].get("decrypted", False) is False:
+			items.pop(i)
+			i -= 1
 
 # TODO: story tree builder
 
