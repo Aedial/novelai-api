@@ -84,7 +84,8 @@ class High_Level:
 
 		# TODO: check if keystore is actually valid b64 ?
 
-		print(json.dumps(keystore))
+#		TODO: check if set_keystore(get_keystore) is same
+# 		print(json.dumps(keystore))
 
 		keystore = json.loads(b64decode(keystore["keystore"]).decode())
 		validate(keystore, self._schemas["schema_keystore_encrypted"])
@@ -94,7 +95,8 @@ class High_Level:
 		sdata = bytes(keystore["sdata"])
 
 		data = decrypt_data(sdata, key, nonce)
-		print(data)
+#		TODO: check if set_keystore(get_keystore) is same
+#		print(data)
 		json_data = json.loads(data)
 		validate(json_data, self._schemas["schema_keystore_decrypted"])
 
