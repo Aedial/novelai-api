@@ -42,7 +42,7 @@ class Low_Level:
 		self._parent = parent
 		self._session = parent._session
 
-	async def request(self, request_method: MethodDescriptorType, endpoint: str, data: Optional[Union[Dict[str, Any], str]]) -> Tuple[ClientResponse, Any]:
+	async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
 		"""
 		:param url: Endpoint of the request
 		:param request_method: Method of the reqest from ClientSession
@@ -52,26 +52,11 @@ class Low_Level:
 		url = f"{self._parent._BASE_ADDRESS}{endpoint}"
 
 		if type(data) is dict:	# data transforms dict in str
-			async with request_method(url, json = data) as rsp:
+			async with self._session.request(method, url, json = data) as rsp:
 				return (rsp, await treat_response(rsp))
 		else:
-			async with request_method(url, data = data) as rsp:
+			async with self._session.request(method, url, data = data) as rsp:
 				return (rsp, await treat_response(rsp))
-
-	async def get(self, endpoint: str) -> Tuple[ClientResponse, Any]:
-		return await self.request(self._session.get, endpoint, None)
-
-	async def post(self, endpoint: str, data: Dict[str, Any]) -> Tuple[ClientResponse, Any]:
-		return await self.request(self._session.post, endpoint, data)
-
-	async def put(self, endpoint: str, data: Union[Dict[str, Any], str],need_login: bool = True) -> Tuple[ClientResponse, Any]:
-		return await self.request(self._session.put, endpoint, data)
-
-	async def patch(self, endpoint: str, data: Dict[str, Any]) -> Tuple[ClientResponse, Any]:
-		return await self.request(self._session.patch, endpoint, data)
-
-	async def delete(self, endpoint: str) -> Tuple[ClientResponse, Any]:
-		return await self.request(self._session.delete, endpoint, None)
 
 	async def is_reachable(self) -> bool:
 		"""
@@ -79,7 +64,7 @@ class Low_Level:
 
 		:return: True if reachable, False if not
 		"""
-		rsp, content = await self.get("/")
+		rsp, content = await self.request("get", "/")
 		return treat_response_bool(rsp, content, 200)
 
 	async def register(self, recapcha: str, access_key: str, email: Optional[str], giftkey: Optional[str] = None) -> bool:
@@ -109,7 +94,7 @@ class Low_Level:
 		if giftkey is not None:
 			data["giftkey"] = giftkey
 
-		rsp, content = await self.post("/user/register", data)
+		rsp, content = await self.request("post", "/user/register", data)
 		rsp = treat_response_bool(rsp, content, 201)
 
 		# FIXME: handle cases where the response is corrupted
@@ -130,7 +115,7 @@ class Low_Level:
 
 		assert len(access_key) == 64, f"access_key should be 64 characters, got length of {len(access_key)}"
 
-		rsp, content = await self.post("/user/login", { "key": access_key })
+		rsp, content = await self.request("post", "/user/login", { "key": access_key })
 		return treat_response_object(rsp, content, 201)
 
 	async def change_access_key(self, current_key: str, new_key: str) -> bool:
@@ -140,13 +125,13 @@ class Low_Level:
 		assert len(current_key) == 64, f"Current access key should be 64 characters, got length of {len(current_key)}"
 		assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
-		rsp, content = await self.post("/user/change-access-key", { "currentAccessKey": current_key, "newAccessKey": new_key })
+		rsp, content = await self.request("post", "/user/change-access-key", { "currentAccessKey": current_key, "newAccessKey": new_key })
 		return treat_response_bool(rsp, content, 200)
 
 	async def request_account_recovery(self, email: str) -> bool:
 		assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
 
-		rsp, content = await self.post("/user/recovery/request", { "email": email })
+		rsp, content = await self.request("post", "/user/recovery/request", { "email": email })
 		return treat_response_bool(rsp, content, 202)
 
 	async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> bool:
@@ -157,35 +142,35 @@ class Low_Level:
 		assert 16 <= len(recovery_token), f"Recovery token should be at least 16 characters, got length of {len(recovery_token)}"
 		assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
-		rsp, content = await self.post("//user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
+		rsp, content = await self.request("post", "//user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
 		return treat_response_bool(rsp, content, 201)
 
 	async def delete_account(self) -> bool:
-		rsp, content = await self.post("/user/delete", None)
+		rsp, content = await self.request("post", "/user/delete", None)
 		return treat_response_bool(rsp, content, 200)
 
 	async def get_priority(self) -> Dict[str, Any]:
-		rsp, content = await self.get("/user/priority")
+		rsp, content = await self.request("get", "/user/priority")
 		return treat_response_object(rsp, content, 200)
 
 	async def get_subscription(self) -> Dict[str, Any]:
-		rsp, content = await self.get("/user/subscription")
+		rsp, content = await self.request("get", "/user/subscription")
 		return treat_response_object(rsp, content, 200)
 
 	async def get_keystore(self) -> Dict[str, str]:
-		rsp, content = await self.get("/user/keystore")
+		rsp, content = await self.request("get", "/user/keystore")
 		return treat_response_object(rsp, content, 200)
 
 	async def set_keystore(self, keystore: Dict[str, str]) -> bool:
 		assert type(keystore) is dict, f"Expected type 'dicy' for keystore, but got type '{type(keystore)}'"
 
-		rsp, content = await self.put("/user/keystore", keystore)
+		rsp, content = await self.request("put", "/user/keystore", keystore)
 		return treat_response_object(rsp, content, 200)
 
 	async def download_objects(self, object_type: str) -> Dict[str, List[Dict[str, Union[str, int]]]]:
 		assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
 
-		rsp, content = await self.get(f"/user/objects/{object_type}")
+		rsp, content = await self.request("get", f"/user/objects/{object_type}")
 		return treat_response_object(rsp, content, 200)
 
 	async def upload_objects(self, object_type: str, meta: str, data: str) -> bool:
@@ -195,14 +180,14 @@ class Low_Level:
 
 		assert len(meta) <= 128, f"Meta should be at most 128 characters, got length of {len(meta)}"
 
-		rsp, content = await self.put(f"/user/objects/{object_type}", { "meta": meta, "data": data })
+		rsp, content = await self.request("put", f"/user/objects/{object_type}", { "meta": meta, "data": data })
 		return treat_response_bool(rsp, content, 200)
 
 	async def download_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
 		assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
 		assert type(object_id) is str, f"Expected type 'str' for object_id, but got type '{type(object_id)}'"
 
-		rsp, content = await self.get(f"/user/objects/{object_type}/{object_id}")
+		rsp, content = await self.request("get", f"/user/objects/{object_type}/{object_id}")
 		return treat_response_object(rsp, content, 200)
 
 	async def upload_object(self, object_type: str, object_id: str, meta: str, data: str) -> bool:
@@ -213,37 +198,37 @@ class Low_Level:
 
 		assert len(meta) <= 128, f"Meta should be at most 128 characters, got length of {len(meta)}"
 
-		rsp, content = await self.patch(f"/user/objects/{object_type}/{object_id}", { "meta": meta, "data": data })
+		rsp, content = await self.request("patch", f"/user/objects/{object_type}/{object_id}", { "meta": meta, "data": data })
 		return treat_response_bool(rsp, content, 200)
 
 	async def delete_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
 		assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
 		assert type(object_id) is str, f"Expected type 'str' for object_id, but got type '{type(object_id)}'"
 
-		rsp, content = await self.delete(f"/user/objects/{object_type}/{object_id}")
+		rsp, content = await self.request("delete", f"/user/objects/{object_type}/{object_id}")
 		return treat_response_object(rsp, content, 200)
 
 	async def get_settings(self) -> str:
-		rsp, content = await self.get("/user/clientsettings")
+		rsp, content = await self.request("get", "/user/clientsettings")
 		return treat_response_object(rsp, content, 200)
 
 	async def set_settings(self, value: str) -> bool:
 		assert type(value) is str, f"Expected type 'str' for value, but got type '{type(value)}'"
 
-		rsp, content = await self.put("/user​/clientsettings", value)
+		rsp, content = await self.request("put", "/user​/clientsettings", value)
 		return treat_response_bool(rsp, content, 200)
 
 	async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
 		assert type(payment_processor) is str, f"Expected type 'str' for payment_processor, but got type '{type(payment_processor)}'"
 		assert type(subscription_id) is str, f"Expected type 'str' for subscription_id, but got type '{type(subscription_id)}'"
 
-		rsp, content = await self.post("/user/subscription/bind", { "paymentProcessor": payment_processor, "subscriptionId": subscription_id })
+		rsp, content = await self.request("post", "/user/subscription/bind", { "paymentProcessor": payment_processor, "subscriptionId": subscription_id })
 		return treat_response_bool(rsp, content, 201)
 
 	async def change_subscription(self, new_plan: str) -> bool:
 		assert type(new_plan) is str, f"Expected type 'str' for new_plan, but got type '{type(new_plan)}'"
 
-		rsp, content = await self.post("​/user​/subscription​/change", { "newSubscriptionPlan": new_plan })
+		rsp, content = await self.request("post", "​/user​/subscription​/change", { "newSubscriptionPlan": new_plan })
 		return treat_response_bool(rsp, content, 200)
 
 	async def generate(self, input: str, model: str, params: Dict[str, Any]) -> Dict[str, str]:
@@ -264,7 +249,7 @@ class Low_Level:
 
 		args = { "input": input, "model": model, "parameters": params }
 
-		rsp, content = await self.post("/ai/generate", args)
+		rsp, content = await self.request("post", "/ai/generate", args)
 		return treat_response_object(rsp, content, 201)
 
 	async def generate_stream(self):
@@ -290,7 +275,7 @@ class Low_Level:
 		assert type(name) is str, f"Expected type 'str' for name, but got type '{type(name)}'"
 		assert type(desc) is str, f"Expected type 'str' for desc, but got type '{type(desc)}'"
 
-		rsp, content = await self.post("​/ai​/module​/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
+		rsp, content = await self.request("post", "​/ai​/module​/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
 		return treat_response_object(rsp, content, 201)
 
 	async def get_modules(self) -> List[Dict[str, Any]]:
@@ -298,7 +283,7 @@ class Low_Level:
 		:return: List of modules saved on the logged account
 		"""
 
-		rsp, content = await self.get("/ai/module/all")
+		rsp, content = await self.request("get", "/ai/module/all")
 		return treat_response_object(rsp, content, 200)
 
 	async def get_module(self, module_id: str) -> Dict[str, Any]:
@@ -310,7 +295,7 @@ class Low_Level:
 
 		assert type(module_id) is str, f"Expected type 'str' for module_id, but got type '{type(module_id)}'"
 
-		rsp, content = await self.get(f"/ai/module/{module_id}")
+		rsp, content = await self.request("get", f"/ai/module/{module_id}")
 		return treat_response_object(rsp, content, 200)
 
 	async def delete_module(self, module_id: str) -> Dict[str, Any]:
@@ -324,5 +309,5 @@ class Low_Level:
 
 		assert type(module_id) is str, f"Expected type 'str' for module_id, but got type '{type(module_id)}'"
 
-		rsp, content = await self.delete(f"/ai/module/{module_id}")
+		rsp, content = await self.request("delete", f"/ai/module/{module_id}")
 		return treat_response_object(rsp, content, 200)
