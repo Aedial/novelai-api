@@ -51,10 +51,41 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	if type(data) is not bytes:
 		data = data.encode()
 
-#	try:
 	return box.encrypt(data, nonce = nonce).decode()
-#	except CryptoError:
-#		return None
+
+def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+	"""
+	Decompress the data of each item in :ref: items
+	Doesn't decrypt, but does a b64 to UTF8 translation
+	"""
+
+	if type(items) is not list and type(items) is not tuple:
+		items = [items]
+
+	for item in items:
+		assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+		assert "data" in item, f"Expected key 'data' in item"
+
+		try:
+			item["data"] = json.loads(b64decode(item["data"]).decode())
+			item["decrypted"] = True	# not decrypted, per say, but for genericity
+		except json.JSONDecodeError:
+			item["decrypted"] = False
+
+def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+	"""
+	Compress the data of each item in :ref: items
+	Doesn't encrypt, but does a UTF8 to b64 translation
+	"""
+
+	if type(items) is not list and type(items) is not tuple:
+		items = [items]
+
+	for item in items:
+		assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+		assert "data" in item, f"Expected key 'data' in item"
+
+		item["data"] = b64encode(json.dumps(item["data"])).decode()
 
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
 	"""
@@ -121,5 +152,3 @@ def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
 			i -= 1
 
 # TODO: story tree builder
-
-# TODO: something to clear the data that couldn't be decrypted from the list ?
