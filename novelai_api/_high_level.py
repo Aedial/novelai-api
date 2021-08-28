@@ -84,9 +84,6 @@ class High_Level:
 
 		# TODO: check if keystore is actually valid b64 ?
 
-#		TODO: check if set_keystore(get_keystore) is same
-# 		print(json.dumps(keystore))
-
 		keystore = json.loads(b64decode(keystore["keystore"]).decode())
 		validate(keystore, self._schemas["schema_keystore_encrypted"])
 
@@ -95,14 +92,12 @@ class High_Level:
 		sdata = bytes(keystore["sdata"])
 
 		data = decrypt_data(sdata, key, nonce)
-#		TODO: check if set_keystore(get_keystore) is same
-#		print(data)
 		json_data = json.loads(data)
 		validate(json_data, self._schemas["schema_keystore_decrypted"])
 
 		keys = json_data["keys"]
-		for key in keys:
-			keys[key] = bytes(keys[key])
+		for meta in keys:
+			keys[meta] = bytes(keys[meta])
 
 		# here, the data should be all valid. Still possible to be false (while valid),
 		# but it would be incredibly rare
@@ -125,11 +120,10 @@ class High_Level:
 			del keystore["nonce"]
 
 			keys = keystore["keys"]
-			for key in keys:
-				keys[key] = list(keys[key])
+			for meta in keys:
+				keys[meta] = list(keys[meta])
 
-			json_data = json.dumps(keystore)
-			print(json_data)
+			json_data = json.dumps(keystore, separators = (',', ':'))
 			encrypted_data = encrypt_data(json_data, key, nonce)
 
 			keystore = {
@@ -138,11 +132,7 @@ class High_Level:
 				"sdata": list(encrypted_data)
 			}
 
-			print(json.dumps(keystore))
-
-			keystore = { "keystore": b64encode(json.dumps(keystore)).decode() }
-
-			raise NotImplementedError("This method has not been tested and shouldn't be used. You have been warned")
+			keystore = { "keystore": b64encode(json.dumps(keystore, separators = (',', ':')).encode()).decode() }
 
 		return await self._parent.low_level.set_keystore(keystore)
 
