@@ -12,9 +12,7 @@
 					"data": { "type": "string" },
 					"lastUpdatedAt": { "type": "integer" }
 				},
-				"requires": [ "id", "type", "meta", "data", "lastUpdatedAt" ],
-				"additionalProperties": false
-			}
+				"requires": [ "id", "type", "meta", "data", "lastUpdatedAt" ]			}
 		}
 	},
 	"required": [ "objects" ],
