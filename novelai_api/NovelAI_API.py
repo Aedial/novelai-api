@@ -8,6 +8,8 @@ from multidict import CIMultiDict
 from logging import Logger, NullHandler
 from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
 
+from os.path import dirname, abspath
+
 class NovelAI_API:
 	# Constants
 	_BASE_ADDRESS: str = "https://api.novelai.net"
@@ -16,6 +18,8 @@ class NovelAI_API:
 	_token: Optional[str] = None
 	_logger: Logger
 	_session: ClientSession
+
+	_lib_root: str = dirname(abspath(__file__))
 
 	### Low Level Public API
 	low_level: Low_Level

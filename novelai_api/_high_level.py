@@ -19,8 +19,8 @@ class High_Level:
 	def __init__(self, parent: "NovelAI_API"):
 		self._parent = parent
 
-		for filename in listdir("schemas"):
-			with open(join("schemas", filename)) as f:
+		for filename in listdir(join(self._parent._lib_root, "schemas")):
+			with open(join(self._parent._lib_root, "schemas", filename)) as f:
 				self._schemas[splitext(filename)[0]] = json.loads(f.read())
 
 	async def register(self, recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None) -> bool:
