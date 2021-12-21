@@ -4,5 +4,5 @@
 		"accessToken": { "type": "string" }
 	},
 	"required": [ "accessToken" ],
-	"additionalProperties": false
+	"_additionalProperties": false
 }
