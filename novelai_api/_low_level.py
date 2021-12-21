@@ -6,9 +6,24 @@ from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.http_exceptions import HttpProcessingError
 
-from requests import request as sync_request
+from requests import request as sync_request, Response
 
 from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
+
+class SyncResponse():
+	_rsp: Response
+
+	def __init__(self, rsp: Response):
+		self._rsp = rsp
+		self.status = rsp.status_code
+		self.reason = rsp.reason
+		self.content_type = rsp.headers["Content-Type"].split(';')[0]
+
+	async def text(self):
+		return self._rsp.text
+
+	async def json(self):
+		return self._rsp.json()
 
 #=== INTERNALS ===#
 #=== API ===#
@@ -21,12 +36,12 @@ class Low_Level:
 		self._is_async = parent._is_async
 
 		assert not self._is_async or isinstance(parent._session, ClientSession), "Session must be of class ClientSession for asynchronous operations"
-		assert self._is_async or isinstance(parent._session, Fake), "Session must be of class FakeClientSession for synchronous operations"
+		assert self._is_async or isinstance(parent._session, FakeClientSession), "Session must be of class FakeClientSession for synchronous operations"
 
 		self._parent = parent
 		self._session = parent._session
 
-	def _treat_response_object(self, rsp: ClientResponse, content: Any, status: int) -> Any:
+	def _treat_response_object(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> Any:
 		# success
 		if rsp.status == status:
 			return content
@@ -39,17 +54,17 @@ class Low_Level:
 		else:
 			raise NovelAIError(rsp.status, "Unknown error")
 
-	def _treat_response_bool(self, rsp: ClientResponse, content: Any, status: int) -> bool:
+	def _treat_response_bool(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> bool:
 		if 100 <= rsp.status < 400:
 			return rsp.status == status
 
 		return bool(treat_response_object(rsp, content, status))
 
-	async def _treat_response(self, rsp: ClientResponse) -> Any:
+	async def _treat_response(self, rsp: Union[ClientResponse, SyncResponse]) -> Any:
 		if rsp.content_type == "application/json":
-			return (await rsp.json()) if self._is_async else rsp.json()
+			return (await rsp.json())
 		else:
-			return (await rsp.text()) if self._is_async else rsp.text
+			return (await rsp.text())
 
 	async def _request_async(self, method: str, url: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
 		"""
@@ -72,12 +87,15 @@ class Low_Level:
 		"""
 
 		timeout = self._session.timeout.total
+		headers = self._parent._session.headers
 
 		if type(data) is dict:
-			with sync_request(method, url, json = data) as rsp:
+			with sync_request(method, url, headers = headers, json = data) as rsp:
+				rsp = SyncResponse(rsp)
 				return (rsp, await self._treat_response(rsp))
 		else:
-			with sync_request(method, url, data = data) as rsp:
+			with sync_request(method, url, headers = headers, data = data) as rsp:
+				rsp = SyncResponse(rsp)
 				return (rsp, await self._treat_response(rsp))
 
 	async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
