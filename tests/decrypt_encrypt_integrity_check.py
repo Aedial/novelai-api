@@ -30,41 +30,46 @@ with open(filename) as f:
 	creds = [line for line in lines if line != "" and line[0] != "#"]
 	username, password = choice(creds).split(',')
 
+async def run_with_api(api: NovelAI_API):
+	await api.high_level.login(username, password)
+
+	key = get_encryption_key(username, password)
+	keystore = await api.high_level.get_keystore(key)
+
+	stories = await api.high_level.download_user_stories()
+	encrypted_stories_in = [str(story) for story in stories]
+	decrypt_user_data(stories, keystore)
+	encrypt_user_data(stories, keystore)
+	encrypted_stories_out = [str(story) for story in stories]
+	compare_in_out("stories", encrypted_stories_in, encrypted_stories_out)
+
+	story_contents = await api.high_level.download_user_story_contents()
+	encrypted_storycontent_in = [str(story_content) for story_content in story_contents]
+	decrypt_user_data(story_contents, keystore)
+	encrypt_user_data(story_contents, keystore)
+	encrypted_storycontent_out = [str(story_content) for story_content in story_contents]
+	compare_in_out("storycontent", encrypted_storycontent_in, encrypted_storycontent_out)
+
+	presets = await api.high_level.download_user_presets()
+	encrypted_presets_in = [str(preset) for preset in presets]
+	decompress_user_data(presets)
+	compress_user_data(presets)
+	encrypted_presets_out = [str(preset) for preset in presets]
+	compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
+
+	modules = await api.high_level.download_user_modules()
+	encrypted_modules_in = [str(module) for module in modules]
+	decrypt_user_data(modules, keystore)
+	encrypt_user_data(modules, keystore)
+	encrypted_modules_out = [str(module) for module in modules]
+	compare_in_out("aimodules", encrypted_modules_in, encrypted_modules_out)
+
 async def main():
 	async with ClientSession() as session:
 		api = NovelAI_API(session)
+		await run_with_api(api)
 
-		await api.high_level.login(username, password)
-
-		key = get_encryption_key(username, password)
-		keystore = await api.high_level.get_keystore(key)
-
-		stories = await api.high_level.download_user_stories()
-		encrypted_stories_in = [str(story) for story in stories]
-		decrypt_user_data(stories, keystore)
-		encrypt_user_data(stories, keystore)
-		encrypted_stories_out = [str(story) for story in stories]
-		compare_in_out("stories", encrypted_stories_in, encrypted_stories_out)
-
-		story_contents = await api.high_level.download_user_story_contents()
-		encrypted_storycontent_in = [str(story_content) for story_content in story_contents]
-		decrypt_user_data(story_contents, keystore)
-		encrypt_user_data(story_contents, keystore)
-		encrypted_storycontent_out = [str(story_content) for story_content in story_contents]
-		compare_in_out("storycontent", encrypted_storycontent_in, encrypted_storycontent_out)
-
-		presets = await api.high_level.download_user_presets()
-		encrypted_presets_in = [str(preset) for preset in presets]
-		decompress_user_data(presets)
-		compress_user_data(presets)
-		encrypted_presets_out = [str(preset) for preset in presets]
-		compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
-
-		modules = await api.high_level.download_user_modules()
-		encrypted_modules_in = [str(module) for module in modules]
-		decrypt_user_data(modules, keystore)
-		encrypt_user_data(modules, keystore)
-		encrypted_modules_out = [str(module) for module in modules]
-		compare_in_out("aimodules", encrypted_modules_in, encrypted_modules_out)
+	api = NovelAI_API()
+	await run_with_api(api)
 
 run(main())
