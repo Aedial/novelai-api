@@ -8,6 +8,7 @@ from aiohttp import ClientSession
 
 from asyncio import run
 from base64 import b64decode
+from random import choice
 
 from typing import List, Tuple, Dict, Set, Any, NoReturn
 
@@ -15,13 +16,17 @@ import json
 
 def check_non_decrypted_item(type_name: str, items: List[Dict[str, Any]]) -> NoReturn:
 	failed: List[Tuple[str, str]] = []
+	fail_flags: List[str] = []
 
 	for item in items:
-		if item.get("decrypted", False) is False:
+		decrypted = item.get("decrypted", False)
+		if decrypted is False:
 			failed.append((item["meta"], item["id"]))
 
+		fail_flags.append('O' if decrypted else 'X')
+
 	if failed:
-		print(f"{len(failed)}/{len(items)} {type_name} couldn't be decrypted:")
+		print(f"{len(failed)}/{len(items)} {type_name} couldn't be decrypted: {''.join(fail_flags)}")
 		print(*(f"\tItem {id} of meta {meta}" for meta, id in failed), sep = "\n")
 		print("")
 	else:
@@ -73,7 +78,9 @@ def check_story_content_without_story(stories: List[Dict[str, Any]], story_conte
 
 filename = join("credentials", "creds_example.txt")
 with open(filename) as f:
-	username, password = f.read().split(',')
+	lines = [line.strip() for line in f.readlines()]
+	creds = [line for line in lines if line != "" and line[0] != "#"]
+	username, password = choice(creds).split(',')
 
 async def main():
 	async with ClientSession() as session:
