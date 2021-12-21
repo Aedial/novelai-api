@@ -144,7 +144,7 @@ class Low_Level:
 
 		:param access_key: Access key of the account
 
-		:return: True on success
+		:return: Response of the request
 		"""
 
 		assert type(access_key) is str, f"Expected type 'str' for access_key, but got type '{type(access_key)}'"

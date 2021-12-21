@@ -45,14 +45,14 @@ class High_Level:
 		key = get_access_key(email, password)
 		return await self._parent.low_level.register(recapcha, key, hashed_email, giftkey)
 
-	async def login(self, email: str, password: str) -> Dict[str, str]:
+	async def login(self, email: str, password: str) -> str:
 		"""
 		Log in to the account
 
 		:param email: Email of the account (username)
 		:param password: Password of the account
 
-		:return: True on success
+		:return: User's access token
 		"""
 		assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
 		assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
@@ -63,7 +63,7 @@ class High_Level:
 
 		self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
-		return rsp
+		return rsp["accessToken"]
 
 	async def login_from_token(self, access_token: str) -> NoReturn:
 		self._parent._session.headers["Authorization"] = f"Bearer {access_token}"
