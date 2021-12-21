@@ -1,8 +1,9 @@
 from novelai_api.NovelAIError import NovelAIError
+from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api._low_level import Low_Level
 from novelai_api._high_level import High_Level
 
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, ClientTimeout
 from multidict import CIMultiDict
 
 from logging import Logger, NullHandler
@@ -18,6 +19,7 @@ class NovelAI_API:
 	_token: Optional[str] = None
 	_logger: Logger
 	_session: ClientSession
+	_is_async: bool
 
 	_lib_root: str = dirname(abspath(__file__))
 
@@ -26,9 +28,15 @@ class NovelAI_API:
 	high_level: High_Level
 
 	# === Operators === #
-	def __init__(self, session: ClientSession, logger: Optional[Logger] = None):
+	def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
 		# variable passing
-		self._session = session
+
+		# no session = synchronous
+		self._is_async = (session is not None)
+		if self._is_async:
+			self._session = session
+		else:
+			self._session = FakeClientSession()
 
 		if logger is None:
 			self._logger = Logger("NovelAI_API")
