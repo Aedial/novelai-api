@@ -1,4 +1,5 @@
 from novelai_api.NovelAIError import NovelAIError
+from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.utils import get_access_key, get_encryption_key, decrypt_data, encrypt_data
 
 from hashlib import sha256
@@ -7,10 +8,11 @@ from base64 import b64decode, b64encode
 
 import json
 from jsonschema import validate, ValidationError
-from os import listdir, urandom
+from os import listdir
 from os.path import join, splitext
 
 from nacl.secret import SecretBox
+from nacl.utils import random
 
 class High_Level:
 	_parent: "NovelAI_API"
@@ -63,6 +65,9 @@ class High_Level:
 
 		return rsp
 
+	async def login_from_token(self, access_token: str) -> NoReturn:
+		self._parent._session.headers["Authorization"] = f"Bearer {access_token}"
+
 	async def get_keystore(self, key: bytes) -> Dict[str, Dict[str, bytes]]:
 		"""
 		Retrieve the keystore and decrypt it in a readable manner.
@@ -78,7 +83,7 @@ class High_Level:
 
 		keystore = await self._parent.low_level.get_keystore()
 		if "keystore" in keystore and keystore["keystore"] is None:	# keystore is null when empty
-			return { "version": 2, "nonce": urandom(SecretBox.NONCE_SIZE), "keys": [] }
+			return { "version": 2, "nonce": random(SecretBox.NONCE_SIZE), "keys": [] }
 
 		validate(keystore, self._schemas["schema_keystore_b64"])
 
@@ -91,7 +96,7 @@ class High_Level:
 		nonce = bytes(keystore["nonce"])
 		sdata = bytes(keystore["sdata"])
 
-		data = decrypt_data(sdata, key, nonce)
+		data, _, is_compressed = decrypt_data(sdata, key, nonce)
 		json_data = json.loads(data)
 		validate(json_data, self._schemas["schema_keystore_decrypted"])
 
@@ -104,6 +109,7 @@ class High_Level:
 
 		json_data["version"] = version
 		json_data["nonce"] = nonce
+		json_data["compressed"] = is_compressed
 
 		return json_data
 
@@ -118,13 +124,15 @@ class High_Level:
 			del keystore["version"]
 			nonce = keystore["nonce"]
 			del keystore["nonce"]
+			is_compressed = keystore["compressed"]
+			del keystore["compressed"]
 
 			keys = keystore["keys"]
 			for meta in keys:
 				keys[meta] = list(keys[meta])
 
 			json_data = json.dumps(keystore, separators = (',', ':'))
-			encrypted_data = encrypt_data(json_data, key, nonce)
+			encrypted_data = encrypt_data(json_data, key, nonce, is_compressed)
 
 			keystore = {
 				"version": version,
