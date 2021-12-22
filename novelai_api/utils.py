@@ -1,10 +1,11 @@
-from argon2 import hash_password_raw
 from argon2 import low_level
 
 from hashlib import blake2b
 from base64 import urlsafe_b64encode, b64encode, b64decode
 import json
-from zlib import decompress as inflate, compress as deflate, MAX_WBITS, DEFLATED
+from zlib import decompress as inflate, compressobj as deflate_obj, MAX_WBITS, Z_BEST_COMPRESSION
+
+from binascii import hexlify
 
 from nacl.secret import SecretBox
 from nacl.exceptions import CryptoError
@@ -65,9 +66,10 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
 	if type(data) is not bytes:
 		data = data.encode()
 
-	# FIXME: most probably wrong (see decrypt_encrypt_integrity_check.py)
+	# FIXME: zlib results in different data than the library used by NAI, but they are fully compatible
 	if is_compressed:
-		data = deflate(data, DEFLATED)
+		deflater = deflate_obj(Z_BEST_COMPRESSION, wbits = -MAX_WBITS)
+		data = deflater.compress(data) + deflater.flush()
 
 	data = bytes(box.encrypt(data, nonce))
 
@@ -111,7 +113,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> No
 
 		if "decrypted" in item:
 			if item["decrypted"]:
-				item["data"] = b64encode(json.dumps(item["data"]).encode()).decode()
+				item["data"] = b64encode(json.dumps(item["data"], separators = (',', ':')).encode()).decode()
 			del item["decrypted"]
 
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Dict[str, Dict[str, bytes]]) -> NoReturn:
