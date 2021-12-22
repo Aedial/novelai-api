@@ -128,6 +128,7 @@ class NovelAI_StoryProxy:
 	_key: bytes
 	_story: Dict[str, Any]
 	_storycontent: Dict[str, Any]
+	_tree: List[int]
 	model: str
 
 	def __init__(self, parent: "NovelAI_Story", key: bytes, story: Dict[str, Any], storycontent: Dict[str, Any], model: Optional[str] = None):
@@ -137,12 +138,11 @@ class NovelAI_StoryProxy:
 		self._key = key
 		self._story = story
 		self._storycontent = storycontent
+		self._tree = []
 
 		self._model = DEFAULT_MODEL if model is None else model
 
-	async def generate(self, input: Union[str, List[int]]) -> "NovelAI_StoryProxy":
-		output = self._api.low_level.generate(input, self.model, self.params)
-
+	def _create_datablock(self, fragment: Dict[str, str], end_offset: int)
 		story = self._storycontent["data"]["story"]
 		blocks = story["datablocks"]
 		fragments = story["fragments"]
@@ -152,19 +152,17 @@ class NovelAI_StoryProxy:
 
 		story["step"] += 1
 
-		fragment = { "data": output, "origin": "" }
 		frag_index = len(fragments)
 		fragments.append(fragment)
 
-		start = cur_block["endIndex"] + 1
-		end = start + len(output)
+		start = cur_block["endIndex"] + len(cur_block["dataFragment"]["data"])
 
 		block = {
 			"nextBlock": [],
 			"prevBlock": cur_index,
-			"origin": "",
+			"origin": fragment["origin"],
 			"startIndex": start,
-			"endIndex": end,
+			"endIndex": start + end_offset,
 			"dataFragment": fragment,
 			"fragmentIndex": frag_index,
 			"removedFragments": [],
@@ -174,6 +172,18 @@ class NovelAI_StoryProxy:
 		blocks.append(block)
 
 		story["currentBlock"] = new_index
+		self._tree.append(new_index)
+
+	async def generate(self, input: Union[str, List[int]]) -> "NovelAI_StoryProxy":
+		output = await self._api.low_level.generate(input, self.model, self.params)
+		fragment = { "data": output, "origin": "ai" }
+
+		self._create_datablock(fragment, 0)
+
+	async def edit(self, start: int, end: int, replace: str):
+		fragment = { "data": replace, "origin": "edit" }
+
+		self._create_datablock(fragment, end - start)
 
 	async def undo(self):
 		story = self._storycontent["data"]["story"]
@@ -201,14 +211,22 @@ class NovelAI_StoryProxy:
 
 		story["currentBlock"] = next_blocks[index]
 
-	async def flatten(self):
-		pass
+	async def flatten(self) -> NoReturn:
+		story = self._storycontent["data"]["story"]
+
+		blocks = story["datablocks"]
+		new_datablocks = [blocks[i] for i in self._tree]
+		self._tree = [i for i in range(len(new_datablocks))]
+		story["datablocks"] = new_datablocks
 
 	async def delete(self):
 		pass
 
 	async def get_current_tree(self):
-		pass
+		story = self._storycontent["data"]["story"]
+
+		blocks = story["datablocks"]
+		return [blocks[i] for i in self._tree]
 
 class NovelAI_Story:
 	_story_instances: List[NovelAI_StoryProxy]
@@ -250,7 +268,6 @@ class NovelAI_Story:
 		proxy = NovelAI_StoryProxy(self, self._keystore[story["meta"]], story, storycontent)
 		# FIXME: look for duplicates
 		self._story_instances.append(proxy)
-
 
 	def select(self, id: str) -> NovelAI_StoryProxy:
 		"""
