@@ -149,7 +149,7 @@ class Low_Level:
 			data["giftkey"] = giftkey
 
 		rsp, content = await self.request("post", "/user/register", data)
-		rsp = self._treat_response_bool(rsp, content, 201)
+		rsp = self._treat_response_object(rsp, content, 201)
 
 		# FIXME: handle cases where the response is corrupted
 		self._parent._token = rsp["accessToken"]
