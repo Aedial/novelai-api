@@ -55,10 +55,11 @@ class Low_Level:
 			raise NovelAIError(rsp.status, "Unknown error")
 
 	def _treat_response_bool(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> bool:
-		if 100 <= rsp.status < 400:
-			return rsp.status == status
+		if rsp.status == status:
+			return True
 
-		return bool(treat_response_object(rsp, content, status))
+		treat_response_object(rsp, content, status)
+		return False
 
 	async def _treat_response(self, rsp: Union[ClientResponse, SyncResponse]) -> Any:
 		if rsp.content_type == "application/json":
