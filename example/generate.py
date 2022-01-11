@@ -4,23 +4,15 @@ from os.path import join, abspath, dirname
 path.insert(0, abspath(join(dirname(__file__), "..")))
 
 from novelai_api import NovelAI_API
-from novelai_api.utils import (
-    get_encryption_key,
-    decrypt_user_data,
-    map_meta_to_stories,
-    assign_content_to_story,
-)
 from aiohttp import ClientSession
 
 from logging import Logger
-from asyncio import run
+import asyncio
 
 import json
 
-# pip3 install pyyaml
-import yaml
-
 import base64
+import struct
 
 filename = join("credentials", "creds_example.txt")
 with open(filename) as f:
@@ -33,62 +25,58 @@ async def main():
     async with ClientSession() as session:
         api = NovelAI_API(session, logger=logger)
 
-        # a .. sLTgAMYAQAA= .. 64
-        bin = base64.b85decode ('sLTgAMYAQAA=')
-        print (bin)
+        input_string = "hello world"
 
-        with open('delme', "wb") as f:
-            f.write(bin)
+        # NB: Generation of the tokenized input from “token_ids” is currently unused
+        # because of the “params["use_string"] = True” clause in “def generate”.
 
-        # b .. sLTgAMYAQQA= .. 65
-        bin = base64.b85decode ('sLTgAMYAQQA=')
-        print (bin)
-        # c .. sLTgAMYAQgA= .. 66
-        bin = base64.b85decode ('sLTgAMYAQgA=')
-        print (bin)
-        return ()
+        # Use https://beta.openai.com/tokenizer to generate the input token IDs.
+        token_ids = [31373, 995]  # “hello world”
+
+        novelai_prefix = bytes([0xB0, 0xB4, 0xE0, 0x00, 0xC6, 0x00])
+
+        bytes_input = novelai_prefix
+        for token in token_ids:
+            bytes_input += struct.pack("<H", token)
+        print("input:")
+        print(bytes_input)
+        input = base64.urlsafe_b64encode(bytes_input).decode("utf-8")
+        print("b64i: " + input)
 
         print("login..")
         login = await api.high_level.login(username, password)
 
-        print("get_encryption_key..")
-        key = get_encryption_key(username, password)
-        keystore = await api.high_level.get_keystore(key)
-
         print("generate..")
-        input = "sLTgAMYAAgARDt4CIgHeAsYA"
         model = "genji-python-6b"
         params = {
-            "generate_until_sentence": True,
+            "temperature": 0.72,
             "max_length": 40,
             "min_length": 1,
-            "prefix": "vanilla",
-            "num_logprobs": 5,
-            "repetition_pentalty": 1.13125,
-            "repetition_penalty_range": 2048,
-            "repetition_penalty_slope": 0.18,
-            "return_full_text": False,
-            "tail_free_sampling": 1,
-            "temperature": 0.72,
             "top_k": 0,
             "top_p": 0.725,
+            "tail_free_sampling": 1,
+            "repetition_penalty": 1.13125,
+            "repetition_penalty_range": 2048,
+            "repetition_penalty_slope": 0.18,
+            "repetition_penalty_frequency": 0,
+            "repetition_penalty_presence": 0,
+            "generate_until_sentence": True,
             "use_cache": False,
             "use_string": False,
+            "return_full_text": True,
+            "prefix": "vanilla",
+            "order": [0, 1, 2, 3],
         }
-        got = await api.low_level.generate(input, model, params)
 
-        # tbd: https://beta.openai.com/tokenizer
-        # If you need a programmatic interface for tokenizing text, check out the transformers package for python or the gpt-3-encoder package for node.js.
-        # https://huggingface.co/transformers/model_doc/gpt2.html#gpt2tokenizerfast
-        # https://github.com/NovelAI/transformers ?
-        # https://github.com/wbrown/novelai-research-tool/tree/main/gpt-bpe ?
-        # https://github.com/kingoflolz/mesh-transformer-jax/blob/master/device_sample.py#L88
-        # https://github.com/latitudegames/GPT-3-Encoder
-        # https://github.com/huggingface/transformers/blob/master/src/transformers/models/gpt2/tokenization_gpt2.py
-        print(yaml.dump(got))
+        got = await api.low_level.generate(input_string, model, params)
 
-        print (got.get ('output'))
-        bin = base64.b85decode (got.get ('output'))
-        print (bin)
+        print(got.get("output"))
 
-run(main())
+        # Might be useful with “params["use_string"] = False”?
+        #
+        # output = base64.urlsafe_b64decode(got.get("output"))
+        # for ix in range(6, len(output), 2):
+        #    print(struct.unpack("<H", output[ix : ix + 2]))
+
+
+asyncio.run(main())
