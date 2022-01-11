@@ -20,6 +20,8 @@ import json
 # pip3 install pyyaml
 import yaml
 
+import base64
+
 filename = join("credentials", "creds_example.txt")
 with open(filename) as f:
     username, password = f.read().split(",")
@@ -31,13 +33,27 @@ async def main():
     async with ClientSession() as session:
         api = NovelAI_API(session, logger=logger)
 
+        # a .. sLTgAMYAQAA= .. 64
+        bin = base64.b85decode ('sLTgAMYAQAA=')
+        print (bin)
+
+        with open('delme', "wb") as f:
+            f.write(bin)
+
+        # b .. sLTgAMYAQQA= .. 65
+        bin = base64.b85decode ('sLTgAMYAQQA=')
+        print (bin)
+        # c .. sLTgAMYAQgA= .. 66
+        bin = base64.b85decode ('sLTgAMYAQgA=')
+        print (bin)
+        return ()
+
         print("login..")
         login = await api.high_level.login(username, password)
 
         print("get_encryption_key..")
         key = get_encryption_key(username, password)
         keystore = await api.high_level.get_keystore(key)
-        print(keystore)
 
         print("generate..")
         input = "sLTgAMYAAgARDt4CIgHeAsYA"
@@ -65,7 +81,14 @@ async def main():
         # If you need a programmatic interface for tokenizing text, check out the transformers package for python or the gpt-3-encoder package for node.js.
         # https://huggingface.co/transformers/model_doc/gpt2.html#gpt2tokenizerfast
         # https://github.com/NovelAI/transformers ?
+        # https://github.com/wbrown/novelai-research-tool/tree/main/gpt-bpe ?
+        # https://github.com/kingoflolz/mesh-transformer-jax/blob/master/device_sample.py#L88
+        # https://github.com/latitudegames/GPT-3-Encoder
+        # https://github.com/huggingface/transformers/blob/master/src/transformers/models/gpt2/tokenization_gpt2.py
         print(yaml.dump(got))
 
+        print (got.get ('output'))
+        bin = base64.b85decode (got.get ('output'))
+        print (bin)
 
 run(main())
