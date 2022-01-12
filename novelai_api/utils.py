@@ -232,7 +232,7 @@ def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
             items.pop(i)
             i -= 1
 
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+tokenizer = None
 
 def tokens_to_b64(tokens: Iterable[int]) -> str:
     return b64encode(t.to_bytes(2, "little") for t in tokens).decode()
@@ -243,6 +243,10 @@ def b64_to_tokens(b64: str) -> List[int]:
     return list(b[i:i + 2] for i in range(0, len(b), 2))
 
 def tokens_to_text(tokens: List[int]) -> str:
+    if tokenizer is None:   # lazy initialization, as tokenizer is heavy
+        global tokenizer
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
     tokenizer.decode(tokens)
 
 # TODO: story tree builder

@@ -288,7 +288,7 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    tokenizer = None
 
     class Model(Enum):
         Calliope = "2.7B"
@@ -308,11 +308,14 @@ class Low_Level:
         """
 
         assert isinstance(input, (str, list)), f"Expected type 'str' or 'List[int]' for input, but got type '{type(input)}'"
-        assert type(model) is Model, f"Expected type 'Model' for model, but got type '{type(model)}'"
+        assert type(model) is self.Model, f"Expected type 'Model' for model, but got type '{type(model)}'"
         assert type(params) is dict, f"Expected type 'dict' for params, but got type '{type(params)}'"
 
         if type(input) is str:
-            input = tokenizer.encode(input)
+            if self.tokenizer is None:   # lazy initialization, as tokenizer is heavy
+                self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+            input = self.tokenizer.encode(input)
 
         input = tokens_to_b64(input)
         args = { "input": input, "model": model.value, "parameters": params }
