@@ -19,8 +19,7 @@ class Keystore:
     _decrypted: bool
     _compressed: bool
 
-
-    # function insertion to avoid circular import
+    # function injection to avoid circular import
     _encrypt_data: Callable
     _decrypt_data: Callable
 
@@ -61,7 +60,7 @@ class Keystore:
         assert self._decrypted, "Can't set key in an encrypted keystore"
         meta = self._keystore.keys()[0]
         while meta in self._keystore:
-            meta = uuid4()
+            meta = str(uuid4())
 
         self._keystore[meta] = random(SecretBox.NONCE_SIZE)
 
@@ -113,6 +112,10 @@ class Keystore:
         self._decrypted = True
 
     def encrypt(self, key: bytes) -> NoReturn:
+        # keystore is not decrypted, no need to encrypt it
+        if not self._decrypted:
+            return
+
         # FIXME: find what type is 'bytes'
 #        validate(keystore, self._schemas["schema_keystore_setter"])
 
@@ -123,6 +126,8 @@ class Keystore:
         keys = { "keys": keystore }
         json_data = dumps(keys, separators = (',', ':'))
         encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
+        # remove automatically prepended nonce
+        encrypted_data = encrypted_data[SecretBox.NONCE_SIZE:]
 
         keystore = {
             "version": self._version,

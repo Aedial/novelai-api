@@ -5,20 +5,14 @@ from os.path import join, abspath, dirname
 path.insert(0, abspath(join(dirname(__file__), '..')))
 
 from novelai_api import NovelAI_API
-from novelai_api.utils import get_encryption_key, decrypt_user_data, encrypt_user_data, map_meta_to_stories, assign_content_to_story, decompress_user_data, compress_user_data
-from novelai_api import utils
+from novelai_api.utils import get_encryption_key, decrypt_user_data, encrypt_user_data, decompress_user_data, compress_user_data
 from aiohttp import ClientSession
 
-from nacl.secret import SecretBox
-from numpy import asarray, uint8
-
 from asyncio import run
-from base64 import b64encode
-from random import choice
 
 #from js2py import require
 
-from typing import List, Tuple, Dict, Set, Any, NoReturn
+from typing import List, Dict, Any
 
 def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: List[Dict[str, Any]]) -> bool:
     fail_flags = ''.join(('O' if item_in == item_out else 'X') for item_in, item_out in zip(items_in, items_out))
@@ -60,7 +54,10 @@ async def run_with_api(api: NovelAI_API):
     key = get_encryption_key(username, password)
     keystore = await api.high_level.get_keystore(key)
 
-    # TODO: add keystore
+    encrypted_keystore_in = [str(keystore.data)]
+    keystore.encrypt(key)
+    encrypted_keystore_out = [str(keystore.data)]
+    success = compare_in_out("keystore", encrypted_keystore_in, encrypted_keystore_out) and success
 
     stories = await api.high_level.download_user_stories()
     encrypted_stories_in = [str(story) for story in stories]
