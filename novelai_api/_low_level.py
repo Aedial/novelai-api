@@ -61,7 +61,7 @@ class Low_Level:
         if rsp.status == status:
             return True
 
-        treat_response_object(rsp, content, status)
+        self._treat_response_object(rsp, content, status)
         return False
 
     async def _treat_response(self, rsp: Union[ClientResponse, SyncResponse]) -> Any:
@@ -156,7 +156,6 @@ class Low_Level:
         rsp = self._treat_response_object(rsp, content, 201)
 
         # FIXME: handle cases where the response is corrupted
-        self._parent._token = rsp["accessToken"]
 
         return rsp
 
@@ -200,7 +199,7 @@ class Low_Level:
         assert 16 <= len(recovery_token), f"Recovery token should be at least 16 characters, got length of {len(recovery_token)}"
         assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
-        rsp, content = await self.request("post", "//user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
+        rsp, content = await self.request("post", "/user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
         return self._treat_response_bool(rsp, content, 201)
 
     async def delete_account(self) -> bool:
@@ -273,7 +272,7 @@ class Low_Level:
     async def set_settings(self, value: str) -> bool:
         assert type(value) is str, f"Expected type 'str' for value, but got type '{type(value)}'"
 
-        rsp, content = await self.request("put", "/user​/clientsettings", value)
+        rsp, content = await self.request("put", "/user/clientsettings", value)
         return self._treat_response_bool(rsp, content, 200)
 
     async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
@@ -286,7 +285,7 @@ class Low_Level:
     async def change_subscription(self, new_plan: str) -> bool:
         assert type(new_plan) is str, f"Expected type 'str' for new_plan, but got type '{type(new_plan)}'"
 
-        rsp, content = await self.request("post", "​/user​/subscription​/change", { "newSubscriptionPlan": new_plan })
+        rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
