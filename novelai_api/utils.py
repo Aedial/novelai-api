@@ -243,8 +243,9 @@ def b64_to_tokens(b64: str) -> List[int]:
     return list(b[i:i + 2] for i in range(0, len(b), 2))
 
 def tokens_to_text(tokens: List[int]) -> str:
+    global tokenizer
+
     if tokenizer is None:   # lazy initialization, as tokenizer is heavy
-        global tokenizer
         tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
     tokenizer.decode(tokens)
