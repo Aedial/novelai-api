@@ -291,7 +291,7 @@ class Low_Level:
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
     class Model(Enum):
-        Callope = "2.7B"
+        Calliope = "2.7B"
         Sigurd = "6B-v4"
         Euterpe = "euterpe-v0"
 
