@@ -307,7 +307,7 @@ class Low_Level:
         :return: Generated output
         """
 
-        assert isinstance(input.__class__, (str, list)), f"Expected type 'str' or 'List[int]' for input, but got type '{type(input)}'"
+        assert isinstance(input, (str, list)), f"Expected type 'str' or 'List[int]' for input, but got type '{type(input)}'"
         assert type(model) is Model, f"Expected type 'Model' for model, but got type '{type(model)}'"
         assert type(params) is dict, f"Expected type 'dict' for params, but got type '{type(params)}'"
 
