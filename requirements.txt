@@ -3,3 +3,5 @@ argon2-cffi
 pynacl
 jsonschema
 requests
+transformer
+js2py
