@@ -75,7 +75,7 @@ class Low_Level:
         :param url: Url of the request
         :param method: Method of the request from ClientSession
         :param data: Data to pass to the method if needed
-        """    
+        """
         if type(data) is dict:    # data transforms dict in str
             async with self._session.request(method, url, json = data) as rsp:
                 return (rsp, await self._treat_response(rsp))
@@ -92,13 +92,14 @@ class Low_Level:
 
         timeout = self._session.timeout.total
         headers = self._parent._session.headers
+        cookies = self._parent._session.cookies
 
         if type(data) is dict:
-            with sync_request(method, url, headers = headers, json = data) as rsp:
+            with sync_request(method, url, headers = headers, json = data, timeout = timeout, cookies = cookies) as rsp:
                 rsp = SyncResponse(rsp)
                 return (rsp, await self._treat_response(rsp))
         else:
-            with sync_request(method, url, headers = headers, data = data) as rsp:
+            with sync_request(method, url, headers = headers, data = data, timeout = timeout, cookies = cookies) as rsp:
                 rsp = SyncResponse(rsp)
                 return (rsp, await self._treat_response(rsp))
 
