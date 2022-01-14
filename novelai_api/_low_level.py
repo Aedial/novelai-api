@@ -76,11 +76,14 @@ class Low_Level:
         :param method: Method of the request from ClientSession
         :param data: Data to pass to the method if needed
         """
+
+        timeout = self._parent._timeout
+
         if type(data) is dict:    # data transforms dict in str
-            async with self._session.request(method, url, json = data) as rsp:
+            async with self._session.request(method, url, json = data, timeout = timeout) as rsp:
                 return (rsp, await self._treat_response(rsp))
         else:
-            async with self._session.request(method, url, data = data) as rsp:
+            async with self._session.request(method, url, data = data, timeout = timeout) as rsp:
                 return (rsp, await self._treat_response(rsp))
 
     async def _request_sync(self, method: str, url: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
@@ -90,9 +93,9 @@ class Low_Level:
         :param data: Data to pass to the method if needed
         """
 
-        timeout = self._session.timeout.total
+        timeout = self._parent._timeout.total
         headers = self._parent._session.headers
-        cookies = self._parent._session.cookies
+        cookies = self._parent._session.cookie_jar
 
         if type(data) is dict:
             with sync_request(method, url, headers = headers, json = data, timeout = timeout, cookies = cookies) as rsp:

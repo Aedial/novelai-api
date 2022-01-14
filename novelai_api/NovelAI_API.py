@@ -19,6 +19,7 @@ class NovelAI_API:
 	_token: Optional[str] = None
 	_logger: Logger
 	_session: ClientSession
+	_timeout: ClientTimeout
 	_is_async: bool
 
 	_lib_root: str = dirname(abspath(__file__))
@@ -44,9 +45,35 @@ class NovelAI_API:
 		else:
 			self._logger = logger
 
+		self._timeout = ClientTimeout(300)
+
 		# API parts
 		self.low_level = Low_Level(self)
 		self.high_level = High_Level(self)
+
+	def attach_session(self, session: ClientSession) -> NoReturn:
+		"""
+		Attach a ClientSession, making the requests asynchronous
+		"""
+
+		session.headers.update(self._session.headers)
+		session.cookie_jar.update_cookies(self._session.cookie_jar)
+
+		self._is_async = True
+		self._session = session
+
+	def detach_session(self) -> NoReturn:
+		"""
+		Detach the current ClientSession, making the requests synchronous
+		"""
+
+		session = FakeClientSession()
+
+		session.headers.update(self._session.headers)
+		session.cookie_jar.update_cookies(self._session.cookie_jar)
+
+		self._is_async = False
+		self._session = session
 
 	@property
 	def headers(self) -> CIMultiDict:
@@ -62,10 +89,10 @@ class NovelAI_API:
 		Timeout for a request (in seconds)
 		"""
 
-		if self._session.timeout is None or self._session.timeout.total is None:
+		if self._timeout is None or self._timeout.total is None:
 			return 300	# aiohttp's default
 
-		return self._session.timeout.total
+		return self._timeout.total
 
 	@timeout.setter
 	def timeout(self, value: int):
@@ -73,4 +100,4 @@ class NovelAI_API:
 		Timeout for a request (in seconds)
 		"""
 
-		self._session.timeout = ClientTimeout(value)
+		self._timeout = ClientTimeout(value)

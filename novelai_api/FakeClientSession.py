@@ -1,12 +1,10 @@
 from multidict import CIMultiDict
-from aiohttp import ClientTimeout
+from aiohttp import CookieJar
 
 class FakeClientSession:
 	headers: CIMultiDict
-	timeout: ClientTimeout
-	cookies: dict
+	cookies: CookieJar
 
 	def __init__(self):
 		self.headers = CIMultiDict()
-		self.timeout = ClientTimeout(300)
-		self.cookies = {}
+		self.cookie_jar = CookieJar()

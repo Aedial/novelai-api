@@ -235,7 +235,7 @@ def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
 tokenizer = None
 
 def tokens_to_b64(tokens: Iterable[int]) -> str:
-    return b64encode(t.to_bytes(2, "little") for t in tokens).decode()
+    return b64encode(b''.join(t.to_bytes(2, "little") for t in tokens)).decode()
 
 def b64_to_tokens(b64: str) -> List[int]:
     b = b64decode(b64)
