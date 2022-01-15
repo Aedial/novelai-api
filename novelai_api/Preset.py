@@ -47,15 +47,20 @@ class Model(StrEnum):
 
 class Preset:
     _TYPE_MAPPING = {
-        "temperature": float, "max_length": int, "min_length": int, "top_k": int,
-        "top_p": float, "tail_free_sampling": float, "repetition_penalty": float,
-        "repetition_penalty_range": int, "repetition_penalty_slope": float,
-        "repetition_penalty_frequency": int, "repetition_penalty_presence": int,
+        "temperature": (int, float), "max_length": int, "min_length": int, "top_k": int,
+        "top_p": (int, float), "tail_free_sampling": (int, float), "repetition_penalty": (int, float),
+        "repetition_penalty_range": int, "repetition_penalty_slope": (float, int),
+        "repetition_penalty_frequency": (int, float), "repetition_penalty_presence": int,
         "order": list
     }
 
     _officials: Dict[str, "Preset"]
     _defaults: Dict[str, Dict[str, str]]
+
+    _enable_temperature: bool
+    _enable_top_k: bool
+    _enable_top_p: bool
+    _enable_tfs: bool
 
     _settings: Dict[str, Any]
     name: str
@@ -65,13 +70,22 @@ class Preset:
         self.name = name
         self.model = model
 
-        self._settings = {} if settings is None else settings
+        self._enable_temperature = True
+        self._enable_top_k = True
+        self._enable_top_p = True
+        self._enable_tfs = True
+
+        self._settings = {}
+        self.update(settings)
 
     def __setitem__(self, o: str, v: Any):
         assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
         assert isinstance(v, self._TYPE_MAPPING[o]), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
 
         if o == "order":
+            assert type(v) is list, f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
+            assert len(v) == 4, f"Expected 4 items in order, but only got {len(v)}: {v}"
+
             for i in range(len(v)):
                 assert isinstance(v[i], (int, Order)), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
 
@@ -83,11 +97,39 @@ class Preset:
     def __contains__(self, o: str) -> bool:
         return o in self._settings
 
-    def __getitem__(self, o: str) -> Any:
+    def __getitem__(self, o: str) -> Optional[Any]:
         return self._settings.get(o)
 
+    def enable(self, temperature: Optional[bool] = None, top_k: Optional[bool] = None,
+                     top_p: Optional[bool] = None, tfs: Optional[bool] = None) -> "Preset":
+        if temperature is not None:     self._enable_temperature    = temperature
+        if top_k is not None:           self._enable_top_k          = top_k
+        if top_p is not None:           self._enable_top_p          = top_p
+        if tfs is not None:             self._enable_tfs            = tfs
+
+        assert type(self._enable_temperature) is bool, f"Expected type bool for temperature, but got type '{type(self._enable_temperature)}'"
+        assert type(self._enable_top_k) is bool, f"Expected type bool for top_k, but got type '{type(self._enable_top_k)}'"
+        assert type(self._enable_top_p) is bool, f"Expected type bool for top_p, but got type '{type(self._enable_top_p)}'"
+        assert type(self._enable_tfs) is bool, f"Expected type bool for tfs, but got type '{type(self._enable_tfs)}'"
+
+        return self
+
     def to_settings(self) -> Dict[str, Any]:
-        return deepcopy(self._settings)
+        settings = deepcopy(self._settings)
+
+        if not self._enable_temperature:
+            del settings["temperature"]
+
+        if not self._enable_top_k:
+            del settings["top_k"]
+
+        if not self._enable_top_p:
+            del settings["top_p"]
+
+        if not self._enable_tfs:
+            del settings["tfs"]
+
+        return settings
 
     def to_file(self, path: str) -> NoReturn:
         raise NotImplementedError()
@@ -116,14 +158,31 @@ class Preset:
         model_name = data["model"] if "model" in data else ""
         model = Model(model_name) if enum_contains(Model, model_name) else None
 
-        settings = data["parameters"] if "parameters" in data else None
+        settings = data["parameters"] if "parameters" in data else {}
         if "textGenerationSettingsVersion" in settings:
             del settings["textGenerationSettingsVersion"]   # not API relevant
 
-        if settings and "order" in settings:
-            settings["order"] = list(name_to_order(o["id"]) for o in settings["order"] if o["enabled"])
+        order = settings["order"] if "order" in settings else {}
+        if order:
+            settings["order"] = list(name_to_order(o["id"]) for o in order)
 
-        return cls(name, model, settings)
+        # TODO: add support for token banning and bias in preset
+        settings.pop("bad_words_ids", None)     # get rid of unsopported option
+        settings.pop("logit_bias_exp", None)    # get rid of unsopported option
+
+        c = cls(name, model, settings)
+
+        if order:
+            enabled = list(o["id"] for o in order if o["enabled"])
+
+            enable_temperature  = "temperature" in enabled
+            enable_top_k        = "top_k" in enabled
+            enable_top_p        = "top_p" in enabled
+            enable_tfs          = "tfs" in enabled
+
+            c.enable(enable_temperature, enable_top_k, enable_top_p, enable_tfs)
+
+        return c
 
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:
