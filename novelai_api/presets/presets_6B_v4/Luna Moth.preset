@@ -1,0 +1,40 @@
+{
+  "presetVersion": 3,
+  "name": "Luna Moth",
+  "id": "a1155c21-12c4-4e5f-bed6-316cf7a160fe",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 2,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 85,
+    "top_p": 0.235,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 2.975,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0,
+    "bad_words_ids": [],
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "6B-v4"
+}

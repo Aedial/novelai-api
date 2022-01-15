@@ -1,0 +1,39 @@
+{
+  "presetVersion": 3,
+  "name": "Storywriter",
+  "id": "a2d75a62-7637-43d4-b970-75f480e533c8",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 0.72,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.725,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 2.75,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0.18,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "genji-jp-6b"
+}

@@ -6,9 +6,9 @@ from hashlib import blake2b
 from base64 import urlsafe_b64encode, b64encode, b64decode
 import json
 from zlib import decompress as inflate, compressobj as deflate_obj, MAX_WBITS, Z_BEST_COMPRESSION
-from transformers import GPT2Tokenizer
 
 from novelai_api.Keystore import Keystore
+from novelai_api.Tokenizer import Tokenizer
 
 from typing import Dict, Union, List, Tuple, Any, Optional, Iterable, NoReturn
 
@@ -232,22 +232,12 @@ def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
             items.pop(i)
             i -= 1
 
-tokenizer = None
-
 def tokens_to_b64(tokens: Iterable[int]) -> str:
     return b64encode(b''.join(t.to_bytes(2, "little") for t in tokens)).decode()
 
 def b64_to_tokens(b64: str) -> List[int]:
     b = b64decode(b64)
 
-    return list(b[i:i + 2] for i in range(0, len(b), 2))
-
-def tokens_to_text(tokens: List[int]) -> str:
-    global tokenizer
-
-    if tokenizer is None:   # lazy initialization, as tokenizer is heavy
-        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-
-    tokenizer.decode(tokens)
+    return list(int.from_bytes(b[i:i + 2], "little") for i in range(0, len(b), 2))
 
 # TODO: story tree builder

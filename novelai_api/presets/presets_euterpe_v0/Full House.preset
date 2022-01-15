@@ -1,0 +1,39 @@
+{
+  "presetVersion": 3,
+  "name": "Full House",
+  "id": "213ff213-30fb-4df8-bd1b-756a5ee3ee39",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 2.5,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 5,
+    "top_p": 0.9,
+    "tail_free_sampling": 0.95,
+    "repetition_penalty": 1,
+    "repetition_penalty_range": 96,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 1,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "euterpe-v0"
+}

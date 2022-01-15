@@ -1,0 +1,40 @@
+{
+  "presetVersion": 3,
+  "name": "Pleasing Results",
+  "id": "90fe9a52-bf58-4987-bfb6-500b9031c081",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 0.44,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "tail_free_sampling": 0.9,
+    "repetition_penalty": 3.35,
+    "repetition_penalty_range": 1024,
+    "repetition_penalty_slope": 6.75,
+    "bad_words_ids": [],
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "6B-v4"
+}

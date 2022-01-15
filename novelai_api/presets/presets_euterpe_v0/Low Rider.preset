@@ -1,0 +1,39 @@
+{
+  "presetVersion": 3,
+  "name": "Low Rider",
+  "id": "4161be5d-8f53-489a-a982-153645179792",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 0.55,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 15,
+    "top_p": 0.93,
+    "tail_free_sampling": 0.888,
+    "repetition_penalty": 3.9,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0.2,
+    "repetition_penalty_frequency": 0.033,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "euterpe-v0"
+}

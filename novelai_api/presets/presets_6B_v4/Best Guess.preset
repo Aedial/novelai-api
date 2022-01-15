@@ -1,0 +1,40 @@
+{
+  "presetVersion": 3,
+  "name": "Best Guess",
+  "id": "20c726dd-4728-4ac8-af31-91fe20013d9b",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 0.8,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 110,
+    "top_p": 0.9,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 3.1,
+    "repetition_penalty_range": 512,
+    "repetition_penalty_slope": 3.33,
+    "bad_words_ids": [],
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "6B-v4"
+}

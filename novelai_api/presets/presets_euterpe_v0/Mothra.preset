@@ -1,0 +1,39 @@
+{
+  "presetVersion": 3,
+  "name": "Mothra",
+  "id": "176dc84c-9327-4d83-8617-219c33312b7d",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 2,
+    "temperature": 1.25,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 125,
+    "top_p": 1,
+    "tail_free_sampling": 0.85,
+    "repetition_penalty": 2.2,
+    "repetition_penalty_range": 512,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "euterpe-v0"
+}
