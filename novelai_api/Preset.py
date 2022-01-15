@@ -35,13 +35,7 @@ def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
     return False
 
 class StrEnum(str, Enum):
-    """
-    def __getitem__(self, i: int) -> "StrEnum":
-        return self._objects[i]
-
-    def __iter__(self):
-        return (e for e in self.__members__)
-    """
+    pass
 
 class Model(StrEnum):
     Calliope = "2.7B"
