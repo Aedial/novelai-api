@@ -100,6 +100,12 @@ class Preset:
 
         return self
 
+    def update(self, values: Dict[str, Any]) -> "Preset":
+        for k, v in values.items():
+            self[k] = v
+
+        return self
+
     @classmethod
     def from_file(cls, path: str) -> "Preset":
         with open(path) as f:
