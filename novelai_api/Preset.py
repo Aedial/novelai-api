@@ -187,9 +187,14 @@ class Preset:
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:
         if name is None:
-            return choice(cls._officials_values[model.value])
+            preset = choice(cls._officials_values[model.value])
+        else:
+            preset = cls._officials[model.value].get(name)
 
-        return cls._officials[model.value].get(name)
+        if preset is not None:
+            preset = preset.copy()
+
+        return preset
 
     @classmethod
     def from_default(cls, model: Model) -> Union["Preset", None]:
@@ -197,7 +202,11 @@ class Preset:
         if default is None:
             return None
 
-        return cls._officials[model.value].get(default)
+        preset = cls._officials[model.value].get(default)
+        if preset is None:
+            return None
+
+        return preset.copy()
 
 
 if not hasattr(Preset, "_officials"):
