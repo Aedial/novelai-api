@@ -31,8 +31,7 @@ logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
 async def generate_10(api: NovelAI_API, model: Model):
-    logger.info(await api.high_level.login(username, password))
-    logger.info("")
+    await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
     global_settings = GlobalSettings(ban_brackets = True, bias_dinkus_asterism = True)
