@@ -28,10 +28,12 @@ def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: Li
         print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
         return True
 
+fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
+
 def inflate_js(data: bytes, wbits: int) -> bytes:
     b64 = b64encode(data).decode()
 
-    p = Popen(["node", "fflate_inflate.js", b64], stdout = PIPE)
+    p = Popen(["node", fflate_path, b64], stdout = PIPE)
     out, _ = p.communicate()
 
     return out
