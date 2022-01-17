@@ -2,6 +2,5 @@ build/
 dist/
 *.egg-info/
 
-novelai_api/__pycache__
-
-credentials/*
+__pycache__
+.vscode

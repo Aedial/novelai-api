@@ -70,10 +70,12 @@ class Keystore:
         keystore = self.data.copy()
 
         if "keystore" in keystore and keystore["keystore"] is None:    # keystore is null when empty
+            self._nonce = random(SecretBox.NONCE_SIZE)
+            self._version = 2
             self.data = {
-                keystore: {
-                    "version": 2,
-                    "nonce": str(list(random(SecretBox.NONCE_SIZE))),
+                "keystore": {
+                    "version": self._version,
+                    "nonce": str(list(self._nonce)),
                     "sdata": ""
                 }
             }
@@ -119,20 +121,28 @@ class Keystore:
         # FIXME: find what type is 'bytes'
 #        validate(keystore, self._schemas["schema_keystore_setter"])
 
-        keystore = self._keystore.copy()
-        for meta in keystore:
-            keystore[meta] = list(keystore[meta])
+        if len(self._keystore) == 0:
+            keystore = {
+                "version": self._version,
+                "nonce": list(self._nonce),
+                "sdata": ""
+            }
 
-        keys = { "keys": keystore }
-        json_data = dumps(keys, separators = (',', ':'))
-        encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
-        # remove automatically prepended nonce
-        encrypted_data = encrypted_data[SecretBox.NONCE_SIZE:]
+        else:
+            keystore = self._keystore.copy()
+            for meta in keystore:
+                keystore[meta] = list(keystore[meta])
 
-        keystore = {
-            "version": self._version,
-            "nonce": list(self._nonce),
-            "sdata": list(encrypted_data)
-        }
+            keys = { "keys": keystore }
+            json_data = dumps(keys, separators = (',', ':'))
+            encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
+            # remove automatically prepended nonce
+            encrypted_data = encrypted_data[SecretBox.NONCE_SIZE:]
+
+            keystore = {
+                "version": self._version,
+                "nonce": list(self._nonce),
+                "sdata": list(encrypted_data)
+            }
 
         self.data["keystore"] = b64encode(dumps(keystore, separators = (',', ':')).encode()).decode()

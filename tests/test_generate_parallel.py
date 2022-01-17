@@ -19,6 +19,8 @@ from logging import Logger, StreamHandler
 from asyncio import run, gather
 from json import dumps
 
+import pytest
+
 if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
     raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
 
@@ -28,27 +30,42 @@ password = env["NAI_PASSWORD"]
 logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
-async def main():
-    async with ClientSession() as session:
-        api = NovelAI_API(session, logger = logger)
-        logger.info(await api.high_level.login(username, password))
+async def generate_10(api: NovelAI_API, model: Model):
+    logger.info(await api.high_level.login(username, password))
+    logger.info("")
+
+    preset = Preset.from_default(model)
+    global_settings = GlobalSettings(ban_brackets = True, bias_dinkus_asterism = True)
+
+    logger.info(f"Using model {model.value}\n")
+
+    input_txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."
+    input = Tokenizer.encode(input_txt)
+
+    preset["max_length"] = 100
+    gens = [api.high_level.generate(input, model, preset, global_settings) for _ in range(10)]
+    results = await gather(*gens)
+    for i, gen in enumerate(results):
+        logger.info(f"Gen {i}:")
+        logger.info("\t" + Tokenizer.decode(b64_to_tokens(gen["output"])))
         logger.info("")
 
-        model = Model.Sigurd
-        preset = Preset.from_default(model)
-        global_settings = GlobalSettings(ban_brackets = True, bias_dinkus_asterism = True)
+@pytest.mark.parametrize("model", [*Model])
+async def test_run_10_generate_sync(model: Model):
+    # sync handler
+    api = NovelAI_API()
+    await generate_10(api, model)
 
-        logger.info(f"Using model {model.value}\n")
+@pytest.mark.parametrize("model", [*Model])
+async def test_run_10_generate_async(model: Model):
+    # async handler
+    async with ClientSession() as session:
+        api = NovelAI_API(session)
+        await generate_10(api, model)
 
-        input_txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."
-        input = Tokenizer.encode(input_txt)
+if __name__ == "__main__":
+    async def main():
+        await test_run_10_generate_sync(Model.Sigurd)
+        await test_run_10_generate_async(Model.Sigurd)
 
-        preset["max_length"] = 100
-        gens = [api.high_level.generate(input, model, preset, global_settings) for _ in range(10)]
-        results = await gather(*gens)
-        for i, gen in enumerate(results):
-            logger.info(f"Gen {i}:")
-            logger.info("\t" + Tokenizer.decode(b64_to_tokens(gen["output"])))
-            logger.info("")
-
-run(main())
+    run(main())

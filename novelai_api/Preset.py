@@ -45,7 +45,24 @@ class Model(StrEnum):
     Genji = "genji-jp-6b"
     Snek = "genji-python-6b"
 
-class Preset:
+class PresetView:
+    model: Model
+    _official_values: Dict[str, "Preset"]
+
+    def __init__(self, model: Model, officials_values: Dict[str, "Preset"]):
+        self.model = model
+        self._officials_values = officials_values
+
+    def __iter__(self):
+        return self._officials_values[self.model.value].__iter__()
+
+class _PresetMetaclass(type):
+    def __getitem__(cls, model: Model):
+        assert type(model) is Model
+
+        return PresetView(model, cls._officials_values)
+
+class Preset(metaclass = _PresetMetaclass):
     _TYPE_MAPPING = {
         "temperature": (int, float), "max_length": int, "min_length": int, "top_k": int,
         "top_p": (int, float), "tail_free_sampling": (int, float), "repetition_penalty": (int, float),
@@ -55,6 +72,7 @@ class Preset:
     }
 
     _officials: Dict[str, "Preset"]
+    _officials_values: List["Preset"]
     _defaults: Dict[str, Dict[str, str]]
 
     _enable_temperature: bool
@@ -100,6 +118,9 @@ class Preset:
     def __getitem__(self, o: str) -> Optional[Any]:
         return self._settings.get(o)
 
+    def __repr__(self) -> str:
+        return f"Preset: '{self.name} ({self.model.value})'"
+
     def enable(self, temperature: Optional[bool] = None, top_k: Optional[bool] = None,
                      top_p: Optional[bool] = None, tfs: Optional[bool] = None) -> "Preset":
         if temperature is not None:     self._enable_temperature    = temperature
@@ -127,7 +148,7 @@ class Preset:
             del settings["top_p"]
 
         if not self._enable_tfs:
-            del settings["tfs"]
+            del settings["tail_free_sampling"]
 
         return settings
 

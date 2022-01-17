@@ -10,7 +10,7 @@ from novelai_api.NovelAIError import NovelAIError
 from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.utils import tokens_to_b64
 from novelai_api.Tokenizer import Tokenizer
-from novelai_api.Preset import Preset, Model
+from novelai_api.Preset import Preset, Model, StrEnum
 
 from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
 
@@ -293,9 +293,7 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
-    tokenizer = None
-
-    class Model(Enum):
+    class Model(StrEnum):
         Calliope = "2.7B"
         Sigurd = "6B-v4"
         Euterpe = "euterpe-v0"

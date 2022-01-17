@@ -4,4 +4,4 @@ pynacl
 jsonschema
 requests
 transformers
-js2py
+pytest-asyncio
