@@ -32,3 +32,6 @@ jobs:
     - name: Test
       run: |
         pytest --tb=short tests/
+      env:
+        NAI_USERNAME: ${{ secrets.NAI_USERNAME }}
+        NAI_PASSWORD: ${{ secrets.NAI_PASSWORD }}
