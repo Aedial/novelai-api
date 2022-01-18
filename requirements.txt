@@ -5,3 +5,4 @@ jsonschema
 requests
 transformers
 pytest-asyncio
+pytest-xdist

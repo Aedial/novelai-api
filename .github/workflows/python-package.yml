@@ -31,7 +31,7 @@ jobs:
         npm install fflate  # for integrity test
     - name: Test
       run: |
-        pytest --tb=short tests/
+        pytest --tb=short -n auto tests/
       env:
         NAI_USERNAME: ${{ secrets.NAI_USERNAME }}
         NAI_PASSWORD: ${{ secrets.NAI_PASSWORD }}
