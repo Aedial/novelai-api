@@ -67,7 +67,6 @@ async def test_keystore_integrity_async():
         api = NovelAI_API(session)
         await keystore_integrity(api)
 
-
 async def stories_integrity(api: NovelAI_API):
     await api.high_level.login(username, password)
 
@@ -150,32 +149,6 @@ async def test_presets_integrity_async():
     async with ClientSession() as session:
         api = NovelAI_API(session)
         await presets_integrity(api)
-
-
-async def preset_integrity(api: NovelAI_API):
-    await api.high_level.login(username, password)
-
-    key = get_encryption_key(username, password)
-    keystore = await api.high_level.get_keystore(key)
-
-    presets = await api.high_level.download_user_presets()
-    encrypted_presets_in = [str(preset) for preset in presets]
-    decompress_user_data(presets)
-    compress_user_data(presets)
-    encrypted_presets_out = [str(preset) for preset in presets]
-
-    assert compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
-
-async def test_preset_integrity_sync():
-    # sync handler
-    api = NovelAI_API()
-    await preset_integrity(api)
-
-async def test_preset_integrity_async():
-    # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await preset_integrity(api)
 
 
 async def aimodules_integrity(api: NovelAI_API):

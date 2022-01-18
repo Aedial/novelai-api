@@ -8,7 +8,6 @@ from novelai_api.BiasGroup import BiasGroup
 from novelai_api.BanList import BanList
 from novelai_api.utils import get_access_key, get_encryption_key, decrypt_data, encrypt_data
 
-from json import dumps
 from hashlib import sha256
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
 

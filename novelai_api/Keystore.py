@@ -134,7 +134,7 @@ class Keystore:
                 keystore[meta] = list(keystore[meta])
 
             keys = { "keys": keystore }
-            json_data = dumps(keys, separators = (',', ':'))
+            json_data = dumps(keys, separators = (',', ':'), ensure_ascii = False)
             encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
             # remove automatically prepended nonce
             encrypted_data = encrypted_data[SecretBox.NONCE_SIZE:]
@@ -145,4 +145,4 @@ class Keystore:
                 "sdata": list(encrypted_data)
             }
 
-        self.data["keystore"] = b64encode(dumps(keystore, separators = (',', ':')).encode()).decode()
+        self.data["keystore"] = b64encode(dumps(keystore, separators = (',', ':'), ensure_ascii = False).encode()).decode()

@@ -17,7 +17,6 @@ from novelai_api.utils import b64_to_tokens
 from aiohttp import ClientSession
 from logging import Logger, StreamHandler
 from asyncio import run, gather
-from json import dumps
 
 import pytest
 

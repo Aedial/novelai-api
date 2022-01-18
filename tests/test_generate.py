@@ -14,7 +14,6 @@ from novelai_api.utils import b64_to_tokens
 
 from aiohttp import ClientSession
 from logging import Logger, StreamHandler
-from json import dumps
 from typing import Union, List, Tuple
 
 import pytest

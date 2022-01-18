@@ -120,7 +120,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> No
 
         if "decrypted" in item:
             if item["decrypted"]:
-                item["data"] = b64encode(json.dumps(item["data"], separators = (',', ':')).encode()).decode()
+                item["data"] = b64encode(json.dumps(item["data"], separators = (',', ':'), ensure_ascii = False).encode()).decode()
             del item["decrypted"]
 
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
@@ -198,7 +198,7 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
                 else:
                     key = keystore[meta]
 
-                    data = json.dumps(item["data"], separators = (',', ':'))
+                    data = json.dumps(item["data"], separators = (',', ':'), ensure_ascii = False)
                     data = b64encode(encrypt_data(data, key, item["nonce"], item["compressed"])).decode()
 
                     item["data"] = data
