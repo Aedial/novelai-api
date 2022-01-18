@@ -6,7 +6,7 @@ from novelai_api.Preset import Preset, Model
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.BanList import BanList
-from novelai_api.utils import get_access_key, get_encryption_key, decrypt_data, encrypt_data
+from novelai_api.utils import get_access_key
 
 from hashlib import sha256
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
@@ -57,8 +57,11 @@ class High_Level:
 
         return rsp["accessToken"]
 
-    async def login_from_token(self, access_token: str) -> NoReturn:
-        self._parent._session.headers["Authorization"] = f"Bearer {access_token}"
+    async def login_from_token(self, access_key: str) -> NoReturn:
+        rsp = await self._parent.low_level.login(access_key)
+        SchemaValidator.validate("schema_login", rsp)
+
+        self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
     async def get_keystore(self, key: bytes) -> Keystore:
         """
@@ -113,9 +116,69 @@ class High_Level:
 
         return modules["objects"]
 
+    async def upload_user_content(self, data: Dict[str, Any]) -> bool:
+        """
+        Upload an user content. If it has been decrypted with decrypt_user_data,
+        it should be re-encrypted with encrypt_user_data, even if the decryption failed
+
+        :param data: Object to upload
+
+        :return: True if the upload succeeded, False otherwise
+        """
+
+        object_id = data["id"]
+        object_type = data["type"]
+        object_meta = data["meta"]
+        object_data = data["data"]
+
+        # clean data introduced by decrypt_user_data
+        # this step should have been done in encrypt_user_data, but the user could have not called it
+        for key in ("nonce", "compressed", "decrypted"):
+            if key in object_data:
+                self._parent.logger.warn(f"Data {key} left in object '{object_type}' of id '{object_id}'")
+                del object_data[key]
+
+        return await self._parent.low_level.upload_object(object_type, object_id, object_meta, object_data)
+
+    async def upload_user_contents(self, datas: Iterable[Dict[str, Any]]) -> List[Tuple[str, Optional[NovelAIError]]]:
+        """
+        Upload multiple user contents. If the content has been decrypted with decrypt_user_data,
+        it should be re-encrypted with encrypt_user_data, even if the decryption failed
+
+        :param datas: Objects to upload
+
+        :return: A list of (id, error) of all the objects that failed to be uploaded
+        """
+
+        status = []
+
+        for data in datas:
+            try:
+                success = await self.upload_user_content(data)
+                if not success:
+                    status.append((data["id"], None))
+            except NovelAIError as e:
+                status.append((data["id"], e))
+
+        return status
+
     async def generate(self, input: Union[List[int], str], model: Model, preset: Preset,
                        global_settings: GlobalSettings, bad_words: Optional[BanList] = None,
                        biases: Optional[Iterable[BiasGroup]] = None, prefix: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Generate content from an AI on the NovelAI server
+
+        :param input: Context to give to the AI (raw text or list of tokens)
+        :param model: Model to use for the AI
+        :param preset: Preset to use for the generation settings
+        :param global_settings: Global settings (used for generation)
+        :param bad_words: Tokens to ban for this generation
+        :param biases: Tokens to bias (up or down) for this generation
+        :param prefix: Module to use for this generation
+
+        :return: Content that has been generated
+        """
+
         assert preset is not None, "Uninitialized preset"
         assert preset.model == model, f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
 
