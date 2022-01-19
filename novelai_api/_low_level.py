@@ -2,8 +2,11 @@ from aiohttp import ClientSession, ClientError
 from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client import _RequestContextManager
 from aiohttp.http_exceptions import HttpProcessingError
+from aiohttp.client_exceptions import ClientConnectionError
 
 from requests import request as sync_request, Response
+from requests.exceptions import ConnectionError
+
 from enum import Enum
 
 from novelai_api.NovelAIError import NovelAIError
@@ -116,10 +119,16 @@ class Low_Level:
 
         url = f"{self._parent._BASE_ADDRESS}{endpoint}"
 
-        if self._is_async:
-            return await self._request_async(method, url, data)
-        else:
-            return await self._request_sync(method, url, data)
+        try:
+            if self._is_async:
+                return await self._request_async(method, url, data)
+            else:
+                return await self._request_sync(method, url, data)
+        except (ClientConnectionError, ConnectionError) as e:      # No internet
+            raise NovelAIError(e.errno, str(e))
+        # TODO: there may be other request errors to catch
+
+    # TODO: move schema verification to low level
 
     async def is_reachable(self) -> bool:
         """
@@ -127,6 +136,7 @@ class Low_Level:
 
         :return: True if reachable, False if not
         """
+
         rsp, content = await self.request("get", "/")
         return self._treat_response_bool(rsp, content, 200)
 
@@ -346,7 +356,7 @@ class Low_Level:
         assert type(name) is str, f"Expected type 'str' for name, but got type '{type(name)}'"
         assert type(desc) is str, f"Expected type 'str' for desc, but got type '{type(desc)}'"
 
-        rsp, content = await self.request("post", "​/ai​/module​/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
+        rsp, content = await self.request("post", "/ai/module/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
         return self._treat_response_object(rsp, content, 201)
 
     async def get_modules(self) -> List[Dict[str, Any]]:
