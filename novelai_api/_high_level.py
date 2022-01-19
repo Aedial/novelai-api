@@ -212,7 +212,7 @@ class High_Level:
                 params["logit_bias_exp"].extend(bias)
 
         # Delete the options that return an unknown error (success status code, but server error)
-        if params["repetition_penalty_slope"] == 0:
+        if "repetition_penalty_slope" in params and params["repetition_penalty_slope"] == 0:
             del params["repetition_penalty_slope"]
 
         if not params["bad_words_ids"]:

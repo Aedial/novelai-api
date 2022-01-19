@@ -4,16 +4,19 @@ from typing import List, Union
 
 class BiasGroup:
     _sequences: List[List[int]]
+
     bias: float
     ensure_sequence_finish: bool
     generate_once: bool
+    enabled: bool
 
-    def __init__(self, bias: float, ensure_sequence_finish: bool = False, generate_once: bool = False):
+    def __init__(self, bias: float, ensure_sequence_finish: bool = False, generate_once: bool = False, enabled: bool = True):
         self._sequences = []
 
         self.bias = bias
         self.ensure_sequence_finish = ensure_sequence_finish
         self.generate_once = generate_once
+        self.enabled = enabled
 
     def add(self, *sequences: Union[List[int], str]) -> "BiasGroup":
         for sequence in sequences:
@@ -37,6 +40,7 @@ class BiasGroup:
         return ({ "bias": self.bias,
                   "ensure_sequence_finish": self.ensure_sequence_finish,
                   "generate_once": self.generate_once,
+                  "enabled": self.enabled,
                   "sequence": s } for s in self._sequences)
 
     def __str__(self) -> str:
@@ -44,5 +48,6 @@ class BiasGroup:
                     f"bias: {self.bias}, " \
                     f"ensure_sequence_finish: {self.ensure_sequence_finish}, " \
                     f"generate_once: {self.generate_once}, " \
+                    f"enabled: {self.enabled}, " \
                     f"sequences: {self._sequences}" \
                 "}"

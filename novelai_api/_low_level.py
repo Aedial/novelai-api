@@ -303,14 +303,6 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
-    class Model(StrEnum):
-        Calliope = "2.7B"
-        Sigurd = "6B-v4"
-        Euterpe = "euterpe-v0"
-
-        Genji = "genji-jp-6b"
-        Snek = "genji-python-6b"
-
     async def generate(self, input: Union[List[int], str], model: Model, params: Dict[str, Any]) -> Dict[str, str]:
         """
         :param input: Input to be sent the AI

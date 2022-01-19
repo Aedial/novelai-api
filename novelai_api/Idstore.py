@@ -1,5 +1,5 @@
 from os import urandom
-from base64 import b64encode
+from base64 import urlsafe_b64encode
 
 from typing import Set, NoReturn
 
@@ -12,7 +12,7 @@ class Idstore:
 
     def _create_id(self) -> str:
         b = urandom(self._ID_SIZE)
-        strid = b64encode(b, b'-_').decode()
+        strid = urlsafe_b64encode(b).decode()
 
         return strid[:self._ID_SIZE]
 

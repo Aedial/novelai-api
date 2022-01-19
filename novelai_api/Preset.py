@@ -68,7 +68,7 @@ class Preset(metaclass = _PresetMetaclass):
         "top_p": (int, float), "tail_free_sampling": (int, float), "repetition_penalty": (int, float),
         "repetition_penalty_range": int, "repetition_penalty_slope": (float, int),
         "repetition_penalty_frequency": (int, float), "repetition_penalty_presence": int,
-        "order": list
+        "order": list, "textGenerationSettingsVersion": int
     }
 
     _officials: Dict[str, "Preset"]
@@ -138,16 +138,19 @@ class Preset(metaclass = _PresetMetaclass):
     def to_settings(self) -> Dict[str, Any]:
         settings = deepcopy(self._settings)
 
-        if not self._enable_temperature:
+        if "textGenerationSettingsVersion" in settings:
+            del settings["textGenerationSettingsVersion"]   # not API relevant
+
+        if not self._enable_temperature and "temperature" in settings:
             del settings["temperature"]
 
-        if not self._enable_top_k:
+        if not self._enable_top_k and "top_k" in settings:
             del settings["top_k"]
 
-        if not self._enable_top_p:
+        if not self._enable_top_p and "top_p" in settings:
             del settings["top_p"]
 
-        if not self._enable_tfs:
+        if not self._enable_tfs and "tail_free_sampling" in settings:
             del settings["tail_free_sampling"]
 
         return settings
@@ -170,18 +173,13 @@ class Preset(metaclass = _PresetMetaclass):
         return self
 
     @classmethod
-    def from_file(cls, path: str) -> "Preset":
-        with open(path) as f:
-            data = loads(f.read())
-
+    def from_preset_data(cls, data: Dict[str, Any]) -> "Preset":
         name = data["name"] if "name" in data else ""
 
         model_name = data["model"] if "model" in data else ""
         model = Model(model_name) if enum_contains(Model, model_name) else None
 
         settings = data["parameters"] if "parameters" in data else {}
-        if "textGenerationSettingsVersion" in settings:
-            del settings["textGenerationSettingsVersion"]   # not API relevant
 
         order = settings["order"] if "order" in settings else {}
         if order:
@@ -204,6 +202,13 @@ class Preset(metaclass = _PresetMetaclass):
             c.enable(enable_temperature, enable_top_k, enable_top_p, enable_tfs)
 
         return c
+
+    @classmethod
+    def from_file(cls, path: str) -> "Preset":
+        with open(path) as f:
+            data = loads(f.read())
+
+        return cls.from_preset_data(data)
 
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:

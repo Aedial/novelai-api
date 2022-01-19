@@ -5,8 +5,12 @@ from typing import List, Union
 class BanList:
     _sequences: List[List[int]]
 
-    def __init__(self):
+    enabled: bool
+
+    def __init__(self, *sequences: Union[List[int], str], enabled: bool = True):
         self._sequences = []
+        if sequences:
+            self.add(*sequences)
 
     def add(self, *sequences: Union[List[int], str]) -> "BanList":
         for sequence in sequences:

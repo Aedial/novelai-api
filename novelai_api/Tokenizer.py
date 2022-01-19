@@ -9,19 +9,19 @@ class Tokenizer:
 
     @classmethod
     def _initialize(cls):
-        from transformers import GPT2Tokenizer
-        cls._tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        from transformers import GPT2TokenizerFast
+        cls._tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
     @classmethod
     def decode(cls, o: List[int]) -> str:
         if cls._tokenizer is None:
             cls._initialize()
 
-        return cls._tokenizer.decode(o)
+        return cls._tokenizer.decode(o, verbose = False)
 
     @classmethod
     def encode(cls, o: str) -> List[int]:
         if cls._tokenizer is None:
             cls._initialize()
 
-        return cls._tokenizer.encode(o)
+        return cls._tokenizer.encode(o, verbose = False)
