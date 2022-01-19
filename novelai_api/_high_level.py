@@ -163,8 +163,8 @@ class High_Level:
         return status
 
     async def generate(self, input: Union[List[int], str], model: Model, preset: Preset,
-                       global_settings: GlobalSettings, bad_words: Optional[BanList] = None,
-                       biases: Optional[Iterable[BiasGroup]] = None, prefix: Optional[str] = None) -> Dict[str, Any]:
+                       global_settings: GlobalSettings, bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+                       biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None, prefix: Optional[str] = None) -> Dict[str, Any]:
         """
         Generate content from an AI on the NovelAI server
 
@@ -196,10 +196,17 @@ class High_Level:
             del params["num_logprobs"]
 
         if bad_words is not None:
-            assert type(bad_words) is BanList, f"Expected type 'BanList' for bad_words, but got '{type(bad_words)}'"
-            params["bad_words_ids"].extend(bad_words)
+            if type(bad_words) is BanList:
+                bad_words = [bad_words]
+
+            for i, bad_word in enumerate(bad_words):
+                assert type(bad_word) is BanList, f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
+                params["bad_words_ids"].extend(bad_word)
 
         if biases is not None:
+            if type(biases) is BiasGroup:
+                biases = [biases]
+
             for i, bias in enumerate(biases):
                 assert type(bias) is BiasGroup, f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
                 params["logit_bias_exp"].extend(bias)
