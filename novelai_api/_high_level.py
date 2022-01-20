@@ -1,3 +1,4 @@
+from json import dumps
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.Keystore import Keystore
@@ -6,7 +7,7 @@ from novelai_api.Preset import Preset, Model
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.BanList import BanList
-from novelai_api.utils import get_access_key
+from novelai_api.utils import get_access_key, decompress_user_data, compress_user_data, decrypt_user_data, encrypt_user_data
 
 from hashlib import sha256
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
@@ -116,12 +117,14 @@ class High_Level:
 
         return modules["objects"]
 
-    async def upload_user_content(self, data: Dict[str, Any]) -> bool:
+    async def upload_user_content(self, data: Dict[str, Any], encrypt: bool = False, keystore: Optional[Keystore] = None) -> bool:
         """
         Upload an user content. If it has been decrypted with decrypt_user_data,
         it should be re-encrypted with encrypt_user_data, even if the decryption failed
 
         :param data: Object to upload
+        :param encrypt: Encrypt/compress the data if True and not already encrypted
+        :param keystore: Keystore to encrypt data if encrypt is True
 
         :return: True if the upload succeeded, False otherwise
         """
@@ -130,6 +133,13 @@ class High_Level:
         object_type = data["type"]
         object_meta = data["meta"]
         object_data = data["data"]
+
+        if encrypt:
+            if object_type in ("stories", "storycontent", "aimodules", "shelf"):
+                assert keystore is not None, "Keystore is not set, cannot encrypt data"
+                encrypt_user_data(data, keystore)
+            elif object_type in ("presets", ):
+                compress_user_data(data)
 
         # clean data introduced by decrypt_user_data
         # this step should have been done in encrypt_user_data, but the user could have not called it

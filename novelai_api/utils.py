@@ -8,7 +8,7 @@ import json
 from zlib import decompress as inflate, compressobj as deflate_obj, MAX_WBITS, Z_BEST_COMPRESSION
 
 from novelai_api.Keystore import Keystore
-from novelai_api.Tokenizer import Tokenizer
+from novelai_api.Preset import Preset
 
 from typing import Dict, Union, List, Tuple, Any, Optional, Iterable, NoReturn
 
@@ -98,6 +98,10 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> 
         assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
         assert "data" in item, f"Expected key 'data' in item"
 
+        # skip already decompressed data
+        if item.get("decrypted"):
+            continue
+
         try:
             item["data"] = json.loads(b64decode(item["data"]).decode())
             item["decrypted"] = True    # not decrypted, per say, but for genericity
@@ -139,32 +143,34 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
     for item in items:
         assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
 
-        if not item.get("decrypted", False):
-            # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-            assert "data" in item, f"Expected key 'data' in item"
-            assert "meta" in item, f"Expected key 'meta' in item"
+        if item.get("decrypted"):
+            continue
 
-            meta = item["meta"]
-#            assert meta in keystore["keys"]
-            if meta not in keystore:
-                print("Meta missing:", meta)
-            else:
-                key = keystore[meta]
+        # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
+        assert "data" in item, f"Expected key 'data' in item"
+        assert "meta" in item, f"Expected key 'meta' in item"
 
-                data, nonce, is_compressed = decrypt_data(b64decode(item["data"]), key)
-                if data is not None:
-                    try:
-                        data = json.loads(data)
-                        item["data"] = data
-                        item["nonce"] = nonce
-                        item["decrypted"] = True
-                        item["compressed"] = is_compressed
-                        continue
+        meta = item["meta"]
+#       assert meta in keystore
+        if meta not in keystore:
+            print("Meta missing:", meta)
+        else:
+            key = keystore[meta]
 
-                    except json.JSONDecodeError:
-                        pass
+            data, nonce, is_compressed = decrypt_data(b64decode(item["data"]), key)
+            if data is not None:
+                try:
+                    data = json.loads(data)
+                    item["data"] = data
+                    item["nonce"] = nonce
+                    item["decrypted"] = True
+                    item["compressed"] = is_compressed
+                    continue
 
-            item["decrypted"] = False
+                except json.JSONDecodeError:
+                    pass
+
+        item["decrypted"] = False
 
 def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
     """
@@ -239,5 +245,13 @@ def b64_to_tokens(b64: str) -> List[int]:
     b = b64decode(b64)
 
     return list(int.from_bytes(b[i:i + 2], "little") for i in range(0, len(b), 2))
+
+def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
+    preset_list = {}
+    for preset_data in presets:
+        decompress_user_data(preset_data)
+        preset_list[preset_data["id"]] = Preset.from_preset_data(preset_data["data"])
+
+    return preset_list
 
 # TODO: story tree builder

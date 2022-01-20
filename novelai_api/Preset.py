@@ -119,7 +119,8 @@ class Preset(metaclass = _PresetMetaclass):
         return self._settings.get(o)
 
     def __repr__(self) -> str:
-        return f"Preset: '{self.name} ({self.model.value})'"
+        model = self.model.value if self.model is not None else "<?>"
+        return f"Preset: '{self.name} ({model})'"
 
     def enable(self, temperature: Optional[bool] = None, top_k: Optional[bool] = None,
                      top_p: Optional[bool] = None, tfs: Optional[bool] = None) -> "Preset":
@@ -174,7 +175,7 @@ class Preset(metaclass = _PresetMetaclass):
 
     @classmethod
     def from_preset_data(cls, data: Dict[str, Any]) -> "Preset":
-        name = data["name"] if "name" in data else ""
+        name = data["name"] if "name" in data else "<?>"
 
         model_name = data["model"] if "model" in data else ""
         model = Model(model_name) if enum_contains(Model, model_name) else None
@@ -186,8 +187,9 @@ class Preset(metaclass = _PresetMetaclass):
             settings["order"] = list(name_to_order(o["id"]) for o in order)
 
         # TODO: add support for token banning and bias in preset
-        settings.pop("bad_words_ids", None)     # get rid of unsopported option
-        settings.pop("logit_bias_exp", None)    # get rid of unsopported option
+        settings.pop("bad_words_ids", None)     # get rid of unsupported option
+        settings.pop("logit_bias_exp", None)    # get rid of unsupported option
+        settings.pop("logit_bias_groups", None)    # get rid of unsupported option
 
         c = cls(name, model, settings)
 
