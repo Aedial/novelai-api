@@ -14,6 +14,11 @@ class BanList:
 
     def add(self, *sequences: Union[List[int], str]) -> "BanList":
         for sequence in sequences:
+            if "sequence" in sequence:
+                sequence = sequence["sequence"]
+            elif "sequences" in sequence:
+                sequence = sequence["sequences"][0]
+
             if type(sequence) is str:
                 sequence = Tokenizer.encode(sequence)
             else:

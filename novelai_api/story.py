@@ -10,7 +10,7 @@ from novelai_api.GlobalSettings import GlobalSettings
 
 from copy import deepcopy
 from time import time
-from json import loads
+from json import loads, dumps
 
 from typing import Dict, Iterator, List, NoReturn, Any, Optional, Union, Iterable
 
@@ -41,6 +41,10 @@ def _set_nested_item(item: Dict[str, Any], val: Any, path: str):
     item[path[-1]] = val
 
 class NovelAI_StoryProxy:
+    TEXT_GENERATION_SETTINGS_VERSION = 2
+
+    DEFAULT_MODEL = Model.Sigurd
+
     _parent: "NovelAI_Story"
 
     _api: NovelAI_API
@@ -56,6 +60,68 @@ class NovelAI_StoryProxy:
     prefix: str
     context_size: int
 
+    def _handle_banlist(self, data: Dict[str, Any]) -> NoReturn:
+        if "bannedSequenceGroups" not in data:
+            data["bannedSequenceGroups"] = []
+
+        ban_seq = data["bannedSequenceGroups"]
+        self.banlists = [BanList(*seq["sequences"], enabled = seq["enabled"]) for seq in ban_seq]
+
+    def _handle_biasgroups(self, data: Dict[str, Any]) -> NoReturn:
+        if "phraseBiasGroup" not in data:
+            data["phraseBiasGroups"] = []
+
+        self.biases = []
+        for bias in data["phraseBiasGroups"]:
+            # FIXME: wtf is "whenInactive" in bias ?
+            b = BiasGroup(bias["bias"], bias["ensureSequenceFinish"], bias["generateOnce"], bias["enabled"])
+            b.add(*bias["phrases"])
+
+            self.biases.append(b)
+
+    def _handle_preset(self, data: Dict[str, Any]) -> NoReturn:
+        settings = data["settings"]
+
+        if "textGenerationSettingsVersion" not in settings:
+            settings["textGenerationSettingsVersion"] = self.TEXT_GENERATION_SETTINGS_VERSION
+
+        if "prefix" not in settings:
+            settings["prefix"] = "vanilla"
+        self.prefix = settings["prefix"]
+
+        if "model" not in settings:
+            settings["model"] = self.DEFAULT_MODEL.value
+        self.model = Model(settings["model"])
+
+        if "preset" not in settings:
+            settings["preset"] = ""
+
+        parameters = settings["parameters"]
+
+        if "bad_words_ids" in parameters:
+            self.banlists.append(BanList(*parameters["bad_words_ids"]))
+            del parameters["bad_words_ids"]
+
+        if "logit_bias_groups" in parameters:
+            for bias in parameters["logit_bias_groups"]:
+                # FIXME: wtf is "whenInactive" in bias ?
+                ensure_sequence_finish = bias["ensureSequenceFinish"] if "ensureSequenceFinish" in bias else \
+                                         bias["ensure_sequence_finish"] if "ensure_sequence_finish" in bias else \
+                                         False
+                generate_once = bias["generateOnce"] if "generateOnce" in bias else \
+                                bias["generate_once"] if "generate_once" in bias else \
+                                False
+
+                b = BiasGroup(bias["bias"], ensure_sequence_finish, generate_once, bias["enabled"])
+                b.add(*bias["phrases"])
+
+                self.biases.append(b)
+            del parameters["logit_bias_groups"]
+
+        self.preset = Preset.from_preset_data(settings)
+        self.preset.name = settings["preset"]
+        self.preset.model = self.model
+
     def __init__(self, parent: "NovelAI_Story", key: bytes, story: Dict[str, Any], storycontent: Dict[str, Any]):
         self._parent = parent
 
@@ -65,25 +131,14 @@ class NovelAI_StoryProxy:
         self._storycontent = storycontent
         self._tree = []
 
-        ban_seq = storycontent["data"]["bannedSequenceGroups"]
-        self.banlists = [BanList(*seq["sequences"], enabled = seq["enabled"]) for seq in ban_seq]
+        data = storycontent["data"]
 
-        self.biases = []
-        for bias in storycontent["data"]["phraseBiasGroups"]:
-            # FIXME: wtf is "whenInactive" in bias ?
-            b = BiasGroup(bias["bias"], bias["ensureSequenceFinish"], bias["generateOnce"], bias["enabled"])
-            b.add(*bias["phrases"])
+        print(dumps(data, indent = 4))
+        self._handle_banlist(data)
+        self._handle_biasgroups(data)
+        self._handle_preset(data)
 
-            self.biases.append(b)
-
-        settings = storycontent["data"]["settings"]
-
-        self.prefix = settings["prefix"]
-        self.model = Model(settings["model"])
-
-        self.preset = Preset.from_preset_data(settings)
-        self.preset.name = settings["preset"]
-        self.preset.model = self.model
+        # FIXME: variable context size ? From global settings ?
         self.context_size = 2048
 
         # TODO: trimResponses

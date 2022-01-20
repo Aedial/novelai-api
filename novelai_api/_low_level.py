@@ -130,6 +130,8 @@ class Low_Level:
 
     # TODO: move schema verification to low level
 
+    # TODO: Add a stream handler
+
     async def is_reachable(self) -> bool:
         """
         Check if the NovelAI API is reachable
