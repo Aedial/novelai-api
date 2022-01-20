@@ -73,11 +73,7 @@ class NovelAI_StoryProxy:
 
         self.biases = []
         for bias in data["phraseBiasGroups"]:
-            # FIXME: wtf is "whenInactive" in bias ?
-            b = BiasGroup(bias["bias"], bias["ensureSequenceFinish"], bias["generateOnce"], bias["enabled"])
-            b.add(*bias["phrases"])
-
-            self.biases.append(b)
+            self.biases.append(BiasGroup.from_data(bias))
 
     def _handle_preset(self, data: Dict[str, Any]) -> NoReturn:
         settings = data["settings"]
@@ -104,18 +100,7 @@ class NovelAI_StoryProxy:
 
         if "logit_bias_groups" in parameters:
             for bias in parameters["logit_bias_groups"]:
-                # FIXME: wtf is "whenInactive" in bias ?
-                ensure_sequence_finish = bias["ensureSequenceFinish"] if "ensureSequenceFinish" in bias else \
-                                         bias["ensure_sequence_finish"] if "ensure_sequence_finish" in bias else \
-                                         False
-                generate_once = bias["generateOnce"] if "generateOnce" in bias else \
-                                bias["generate_once"] if "generate_once" in bias else \
-                                False
-
-                b = BiasGroup(bias["bias"], ensure_sequence_finish, generate_once, bias["enabled"])
-                b.add(*bias["phrases"])
-
-                self.biases.append(b)
+                self.biases.append(BiasGroup.from_data(bias))
             del parameters["logit_bias_groups"]
 
         self.preset = Preset.from_preset_data(settings)
@@ -241,6 +226,8 @@ class NovelAI_StoryProxy:
         self._create_datablock(fragment, 0)
 
     async def edit(self, start: int, end: int, replace: str):
+        # FIXME: redo edit implementation
+
         fragment = { "data": replace, "origin": "edit" }
 
         self._create_datablock(fragment, end - start)
@@ -264,8 +251,8 @@ class NovelAI_StoryProxy:
         story["currentBlock"] = cur_block["nextBlock"][-1]
 
     async def save(self, upload: bool = False) -> bool:
-        encrypted_story = encrypt_user_data(deepcopy(self._story))
-        encrypted_storycontent = encrypt_user_data(deepcopy(self._storycontent))
+        encrypted_story = encrypt_user_data(deepcopy(self._story), self._parent._keystore)
+        encrypted_storycontent = encrypt_user_data(deepcopy(self._storycontent), self._parent._keystore)
 
         success = True
 

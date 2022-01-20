@@ -1,6 +1,6 @@
 from novelai_api.Tokenizer import Tokenizer
 
-from typing import List, Union
+from typing import Dict, List, Union, Any
 
 class BiasGroup:
     _sequences: List[List[int]]
@@ -17,6 +17,23 @@ class BiasGroup:
         self.ensure_sequence_finish = ensure_sequence_finish
         self.generate_once = generate_once
         self.enabled = enabled
+
+    @classmethod
+    def from_data(cls, data: Dict[str, Any]) -> "BiasGroup":
+        # FIXME: wtf is "whenInactive" in bias ?
+        ensure_sequence_finish = data["ensureSequenceFinish"] if "ensureSequenceFinish" in data else \
+                                 data["ensure_sequence_finish"] if "ensure_sequence_finish" in data else \
+                                 False
+        generate_once = data["generateOnce"] if "generateOnce" in data else \
+                        data["generate_once"] if "generate_once" in data else \
+                        False
+
+        b = cls(data["bias"], ensure_sequence_finish, generate_once, data["enabled"])
+
+        if "phrases" in data:
+            b.add(*data["phrases"])
+
+        return b
 
     def add(self, *sequences: Union[List[int], str]) -> "BiasGroup":
         for sequence in sequences:
