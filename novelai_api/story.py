@@ -43,7 +43,7 @@ def _set_nested_item(item: Dict[str, Any], val: Any, path: str):
 class NovelAI_StoryProxy:
     TEXT_GENERATION_SETTINGS_VERSION = 2
 
-    DEFAULT_MODEL = Model.Sigurd
+    DEFAULT_MODEL = Model.Euterpe
 
     _parent: "NovelAI_Story"
 
@@ -195,7 +195,7 @@ class NovelAI_StoryProxy:
         story_tokens = []
         while len(story_tokens) < self.context_size:
             story_content_size *= 2
-            story_tokens = Tokenizer.encode(story_content[-story_content_size:])
+            story_tokens = Tokenizer.encode(self.model, story_content[-story_content_size:])
 
             # whole story content is tokenized
             if len(story_content) < story_content_size:
@@ -220,7 +220,7 @@ class NovelAI_StoryProxy:
         rsp = await self._api.high_level.generate(input, self.model, self.preset, self._parent.global_settings,
                                                   self.banlists, self.biases, self.prefix)
 
-        output = Tokenizer.decode(b64_to_tokens(rsp["output"]))
+        output = Tokenizer.decode(self.model, b64_to_tokens(rsp["output"]))
         fragment = { "data": output, "origin": "ai" }
 
         self._create_datablock(fragment, 0)

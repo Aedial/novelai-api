@@ -1,3 +1,5 @@
+from novelai_api.Preset import Model
+
 from typing import List
 
 class Tokenizer:
@@ -5,23 +7,38 @@ class Tokenizer:
     Simple lazy initialization of the tokenizer as it is heavy
     """
 
-    _tokenizer = None
+    _tokenizer_name = {
+        Model.Calliope: "gpt2",
+        Model.Euterpe: "gpt2",
+        Model.Sigurd: "gpt2",
+        Model.Snek: "gpt2",
+        # FIXME: genji isn't in HF's API
+#        Model.Genji: "gpt2-genji",
+        # add 20B tokenizer
+    }
+
+    _tokenizer = { }
+    
+    @classmethod
+    def _get_tokenizer(cls, model: Model) ->  "PreTrainedTokenizerFast":
+        assert model in cls._tokenizer_name, f"Model {model} is not supported"
+
+        tokenizer_name = cls._tokenizer_name[model]
+
+        if tokenizer_name not in cls._tokenizer:
+            from transformers import  PreTrainedTokenizerFast
+            cls._tokenizer[tokenizer_name] =  PreTrainedTokenizerFast.from_pretrained(tokenizer_name)
+
+        return cls._tokenizer[tokenizer_name]
 
     @classmethod
-    def _initialize(cls):
-        from transformers import GPT2TokenizerFast
-        cls._tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+    def decode(cls, model: Model, o: List[int]) -> str:
+        tokenizer = cls._get_tokenizer(model)
+
+        return tokenizer.decode(o, verbose = False)
 
     @classmethod
-    def decode(cls, o: List[int]) -> str:
-        if cls._tokenizer is None:
-            cls._initialize()
+    def encode(cls, model: Model, o: str) -> List[int]:
+        tokenizer = cls._get_tokenizer(model)
 
-        return cls._tokenizer.decode(o, verbose = False)
-
-    @classmethod
-    def encode(cls, o: str) -> List[int]:
-        if cls._tokenizer is None:
-            cls._initialize()
-
-        return cls._tokenizer.encode(o, verbose = False)
+        return tokenizer.encode(o, verbose = False)

@@ -38,14 +38,14 @@ async def generate_10(api: NovelAI_API, model: Model):
     logger.info(f"Using model {model.value}\n")
 
     input_txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."
-    input = Tokenizer.encode(input_txt)
+    input = Tokenizer.encode(model, input_txt)
 
     preset["max_length"] = 100
     gens = [api.high_level.generate(input, model, preset, global_settings) for _ in range(10)]
     results = await gather(*gens)
     for i, gen in enumerate(results):
         logger.info(f"Gen {i}:")
-        logger.info("\t" + Tokenizer.decode(b64_to_tokens(gen["output"])))
+        logger.info("\t" + Tokenizer.decode(model, b64_to_tokens(gen["output"])))
         logger.info("")
 
 @pytest.mark.parametrize("model", [*Model])

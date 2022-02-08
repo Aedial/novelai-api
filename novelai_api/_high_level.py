@@ -211,7 +211,7 @@ class High_Level:
 
             for i, bad_word in enumerate(bad_words):
                 assert type(bad_word) is BanList, f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
-                params["bad_words_ids"].extend(bad_word)
+                params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
 
         if biases is not None:
             if type(biases) is BiasGroup:
@@ -219,7 +219,7 @@ class High_Level:
 
             for i, bias in enumerate(biases):
                 assert type(bias) is BiasGroup, f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
-                params["logit_bias_exp"].extend(bias)
+                params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
 
         # Delete the options that return an unknown error (success status code, but server error)
         if "repetition_penalty_slope" in params and params["repetition_penalty_slope"] == 0:

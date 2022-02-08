@@ -1,9 +1,10 @@
-from novelai_api.Tokenizer import Tokenizer
+from novelai_api.Preset import Model
+from novelai_api.utils import tokenize_if_not
 
-from typing import Dict, List, Union, Any
+from typing import Dict, Iterable, List, Union, Any
 
 class BiasGroup:
-    _sequences: List[List[int]]
+    _sequences: List[Union[List[int], str]]
 
     bias: float
     ensure_sequence_finish: bool
@@ -43,9 +44,7 @@ class BiasGroup:
                 elif "sequences" in sequence:
                     sequence = sequence["sequences"][0]
 
-            if type(sequence) is str:
-                sequence = Tokenizer.encode(sequence)
-            else:
+            if type(sequence) is not str:
                 assert type(sequence) is list, f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
                     assert type(s) is int, f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
@@ -65,6 +64,13 @@ class BiasGroup:
                   "generate_once": self.generate_once,
                   "enabled": self.enabled,
                   "sequence": s } for s in self._sequences)
+
+    def get_tokenized_biases(self, model: Model) -> Iterable[Dict[str, any]]:
+        return ({ "bias": self.bias,
+                  "ensure_sequence_finish": self.ensure_sequence_finish,
+                  "generate_once": self.generate_once,
+                  "enabled": self.enabled,
+                  "sequence": tokenize_if_not(model, s) } for s in self._sequences)
 
     def __str__(self) -> str:
         return "{ " \

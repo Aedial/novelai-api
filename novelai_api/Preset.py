@@ -41,8 +41,9 @@ class Model(StrEnum):
     Calliope = "2.7B"
     Sigurd = "6B-v4"
     Euterpe = "euterpe-v0"
+    # TODO: add Euterpe_v2
 
-    Genji = "genji-jp-6b"
+    Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
 
 class PresetView:

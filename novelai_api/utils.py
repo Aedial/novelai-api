@@ -8,7 +8,8 @@ import json
 from zlib import decompress as inflate, compressobj as deflate_obj, MAX_WBITS, Z_BEST_COMPRESSION
 
 from novelai_api.Keystore import Keystore
-from novelai_api.Preset import Preset
+from novelai_api.Preset import Preset, Model
+from novelai_api.Tokenizer import Tokenizer
 
 from typing import Dict, Union, List, Tuple, Any, Optional, Iterable, NoReturn
 
@@ -253,5 +254,12 @@ def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
         preset_list[preset_data["id"]] = Preset.from_preset_data(preset_data["data"])
 
     return preset_list
+
+def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
+    if type(o) is list:
+        return o
+
+    assert type(o) is str
+    return Tokenizer.encode(model, o)
 
 # TODO: story tree builder

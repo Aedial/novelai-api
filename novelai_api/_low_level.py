@@ -319,7 +319,7 @@ class Low_Level:
         assert type(params) is dict, f"Expected type 'dict' for params, but got type '{type(params)}'"
 
         if type(input) is str:
-            input = Tokenizer.encode(input)
+            input = Tokenizer.encode(model, input)
 
         input = tokens_to_b64(input)
         args = { "input": input, "model": model.value, "parameters": params }
