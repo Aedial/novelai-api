@@ -1,6 +1,10 @@
+from os.path import abspath, dirname, join, split
+
 from novelai_api.Preset import Model
 
 from typing import List
+
+tokenizers_path = join(dirname(abspath(__file__)), "tokenizers")
 
 class Tokenizer:
     """
@@ -12,22 +16,33 @@ class Tokenizer:
         Model.Euterpe: "gpt2",
         Model.Sigurd: "gpt2",
         Model.Snek: "gpt2",
-        # FIXME: genji isn't in HF's API
-#        Model.Genji: "gpt2-genji",
-        # add 20B tokenizer
+        Model.Genji: join(tokenizers_path, "gpt2-genji"),
+        # TODO: add 20B tokenizer
+    }
+
+    _tokenizer_base = {
+        "gpt2": "GPT2TokenizerFast",
+        "gpt2-genji": "GPT2TokenizerFast"
     }
 
     _tokenizer = { }
     
     @classmethod
-    def _get_tokenizer(cls, model: Model) ->  "PreTrainedTokenizerFast":
+    def get_tokenizer_name(cls, model: Model) -> str:
         assert model in cls._tokenizer_name, f"Model {model} is not supported"
 
-        tokenizer_name = cls._tokenizer_name[model]
+        return split(cls._tokenizer_name[model])[-1]
+
+    @classmethod
+    def _get_tokenizer(cls, model: Model) ->  "PreTrainedTokenizerFast":
+        tokenizer_name = cls.get_tokenizer_name(model)
 
         if tokenizer_name not in cls._tokenizer:
-            from transformers import  PreTrainedTokenizerFast
-            cls._tokenizer[tokenizer_name] =  PreTrainedTokenizerFast.from_pretrained(tokenizer_name)
+            import transformers
+
+            assert tokenizer_name in cls._tokenizer_base
+            TokenizerBase = getattr(transformers, cls._tokenizer_base[tokenizer_name])
+            cls._tokenizer[tokenizer_name] = TokenizerBase.from_pretrained(cls._tokenizer_name[model])
 
         return cls._tokenizer[tokenizer_name]
 

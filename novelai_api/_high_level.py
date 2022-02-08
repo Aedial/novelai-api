@@ -193,7 +193,7 @@ class High_Level:
         assert preset.model == model, f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
 
         preset_params = preset.to_settings()
-        global_params = global_settings.to_settings()
+        global_params = global_settings.to_settings(model)
 
         params = {}
 
