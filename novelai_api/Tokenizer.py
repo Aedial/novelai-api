@@ -13,11 +13,13 @@ class Tokenizer:
 
     _tokenizer_name = {
         Model.Calliope: "gpt2",
-        Model.Euterpe: "gpt2",
         Model.Sigurd: "gpt2",
+        Model.Euterpe_v1: "gpt2",
+        Model.Euterpe: "gpt2",
+        # TODO: add 20B tokenizer
+
         Model.Snek: "gpt2",
         Model.Genji: join(tokenizers_path, "gpt2-genji"),
-        # TODO: add 20B tokenizer
     }
 
     _tokenizer_base = {
