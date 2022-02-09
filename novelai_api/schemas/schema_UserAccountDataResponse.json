@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "proprieties":
+    {
+        "priority": { "$ref": "/schema_PriorityResponse" },
+        "subscription": { "$ref": "/schema_SubscriptionResponse" },
+        "keystore": { "$ref": "/schema_GetKeystoreResponse" },
+        "settings": { "type": "string" },
+        "information": { "$ref": "/schema_AccountInformationResponse" }
+    },
+    "required": [ "priority", "subscription", "keystore", "settings", "information" ]
+}

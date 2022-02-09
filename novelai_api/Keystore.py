@@ -87,10 +87,6 @@ class Keystore:
 
             return
 
-        SchemaValidator.validate("schema_keystore_b64", self.data)
-
-        # TODO: check if keystore is actually valid b64 ?
-
         keystore = loads(b64decode(self.data["keystore"]).decode())
         SchemaValidator.validate("schema_keystore_encrypted", keystore)
 

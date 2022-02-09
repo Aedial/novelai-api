@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+        "tier": { "type": "number" },
+        "active": { "type": "boolean" },
+        "expiresAt": { "type": "number" },
+        "perks": {
+            "type": "object",
+            "properties": {
+                "maxPriorityActions": { "type": "number" },
+                "startPriority": { "type": "number" },
+                "contextTokens": { "type": "number" },
+                "unlimitedMaxPriority": { "type": "boolean" },
+                "moduleTrainingSteps": { "type": "number" }
+            },
+            "required": [ "maxPriorityActions", "startPriority", "contextTokens", "unlimitedMaxPriority", "moduleTrainingSteps" ]
+        },
+        "trainingStepsLeft": {
+            "type": "object",
+            "properties": {
+                "fixedTrainingStepsLeft": { "type": "number" },
+                "purchasedTrainingSteps": { "type": "number" }
+            },
+            "required": [ "fixedTrainingStepsLeft", "purchasedTrainingSteps" ]
+        }
+    },
+    "required": [ "tier", "active", "expiresAt", "perks", "trainingStepsLeft" ]
+}

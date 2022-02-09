@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "maxPriorityActions": { "type": "number" },
+        "nextRefillAt": { "type": "number" },
+        "taskPriority": { "type": "number" }
+    },
+    "required": [ "maxPriorityActions", "nextRefillAt", "taskPriority" ]
+}

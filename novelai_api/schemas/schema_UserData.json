@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "properties": {
+        "id": { "type": "string" },
+        "meta": { "type": "string", "maxLength": 128 },
+        "data": { "type": "string" },
+        "lastUpdatedAt": { "type": "number" },
+        "changeIndex": { "type": "number" },
+        "type": { "type": "string", "minLength": 1, "maxLength": 16 }
+    },
+    "requires": [ "id", "meta", "data", "lastUpdatedAt", "changeIndex", "type" ]
+}

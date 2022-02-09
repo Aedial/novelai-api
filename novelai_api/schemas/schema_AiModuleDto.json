@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "properties": {
+        "data": { "type": "string" },
+        "lr": { "type": "number" },
+        "steps": { "type": "number" },
+        "model": { "type": "string" },
+        "lastUpdatedAt": { "type": "number" },
+        "status": { "type": "string" },
+        "lossHistory": { "type": "array", "items": { "type": "number" } },
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 256 }
+    },
+    "required": [ "data", "lr", "steps", "model", "lastUpdatedAt", "status", "lossHistory", "id", "name", "description" ]
+}

@@ -7,15 +7,14 @@ from aiohttp.client_exceptions import ClientConnectionError
 from requests import request as sync_request, Response
 from requests.exceptions import ConnectionError
 
-from enum import Enum
-
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.utils import tokens_to_b64
 from novelai_api.Tokenizer import Tokenizer
-from novelai_api.Preset import Preset, Model, StrEnum
+from novelai_api.SchemaValidator import SchemaValidator
+from novelai_api.Preset import Model
 
-from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
+from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
 class SyncResponse():
     _rsp: Response
@@ -39,6 +38,8 @@ class Low_Level:
     _session: Union[ClientSession, FakeClientSession]
     _is_async: bool
 
+    is_schema_validation_enabled: bool
+
     def __init__(self, parent: "NovelAI_API"):
         self._is_async = parent._is_async
 
@@ -47,6 +48,8 @@ class Low_Level:
 
         self._parent = parent
         self._session = parent._session
+
+        self.is_schema_validation_enabled = True
 
     def _treat_response_object(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> Any:
         # error is an unexpected fail and usually come with a success status
@@ -117,7 +120,7 @@ class Low_Level:
     async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
         """
         :param endpoint: Endpoint of the request
-        :param request_method: Method of the reqest from ClientSession
+        :param request_method: Method of the request from ClientSession
         :param data: Data to pass to the method if needed
         """
 
@@ -131,8 +134,6 @@ class Low_Level:
         except (ClientConnectionError, ConnectionError) as e:      # No internet
             raise NovelAIError(e.errno, str(e))
         # TODO: there may be other request errors to catch
-
-    # TODO: move schema verification to low level
 
     # TODO: Add a stream handler
 
@@ -174,11 +175,12 @@ class Low_Level:
             data["giftkey"] = giftkey
 
         rsp, content = await self.request("post", "/user/register", data)
-        rsp = self._treat_response_object(rsp, content, 201)
+        self._treat_response_object(rsp, content, 201)
 
-        # FIXME: handle cases where the response is corrupted
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
 
-        return rsp
+        return content
 
     async def login(self, access_key: str) -> Dict[str, str]:
         """
@@ -194,17 +196,56 @@ class Low_Level:
         assert len(access_key) == 64, f"access_key should be 64 characters, got length of {len(access_key)}"
 
         rsp, content = await self.request("post", "/user/login", { "key": access_key })
-        return self._treat_response_object(rsp, content, 201)
+        self._treat_response_object(rsp, content, 201)
 
-    async def change_access_key(self, current_key: str, new_key: str) -> bool:
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+
+        return content
+
+    async def change_access_key(self, current_key: str, new_key: str, new_email: Optional[str] = None) -> Dict[str, str]:
         assert type(current_key) is str, f"Expected type 'str' for current_key, but got type '{type(current_key)}'"
         assert type(new_key) is str, f"Expected type 'str' for new_key, but got type '{type(new_key)}'"
+        assert new_email is None or type(new_email) is str, f"Expected None or type 'str' for new_email, but got type '{type(new_email)}'"
 
         assert len(current_key) == 64, f"Current access key should be 64 characters, got length of {len(current_key)}"
         assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
-        rsp, content = await self.request("post", "/user/change-access-key", { "currentAccessKey": current_key, "newAccessKey": new_key })
+        data = { "currentAccessKey": current_key, "newAccessKey": new_key }
+
+        if new_email is not None:
+            data["newEmail"] = new_email
+
+        rsp, content = await self.request("post", "/user/change-access-key", data)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+
+        return content
+
+    async def send_email_verification(self, email: str) -> bool:
+        assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
+
+        rsp, content = await self.request("post", "/user/resend-email-verification", { "email": email })
         return self._treat_response_bool(rsp, content, 200)
+
+    async def verify_email(self, verification_token: str) -> bool:
+        assert type(verification_token) is str, f"Expected type 'str' for verification_token, but got type '{type(verification_token)}'"
+
+        assert len(verification_token) == 64, f"Verification token should be 64 characters, got length of {len(verification_token)}"
+
+        rsp, content = await self.request("post", "/user/verify-email", { "verificationToken": verification_token })
+        return self._treat_response_bool(rsp, content, 200)
+
+    async def get_information(self) -> Dict[str, Any]:
+        rsp, content = await self.request("get", "/user/information")
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_AccountInformationResponse", content)
+
+        return content
 
     async def request_account_recovery(self, email: str) -> bool:
         assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
@@ -212,7 +253,7 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/recovery/request", { "email": email })
         return self._treat_response_bool(rsp, content, 202)
 
-    async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> bool:
+    async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> Dict[str, Any]:
         assert type(recovery_token) is str, f"Expected type 'str' for recovery_token, but got type '{type(recovery_token)}'"
         assert type(new_key) is str, f"Expected type 'str' for new_key, but got type '{type(new_key)}'"
         assert type(delete_content) is bool, f"Expected type 'bool' for delete_content, but got type '{type(delete_content)}'"
@@ -221,23 +262,52 @@ class Low_Level:
         assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
         rsp, content = await self.request("post", "/user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
-        return self._treat_response_bool(rsp, content, 201)
+        self._treat_response_object(rsp, content, 201)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+
+        return content
 
     async def delete_account(self) -> bool:
         rsp, content = await self.request("post", "/user/delete", None)
         return self._treat_response_bool(rsp, content, 200)
 
+    async def get_data(self) -> Dict[str, Any]:
+        rsp, content = await self.request("get", "/user/data")
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_AccountInformationResponse", content)
+
+        return content
+
     async def get_priority(self) -> Dict[str, Any]:
         rsp, content = await self.request("get", "/user/priority")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_PriorityResponse", content)
+
+        return content
 
     async def get_subscription(self) -> Dict[str, Any]:
         rsp, content = await self.request("get", "/user/subscription")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_SubscriptionResponse", content)
+
+        return content
 
     async def get_keystore(self) -> Dict[str, str]:
         rsp, content = await self.request("get", "/user/keystore")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_GetKeystoreResponse", content)
+
+        return content
 
     async def set_keystore(self, keystore: Dict[str, str]) -> bool:
         assert type(keystore) is dict, f"Expected type 'dicy' for keystore, but got type '{type(keystore)}'"
@@ -249,7 +319,12 @@ class Low_Level:
         assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
 
         rsp, content = await self.request("get", f"/user/objects/{object_type}")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_ObjectsResponse", content)
+
+        return content
 
     async def upload_objects(self, object_type: str, meta: str, data: str) -> bool:
         assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
@@ -259,14 +334,21 @@ class Low_Level:
         assert len(meta) <= 128, f"Meta should be at most 128 characters, got length of {len(meta)}"
 
         rsp, content = await self.request("put", f"/user/objects/{object_type}", { "meta": meta, "data": data })
-        return self._treat_response_bool(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        return content
 
     async def download_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
         assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
         assert type(object_id) is str, f"Expected type 'str' for object_id, but got type '{type(object_id)}'"
 
         rsp, content = await self.request("get", f"/user/objects/{object_type}/{object_id}")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_userData", content)
+
+        return content
 
     async def upload_object(self, object_type: str, object_id: str, meta: str, data: str) -> bool:
         assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
@@ -277,7 +359,9 @@ class Low_Level:
         assert len(meta) <= 128, f"Meta should be at most 128 characters, got length of {len(meta)}"
 
         rsp, content = await self.request("patch", f"/user/objects/{object_type}/{object_id}", { "meta": meta, "data": data })
-        return self._treat_response_bool(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        return content
 
     async def delete_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
         assert type(object_type) is str, f"Expected type 'str' for object_type, but got type '{type(object_type)}'"
@@ -345,7 +429,7 @@ class Low_Level:
         :param name: Name of the module
         :param desc: Description of the module
 
-        :return: Module being trained
+        :return: Status of the module being trained
         """
 
         assert type(data) is str, f"Expected type 'str' for data, but got type '{type(data)}'"
@@ -355,27 +439,41 @@ class Low_Level:
         assert type(desc) is str, f"Expected type 'str' for desc, but got type '{type(desc)}'"
 
         rsp, content = await self.request("post", "/ai/module/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
-        return self._treat_response_object(rsp, content, 201)
+        self._treat_response_object(rsp, content, 201)
 
-    async def get_modules(self) -> List[Dict[str, Any]]:
+        # TODO: verify response ?
+
+        return content
+
+    async def get_trained_modules(self) -> List[Dict[str, Any]]:
         """
-        :return: List of modules saved on the logged account
+        :return: List of modules trained or in training
         """
 
         rsp, content = await self.request("get", "/ai/module/all")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_AiModuleDto", content)
+
+        return content
 
     async def get_module(self, module_id: str) -> Dict[str, Any]:
         """
         :param module_id: Id of the module
 
-        :return: Selected module
+        :return: Selected module, trained or in training
         """
 
         assert type(module_id) is str, f"Expected type 'str' for module_id, but got type '{type(module_id)}'"
 
         rsp, content = await self.request("get", f"/ai/module/{module_id}")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        if self.is_schema_validation_enabled:
+            SchemaValidator.validate("schema_AiModuleDto", content)
+
+        return content
 
     async def delete_module(self, module_id: str) -> Dict[str, Any]:
         """
@@ -389,4 +487,8 @@ class Low_Level:
         assert type(module_id) is str, f"Expected type 'str' for module_id, but got type '{type(module_id)}'"
 
         rsp, content = await self.request("delete", f"/ai/module/{module_id}")
-        return self._treat_response_object(rsp, content, 200)
+        self._treat_response_object(rsp, content, 200)
+
+        # TODO: verify response ?
+
+        return content

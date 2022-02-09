@@ -3,6 +3,5 @@
 	"properties": {
 		"accessToken": { "type": "string" }
 	},
-	"required": [ "accessToken" ],
-	"_additionalProperties": false
+	"required": [ "accessToken" ]
 }

@@ -1,0 +1,10 @@
+{ 
+	"type": "object",
+	"properties": {
+		"objects": {
+			"type": "array",
+			"items": { "$ref": "/schema_UserData" }
+		}
+	},
+	"required": [ "objects" ]
+}

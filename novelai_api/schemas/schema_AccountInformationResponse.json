@@ -1,0 +1,11 @@
+{ 
+	"type": "object",
+	"properties": {
+		"emailVerified": { "type": "boolean" },
+		"emailVerificationLetterSent": { "type": "boolean" },
+		"trialActivated": { "type": "boolean" },
+		"trialActionsLeft": { "type": "number" },
+		"accountCreatedAt": { "type": "number" }
+	},
+	"required": [ "emailVerified", "emailVerificationLetterSent", "trialActivated", "trialActionsLeft", "accountCreatedAt" ]
+}

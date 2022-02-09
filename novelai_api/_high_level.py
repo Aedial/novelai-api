@@ -52,7 +52,6 @@ class High_Level:
 
         access_key = get_access_key(email, password)
         rsp = await self._parent.low_level.login(access_key)
-        SchemaValidator.validate("schema_login", rsp)
 
         self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
@@ -60,7 +59,6 @@ class High_Level:
 
     async def login_from_token(self, access_key: str) -> NoReturn:
         rsp = await self._parent.low_level.login(access_key)
-        SchemaValidator.validate("schema_login", rsp)
 
         self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
@@ -89,31 +87,26 @@ class High_Level:
 
     async def download_user_stories(self) -> Dict[str, Dict[str, Union[str, int]]]:
         stories = await self._parent.low_level.download_objects("stories")
-        SchemaValidator.validate("schema_encrypted_stories", stories)
 
         return stories["objects"]
 
     async def download_user_story_contents(self) -> Dict[str, Dict[str, Union[str, int]]]:
         story_contents = await self._parent.low_level.download_objects("storycontent")
-        SchemaValidator.validate("schema_encrypted_stories", story_contents)
 
         return story_contents["objects"]
 
     async def download_user_presets(self) -> List[Dict[str, Union[str, int]]]:
         presets = await self._parent.low_level.download_objects("presets")
-        SchemaValidator.validate("schema_encrypted_stories", presets)
 
         return presets["objects"]
 
     async def download_user_modules(self) -> List[Dict[str, Union[str, int]]]:
         modules = await self._parent.low_level.download_objects("aimodules")
-        SchemaValidator.validate("schema_encrypted_stories", modules)
 
         return modules["objects"]
 
     async def download_user_shelves(self) -> List[Dict[str, Union[str, int]]]:
         modules = await self._parent.low_level.download_objects("shelf")
-        SchemaValidator.validate("schema_encrypted_stories", modules)
 
         return modules["objects"]
 
