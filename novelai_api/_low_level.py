@@ -329,7 +329,6 @@ class Low_Level:
         args = { "input": input, "model": model.value, "parameters": params }
 
         rsp, content = await self.request("post", "/ai/generate", args)
-        print(rsp.status)
         return self._treat_response_object(rsp, content, 201)
 
     async def generate_stream(self):
