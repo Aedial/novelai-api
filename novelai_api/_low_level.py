@@ -49,6 +49,10 @@ class Low_Level:
         self._session = parent._session
 
     def _treat_response_object(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> Any:
+        # error is an unexpected fail and usually come with a success status
+        if type(content) is dict and "error" in content:
+            raise NovelAIError(rsp.status, content["error"])
+
         # success
         if rsp.status == status:
             return content
@@ -325,6 +329,7 @@ class Low_Level:
         args = { "input": input, "model": model.value, "parameters": params }
 
         rsp, content = await self.request("post", "/ai/generate", args)
+        print(rsp.status)
         return self._treat_response_object(rsp, content, 201)
 
     async def generate_stream(self):
