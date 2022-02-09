@@ -1,20 +1,21 @@
 {
   "presetVersion": 3,
   "name": "Best Guess",
-  "id": "20c726dd-4728-4ac8-af31-91fe20013d9b",
+  "id": "227339b4-00cb-4dd1-8136-1fbb77e84492",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
+    "textGenerationSettingsVersion": 3,
     "temperature": 0.8,
     "max_length": 40,
     "min_length": 1,
     "top_k": 110,
     "top_p": 0.9,
+    "top_a": 1,
+    "typical_p": 1,
     "tail_free_sampling": 1,
     "repetition_penalty": 3.1,
     "repetition_penalty_range": 512,
     "repetition_penalty_slope": 3.33,
-    "bad_words_ids": [],
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "order": [
@@ -33,6 +34,14 @@
       {
         "id": "tfs",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },

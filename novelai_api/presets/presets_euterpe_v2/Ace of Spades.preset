@@ -1,39 +1,39 @@
 {
   "presetVersion": 3,
-  "name": "Morpho",
-  "id": "904eca0a-660e-4987-88dc-2614fc5942a6",
+  "name": "Ace of Spades",
+  "id": "1b6cc1c5-a764-497d-b25c-8ede872c23f8",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 3,
-    "temperature": 0.666,
+    "temperature": 1.15,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
-    "top_p": 1,
+    "top_p": 0.95,
     "top_a": 1,
     "typical_p": 1,
-    "tail_free_sampling": 1,
-    "repetition_penalty": 1,
+    "tail_free_sampling": 0.8,
+    "repetition_penalty": 2.75,
     "repetition_penalty_range": 2048,
-    "repetition_penalty_slope": 0,
-    "repetition_penalty_frequency": 0.1,
+    "repetition_penalty_slope": 7.02,
+    "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "order": [
       {
-        "id": "temperature",
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
         "enabled": true
       },
       {
         "id": "top_k",
-        "enabled": false
+        "enabled": true
       },
       {
-        "id": "top_p",
-        "enabled": false
-      },
-      {
-        "id": "tfs",
-        "enabled": false
+        "id": "temperature",
+        "enabled": true
       },
       {
         "id": "top_a",
@@ -45,5 +45,5 @@
       }
     ]
   },
-  "model": "euterpe-v0"
+  "model": "euterpe-v2"
 }

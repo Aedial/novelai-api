@@ -1,19 +1,21 @@
 {
   "presetVersion": 3,
-  "name": "Storywriter",
-  "id": "a2d75a62-7637-43d4-b970-75f480e533c8",
+  "name": "Basic Coherence",
+  "id": "83d2e66f-47f7-4f60-bb35-1ac5f21bb3fc",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
-    "temperature": 0.72,
+    "textGenerationSettingsVersion": 3,
+    "temperature": 0.585,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
-    "top_p": 0.725,
-    "tail_free_sampling": 1,
-    "repetition_penalty": 2.75,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 1,
+    "tail_free_sampling": 0.87,
+    "repetition_penalty": 3.05,
     "repetition_penalty_range": 2048,
-    "repetition_penalty_slope": 0.18,
+    "repetition_penalty_slope": 0.33,
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "order": [
@@ -32,8 +34,16 @@
       {
         "id": "tfs",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },
-  "model": "genji-jp-6b-v2"
+  "model": "euterpe-v2"
 }

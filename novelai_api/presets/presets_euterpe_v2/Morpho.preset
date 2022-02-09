@@ -1,11 +1,11 @@
 {
   "presetVersion": 3,
   "name": "Morpho",
-  "id": "904eca0a-660e-4987-88dc-2614fc5942a6",
+  "id": "31a8afa9-9792-4098-8728-0ce32b26254d",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 3,
-    "temperature": 0.666,
+    "temperature": 0.6889,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
@@ -20,7 +20,7 @@
     "repetition_penalty_presence": 0,
     "order": [
       {
-        "id": "temperature",
+        "id": "top_k",
         "enabled": true
       },
       {
@@ -45,5 +45,5 @@
       }
     ]
   },
-  "model": "euterpe-v0"
+  "model": "euterpe-v2"
 }

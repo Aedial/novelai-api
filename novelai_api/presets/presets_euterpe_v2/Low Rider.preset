@@ -1,39 +1,39 @@
 {
   "presetVersion": 3,
-  "name": "Morpho",
-  "id": "904eca0a-660e-4987-88dc-2614fc5942a6",
+  "name": "Low Rider",
+  "id": "dbb84a59-6089-412b-be44-aad3b4fead4c",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 3,
-    "temperature": 0.666,
+    "temperature": 0.94,
     "max_length": 40,
     "min_length": 1,
-    "top_k": 0,
+    "top_k": 12,
     "top_p": 1,
     "top_a": 1,
     "typical_p": 1,
-    "tail_free_sampling": 1,
-    "repetition_penalty": 1,
+    "tail_free_sampling": 0.94,
+    "repetition_penalty": 2.66,
     "repetition_penalty_range": 2048,
-    "repetition_penalty_slope": 0,
-    "repetition_penalty_frequency": 0.1,
+    "repetition_penalty_slope": 0.18,
+    "repetition_penalty_frequency": 0.013,
     "repetition_penalty_presence": 0,
     "order": [
       {
-        "id": "temperature",
+        "id": "top_p",
         "enabled": true
       },
       {
         "id": "top_k",
-        "enabled": false
-      },
-      {
-        "id": "top_p",
-        "enabled": false
+        "enabled": true
       },
       {
         "id": "tfs",
-        "enabled": false
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
       },
       {
         "id": "top_a",
@@ -45,5 +45,5 @@
       }
     ]
   },
-  "model": "euterpe-v0"
+  "model": "euterpe-v2"
 }

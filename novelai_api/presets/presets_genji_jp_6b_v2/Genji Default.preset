@@ -1,22 +1,22 @@
 {
   "presetVersion": 3,
-  "name": "Morpho",
-  "id": "904eca0a-660e-4987-88dc-2614fc5942a6",
+  "name": "Genji Default",
+  "id": "6af49934-adfc-4cb8-a688-a89907eeb699",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 3,
-    "temperature": 0.666,
+    "temperature": 0.86,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
     "top_p": 1,
     "top_a": 1,
     "typical_p": 1,
-    "tail_free_sampling": 1,
-    "repetition_penalty": 1,
+    "tail_free_sampling": 0.927,
+    "repetition_penalty": 2.9,
     "repetition_penalty_range": 2048,
-    "repetition_penalty_slope": 0,
-    "repetition_penalty_frequency": 0.1,
+    "repetition_penalty_slope": 3.33,
+    "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "order": [
       {
@@ -25,15 +25,15 @@
       },
       {
         "id": "top_k",
-        "enabled": false
+        "enabled": true
       },
       {
         "id": "top_p",
-        "enabled": false
+        "enabled": true
       },
       {
         "id": "tfs",
-        "enabled": false
+        "enabled": true
       },
       {
         "id": "top_a",
@@ -45,5 +45,5 @@
       }
     ]
   },
-  "model": "euterpe-v0"
+  "model": "genji-jp-6b-v2"
 }

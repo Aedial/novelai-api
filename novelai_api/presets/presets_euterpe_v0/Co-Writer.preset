@@ -1,15 +1,17 @@
 {
   "presetVersion": 3,
   "name": "Co-Writer",
-  "id": "d2ca9c7d-5b82-4770-aba1-d0f685029f9f",
+  "id": "339f4189-fe8c-4cda-82df-27fddc6dba8f",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
+    "textGenerationSettingsVersion": 3,
     "temperature": 0.55,
     "max_length": 40,
     "min_length": 1,
     "top_k": 14,
     "top_p": 0.9,
+    "top_a": 1,
+    "typical_p": 1,
     "tail_free_sampling": 0.7,
     "repetition_penalty": 4,
     "repetition_penalty_range": 2048,
@@ -32,6 +34,14 @@
       {
         "id": "temperature",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },

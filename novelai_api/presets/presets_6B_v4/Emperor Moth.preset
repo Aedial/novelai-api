@@ -1,20 +1,21 @@
 {
   "presetVersion": 3,
   "name": "Emperor Moth",
-  "id": "ea984b5f-85f8-4dbb-aa0b-c863dbb5b861",
+  "id": "d51f7000-9654-4ee7-8eea-4b2449a0827e",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
+    "textGenerationSettingsVersion": 3,
     "temperature": 1.25,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
     "top_p": 0.235,
+    "top_a": 1,
+    "typical_p": 1,
     "tail_free_sampling": 1,
     "repetition_penalty": 2.75,
     "repetition_penalty_range": 2048,
     "repetition_penalty_slope": 0,
-    "bad_words_ids": [],
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "order": [
@@ -33,6 +34,14 @@
       {
         "id": "tfs",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },

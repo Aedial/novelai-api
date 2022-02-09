@@ -1,10 +1,9 @@
 {
   "presetVersion": 3,
   "name": "Full House",
-  "id": "213ff213-30fb-4df8-bd1b-756a5ee3ee39",
+  "id": "0dee442a-444c-4bf9-9cf0-332aa88ac161",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
     "temperature": 2.5,
     "max_length": 40,
     "min_length": 1,
@@ -32,6 +31,14 @@
       {
         "id": "temperature",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },

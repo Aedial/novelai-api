@@ -1,15 +1,17 @@
 {
   "presetVersion": 3,
   "name": "Weaver",
-  "id": "3d9bc15c-51ae-46e2-bf20-b9a9fadac968",
+  "id": "4772dbb7-b942-413a-9591-2d8f54161d08",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
+    "textGenerationSettingsVersion": 3,
     "temperature": 1,
     "max_length": 40,
     "min_length": 1,
     "top_k": 12,
     "top_p": 0.825,
+    "top_a": 1,
+    "typical_p": 1,
     "tail_free_sampling": 0.875,
     "repetition_penalty": 3.75,
     "repetition_penalty_range": 2048,
@@ -32,6 +34,14 @@
       {
         "id": "temperature",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },

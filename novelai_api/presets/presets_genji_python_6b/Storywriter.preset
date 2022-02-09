@@ -1,15 +1,17 @@
 {
   "presetVersion": 3,
   "name": "Storywriter",
-  "id": "bb582281-c5e0-430c-8634-106e16d72e19",
+  "id": "048f50df-40e2-4e87-a558-786c9e442388",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 2,
+    "textGenerationSettingsVersion": 3,
     "temperature": 0.72,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
     "top_p": 0.725,
+    "top_a": 1,
+    "typical_p": 1,
     "tail_free_sampling": 1,
     "repetition_penalty": 2.75,
     "repetition_penalty_range": 2048,
@@ -32,6 +34,14 @@
       {
         "id": "tfs",
         "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
       }
     ]
   },
