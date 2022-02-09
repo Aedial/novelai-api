@@ -12,11 +12,26 @@ class Order(IntEnum):
     Top_K       = 1
     Top_P       = 2
     TFS         = 3
+    Top_A       = 4
+    Typical_P   = 5
 
-def name_to_order(name: str) -> Order:
-    mapping = { "tfs": Order.TFS, "temperature": Order.Temperature, "top_p": Order.Top_P, "top_k": Order.Top_K }
+NAME_TO_ORDER = {
+    "tfs": Order.TFS,
+    "temperature": Order.Temperature,
+    "top_p": Order.Top_P,
+    "top_k": Order.Top_K,
+    "top_a": Order.Top_A,
+    "typical_p": Order.Typical_P
+}
 
-    return mapping[name]
+ORDER_TO_NAME = {
+    Order.TFS: "tfs",
+    Order.Temperature: "temperature",
+    Order.Top_P: "top_p",
+    Order.Top_K: "top_k",
+    Order.Top_A: "top_a",
+    Order.Typical_P: "typical_p"
+}
 
 def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
     if not hasattr(enum_class, "_member_values"):
@@ -40,8 +55,9 @@ class StrEnum(str, Enum):
 class Model(StrEnum):
     Calliope = "2.7B"
     Sigurd = "6B-v4"
-    Euterpe = "euterpe-v0"
-    # TODO: add Euterpe_v2
+    Euterpe_v1 = "euterpe-v0"
+    Euterpe = "euterpe-v2"
+    # TODO: add 20B
 
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
@@ -64,22 +80,49 @@ class _PresetMetaclass(type):
         return PresetView(model, cls._officials_values)
 
 class Preset(metaclass = _PresetMetaclass):
+    # TODO
+    # do_sample                     boolean
+    # early_stopping                boolean
+    # num_beams                     number
+    # pad_token_id                  number
+    # bos_token_id                  number
+    # eos_token_id                  number
+    # no_repeat_ngram_size          number
+    # encoder_no_repeat_ngram_size	number
+    # num_return_sequences          number
+    # max_time                      number
+    # num_beam_groups               number
+    # get_hidden_states             boolean
+    # next_word                     boolean
+    # output_nonzero_probs          boolean
+    # generate_until_sentence       boolean
+
     _TYPE_MAPPING = {
-        "temperature": (int, float), "max_length": int, "min_length": int, "top_k": int,
-        "top_p": (int, float), "tail_free_sampling": (int, float), "repetition_penalty": (int, float),
-        "repetition_penalty_range": int, "repetition_penalty_slope": (float, int),
-        "repetition_penalty_frequency": (int, float), "repetition_penalty_presence": int,
-        "order": list, "textGenerationSettingsVersion": int
+        "textGenerationSettingsVersion": int,
+        "temperature": (int, float),
+        "max_length": int,
+        "min_length": int,
+        "top_k": int,
+        "top_a": (int, float),
+        "top_p": (int, float),
+        "typical_p": (int, float),
+        "tail_free_sampling": (int, float),
+        "repetition_penalty": (int, float),
+        "repetition_penalty_range": int,
+        "repetition_penalty_slope": (float, int),
+        "repetition_penalty_frequency": (int, float),
+        "repetition_penalty_presence": int,
+        "repetition_penalty_whitelist": list,
+        "length_penalty": (int, float),
+        "diversity_penalty": (int, float),
+        "order": list,
     }
 
     _officials: Dict[str, "Preset"]
     _officials_values: List["Preset"]
     _defaults: Dict[str, Dict[str, str]]
 
-    _enable_temperature: bool
-    _enable_top_k: bool
-    _enable_top_p: bool
-    _enable_tfs: bool
+    _enabled: List[bool]
 
     _settings: Dict[str, Any]
     name: str
@@ -89,10 +132,7 @@ class Preset(metaclass = _PresetMetaclass):
         self.name = name
         self.model = model
 
-        self._enable_temperature = True
-        self._enable_top_k = True
-        self._enable_top_p = True
-        self._enable_tfs = True
+        self._enabled = [True] * len(Order)
 
         self._settings = {}
         self.update(settings)
@@ -103,7 +143,6 @@ class Preset(metaclass = _PresetMetaclass):
 
         if o == "order":
             assert type(v) is list, f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
-            assert len(v) == 4, f"Expected 4 items in order, but only got {len(v)}: {v}"
 
             for i in range(len(v)):
                 assert isinstance(v[i], (int, Order)), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
@@ -123,17 +162,13 @@ class Preset(metaclass = _PresetMetaclass):
         model = self.model.value if self.model is not None else "<?>"
         return f"Preset: '{self.name} ({model})'"
 
-    def enable(self, temperature: Optional[bool] = None, top_k: Optional[bool] = None,
-                     top_p: Optional[bool] = None, tfs: Optional[bool] = None) -> "Preset":
-        if temperature is not None:     self._enable_temperature    = temperature
-        if top_k is not None:           self._enable_top_k          = top_k
-        if top_p is not None:           self._enable_top_p          = top_p
-        if tfs is not None:             self._enable_tfs            = tfs
+    def enable(self, **kwargs) -> "Preset":
+        for o in Order:
+            name = ORDER_TO_NAME[o]
+            enabled = kwargs.pop(name, False)
+            self._enabled[o.value] = enabled
 
-        assert type(self._enable_temperature) is bool, f"Expected type bool for temperature, but got type '{type(self._enable_temperature)}'"
-        assert type(self._enable_top_k) is bool, f"Expected type bool for top_k, but got type '{type(self._enable_top_k)}'"
-        assert type(self._enable_top_p) is bool, f"Expected type bool for top_p, but got type '{type(self._enable_top_p)}'"
-        assert type(self._enable_tfs) is bool, f"Expected type bool for tfs, but got type '{type(self._enable_tfs)}'"
+        assert len(kwargs) == 0, f"Invalid order name: {', '.join(kwargs)}"
 
         return self
 
@@ -143,17 +178,10 @@ class Preset(metaclass = _PresetMetaclass):
         if "textGenerationSettingsVersion" in settings:
             del settings["textGenerationSettingsVersion"]   # not API relevant
 
-        if not self._enable_temperature and "temperature" in settings:
-            del settings["temperature"]
-
-        if not self._enable_top_k and "top_k" in settings:
-            del settings["top_k"]
-
-        if not self._enable_top_p and "top_p" in settings:
-            del settings["top_p"]
-
-        if not self._enable_tfs and "tail_free_sampling" in settings:
-            del settings["tail_free_sampling"]
+        for o in Order:
+            name = ORDER_TO_NAME[o]
+            if not self._enabled[o.value] and name in settings:
+                del settings[name]
 
         return settings
 
@@ -185,7 +213,7 @@ class Preset(metaclass = _PresetMetaclass):
 
         order = settings["order"] if "order" in settings else {}
         if order:
-            settings["order"] = list(name_to_order(o["id"]) for o in order)
+            settings["order"] = list(NAME_TO_ORDER[o["id"]] for o in order)
 
         # TODO: add support for token banning and bias in preset
         settings.pop("bad_words_ids", None)     # get rid of unsupported option
@@ -195,14 +223,8 @@ class Preset(metaclass = _PresetMetaclass):
         c = cls(name, model, settings)
 
         if order:
-            enabled = list(o["id"] for o in order if o["enabled"])
-
-            enable_temperature  = "temperature" in enabled
-            enable_top_k        = "top_k" in enabled
-            enable_top_p        = "top_p" in enabled
-            enable_tfs          = "tfs" in enabled
-
-            c.enable(enable_temperature, enable_top_k, enable_top_p, enable_tfs)
+            enabled = { o["id"]: o["enabled"] for o in order }
+            c.enable(**enabled)
 
         return c
 
