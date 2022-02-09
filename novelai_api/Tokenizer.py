@@ -36,7 +36,7 @@ class Tokenizer:
         return split(cls._tokenizer_name[model])[-1]
 
     @classmethod
-    def _get_tokenizer(cls, model: Model) ->  "PreTrainedTokenizerFast":
+    def _get_tokenizer(cls, model: Model) -> "PreTrainedTokenizerFast":
         tokenizer_name = cls.get_tokenizer_name(model)
 
         if tokenizer_name not in cls._tokenizer:

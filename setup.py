@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name = "novelai-api",
-    version = "0.7",
+    version = "0.8",
     author = "Arthus Leroy",
     author_email = "arthus.leroy@epita.fr",
     url = "https://github.com/arthus-leroy/novelai-api/",

@@ -32,27 +32,40 @@ class GlobalSettings:
 
     _DINKUS_ASTERISM = BiasGroup(-0.12).add("***", "⁂")
 
+    _DEFAULT_SETTINGS = {
+        "generate_until_sentence": False,
+        "num_logprobs": 10,
+        "ban_brackets": True,
+        "bias_dinkus_asterism": False,
+        "ban_ambiguous_genji_tokens": True
+    }
+
     NO_LOGPROBS = -1
 
-    generate_until_sentence: bool
-    num_logprobs: int
-    ban_brackets: bool
-    bias_dinkus_asterism: bool
-    ban_ambiguous_genji_tokens: bool
+    _settings: Dict[str, Any]
 
-    def __init__(self, generate_until_sentence: bool = False, num_logprobs: int = 10,
-                       ban_brackets: bool = True, bias_dinkus_asterism: bool = False,
-                       ban_ambiguous_genji_tokens: bool = True):
-        self.generate_until_sentence = generate_until_sentence
-        self.num_logprobs = num_logprobs
-        self.ban_brackets = ban_brackets
-        self.bias_dinkus_asterism = bias_dinkus_asterism
-        self.ban_ambiguous_genji_tokens = ban_ambiguous_genji_tokens
+    def __init__(self, **kwargs):
+        self._settings = {}
+
+        for setting in self._DEFAULT_SETTINGS:
+            self._settings[setting] = kwargs.pop(setting, self._DEFAULT_SETTINGS[setting])
+
+        assert len(kwargs) == 0, f"Invalid global setting name: {', '.join(kwargs)}"
+
+    def __setitem__(self, o: str, v: Any) -> None:
+        assert o in self._settings, f"Invalid setting: {o}"
+
+        self._settings[o] = v
+
+    def __getitem__(self, o: str) -> Any:
+        assert o in self._settings, f"Invalid setting: {o}"
+
+        return self._settings[o]
 
     def to_settings(self, model: Model) -> Dict[str, Any]:
         settings = {
-            "generate_until_sentence": self.generate_until_sentence,
-            "num_logprobs": self.num_logprobs,
+            "generate_until_sentence": self._settings["generate_until_sentence"],
+            "num_logprobs": self._settings["num_logprobs"],
 
             "bad_words_ids": [],
             "logit_bias_exp": [],
@@ -63,13 +76,13 @@ class GlobalSettings:
 
         tokenizer_name = Tokenizer.get_tokenizer_name(model)
 
-        if self.ban_brackets:
+        if self._settings["ban_brackets"]:
             settings["bad_words_ids"].extend(self._BRACKETS[tokenizer_name])
 
-        if self.ban_ambiguous_genji_tokens and tokenizer_name == "gpt2-genji":
+        if self._settings["ban_ambiguous_genji_tokens"] and tokenizer_name == "gpt2-genji":
             settings["bad_words_ids"].extend(self._GENJI_AMBIGUOUS_TOKENS)
 
-        if self.bias_dinkus_asterism:
+        if self._settings["bias_dinkus_asterism"]:
             settings["logit_bias_exp"].extend(self._DINKUS_ASTERISM.get_tokenized_biases(model))
 
         return settings
