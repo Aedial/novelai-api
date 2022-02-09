@@ -17,6 +17,7 @@ from logging import Logger, StreamHandler
 from typing import Union, List, Tuple
 
 import pytest
+import asyncio
 
 def permutations(*args):
     args = [list(a) for a in args if len(a)]
@@ -70,6 +71,7 @@ async def simple_generate(api: NovelAI_API, model: Model, preset: Preset, input:
 
     global_settings = GlobalSettings()
     gen = await api.high_level.generate(content, model, preset, global_settings)
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model_preset,input", model_preset_input_permutation)
@@ -99,6 +101,7 @@ async def default_generate(api: NovelAI_API, model: Model, input: Tuple[str, boo
 
     global_settings = GlobalSettings()
     gen = await api.high_level.generate(content, model, preset, global_settings)
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model,input", model_input_permutation)
@@ -128,6 +131,7 @@ async def official_generate(api: NovelAI_API, model: Model, input: Tuple[str, bo
 
     global_settings = GlobalSettings()
     gen = await api.high_level.generate(content, model, preset, global_settings)
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model,input", model_input_permutation)
@@ -159,6 +163,7 @@ async def globalsettings_generate(api: NovelAI_API, model: Model, preset: Preset
     global_settings.num_logprobs = GlobalSettings.NO_LOGPROBS
 
     gen = await api.high_level.generate(content, model, preset, global_settings)
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model_preset,input", model_preset_input_permutation)
@@ -199,6 +204,7 @@ async def bias_generate(api: NovelAI_API, model: Model, preset: Preset, input: T
 
     gen = await api.high_level.generate(content, model, preset, global_settings,
                                         biases = (bias1, bias2))
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model_preset,input", model_preset_input_permutation)
@@ -235,6 +241,7 @@ async def ban_generate(api: NovelAI_API, model: Model, preset: Preset, input: Tu
 
     gen = await api.high_level.generate(content, model, preset, global_settings,
                                         bad_words = banned)
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model_preset,input", model_preset_input_permutation)
@@ -274,6 +281,7 @@ async def ban_and_bias_generate(api: NovelAI_API, model: Model, preset: Preset, 
 
     gen = await api.high_level.generate(content, model, preset, global_settings,
                                         bad_words = banned, biases = [bias2])
+    logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
 @pytest.mark.parametrize("model_preset,input", model_preset_input_permutation)
