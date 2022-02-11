@@ -1,6 +1,5 @@
 from json import dumps
 from novelai_api.NovelAIError import NovelAIError
-from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.Keystore import Keystore
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Preset, Model
@@ -53,14 +52,14 @@ class High_Level:
         access_key = get_access_key(email, password)
         rsp = await self._parent.low_level.login(access_key)
 
-        self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
+        self._parent._headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
         return rsp["accessToken"]
 
     async def login_from_token(self, access_key: str) -> NoReturn:
         rsp = await self._parent.low_level.login(access_key)
 
-        self._parent._session.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
+        self._parent._headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
     async def get_keystore(self, key: bytes) -> Keystore:
         """

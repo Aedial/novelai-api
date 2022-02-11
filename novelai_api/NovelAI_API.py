@@ -1,9 +1,8 @@
 from novelai_api.NovelAIError import NovelAIError
-from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api._low_level import Low_Level
 from novelai_api._high_level import High_Level
 
-from aiohttp import ClientSession, ClientTimeout, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, ClientTimeout, CookieJar
 from multidict import CIMultiDict
 
 from logging import Logger, NullHandler
@@ -16,13 +15,15 @@ class NovelAI_API:
 	_BASE_ADDRESS: str = "https://api.novelai.net"
 
 	# Variables
-	_token: Optional[str] = None
 	_logger: Logger
-	_session: ClientSession
-	_timeout: ClientTimeout
+	_session: Optional[ClientSession]
 	_is_async: bool
 
 	_lib_root: str = dirname(abspath(__file__))
+
+	_timeout: ClientTimeout
+	_headers: CIMultiDict
+	_cookies: CookieJar
 
 	### Low Level Public API
 	low_level: Low_Level
@@ -34,18 +35,16 @@ class NovelAI_API:
 
 		# no session = synchronous
 		self._is_async = (session is not None)
-		if self._is_async:
-			self._session = session
-		else:
-			self._session = FakeClientSession()
+		self._session = session
 
 		if logger is None:
 			self._logger = Logger("NovelAI_API")
-			self._logger.addHandler(NullHandler())
 		else:
 			self._logger = logger
 
-		self._timeout = ClientTimeout(300)
+		self._timeout = ClientTimeout()
+		self._headers = CIMultiDict()
+		self._cookies = CookieJar()
 
 		# API parts
 		self.low_level = Low_Level(self)
@@ -56,8 +55,7 @@ class NovelAI_API:
 		Attach a ClientSession, making the requests asynchronous
 		"""
 
-		session.headers.update(self._session.headers)
-		session.cookie_jar.update_cookies(self._session.cookie_jar)
+		assert session is not None
 
 		self._is_async = True
 		self._session = session
@@ -67,13 +65,8 @@ class NovelAI_API:
 		Detach the current ClientSession, making the requests synchronous
 		"""
 
-		session = FakeClientSession()
-
-		session.headers.update(self._session.headers)
-		session.cookie_jar.update_cookies(self._session.cookie_jar)
-
 		self._is_async = False
-		self._session = session
+		self._session = None
 
 	@property
 	def headers(self) -> CIMultiDict:
@@ -88,9 +81,6 @@ class NovelAI_API:
 		"""
 		Timeout for a request (in seconds)
 		"""
-
-		if self._timeout is None or self._timeout.total is None:
-			return 300	# aiohttp's default
 
 		return self._timeout.total
 

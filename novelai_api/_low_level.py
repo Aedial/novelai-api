@@ -1,14 +1,8 @@
 from aiohttp import ClientSession, ClientError
 from aiohttp.client_reqrep import ClientResponse
-from aiohttp.client import _RequestContextManager
-from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.client_exceptions import ClientConnectionError
 
-from requests import request as sync_request, Response
-from requests.exceptions import ConnectionError
-
 from novelai_api.NovelAIError import NovelAIError
-from novelai_api.FakeClientSession import FakeClientSession
 from novelai_api.utils import tokens_to_b64
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.SchemaValidator import SchemaValidator
@@ -16,42 +10,20 @@ from novelai_api.Preset import Model
 
 from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
-class SyncResponse():
-    _rsp: Response
-
-    def __init__(self, rsp: Response):
-        self._rsp = rsp
-        self.status = rsp.status_code
-        self.reason = rsp.reason
-        self.content_type = rsp.headers["Content-Type"].split(';')[0]
-
-    async def text(self):
-        return self._rsp.text
-
-    async def json(self):
-        return self._rsp.json()
 
 #=== INTERNALS ===#
 #=== API ===#
 class Low_Level:
     _parent: "NovelAI_API"
-    _session: Union[ClientSession, FakeClientSession]
     _is_async: bool
 
     is_schema_validation_enabled: bool
 
     def __init__(self, parent: "NovelAI_API"):
-        self._is_async = parent._is_async
-
-        assert not self._is_async or isinstance(parent._session, ClientSession), "Session must be of class ClientSession for asynchronous operations"
-        assert self._is_async or isinstance(parent._session, FakeClientSession), "Session must be of class FakeClientSession for synchronous operations"
-
         self._parent = parent
-        self._session = parent._session
-
         self.is_schema_validation_enabled = True
 
-    def _treat_response_object(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> Any:
+    def _treat_response_object(self, rsp: ClientResponse, content: Any, status: int) -> Any:
         # error is an unexpected fail and usually come with a success status
         if type(content) is dict and "error" in content:
             raise NovelAIError(rsp.status, content["error"])
@@ -68,72 +40,60 @@ class Low_Level:
         else:
             raise NovelAIError(rsp.status, "Unknown error")
 
-    def _treat_response_bool(self, rsp: Union[ClientResponse, SyncResponse], content: Any, status: int) -> bool:
+    def _treat_response_bool(self, rsp: ClientResponse, content: Any, status: int) -> bool:
         if rsp.status == status:
             return True
 
         self._treat_response_object(rsp, content, status)
         return False
 
-    async def _treat_response(self, rsp: Union[ClientResponse, SyncResponse]) -> Any:
+    async def _treat_response(self, rsp: ClientResponse) -> Any:
         if rsp.content_type == "application/json":
             return (await rsp.json())
         else:
             return (await rsp.text())
 
-    async def _request_async(self, method: str, url: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
+    async def _request_async(self, method: str, url: str, session: ClientSession,
+                             data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
         """
         :param url: Url of the request
         :param method: Method of the request from ClientSession
+        :param session: Session to use for the request
         :param data: Data to pass to the method if needed
         """
 
         timeout = self._parent._timeout
+        cookies = self._parent._cookies
+        headers = self._parent._headers
 
-        if type(data) is dict:    # data transforms dict in str
-            async with self._session.request(method, url, json = data, timeout = timeout) as rsp:
-                return (rsp, await self._treat_response(rsp))
-        else:
-            async with self._session.request(method, url, data = data, timeout = timeout) as rsp:
-                return (rsp, await self._treat_response(rsp))
+        try:
+            if type(data) is dict:    # data transforms dict in str
+                async with session.request(method, url, json = data, timeout = timeout, cookies = cookies, headers = headers) as rsp:
+                    return (rsp, await self._treat_response(rsp))
+            else:
+                async with session.request(method, url, data = data, timeout = timeout, cookies = cookies, headers = headers) as rsp:
+                    return (rsp, await self._treat_response(rsp))
 
-    async def _request_sync(self, method: str, url: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
-        """
-        :param url: Url of the request
-        :param method: Method of the request from the request library
-        :param data: Data to pass to the method if needed
-        """
-
-        timeout = self._parent._timeout.total
-        headers = self._parent._session.headers
-        cookies = self._parent._session.cookie_jar
-
-        if type(data) is dict:
-            with sync_request(method, url, headers = headers, json = data, timeout = timeout, cookies = cookies) as rsp:
-                rsp = SyncResponse(rsp)
-                return (rsp, await self._treat_response(rsp))
-        else:
-            with sync_request(method, url, headers = headers, data = data, timeout = timeout, cookies = cookies) as rsp:
-                rsp = SyncResponse(rsp)
-                return (rsp, await self._treat_response(rsp))
+        except ClientConnectionError as e:      # No internet
+            raise NovelAIError(e.errno, str(e))
+        # TODO: there may be other request errors to catch
 
     async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
         """
+        Send request
+
+        :param method: Method of the request (get, post, delete)
         :param endpoint: Endpoint of the request
-        :param request_method: Method of the request from ClientSession
         :param data: Data to pass to the method if needed
         """
 
         url = f"{self._parent._BASE_ADDRESS}{endpoint}"
 
-        try:
-            if self._is_async:
-                return await self._request_async(method, url, data)
-            else:
-                return await self._request_sync(method, url, data)
-        except (ClientConnectionError, ConnectionError) as e:      # No internet
-            raise NovelAIError(e.errno, str(e))
-        # TODO: there may be other request errors to catch
+        if self._parent._is_async:
+            return await self._request_async(method, url, self._parent._session, data)
+        else:
+            async with ClientSession() as session:
+                return await self._request_async(method, url, session, data)
 
     # TODO: Add a stream handler
 

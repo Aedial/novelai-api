@@ -2,7 +2,6 @@ aiohttp
 argon2-cffi
 pynacl
 jsonschema
-requests
 transformers
 pytest-asyncio
 pytest-xdist
