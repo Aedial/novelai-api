@@ -30,6 +30,8 @@ logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
 async def generate_10(api: NovelAI_API, model: Model):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
@@ -57,9 +59,13 @@ async def test_run_10_generate_sync(model: Model):
 @pytest.mark.parametrize("model", [*Model])
 async def test_run_10_generate_async(model: Model):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await generate_10(api, model)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await generate_10(api, model)
+    except Exception as e:
+        await session.close()
+        raise e
 
 if __name__ == "__main__":
     async def main():

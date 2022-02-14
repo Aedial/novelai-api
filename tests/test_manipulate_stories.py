@@ -27,6 +27,8 @@ logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
 async def story_manipulation(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -44,9 +46,9 @@ async def story_manipulation(api: NovelAI_API):
 
     for _ in range(10):
         await story.generate()
-        logger.info(story)
-        logger.info(dumps(story._storycontent["data"]["story"]["fragments"], indent = 4))
-        logger.info("")
+#        logger.info(story)
+#        logger.info(dumps(story._storycontent["data"]["story"]["fragments"], indent = 4))
+#        logger.info("")
 
 async def test_story_manipulation_sync():
     # sync handler
@@ -55,9 +57,13 @@ async def test_story_manipulation_sync():
 
 async def test_story_manipulation_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await story_manipulation(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await story_manipulation(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 if __name__ == "__main__":
     asyncio.run(test_story_manipulation_async())

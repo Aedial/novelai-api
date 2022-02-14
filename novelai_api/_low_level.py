@@ -8,7 +8,10 @@ from novelai_api.Tokenizer import Tokenizer
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Model
 
-from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
+from json import loads as load_json
+from yaml import safe_load as load_yaml
+
+from typing import Literal, Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
 
 #=== INTERNALS ===#
@@ -47,36 +50,81 @@ class Low_Level:
         self._treat_response_object(rsp, content, status)
         return False
 
-    async def _treat_response(self, rsp: ClientResponse) -> Any:
+    async def _treat_response(self, rsp: ClientResponse, data: Any) -> Any:
         if rsp.content_type == "application/json":
-            return (await rsp.json())
+            return (await data.json())
         else:
-            return (await rsp.text())
+            return (await data.text())
 
-    async def _request_async(self, method: str, url: str, session: ClientSession,
-                             data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
+    def _parse_stream_data(self, stream_content: str) -> Dict[str, Any]:
+        stream_data = {}
+
+        for line in stream_content.splitlines():
+            colon = line.find(":")
+            # TODO: replace by a meaningful error
+            assert ":" != -1, f"Malformed data stream line: {line}"
+
+            stream_data[line[:colon]] = line[colon + 1:]
+
+            print(stream_data)
+
+        return stream_data
+
+    async def _treat_response_stream(self, rsp: ClientResponse, data: bytes) -> Any:
+        data = data.decode()
+
+        if rsp.content_type == "text/event-stream":
+            stream_data = self._parse_stream_data(data)
+
+            # TODO: replace by a meaningful error
+            assert "data" in stream_data
+            data = load_json(stream_data["data"])
+
+        return data
+
+    async def _request(self, method: str, url: str, session: ClientSession,
+                             data: Union[Dict[str, Any], str], stream: bool) -> Tuple[ClientResponse, Any]:
+
+        kwargs = {
+            "timeout": self._parent._timeout,
+            "cookies": self._parent._cookies,
+            "headers": self._parent._headers,
+        }
+
+        kwargs["json" if type(data) is dict else "data"] = data
+
+        async with session.request(method, url, **kwargs) as rsp:
+            if stream:
+                async for i in rsp.content.iter_any():
+                    yield (rsp, await self._treat_response_stream(rsp, i))
+            else:
+                yield (rsp, await self._treat_response(rsp, rsp))
+
+    async def request_stream(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None,
+                                   stream: bool = True) -> Tuple[ClientResponse, Any]:
         """
-        :param url: Url of the request
-        :param method: Method of the request from ClientSession
-        :param session: Session to use for the request
+        Send request with support for data streaming
+
+        :param method: Method of the request (get, post, delete)
+        :param endpoint: Endpoint of the request
         :param data: Data to pass to the method if needed
+        :param stream: Use data streaming for the response
         """
 
-        timeout = self._parent._timeout
-        cookies = self._parent._cookies
-        headers = self._parent._headers
+        url = f"{self._parent._BASE_ADDRESS}{endpoint}"
+
+        is_sync = self._parent._session is None
+        session = ClientSession() if is_sync else self._parent._session
 
         try:
-            if type(data) is dict:    # data transforms dict in str
-                async with session.request(method, url, json = data, timeout = timeout, cookies = cookies, headers = headers) as rsp:
-                    return (rsp, await self._treat_response(rsp))
-            else:
-                async with session.request(method, url, data = data, timeout = timeout, cookies = cookies, headers = headers) as rsp:
-                    return (rsp, await self._treat_response(rsp))
-
+            async for i in self._request(method, url, session, data, stream):
+                yield i
         except ClientConnectionError as e:      # No internet
             raise NovelAIError(e.errno, str(e))
         # TODO: there may be other request errors to catch
+        finally:
+            if is_sync:
+                await session.close()
 
     async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
         """
@@ -87,15 +135,8 @@ class Low_Level:
         :param data: Data to pass to the method if needed
         """
 
-        url = f"{self._parent._BASE_ADDRESS}{endpoint}"
-
-        if self._parent._is_async:
-            return await self._request_async(method, url, self._parent._session, data)
-        else:
-            async with ClientSession() as session:
-                return await self._request_async(method, url, session, data)
-
-    # TODO: Add a stream handler
+        async for i in self.request_stream(method, endpoint, data, False):
+            return i
 
     async def is_reachable(self) -> bool:
         """
@@ -353,11 +394,13 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
-    async def generate(self, input: Union[List[int], str], model: Model, params: Dict[str, Any]) -> Dict[str, str]:
+    async def generate(self, input: Union[List[int], str], model: Model, params: Dict[str, Any],
+                             stream: bool = False) -> Dict[str, str]:
         """
         :param input: Input to be sent the AI
         :param model: Model of the AI
         :param params: Generation parameters
+        :param stream: Use data streaming for the response
 
         :return: Generated output
         """
@@ -365,6 +408,7 @@ class Low_Level:
         assert isinstance(input, (str, list)), f"Expected type 'str' or 'List[int]' for input, but got type '{type(input)}'"
         assert type(model) is Model, f"Expected type 'Model' for model, but got type '{type(model)}'"
         assert type(params) is dict, f"Expected type 'dict' for params, but got type '{type(params)}'"
+        assert type(stream) is bool, f"Expected type 'bool' for stream, but got type '{type(stream)}'"
 
         if type(input) is str:
             input = Tokenizer.encode(model, input)
@@ -372,11 +416,12 @@ class Low_Level:
         input = tokens_to_b64(input)
         args = { "input": input, "model": model.value, "parameters": params }
 
-        rsp, content = await self.request("post", "/ai/generate", args)
-        return self._treat_response_object(rsp, content, 201)
+        endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
-    async def generate_stream(self):
-        raise NotImplementedError("Function is not implemented yet")
+        async for rsp, content in self.request_stream("post", endpoint, args, stream):
+            self._treat_response_object(rsp, content, 201)
+
+            yield content
 
     async def classify(self):
         raise NotImplementedError("Function is not implemented yet")

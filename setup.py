@@ -29,11 +29,10 @@ setuptools.setup(
     python_requires = '>=3.7',
     keywords = [ "python", "NovelAI", "API" ],
     install_requires = [
-		"aiohttp",
+		"aiohttp[speedups]",
 		"argon2-cffi",
 		"pynacl",
         "jsonschema",
-        "requests",
         "transformers"
 	]
 )

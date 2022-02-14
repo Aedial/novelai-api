@@ -62,6 +62,8 @@ model_input_permutation = [*permutations(models, input, tokenize_input)]
 model_preset_input_permutation = [*permutations(models_presets, input, tokenize_input)]
 
 async def simple_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -83,12 +85,17 @@ async def test_simple_generate_sync(model_preset: Tuple[Model, Preset], input: s
 @pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
 async def test_simple_generate_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await simple_generate(api, *model_preset, input, tokenize)
-
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await simple_generate(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 async def default_generate(api: NovelAI_API, model: Model, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
@@ -112,12 +119,18 @@ async def test_default_generate_sync(model: Model, input: str, tokenize: bool):
 @pytest.mark.parametrize("model,input,tokenize", model_input_permutation)
 async def test_default_generate_async(model: Model, input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await default_generate(api, model, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await default_generate(api, model, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def official_generate(api: NovelAI_API, model: Model, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     preset = Preset.from_official(model)
@@ -141,12 +154,18 @@ async def test_official_generate_sync(model: Model, input: str, tokenize: bool):
 @pytest.mark.parametrize("model,input,tokenize", model_input_permutation)
 async def test_official_generate_async(model: Model, input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await official_generate(api, model, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await official_generate(api, model, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def globalsettings_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -169,12 +188,18 @@ async def test_globalsettings_generate_sync(model_preset: Tuple[Model, Preset], 
 @pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
 async def test_globalsettings_generate_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await globalsettings_generate(api, *model_preset, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await globalsettings_generate(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def bias_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -209,12 +234,18 @@ async def test_bias_generate_sync(model_preset: Tuple[Model, Preset], input: str
 @pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
 async def test_bias_generate_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await bias_generate(api, *model_preset, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await bias_generate(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def ban_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -245,12 +276,18 @@ async def test_ban_generate_sync(model_preset: Tuple[Model, Preset], input: str,
 @pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
 async def test_ban_generate_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await ban_generate(api, *model_preset, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await ban_generate(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def ban_and_bias_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -284,6 +321,55 @@ async def test_ban_and_bias_generate_sync(model_preset: Tuple[Model, Preset], in
 @pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await ban_generate(api, *model_preset, input, tokenize)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await ban_generate(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e
+
+
+async def ban_and_bias_generate_streaming(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
+    api.timeout = 30
+
+    await api.high_level.login(username, password)
+
+    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+
+    if tokenize:
+        input = Tokenizer.encode(model, input)
+
+    global_settings = GlobalSettings()
+    global_settings["bias_dinkus_asterism"] = True
+    global_settings["ban_brackets"] = True
+    global_settings["num_logprobs"] = 1
+
+    banned = BanList().add("***", "---", Tokenizer.encode(model, "///")).add("fairly")
+    banned += "commonly"
+    banned += " commonly"
+
+    bias2 = BiasGroup(0.1).add(" because", " since").add(" why").add(" when", " about")
+    bias2 += "as it is"
+
+    async for i in api.high_level.generate_stream(input, model, preset, global_settings,
+                                                  bad_words = banned, biases = [bias2]):
+        logger.info(i)
+        logger.info(Tokenizer.decode(model, b64_to_tokens(i["token"])))
+
+@pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
+async def test_ban_and_bias_generate_streaming_sync(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
+    # sync handler
+    api = NovelAI_API()
+    await ban_and_bias_generate_streaming(api, *model_preset, input, tokenize)
+
+@pytest.mark.parametrize("model_preset,input,tokenize", model_preset_input_permutation)
+async def test_ban_and_bias_generate_streaming_async(model_preset: Tuple[Model, Preset], input: str, tokenize: bool):
+    # async handler
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await ban_and_bias_generate_streaming(api, *model_preset, input, tokenize)
+    except Exception as e:
+        await session.close()
+        raise e

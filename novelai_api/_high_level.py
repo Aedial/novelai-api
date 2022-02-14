@@ -137,7 +137,7 @@ class High_Level:
         # this step should have been done in encrypt_user_data, but the user could have not called it
         for key in ("nonce", "compressed", "decrypted"):
             if key in object_data:
-                self._parent.logger.warn(f"Data {key} left in object '{object_type}' of id '{object_id}'")
+                self._parent.logger.warning(f"Data {key} left in object '{object_type}' of id '{object_id}'")
                 del object_data[key]
 
         return await self._parent.low_level.upload_object(object_type, object_id, object_meta, object_data)
@@ -164,11 +164,16 @@ class High_Level:
 
         return status
 
-    async def generate(self, input: Union[List[int], str], model: Model, preset: Preset,
-                       global_settings: GlobalSettings, bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
-                       biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None, prefix: Optional[str] = None) -> Dict[str, Any]:
+    async def _generate(self, input: Union[List[int], str],
+                              model: Model,
+                              preset: Preset,
+                              global_settings: GlobalSettings,
+                              bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+                              biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+                              prefix: Optional[str] = None,
+                              stream: bool = False) -> Dict[str, Any]:
         """
-        Generate content from an AI on the NovelAI server
+        Generate content from an AI on the NovelAI server which support streaming
 
         :param input: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -177,6 +182,7 @@ class High_Level:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation
+        :param stream: Use data streaming for the response
 
         :return: Content that has been generated
         """
@@ -220,6 +226,55 @@ class High_Level:
         if not params["bad_words_ids"]:
             del params["bad_words_ids"]
 
-        return await self._parent.low_level.generate(input, model, params)
+        async for i in self._parent.low_level.generate(input, model, params, stream):
+            yield i
+
+    async def generate(self, input: Union[List[int], str],
+                             model: Model,
+                             preset: Preset,
+                             global_settings: GlobalSettings,
+                             bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+                             biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+                             prefix: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Generate content from an AI on the NovelAI server which support streaming
+
+        :param input: Context to give to the AI (raw text or list of tokens)
+        :param model: Model to use for the AI
+        :param preset: Preset to use for the generation settings
+        :param global_settings: Global settings (used for generation)
+        :param bad_words: Tokens to ban for this generation
+        :param biases: Tokens to bias (up or down) for this generation
+        :param prefix: Module to use for this generation
+
+        :return: Content that has been generated
+        """
+
+        async for i in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, False):
+            return i
+
+    async def generate_stream(self, input: Union[List[int], str],
+                                    model: Model,
+                                    preset: Preset,
+                                    global_settings: GlobalSettings,
+                                    bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+                                    biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+                                    prefix: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Generate content from an AI on the NovelAI server
+
+        :param input: Context to give to the AI (raw text or list of tokens)
+        :param model: Model to use for the AI
+        :param preset: Preset to use for the generation settings
+        :param global_settings: Global settings (used for generation)
+        :param bad_words: Tokens to ban for this generation
+        :param biases: Tokens to bias (up or down) for this generation
+        :param prefix: Module to use for this generation
+
+        :return: Content that has been generated
+        """
+
+        async for i in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, True):
+            yield i
 
     # TODO: encryption and upload

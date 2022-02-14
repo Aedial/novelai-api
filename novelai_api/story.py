@@ -348,7 +348,7 @@ class NovelAI_Story:
                 story_id = storycontent["id"]
 
                 if story_id not in mapping:
-                    self._api._logger.warn(f"Storycontent {story_id} has no associated story")
+                    self._api._logger.warning(f"Storycontent {story_id} has no associated story")
                 else:
                     proxy = self.load(mapping[story_id], storycontent)
                     del mapping[story_id]
@@ -356,7 +356,7 @@ class NovelAI_Story:
                     loaded.append(proxy)
 
         for story_id in mapping.keys():
-            self._api._logger.warn(f"Story {story_id} has no associated storycontent")
+            self._api._logger.warning(f"Story {story_id} has no associated storycontent")
 
         return loaded
 

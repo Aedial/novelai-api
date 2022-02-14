@@ -45,6 +45,8 @@ username = env["NAI_USERNAME"]
 password = env["NAI_PASSWORD"]
 
 async def keystore_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -63,11 +65,18 @@ async def test_keystore_integrity_sync():
 
 async def test_keystore_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await keystore_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await keystore_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
+
 
 async def stories_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -88,12 +97,18 @@ async def test_stories_integrity_sync():
 
 async def test_stories_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await stories_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await stories_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def storycontent_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -120,12 +135,18 @@ async def test_storycontent_integrity_sync():
 
 async def test_storycontent_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await storycontent_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await storycontent_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def presets_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -146,12 +167,18 @@ async def test_presets_integrity_sync():
 
 async def test_presets_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await presets_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await presets_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def aimodules_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -172,12 +199,18 @@ async def test_keystore_integrity_sync():
 
 async def test_keystore_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await aimodules_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await aimodules_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 async def shelves_integrity(api: NovelAI_API):
+    api.timeout = 30
+
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
@@ -198,9 +231,13 @@ async def test_shelves_integrity_sync():
 
 async def test_shelves_integrity_async():
     # async handler
-    async with ClientSession() as session:
-        api = NovelAI_API(session)
-        await shelves_integrity(api)
+    try:
+        async with ClientSession() as session:
+            api = NovelAI_API(session)
+            await shelves_integrity(api)
+    except Exception as e:
+        await session.close()
+        raise e
 
 
 if __name__ == "__main__":
@@ -214,8 +251,8 @@ if __name__ == "__main__":
         await test_storycontent_integrity_sync()
         await test_storycontent_integrity_async()
 
-        await test_preset_integrity_sync()
-        await test_preset_integrity_async()
+        await test_presets_integrity_sync()
+        await test_presets_integrity_async()
 
         await test_shelves_integrity_sync()
         await test_shelves_integrity_async()
