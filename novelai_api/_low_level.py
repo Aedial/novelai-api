@@ -87,8 +87,8 @@ class Low_Level:
 
         kwargs = {
             "timeout": self._parent._timeout,
-            "cookies": self._parent._cookies,
-            "headers": self._parent._headers,
+            "cookies": self._parent.cookies,
+            "headers": self._parent.headers,
         }
 
         kwargs["json" if type(data) is dict else "data"] = data
