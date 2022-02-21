@@ -66,8 +66,6 @@ class Low_Level:
 
             stream_data[line[:colon]] = line[colon + 1:]
 
-            print(stream_data)
-
         return stream_data
 
     async def _treat_response_stream(self, rsp: ClientResponse, data: bytes) -> Any:
