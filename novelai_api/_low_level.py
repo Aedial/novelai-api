@@ -8,8 +8,7 @@ from novelai_api.Tokenizer import Tokenizer
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Model
 
-from json import loads as load_json
-from yaml import safe_load as load_yaml
+from json import loads
 
 from typing import Literal, Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
@@ -76,7 +75,7 @@ class Low_Level:
 
             # TODO: replace by a meaningful error
             assert "data" in stream_data
-            data = load_json(stream_data["data"])
+            data = loads(stream_data["data"])
 
         return data
 
