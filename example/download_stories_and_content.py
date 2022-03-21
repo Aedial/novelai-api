@@ -5,7 +5,7 @@ from os.path import join, abspath, dirname
 path.insert(0, abspath(join(dirname(__file__), '..')))
 
 from novelai_api import NovelAI_API
-from novelai_api.utils import get_encryption_key, decrypt_user_data, map_meta_to_stories, assign_content_to_story
+from novelai_api.utils import get_encryption_key, decrypt_user_data, assign_content_to_story
 from aiohttp import ClientSession
 
 from logging import Logger, StreamHandler
@@ -41,19 +41,18 @@ async def main():
             if "nonce" in story:
                 del story["nonce"]
 
+        logger.info(json.dumps(stories, indent = 4, ensure_ascii = False))
+
         story_contents = await api.high_level.download_user_story_contents()
         decrypt_user_data(story_contents, keystore)
+
+        logger.info("\n\n\n")
 
         # delete the nonce as it is not dump'able
         for story_content in story_contents:
             if "nonce" in story_content:
                 del story_content["nonce"]
 
-        logger.info(json.dumps(story_contents, indent = 4))
-
-        stories = map_meta_to_stories(stories)
-        assign_content_to_story(stories, story_contents)
-
-        logger.info(json.dumps(stories, indent = 4))
+        logger.info(json.dumps(story_contents, indent = 4, ensure_ascii = False))
 
 run(main())

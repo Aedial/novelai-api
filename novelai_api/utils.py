@@ -214,24 +214,21 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 
             del item["decrypted"]
 
-def map_meta_to_stories(stories: Union[List[Dict[str, Any]], Dict[str, Any]]) -> Dict[str, Dict[str, Union[str, int]]]:
-    data = {}
-    for story in stories:
-        data[story["meta"]] = story
-
-    return data
-
-def assign_content_to_story(stories: Dict[str, Dict[str, Union[str, int]]], story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
-    assert type(stories) is dict, "Stories must be mapped, before being associated with their content"
+def assign_content_to_story(stories: Dict[str, Union[str, int]], story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+    if type(stories) is not list and type(stories) is not tuple:
+        stories = [stories]
 
     if type(story_contents) is not list and type(story_contents) is not tuple:
         story_contents = [story_contents]
 
-    for story_content in story_contents:
-        meta = story_content["meta"]
+    story_contents = {content["id"]: content["data"] for content in story_contents}
 
-        if meta in stories and story_content["decrypted"] and stories[meta]["decrypted"]:
-            stories[meta]["content"] = story_content
+    for story in stories:
+        if story.get("decrypted", False):
+            remoteId = story["data"].get("remoteStoryId")
+
+            if remoteId and remoteId in story_contents and story_contents[remoteId].get("decrypted"):
+                story["content"] = story_contents[remoteId]
 
 def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
     for i in range(len(items)):
