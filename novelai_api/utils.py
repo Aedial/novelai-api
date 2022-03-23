@@ -221,10 +221,10 @@ def assign_content_to_story(stories: Dict[str, Union[str, int]], story_contents:
     if type(story_contents) is not list and type(story_contents) is not tuple:
         story_contents = [story_contents]
 
-    story_contents = {content["id"]: content["data"] for content in story_contents}
+    story_contents = {content["id"]: content for content in story_contents}
 
     for story in stories:
-        if story.get("decrypted", False):
+        if story.get("decrypted"):
             remoteId = story["data"].get("remoteStoryId")
 
             if remoteId and remoteId in story_contents and story_contents[remoteId].get("decrypted"):
