@@ -20,6 +20,8 @@ from asyncio import run, gather
 
 import pytest
 
+models = [*Model]
+
 if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
     raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
 
@@ -30,8 +32,6 @@ logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
 async def generate_10(api: NovelAI_API, model: Model):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
@@ -50,13 +50,13 @@ async def generate_10(api: NovelAI_API, model: Model):
         logger.info("\t" + Tokenizer.decode(model, b64_to_tokens(gen["output"])))
         logger.info("")
 
-@pytest.mark.parametrize("model", [*Model])
+@pytest.mark.parametrize("model", models)
 async def test_run_10_generate_sync(model: Model):
     # sync handler
     api = NovelAI_API()
     await generate_10(api, model)
 
-@pytest.mark.parametrize("model", [*Model])
+@pytest.mark.parametrize("model", models)
 async def test_run_10_generate_async(model: Model):
     # async handler
     try:
