@@ -14,7 +14,6 @@ class Tokenizer:
     _tokenizer_name = {
         Model.Calliope: "gpt2",
         Model.Sigurd: "gpt2",
-        Model.Euterpe_v1: "gpt2",
         Model.Euterpe: "gpt2",
         # TODO: add 20B tokenizer
 

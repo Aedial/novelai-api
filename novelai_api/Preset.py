@@ -55,7 +55,6 @@ class StrEnum(str, Enum):
 class Model(StrEnum):
     Calliope = "2.7B"
     Sigurd = "6B-v4"
-    Euterpe_v1 = "euterpe-v0"
     Euterpe = "euterpe-v2"
     # TODO: add 20B
 
