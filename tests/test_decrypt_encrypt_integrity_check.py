@@ -23,10 +23,6 @@ def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: Li
         print(fail_flags)
         print("")
 
-        pos = fail_flags.find('X')
-        print(items_in[pos])
-        print(items_out[pos])
-
         return False
     else:
         print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
