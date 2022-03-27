@@ -23,6 +23,10 @@ def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: Li
         print(fail_flags)
         print("")
 
+        pos = fail_flags.find('X')
+        print(items_in[pos])
+        print(items_out[pos])
+
         return False
     else:
         print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
@@ -30,11 +34,19 @@ def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: Li
 
 fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
 
+# FIXME: move the data from argument to stdin
 def inflate_js(data: bytes, wbits: int) -> bytes:
     b64 = b64encode(data).decode()
+#    b64 = b64encode(data)
 
-    p = Popen(["node", fflate_path, b64], stdout = PIPE)
-    out, _ = p.communicate()
+    try:
+        p = Popen(["node", fflate_path, b64], stdout = PIPE)
+        out, _ = p.communicate()
+    except OSError:     # OSError if b64 is too big
+        out = b''
+
+#    p = Popen(["node", fflate_path, str(len(b64))], stdin = PIPE, stdout = PIPE)
+#    out, _ = p.communicate(b64)
 
     return out
 
@@ -150,7 +162,6 @@ async def presets_integrity(api: NovelAI_API):
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
-    keystore = await api.high_level.get_keystore(key)
 
     presets = await api.high_level.download_user_presets()
     encrypted_presets_in = [str(preset) for preset in presets]
@@ -214,12 +225,11 @@ async def shelves_integrity(api: NovelAI_API):
     await api.high_level.login(username, password)
 
     key = get_encryption_key(username, password)
-    keystore = await api.high_level.get_keystore(key)
 
     shelves = await api.high_level.download_user_shelves()
     encrypted_shelves_in = [str(shelf) for shelf in shelves]
-    decrypt_user_data(shelves, keystore)
-    encrypt_user_data(shelves, keystore)
+    decompress_user_data(shelves)
+    compress_user_data(shelves)
     encrypted_shelves_out = [str(shelf) for shelf in shelves]
 
     assert compare_in_out("shelves", encrypted_shelves_in, encrypted_shelves_out)
