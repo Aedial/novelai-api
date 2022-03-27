@@ -9,6 +9,7 @@ from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Model
 
 from json import loads
+from urllib.parse import urlencode, quote
 
 from typing import Literal, Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
@@ -50,6 +51,8 @@ class Low_Level:
         return False
 
     async def _treat_response(self, rsp: ClientResponse, data: Any) -> Any:
+        if rsp.content_type == "audio/webm":
+            return (await data.read())
         if rsp.content_type == "application/json":
             return (await data.json())
         else:
@@ -492,5 +495,31 @@ class Low_Level:
         self._treat_response_object(rsp, content, 200)
 
         # TODO: verify response ?
+
+        return content
+
+    async def generate_voice(self, text: str, seed: str, voice: int, opus: bool) -> Dict[str, Any]:
+        """
+        Generate the Text-to-Speech of :ref: `text` using the given seed and voice
+        
+        :param text: Text to synthetize into voice
+        :param seed: Person to use the voice of
+        :param voice: Index of the voice to use
+        :param opus: Use the Opus TTS
+
+        :return: TTS of the text
+        """
+
+        assert type(text) is str, f"Expected type 'str' for text, but got type '{type(text)}'"
+        assert type(seed) is str, f"Expected type 'str' for seed, but got type '{type(seed)}'"
+        assert type(voice) is int, f"Expected type 'int' for voice, but got type '{type(voice)}'"
+        assert type(opus) is bool, f"Expected type 'bool' for opus, but got type '{type(opus)}'"
+
+        # urlencode keeps capitalization on bool =_=
+        opus = "true" if opus else "false"
+        query = urlencode({"text": text, "seed": seed, "voice": voice, "opus": opus}, quote_via = quote)
+
+        rsp, content = await self.request("get", f"/ai/generate-voice?{query}")
+        self._treat_response_object(rsp, content, 200)
 
         return content
