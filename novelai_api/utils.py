@@ -67,7 +67,7 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
     if type(data) is not bytes:
         data = data.encode()
 
-    # FIXME: zlib results in different data than the library used by NAI, but they are fully compatible
+    # NOTE: zlib results in different data than the library used by NAI, but they are fully compatible
     if is_compressed:
         deflater = deflate_obj(Z_BEST_COMPRESSION, wbits = -MAX_WBITS)
         data = deflater.compress(data) + deflater.flush()
@@ -104,8 +104,16 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> 
             continue
 
         try:
-            item["data"] = json.loads(b64decode(item["data"]).decode())
+            data = b64decode(item["data"])
+
+            is_compressed = (len(data) >= 16 and data[:16] == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01")
+            if is_compressed:
+                data = data[16:]
+                data = inflate(data, -MAX_WBITS)
+
+            item["data"] = json.loads(data.decode())
             item["decrypted"] = True    # not decrypted, per say, but for genericity
+            item["compressed"] = is_compressed
         except json.JSONDecodeError:
             item["decrypted"] = False
 
@@ -125,7 +133,16 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> No
 
         if "decrypted" in item:
             if item["decrypted"]:
-                item["data"] = b64encode(json.dumps(item["data"], separators = (',', ':'), ensure_ascii = False).encode()).decode()
+                data = json.dumps(item["data"], separators = (',', ':'), ensure_ascii = False).encode()
+
+                if "compressed" in item:
+                    if item["compressed"]:
+                        deflater = deflate_obj(Z_BEST_COMPRESSION, wbits = -MAX_WBITS)
+                        data = deflater.compress(data) + deflater.flush()
+                        data = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01" + data
+                    del item["compressed"]
+
+                item["data"] = b64encode(data).decode()
             del item["decrypted"]
 
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
