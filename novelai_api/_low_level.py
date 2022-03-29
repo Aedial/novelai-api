@@ -11,7 +11,7 @@ from novelai_api.Preset import Model
 from json import loads
 from urllib.parse import urlencode, quote
 
-from typing import Literal, Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
+from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
 
 
 #=== INTERNALS ===#
