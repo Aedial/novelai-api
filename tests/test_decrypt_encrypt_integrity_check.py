@@ -7,7 +7,6 @@ path.insert(0, abspath(join(dirname(__file__), '..')))
 from novelai_api import NovelAI_API, utils
 from novelai_api.utils import get_encryption_key, decrypt_user_data, encrypt_user_data, decompress_user_data, compress_user_data
 
-
 from aiohttp import ClientSession
 from base64 import b64encode
 from subprocess import Popen, PIPE
@@ -30,19 +29,9 @@ def compare_in_out(type_name: str, items_in: List[Dict[str, Any]], items_out: Li
 
 fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
 
-# FIXME: move the data from argument to stdin
 def inflate_js(data: bytes, wbits: int) -> bytes:
-    b64 = b64encode(data).decode()
-#    b64 = b64encode(data)
-
-    try:
-        p = Popen(["node", fflate_path, b64], stdout = PIPE)
-        out, _ = p.communicate()
-    except OSError:     # OSError if b64 is too big
-        out = b''
-
-#    p = Popen(["node", fflate_path, str(len(b64))], stdin = PIPE, stdout = PIPE)
-#    out, _ = p.communicate(b64)
+    p = Popen(["node", fflate_path, str(len(data))], stdin = PIPE, stdout = PIPE)
+    out, _ = p.communicate(data)
 
     return out
 
