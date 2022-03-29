@@ -52,7 +52,7 @@ input = [input_txt]
 tokenize_input = [False, True]
 
 models = [*Model]
-# NOTE: uncomment that if you're Opus
+# NOTE: uncomment that if you're not Opus
 # models.remove(Model.Genji)
 # models.remove(Model.Snek)
 
@@ -62,8 +62,6 @@ model_input_permutation = [*permutations(models, input, tokenize_input)]
 model_preset_input_permutation = [*permutations(models_presets, input, tokenize_input)]
 
 async def simple_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -94,8 +92,6 @@ async def test_simple_generate_async(model_preset: Tuple[Model, Preset], input: 
         raise e
 
 async def default_generate(api: NovelAI_API, model: Model, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
@@ -129,8 +125,6 @@ async def test_default_generate_async(model: Model, input: str, tokenize: bool):
 
 
 async def official_generate(api: NovelAI_API, model: Model, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     preset = Preset.from_official(model)
@@ -164,8 +158,6 @@ async def test_official_generate_async(model: Model, input: str, tokenize: bool)
 
 
 async def globalsettings_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -198,8 +190,6 @@ async def test_globalsettings_generate_async(model_preset: Tuple[Model, Preset],
 
 
 async def bias_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -244,8 +234,6 @@ async def test_bias_generate_async(model_preset: Tuple[Model, Preset], input: st
 
 
 async def ban_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -286,8 +274,6 @@ async def test_ban_generate_async(model_preset: Tuple[Model, Preset], input: str
 
 
 async def ban_and_bias_generate(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
@@ -331,8 +317,6 @@ async def test_ban_and_bias_generate_async(model_preset: Tuple[Model, Preset], i
 
 
 async def ban_and_bias_generate_streaming(api: NovelAI_API, model: Model, preset: Preset, input: str, tokenize: bool):
-    api.timeout = 30
-
     await api.high_level.login(username, password)
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
