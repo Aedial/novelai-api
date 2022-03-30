@@ -1,0 +1,2576 @@
+{
+  "presetVersion": 3,
+  "name": "Calypso",
+  "id": "fa4a5140-e07c-4a5f-91ba-899f97717216",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 20,
+    "top_p": 1,
+    "top_a": 0.2,
+    "typical_p": 1,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 1.04,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0.09,
+    "bad_words_ids": [
+      [
+        22744
+      ],
+      [
+        5650
+      ],
+      [
+        41787
+      ],
+      [
+        16013
+      ],
+      [
+        38,
+        4792
+      ],
+      [
+        402,
+        4792
+      ],
+      [
+        13424
+      ],
+      [
+        2042
+      ],
+      [
+        9915
+      ],
+      [
+        2619
+      ],
+      [
+        9148,
+        8120
+      ],
+      [
+        31963
+      ]
+    ],
+    "logit_bias_groups": [
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                632,
+                318
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1026,
+                318
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1026,
+                373
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                632,
+                373
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1858,
+                318
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1858,
+                389
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1318,
+                318
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1318,
+                373
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1318,
+                389
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1544
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                679
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1375
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                3347
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                2990
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1119
+              ]
+            ],
+            "type": 0
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                1629
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                2953
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                554
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                818
+              ]
+            ],
+            "type": 0
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                2163
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1459
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                464,
+                220
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                383
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1026
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1026,
+                220
+              ]
+            ],
+            "type": 0
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                780
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1201
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1521
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                618
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                546
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1276
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                815
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                460
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                743
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                1244
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                714
+              ]
+            ],
+            "type": 0
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": true,
+        "generateOnce": true,
+        "bias": 0.1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                13
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                30
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                0
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                986
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3926
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2644
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                3926
+              ]
+            ],
+            "type": 0
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                220
+              ]
+            ],
+            "type": 1
+          },
+          {
+            "sequences": [
+              [
+                628
+              ]
+            ],
+            "type": 1
+          },
+          {
+            "sequences": [
+              [
+                44320
+              ]
+            ],
+            "type": 1
+          },
+          {
+            "sequences": [
+              [
+                8162
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                46256,
+                224
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                1
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                366
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                526
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                22135
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1701
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2474
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11097
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1058
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                26033
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2162
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                16725
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1267
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                4943
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                366
+              ],
+              [
+                8
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                7203
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5855
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                18109
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                30629
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                15931
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                13538
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                37811
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                37227
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2404
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17971
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                39658
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                30543
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                24018
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                29653
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                705
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                44212
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7879
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                19990
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                33490
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                24618
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                14692
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                14631
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17912
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                12878
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                30866
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2361
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                8973
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                366
+              ],
+              [
+                60
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                4895
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                19779
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1
+              ],
+              [
+                90
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                45144
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                36786
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1782
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                20662
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                366
+              ],
+              [
+                92
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                30487
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1220
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                42720
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5145
+              ],
+              [
+                1701
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                30823
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5633
+              ],
+              [
+                2474
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                25113
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                26793
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27444
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                21215
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                532
+              ],
+              [
+                1
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                2625
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5320
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                19056
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                15327
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                37160
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                553
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                42911
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1600
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                33172
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1911
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27071
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                13984
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                40484
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1298
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                8172
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                43825
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                705
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2637
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4458
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                45302
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4032
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7061
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                10148
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17020
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                10354
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                32105
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                10786
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                19203
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                33047
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11537
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11639
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17816
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                37250
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                20520
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                26488
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                31051
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                43054
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                34373
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                8348
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                13679
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                9313
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                35713
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                9962
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                46385
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                39115
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                26214
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27896
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                24426
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                29368
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3256
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                46083
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                35384
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                447
+              ]
+            ],
+            "type": 1
+          },
+          {
+            "sequences": [
+              [
+                564
+              ]
+            ],
+            "type": 1
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                29012
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7009
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1402
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1200
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5156
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5381
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1751
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                39765
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                40620
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                13779
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11398
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2705
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6578,
+                258
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11903
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                30773
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                50142
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11212
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                18775
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7209
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7888
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7209
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                269,
+                16948
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                11254
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2802
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1995
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                25949
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4957
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                35961
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6621
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.2,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                16330
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                15287
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17366
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6036
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                15508
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2415
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1466
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                2988
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                9190
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                8402
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6510
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                582
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1450
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3516
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3730
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5229
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27742
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                9955
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17415
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                16774
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                28231
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2560
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3397
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                35822
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                26926
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                17695
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                18410
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                49890
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4490,
+                8957
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                28571
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4490,
+                8000
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4490,
+                47984
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -1,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                10423
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                848,
+                28321
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                19921
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                31192
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.3,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                19921,
+                16539
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1644
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4936
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.4,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                837
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.6,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                1310,
+                2576
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1310,
+                4813
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27706,
+                576
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                27706,
+                17517
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.2,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                1560
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4952
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                910
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1139
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1297
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                531
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                468
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                460,
+                447,
+                247,
+                83,
+                1975
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": true,
+        "generateOnce": true,
+        "bias": -0.2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                67,
+                692
+              ]
+            ],
+            "type": 0
+          },
+          {
+            "sequences": [
+              [
+                3654
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                36062
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.4,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                198
+              ]
+            ],
+            "type": 1
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -0.1,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                5123
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                12864
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                1494
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2923
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                4656
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                3724
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                9950
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                5170
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2243
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                14073
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                7356
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -2,
+        "enabled": true,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                1995
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                6621
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2802
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                11254
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                264,
+                271
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.2,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                35961
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": 0.5,
+        "enabled": false,
+        "whenInactive": false
+      },
+      {
+        "phrases": [
+          {
+            "sequences": [
+              [
+                679
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                339
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                465
+              ]
+            ],
+            "type": 2
+          },
+          {
+            "sequences": [
+              [
+                2399
+              ]
+            ],
+            "type": 2
+          }
+        ],
+        "ensure_sequence_finish": false,
+        "ensureSequenceFinish": false,
+        "generate_once": false,
+        "generateOnce": true,
+        "bias": -1,
+        "enabled": true,
+        "whenInactive": false
+      }
+    ],
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "krake-v1"
+}
