@@ -2,6 +2,6 @@ aiohttp[speedups]
 argon2-cffi
 pynacl
 jsonschema
-transformers
+tokenizers
 pytest-asyncio
 pytest-xdist
