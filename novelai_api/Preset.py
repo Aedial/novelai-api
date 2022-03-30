@@ -56,7 +56,7 @@ class Model(StrEnum):
     Calliope = "2.7B"
     Sigurd = "6B-v4"
     Euterpe = "euterpe-v2"
-    # TODO: add 20B
+    Krake = "krake-v1"
 
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"

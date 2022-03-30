@@ -24,8 +24,8 @@ class GlobalSettings:
                            [47182],[47527],[47715],[48600],[48683],[48688],[48874],[48999],[49074],
                            [49082],[49146],[49946],[10221],[4841],[1427],[2602,834],[29343],[37405],
                            [35780],[2602],[50256]],
-                 "gpt2-genji": [],   # FIXME
-                 # TODO: add 20B
+                 "gpt2-genji": [],
+                 "pile": [],
     }
 
     # this one is pretty much mandatory, else genji throws errors all the time

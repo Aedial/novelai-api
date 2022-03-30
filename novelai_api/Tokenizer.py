@@ -4,6 +4,8 @@ from novelai_api.Preset import Model
 
 from typing import List
 
+import tokenizers
+
 tokenizers_path = join(dirname(abspath(__file__)), "tokenizers")
 
 class Tokenizer:
@@ -11,50 +13,43 @@ class Tokenizer:
     Simple lazy initialization of the tokenizer as it is heavy
     """
 
-    _tokenizer_name = {
-        Model.Calliope: "gpt2",
-        Model.Sigurd: "gpt2",
-        Model.Euterpe: "gpt2",
-        # TODO: add 20B tokenizer
+    _tokenizers_name = {
+        Model.Calliope:     "gpt2",
+        Model.Sigurd:       "gpt2",
+        Model.Euterpe:      "gpt2",
+        Model.Krake:        "pile",
 
-        Model.Snek: "gpt2",
-        Model.Genji: join(tokenizers_path, "gpt2-genji"),
+        Model.Snek:         "gpt2",
+        Model.Genji:        "gpt2-genji",
     }
 
-    _tokenizer_base = {
-        "gpt2": "GPT2TokenizerFast",
-        "gpt2-genji": "GPT2TokenizerFast"
-    }
-
-    _tokenizer = { }
-    
     @classmethod
     def get_tokenizer_name(cls, model: Model) -> str:
-        assert model in cls._tokenizer_name, f"Model {model} is not supported"
+        return cls._tokenizers_name[model]
 
-        return split(cls._tokenizer_name[model])[-1]
+    _GPT2_PATH = join(tokenizers_path, "gpt2_tokenizer.json")
+    _GPT2_TOKENIZER = tokenizers.Tokenizer.from_file(_GPT2_PATH)
 
-    @classmethod
-    def _get_tokenizer(cls, model: Model) -> "PreTrainedTokenizerFast":
-        tokenizer_name = cls.get_tokenizer_name(model)
+    _GENJI_PATH = join(tokenizers_path, "gpt2-genji_tokenizer.json")
+    _GENJI_TOKENIZER = tokenizers.Tokenizer.from_file(_GENJI_PATH)
 
-        if tokenizer_name not in cls._tokenizer:
-            import transformers
+    _PILE_PATH = join(tokenizers_path, "pile_tokenizer.json")
+    _PILE_TOKENIZER = tokenizers.Tokenizer.from_file(_PILE_PATH)
 
-            assert tokenizer_name in cls._tokenizer_base
-            TokenizerBase = getattr(transformers, cls._tokenizer_base[tokenizer_name])
-            cls._tokenizer[tokenizer_name] = TokenizerBase.from_pretrained(cls._tokenizer_name[model])
+    _tokenizers = {
+        Model.Calliope:     _GPT2_TOKENIZER,
+        Model.Sigurd:       _GPT2_TOKENIZER,
+        Model.Euterpe:      _GPT2_TOKENIZER,
+        Model.Krake:        _PILE_TOKENIZER,
 
-        return cls._tokenizer[tokenizer_name]
+        Model.Snek:         _GPT2_TOKENIZER,
+        Model.Genji:        _GENJI_TOKENIZER,
+    }
 
     @classmethod
     def decode(cls, model: Model, o: List[int]) -> str:
-        tokenizer = cls._get_tokenizer(model)
-
-        return tokenizer.decode(o, verbose = False)
+        return cls._tokenizers[model].decode(o)
 
     @classmethod
     def encode(cls, model: Model, o: str) -> List[int]:
-        tokenizer = cls._get_tokenizer(model)
-
-        return tokenizer.encode(o, verbose = False)
+        return cls._tokenizers[model].encode(o).ids
