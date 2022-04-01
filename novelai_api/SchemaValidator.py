@@ -6,23 +6,23 @@ from os.path import splitext, dirname, abspath, join
 from typing import Any, Dict
 
 class SchemaValidator:
-	_schemas: Dict[str, Dict[str, Any]]
+    _schemas: Dict[str, Dict[str, Any]]
 
-	def __init__(self):
-		if not hasattr(self, "_schemas"):
-			schemas = {}
+    def __init__(self):
+        if not hasattr(self, "_schemas"):
+            schemas = {}
 
-			lib_root = dirname(abspath(__file__))
+            lib_root = dirname(abspath(__file__))
 
-			for filename in listdir(join(lib_root, "schemas")):
-				with open(join(lib_root, "schemas", filename)) as f:
-					schemas[splitext(filename)[0]] = loads(f.read())
+            for filename in listdir(join(lib_root, "schemas")):
+                with open(join(lib_root, "schemas", filename)) as f:
+                    schemas[splitext(filename)[0]] = loads(f.read())
 
-			SchemaValidator._schemas = schemas
+            SchemaValidator._schemas = schemas
 
-	@classmethod
-	def validate(cls, name: str, obj: Any):
-		validate(cls._schemas[name], obj)
+    @classmethod
+    def validate(cls, name: str, obj: Any):
+        validate(obj, cls._schemas[name])
 
 # initialize the schemas. A bit dirty, but the simplest
 SchemaValidator()
