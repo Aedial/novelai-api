@@ -51,12 +51,16 @@ class Low_Level:
         return False
 
     async def _treat_response(self, rsp: ClientResponse, data: Any) -> Any:
-        if rsp.content_type == "audio/webm":
-            return (await data.read())
         if rsp.content_type == "application/json":
             return (await data.json())
-        else:
+
+        if rsp.content_type == "text/plain":
             return (await data.text())
+
+        if rsp.content_type == "audio/mpeg" or rsp.content_type == "audio/webm":
+            return (await data.read())
+
+        raise RuntimeError(f"Unsupported type: {rsp.content_type}")
 
     def _parse_stream_data(self, stream_content: str) -> Dict[str, Any]:
         stream_data = {}
@@ -459,11 +463,11 @@ class Low_Level:
         self._treat_response_object(rsp, content, 200)
 
         if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_AiModuleDto", content)
+            SchemaValidator.validate("schema_AiModuleDtos", content)
 
         return content
 
-    async def get_module(self, module_id: str) -> Dict[str, Any]:
+    async def get_trained_module(self, module_id: str) -> Dict[str, Any]:
         """
         :param module_id: Id of the module
 
@@ -505,9 +509,9 @@ class Low_Level:
         :param text: Text to synthetize into voice
         :param seed: Person to use the voice of
         :param voice: Index of the voice to use
-        :param opus: Use the Opus TTS
+        :param opus: True for WebM format, False for mp3 format
 
-        :return: TTS of the text
+        :return: TTS audio data of the text
         """
 
         assert type(text) is str, f"Expected type 'str' for text, but got type '{type(text)}'"
