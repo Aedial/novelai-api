@@ -19,7 +19,8 @@ password = env["NAI_PASSWORD"]
 logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
-tts_file = "tts.webm"
+#tts_file = "tts.webm"
+tts_file = "tts.mp3"
 
 async def main():
     async with ClientSession() as session:
@@ -38,7 +39,8 @@ Egestas sed tempus urna et pharetra. Blandit turpis cursus in hac habitasse plat
 """
         voice = "James"
         seed = 42
-        opus = True
+        opus = False
+#        opus = True
 
         logger.info(f"Generating a tts voice for {len(text)} characters of text")
 
