@@ -3,7 +3,7 @@
 	"properties": {
 		"objects": {
 			"type": "array",
-			"items": { "$ref": "/schema_UserData" }
+			"items": { "$ref": "schema_UserData" }
 		}
 	},
 	"required": [ "objects" ]
