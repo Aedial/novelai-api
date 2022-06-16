@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Krait",
+  "id": "38a07338-1612-4af9-a5b6-510a08a50e24",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 0.9,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 1000,
+    "top_p": 0.992,
+    "top_a": 0.072,
+    "typical_p": 0.98,
+    "tail_free_sampling": 0.997,
+    "repetition_penalty": 1.0236,
+    "repetition_penalty_range": 610,
+    "repetition_penalty_slope": 0.85,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

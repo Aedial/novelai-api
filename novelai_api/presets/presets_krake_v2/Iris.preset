@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Iris",
+  "id": "b7edb636-7804-4181-bb00-c250179643f3",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 2.5,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 0.9566,
+    "tail_free_sampling": 0.97,
+    "repetition_penalty": 1,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

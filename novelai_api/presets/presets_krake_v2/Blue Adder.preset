@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Blue Adder",
+  "id": "bbaecc70-5974-4acf-abae-7a3fa3d2b0da",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.01,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.7,
+    "top_a": 0.06,
+    "typical_p": 0.996,
+    "tail_free_sampling": 0.991,
+    "repetition_penalty": 1.02325,
+    "repetition_penalty_range": 496,
+    "repetition_penalty_slope": 0.72,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

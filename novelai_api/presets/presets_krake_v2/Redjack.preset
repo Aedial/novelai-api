@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Redjack",
+  "id": "fe0926ca-d55f-457b-866d-93cd3cd47595",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.1,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.96,
+    "top_a": 0.98,
+    "typical_p": 1,
+    "tail_free_sampling": 0.92,
+    "repetition_penalty": 1.0075,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 4,
+    "repetition_penalty_frequency": 0.025,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "typical_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

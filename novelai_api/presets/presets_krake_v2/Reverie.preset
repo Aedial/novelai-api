@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Reverie",
+  "id": "ae5c9d89-a3cf-45a1-a2e2-83c45c0f5cf3",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 0.925,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 85,
+    "top_p": 0.985,
+    "top_a": 0.12,
+    "typical_p": 0.85,
+    "tail_free_sampling": 0.925,
+    "repetition_penalty": 1.0225,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

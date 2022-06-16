@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Calibrated",
+  "id": "4410a4db-34cf-4e85-be8c-b746e4465050",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 0.34,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 0.975,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 1.036,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 3.33,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "krake-v2"
+}

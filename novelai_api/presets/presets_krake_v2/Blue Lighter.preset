@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Blue Lighter",
+  "id": "1ca3d566-7ac5-40ba-a758-c3be95c55b5f",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.33,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 81,
+    "top_p": 0.88,
+    "top_a": 0.085,
+    "typical_p": 0.965,
+    "tail_free_sampling": 0.937,
+    "repetition_penalty": 1.05,
+    "repetition_penalty_range": 560,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "krake-v2"
+}
