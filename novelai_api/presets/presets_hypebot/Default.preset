@@ -1,0 +1,48 @@
+{
+  "presetVersion": 3,
+  "name": "Default",
+  "id": "",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "stop_sequences": [[48585]],
+    "temperature": 1,
+    "max_length": 80,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "tail_free_sampling": 0.95,
+    "repetition_penalty": 1,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0.18,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "hypebot"
+}

@@ -10,7 +10,7 @@ tokenizers_path = join(dirname(abspath(__file__)), "tokenizers")
 
 class Tokenizer:
     """
-    Simple lazy initialization of the tokenizer as it is heavy
+    Abstraction of the tokenizer behind each Model
     """
 
     _tokenizers_name = {
@@ -21,6 +21,9 @@ class Tokenizer:
 
         Model.Snek:         "gpt2",
         Model.Genji:        "gpt2-genji",
+
+        Model.HypeBot:      "gpt2",
+        Model.Inline:       "gpt2",
     }
 
     @classmethod
@@ -37,19 +40,19 @@ class Tokenizer:
     _PILE_TOKENIZER = tokenizers.Tokenizer.from_file(_PILE_PATH)
 
     _tokenizers = {
-        Model.Calliope:     _GPT2_TOKENIZER,
-        Model.Sigurd:       _GPT2_TOKENIZER,
-        Model.Euterpe:      _GPT2_TOKENIZER,
-        Model.Krake:        _PILE_TOKENIZER,
-
-        Model.Snek:         _GPT2_TOKENIZER,
-        Model.Genji:        _GENJI_TOKENIZER,
+        "gpt2":             _GPT2_TOKENIZER,
+        "gpt2-genji":       _GENJI_TOKENIZER,
+        "pile":             _PILE_TOKENIZER,
     }
 
     @classmethod
     def decode(cls, model: Model, o: List[int]) -> str:
-        return cls._tokenizers[model].decode(o)
+        tokenizer_name = cls._tokenizers_name[model]
+
+        return cls._tokenizers[tokenizer_name].decode(o)
 
     @classmethod
     def encode(cls, model: Model, o: str) -> List[int]:
-        return cls._tokenizers[model].encode(o).ids
+        tokenizer_name = cls._tokenizers_name[model]
+
+        return cls._tokenizers[tokenizer_name].encode(o).ids

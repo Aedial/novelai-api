@@ -61,6 +61,9 @@ class Model(StrEnum):
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
 
+    HypeBot = "hypebot"
+    Inline = "infillmodel"
+
 class PresetView:
     model: Model
     _official_values: Dict[str, "Preset"]
@@ -115,6 +118,8 @@ class Preset(metaclass = _PresetMetaclass):
         "length_penalty": (int, float),
         "diversity_penalty": (int, float),
         "order": list,
+        "eos_token_id": int,
+        "stop_sequences": list
     }
 
     _officials: Dict[str, "Preset"]
@@ -271,7 +276,7 @@ if not hasattr(Preset, "_officials"):
 
         if exists(join(path, "default.txt")):
             with open(join(path, "default.txt")) as f:
-                cls._defaults[model.value] = f.read()
+                cls._defaults[model.value] = f.read().splitlines()[0]
 
         officials = {}
         for filename in listdir(path):
