@@ -37,14 +37,16 @@ Eleifend quam adipiscing vitae proin sagittis nisl rhoncus. Vitae proin sagittis
 
 Egestas sed tempus urna et pharetra. Blandit turpis cursus in hac habitasse platea dictumst. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl. Eu ultrices vitae auctor eu augue ut lectus. Eget felis eget nunc lobortis. Purus in massa tempor nec. Vitae elementum curabitur vitae nunc sed. Molestie nunc non blandit massa enim nec dui nunc mattis. Diam maecenas sed enim ut sem viverra aliquet. Ipsum a arcu cursus vitae congue. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Donec pretium vulputate sapien nec sagittis aliquam. Fermentum posuere urna nec tincidunt praesent semper feugiat. Vehicula ipsum a arcu cursus vitae congue mauris rhoncus. Erat pellentesque adipiscing commodo elit at imperdiet dui. At ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget. Ultrices mi tempus imperdiet nulla malesuada.
 """
-        voice = "James"
+        voice = "Aini"
         seed = 42
         opus = False
 #        opus = True
+#        version = "v1"
+        version = "v2"
 
         logger.info(f"Generating a tts voice for {len(text)} characters of text")
 
-        tts = await api.low_level.generate_voice(text, voice, seed, opus)
+        tts = await api.low_level.generate_voice(text, voice, seed, opus, version)
         with open(tts_file, "wb") as f:
             f.write(tts)
 
