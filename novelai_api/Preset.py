@@ -7,6 +7,7 @@ from random import choice
 
 from typing import Dict, List, Any, Union, Optional, NoReturn
 
+
 class Order(IntEnum):
     Temperature = 0
     Top_K       = 1
@@ -14,6 +15,7 @@ class Order(IntEnum):
     TFS         = 3
     Top_A       = 4
     Typical_P   = 5
+
 
 NAME_TO_ORDER = {
     "tfs": Order.TFS,
@@ -33,6 +35,7 @@ ORDER_TO_NAME = {
     Order.Typical_P: "typical_p"
 }
 
+
 def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
     if not hasattr(enum_class, "_member_values"):
         enum_class._member_values = list(enum_class.__members__.values())
@@ -49,8 +52,10 @@ def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
 
     return False
 
+
 class StrEnum(str, Enum):
     pass
+
 
 class Model(StrEnum):
     Calliope = "2.7B"
@@ -64,6 +69,7 @@ class Model(StrEnum):
     HypeBot = "hypebot"
     Inline = "infillmodel"
 
+
 class PresetView:
     model: Model
     _official_values: Dict[str, "Preset"]
@@ -75,11 +81,13 @@ class PresetView:
     def __iter__(self):
         return self._officials_values[self.model.value].__iter__()
 
+
 class _PresetMetaclass(type):
     def __getitem__(cls, model: Model):
         assert type(model) is Model
 
         return PresetView(model, cls._officials_values)
+
 
 class Preset(metaclass = _PresetMetaclass):
     # TODO
@@ -182,10 +190,9 @@ class Preset(metaclass = _PresetMetaclass):
         if "textGenerationSettingsVersion" in settings:
             del settings["textGenerationSettingsVersion"]   # not API relevant
 
-        for o in Order:
-            name = ORDER_TO_NAME[o]
-            if not self._enabled[o.value] and name in settings:
-                del settings[name]
+        for i, o in enumerate(Order):
+            if not self._enabled[i]:
+                settings["order"].remove(o)
 
         return settings
 
@@ -216,8 +223,7 @@ class Preset(metaclass = _PresetMetaclass):
         settings = data["parameters"] if "parameters" in data else {}
 
         order = settings["order"] if "order" in settings else {}
-        if order:
-            settings["order"] = list(NAME_TO_ORDER[o["id"]] for o in order)
+        settings["order"] = list(NAME_TO_ORDER[o["id"]] for o in order)
 
         # TODO: add support for token banning and bias in preset
         settings.pop("bad_words_ids", None)     # get rid of unsupported option
@@ -226,9 +232,8 @@ class Preset(metaclass = _PresetMetaclass):
 
         c = cls(name, model, settings)
 
-        if order:
-            enabled = { o["id"]: o["enabled"] for o in order }
-            c.enable(**enabled)
+        enabled = {o["id"]: o["enabled"] for o in order}
+        c.enable(**enabled)
 
         return c
 
@@ -247,7 +252,7 @@ class Preset(metaclass = _PresetMetaclass):
             preset = cls._officials[model.value].get(name)
 
         if preset is not None:
-            preset = preset.copy()
+            preset = deepcopy(preset)
 
         return preset
 
