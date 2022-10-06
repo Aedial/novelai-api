@@ -52,13 +52,13 @@ class Low_Level:
 
     async def _treat_response(self, rsp: ClientResponse, data: Any) -> Any:
         if rsp.content_type == "application/json":
-            return (await data.json())
+            return await data.json()
 
-        if rsp.content_type == "text/plain":
-            return (await data.text())
+        if rsp.content_type == "text/plain" or rsp.content_type == "text/html":
+            return await data.text()
 
         if rsp.content_type == "audio/mpeg" or rsp.content_type == "audio/webm":
-            return (await data.read())
+            return await data.read()
 
         raise RuntimeError(f"Unsupported type: {rsp.content_type}")
 
