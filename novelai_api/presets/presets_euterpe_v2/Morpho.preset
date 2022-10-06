@@ -20,7 +20,7 @@
     "repetition_penalty_presence": 0,
     "order": [
       {
-        "id": "top_k",
+        "id": "temperature",
         "enabled": true
       },
       {
