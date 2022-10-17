@@ -1,12 +1,11 @@
-from json import dumps
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Keystore import Keystore
-from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Preset, Model
+from novelai_api.ImagePreset import ImageModel, ImagePreset
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.BanList import BanList
-from novelai_api.utils import get_access_key, decompress_user_data, compress_user_data, decrypt_user_data, encrypt_user_data
+from novelai_api.utils import get_access_key, compress_user_data, encrypt_user_data
 
 from hashlib import sha256
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
@@ -70,7 +69,7 @@ class High_Level:
         Losing your keystore, or overwriting it means losing all content on the account.
 
         :param key: Account's encryption key
-        
+
         :return: Keystore object
         """
 
@@ -237,7 +236,7 @@ class High_Level:
                              biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
                              prefix: Optional[str] = None) -> Dict[str, Any]:
         """
-        Generate content from an AI on the NovelAI server which support streaming
+        Generate text from an AI on the NovelAI server which support streaming
 
         :param input: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -250,8 +249,8 @@ class High_Level:
         :return: Content that has been generated
         """
 
-        async for i in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, False):
-            return i
+        async for e in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, False):
+            return e
 
     async def generate_stream(self, input: Union[List[int], str],
                                     model: Model,
@@ -261,7 +260,7 @@ class High_Level:
                                     biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
                                     prefix: Optional[str] = None) -> Dict[str, Any]:
         """
-        Generate content from an AI on the NovelAI server
+        Generate text from an AI on the NovelAI server
 
         :param input: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -274,7 +273,31 @@ class High_Level:
         :return: Content that has been generated
         """
 
-        async for i in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, True):
-            yield i
+        async for e in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, True):
+            yield e
 
-    # TODO: encryption and upload
+    async def generate_image(self, prompt: str,
+                                   model: ImageModel,
+                                   preset: ImagePreset):
+        """
+        Generate image from an AI on the NovelAI server
+
+        :param prompt: Prompt to give to the AI (raw text describing the wanted image)
+        :param model: Model to use for the AI
+        :param preset: Preset to use for the generation settings
+
+        :return: Content that has been generated
+        """
+
+        settings = preset.to_settings(model)
+
+        uc = settings["uc"]
+        if "nsfw" in prompt and uc.startswith("nsfw,"):
+            settings["uc"] = uc[len("nsfw, "):]
+
+        quality_toggle = preset["quality_toggle"]
+        if quality_toggle:
+            prompt = f"masterpiece, best quality, {prompt}"
+
+        async for e in self._parent.low_level.generate_image(prompt, model, settings):
+            yield e

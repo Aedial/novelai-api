@@ -1,19 +1,19 @@
-from novelai_api.NovelAIError import NovelAIError
 from novelai_api._low_level import Low_Level
 from novelai_api._high_level import High_Level
 
 from http.cookies import SimpleCookie
-from aiohttp import ClientSession, ClientTimeout, ClientTimeout, CookieJar
+from aiohttp import ClientSession, ClientTimeout
 from multidict import CIMultiDict
 
-from logging import Logger, NullHandler
-from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional, MethodDescriptorType
+from logging import Logger
+from typing import NoReturn, Optional
 
 from os.path import dirname, abspath
 
+
 class NovelAI_API:
     # Constants
-    _BASE_ADDRESS: str = "https://api.novelai.net"
+    BASE_ADDRESS: str = "https://api.novelai.net"
 
     # Variables
     _logger: Logger
@@ -25,14 +25,13 @@ class NovelAI_API:
     headers: CIMultiDict
     cookies: SimpleCookie
 
-    ### Low Level Public API
     low_level: Low_Level
     high_level: High_Level
 
-    # === Operators === #
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
         # variable passing
-        assert session is None or type(session) is ClientSession, f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
+        assert session is None or type(session) is ClientSession, \
+            f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
 
         # no session = synchronous
         self._logger = Logger("NovelAI_API") if logger is None else logger
@@ -63,7 +62,7 @@ class NovelAI_API:
         self._session = None
 
     @property
-    def timeout(self) -> int:
+    def timeout(self) -> float:
         """
         Timeout for a request (in seconds)
         """
@@ -71,7 +70,7 @@ class NovelAI_API:
         return self._timeout.total
 
     @timeout.setter
-    def timeout(self, value: int) -> NoReturn:
+    def timeout(self, value: float) -> NoReturn:
         """
         Timeout for a request (in seconds)
         """

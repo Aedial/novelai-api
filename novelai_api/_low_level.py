@@ -1,4 +1,4 @@
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client_exceptions import ClientConnectionError
 
@@ -7,15 +7,17 @@ from novelai_api.utils import tokens_to_b64
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Preset import Model
+from novelai_api.ImagePreset import ImageModel
 
-from json import loads
+import enum
+import json
 from urllib.parse import urlencode, quote
 
-from typing import Union, Dict, Tuple, List, Iterable, Any, NoReturn, Optional
+from typing import Union, Dict, Tuple, List, Any, Optional
 
 
-#=== INTERNALS ===#
-#=== API ===#
+# === INTERNALS === #
+# === API === #
 class Low_Level:
     _parent: "NovelAI_API"
     _is_async: bool
@@ -26,7 +28,8 @@ class Low_Level:
         self._parent = parent
         self.is_schema_validation_enabled = True
 
-    def _treat_response_object(self, rsp: ClientResponse, content: Any, status: int) -> Any:
+    @staticmethod
+    def _treat_response_object(rsp: ClientResponse, content: Any, status: int) -> Any:
         # error is an unexpected fail and usually come with a success status
         if type(content) is dict and "error" in content:
             raise NovelAIError(rsp.status, content["error"])
@@ -50,7 +53,8 @@ class Low_Level:
         self._treat_response_object(rsp, content, status)
         return False
 
-    async def _treat_response(self, rsp: ClientResponse, data: Any) -> Any:
+    @staticmethod
+    async def _treat_response(rsp: ClientResponse, data: Any) -> Any:
         if rsp.content_type == "application/json":
             return await data.json()
 
@@ -62,15 +66,17 @@ class Low_Level:
 
         raise RuntimeError(f"Unsupported type: {rsp.content_type}")
 
-    def _parse_stream_data(self, stream_content: str) -> Dict[str, Any]:
+    @staticmethod
+    def _parse_stream_data(stream_content: str) -> Dict[str, Any]:
         stream_data = {}
 
-        for line in stream_content.splitlines():
+        for line in stream_content.strip('\n').splitlines():
             colon = line.find(":")
             # TODO: replace by a meaningful error
-            assert ":" != -1, f"Malformed data stream line: {line}"
+            if ":" == -1:
+                raise NovelAIError(0, f"Malformed data stream line: {line}")
 
-            stream_data[line[:colon]] = line[colon + 1:]
+            stream_data[line[:colon]] = line[colon + 1:].strip()
 
         return stream_data
 
@@ -82,30 +88,45 @@ class Low_Level:
 
             # TODO: replace by a meaningful error
             assert "data" in stream_data
-            data = loads(stream_data["data"])
+            data = stream_data["data"]
+
+            if data.startswith('{') and data.endswith('}'):
+                data = json.loads(data)
 
         return data
 
     async def _request(self, method: str, url: str, session: ClientSession,
-                             data: Union[Dict[str, Any], str], stream: bool) -> Tuple[ClientResponse, Any]:
+                             data: Union[Dict[str, Any], str], stream: bool):
 
         kwargs = {
             "timeout": self._parent._timeout,
             "cookies": self._parent.cookies,
             "headers": self._parent.headers,
+            "json" if type(data) is dict else "data": data
         }
-
-        kwargs["json" if type(data) is dict else "data"] = data
 
         async with session.request(method, url, **kwargs) as rsp:
             if stream:
-                async for i in rsp.content.iter_any():
-                    yield (rsp, await self._treat_response_stream(rsp, i))
+                content = b''
+
+                async for chunk in rsp.content.iter_any():
+                    if chunk.startswith(b'event'):
+                        print(chunk)
+
+                    # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
+                    #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
+                    if content and chunk.startswith(b'event:'):
+                        yield rsp, await self._treat_response_stream(rsp, content)
+                        content = chunk
+                    else:
+                        content += chunk
+
+                yield rsp, await self._treat_response_stream(rsp, content)
             else:
-                yield (rsp, await self._treat_response(rsp, rsp))
+                yield rsp, await self._treat_response(rsp, rsp)
 
     async def request_stream(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None,
-                                   stream: bool = True) -> Tuple[ClientResponse, Any]:
+                                   stream: bool = True):
         """
         Send request with support for data streaming
 
@@ -115,7 +136,12 @@ class Low_Level:
         :param stream: Use data streaming for the response
         """
 
-        url = f"{self._parent._BASE_ADDRESS}{endpoint}"
+        # FIXME: remove when NAI move everything back together (hopefully)
+        if endpoint.startswith("/ai/generate-image"):
+            BASE_ADDRESS: str = "https://backend-production-svc.novelai.net"
+            url = f"{BASE_ADDRESS}{endpoint}"
+        else:
+            url = f"{self._parent.BASE_ADDRESS}{endpoint}"
 
         is_sync = self._parent._session is None
         session = ClientSession() if is_sync else self._parent._session
@@ -130,7 +156,11 @@ class Low_Level:
             if is_sync:
                 await session.close()
 
-    async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None) -> Tuple[ClientResponse, Any]:
+    async def request(
+        self, method: str,
+        endpoint: str,
+        data: Optional[Union[Dict[str, Any], str]] = None
+    ) -> Tuple[ClientResponse, Any]:
         """
         Send request
 
@@ -152,7 +182,12 @@ class Low_Level:
         rsp, content = await self.request("get", "/")
         return self._treat_response_bool(rsp, content, 200)
 
-    async def register(self, recapcha: str, access_key: str, email: Optional[str], giftkey: Optional[str] = None) -> bool:
+    async def register(self,
+        recapcha: str,
+        access_key: str,
+        email: Optional[str],
+        giftkey: Optional[str] = None
+    ) -> bool:
         """
         Register a new account
 
@@ -208,10 +243,15 @@ class Low_Level:
 
         return content
 
-    async def change_access_key(self, current_key: str, new_key: str, new_email: Optional[str] = None) -> Dict[str, str]:
+    async def change_access_key(self,
+        current_key: str,
+        new_key: str,
+        new_email: Optional[str] = None
+    ) -> Dict[str, str]:
         assert type(current_key) is str, f"Expected type 'str' for current_key, but got type '{type(current_key)}'"
         assert type(new_key) is str, f"Expected type 'str' for new_key, but got type '{type(new_key)}'"
-        assert new_email is None or type(new_email) is str, f"Expected None or type 'str' for new_email, but got type '{type(new_email)}'"
+        assert new_email is None or type(new_email) is str, \
+            f"Expected None or type 'str' for new_email, but got type '{type(new_email)}'"
 
         assert len(current_key) == 64, f"Current access key should be 64 characters, got length of {len(current_key)}"
         assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
@@ -236,9 +276,10 @@ class Low_Level:
         return self._treat_response_bool(rsp, content, 200)
 
     async def verify_email(self, verification_token: str) -> bool:
-        assert type(verification_token) is str, f"Expected type 'str' for verification_token, but got type '{type(verification_token)}'"
-
-        assert len(verification_token) == 64, f"Verification token should be 64 characters, got length of {len(verification_token)}"
+        assert type(verification_token) is str,\
+            f"Expected type 'str' for verification_token, but got type '{type(verification_token)}'"
+        assert len(verification_token) == 64,\
+            f"Verification token should be 64 characters, got length of {len(verification_token)}"
 
         rsp, content = await self.request("post", "/user/verify-email", { "verificationToken": verification_token })
         return self._treat_response_bool(rsp, content, 200)
@@ -259,14 +300,21 @@ class Low_Level:
         return self._treat_response_bool(rsp, content, 202)
 
     async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> Dict[str, Any]:
-        assert type(recovery_token) is str, f"Expected type 'str' for recovery_token, but got type '{type(recovery_token)}'"
+        assert type(recovery_token) is str, \
+            f"Expected type 'str' for recovery_token, but got type '{type(recovery_token)}'"
         assert type(new_key) is str, f"Expected type 'str' for new_key, but got type '{type(new_key)}'"
-        assert type(delete_content) is bool, f"Expected type 'bool' for delete_content, but got type '{type(delete_content)}'"
+        assert type(delete_content) is bool, \
+            f"Expected type 'bool' for delete_content, but got type '{type(delete_content)}'"
 
-        assert 16 <= len(recovery_token), f"Recovery token should be at least 16 characters, got length of {len(recovery_token)}"
+        assert 16 <= len(recovery_token), \
+            f"Recovery token should be at least 16 characters, got length of {len(recovery_token)}"
         assert len(new_key) == 64, f"New access key should be 64 characters, got length of {len(new_key)}"
 
-        rsp, content = await self.request("post", "/user/recovery/recover", { "recoveryToken": recovery_token, "newAccessKey": new_key, "deleteContent": delete_content })
+        rsp, content = await self.request("post", "/user/recovery/recover", {
+            "recoveryToken": recovery_token,
+            "newAccessKey": new_key,
+            "deleteContent": delete_content
+        })
         self._treat_response_object(rsp, content, 201)
 
         if self.is_schema_validation_enabled:
@@ -295,6 +343,12 @@ class Low_Level:
             SchemaValidator.validate("schema_PriorityResponse", content)
 
         return content
+
+    class SubscriptionTier(enum.IntEnum):
+        PAPER = 0
+        TABLET = 1
+        SCROLL = 2
+        OPUS = 3
 
     async def get_subscription(self) -> Dict[str, Any]:
         rsp, content = await self.request("get", "/user/subscription")
@@ -386,10 +440,15 @@ class Low_Level:
         return self._treat_response_bool(rsp, content, 200)
 
     async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
-        assert type(payment_processor) is str, f"Expected type 'str' for payment_processor, but got type '{type(payment_processor)}'"
-        assert type(subscription_id) is str, f"Expected type 'str' for subscription_id, but got type '{type(subscription_id)}'"
+        assert type(payment_processor) is str, \
+            f"Expected type 'str' for payment_processor, but got type '{type(payment_processor)}'"
+        assert type(subscription_id) is str, \
+            f"Expected type 'str' for subscription_id, but got type '{type(subscription_id)}'"
 
-        rsp, content = await self.request("post", "/user/subscription/bind", { "paymentProcessor": payment_processor, "subscriptionId": subscription_id })
+        rsp, content = await self.request("post", "/user/subscription/bind", {
+            "paymentProcessor": payment_processor,
+            "subscriptionId": subscription_id
+        })
         return self._treat_response_bool(rsp, content, 201)
 
     async def change_subscription(self, new_plan: str) -> bool:
@@ -398,10 +457,11 @@ class Low_Level:
         rsp, content = await self.request("post", "/user/subscription/change", { "newSubscriptionPlan": new_plan })
         return self._treat_response_bool(rsp, content, 200)
 
-    async def generate(self, input: Union[List[int], str], model: Model, params: Dict[str, Any],
-                             stream: bool = False) -> Dict[str, str]:
+    async def generate(self,
+        prompt: Union[List[int], str], model: Model, params: Dict[str, Any], stream: bool = False
+    ):
         """
-        :param input: Input to be sent the AI
+        :param prompt: Input to be sent the AI
         :param model: Model of the AI
         :param params: Generation parameters
         :param stream: Use data streaming for the response
@@ -409,16 +469,17 @@ class Low_Level:
         :return: Generated output
         """
 
-        assert isinstance(input, (str, list)), f"Expected type 'str' or 'List[int]' for input, but got type '{type(input)}'"
+        assert isinstance(prompt, (str, list)), \
+            f"Expected type 'str' or 'List[int]' for prompt, but got type '{type(prompt)}'"
         assert type(model) is Model, f"Expected type 'Model' for model, but got type '{type(model)}'"
         assert type(params) is dict, f"Expected type 'dict' for params, but got type '{type(params)}'"
         assert type(stream) is bool, f"Expected type 'bool' for stream, but got type '{type(stream)}'"
 
-        if type(input) is str:
-            input = Tokenizer.encode(model, input)
+        if type(prompt) is str:
+            prompt = Tokenizer.encode(model, prompt)
 
-        input = tokens_to_b64(input)
-        args = { "input": input, "model": model.value, "parameters": params }
+        prompt = tokens_to_b64(prompt)
+        args = { "input": prompt, "model": model.value, "parameters": params }
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
@@ -535,3 +596,54 @@ class Low_Level:
         self._treat_response_object(rsp, content, 200)
 
         return content
+
+    async def suggest_tags(self, tag: str, model: ImageModel):
+        assert type(tag) is str, f"Expected type 'str' for tag, but got type '{type(tag)}'"
+        assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
+
+        query = urlencode({
+            "model": model,
+            "prompt": tag,
+        }, quote_via = quote)
+
+        rsp, content = await self.request("post", f"/ai/generate-image/suggest-tags?{query}")
+        self._treat_response_object(rsp, content, 200)
+
+        return content
+
+    async def request_price(self,
+        prompts: List[str], model: ImageModel, parameters: Dict[str, Any], tier: SubscriptionTier
+    ):
+        assert type(prompts) is list, f"Expected type 'list' for prompts, but got type '{type(prompts)}'"
+        assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
+        assert type(parameters) is dict, f"Expected type 'dict' for parameters, but got type '{type(parameters)}'"
+        assert type(tier) is self.SubscriptionTier, \
+            f"Expected type 'SubscriptionTier' for tier, but got type '{type(tier)}'"
+
+        args = {
+            "input": prompts,
+            "model": model,
+            "parameters": parameters,
+            "tier": tier
+        }
+
+        rsp, content = await self.request("post", "/ai/generate-image/request-price", args)
+        self._treat_response_object(rsp, content, 200)
+
+        return content
+
+    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]):
+        assert type(prompt) is str, f"Expected type 'list' for prompts, but got type '{type(prompt)}'"
+        assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
+        assert type(parameters) is dict, f"Expected type 'dict' for parameters, but got type '{type(parameters)}'"
+
+        args = {
+            "input": prompt,
+            "model": model.value,
+            "parameters": parameters,
+        }
+
+        async for rsp, content in self.request_stream("post", "/ai/generate-image", args):
+            self._treat_response_object(rsp, content, 201)
+
+            yield content
