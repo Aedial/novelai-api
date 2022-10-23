@@ -14,7 +14,7 @@ class Tokenizer:
     """
 
     _tokenizers_name = {
-        Model.Calliope:     "gpt2",
+        # Model.Calliope:     "gpt2",
         Model.Sigurd:       "gpt2",
         Model.Euterpe:      "gpt2",
         Model.Krake:        "pile",

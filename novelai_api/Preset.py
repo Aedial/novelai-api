@@ -59,7 +59,7 @@ class StrEnum(str, Enum):
 
 
 class Model(StrEnum):
-    Calliope = "2.7B"
+    # Calliope = "2.7B"
     Sigurd = "6B-v4"
     Euterpe = "euterpe-v2"
     Krake = "krake-v2"
