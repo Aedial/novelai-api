@@ -3,7 +3,7 @@ import copy
 import json
 import random
 
-from typing import Dict, Tuple, Any
+from typing import Dict, Any
 
 
 class ImageModel(enum.Enum):
@@ -45,11 +45,11 @@ class ImagePreset:
         ImageModel.Anime_Curated: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy:
                 "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, "
-                "cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, "
-                "blurry",
+                "cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, "
+                "twitter username, blurry",
             UCPreset.Preset_Low_Quality:
                 "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature,"
-                "watermark, username, blurry",
+                "watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres"
         },
         ImageModel.Anime_Full: {

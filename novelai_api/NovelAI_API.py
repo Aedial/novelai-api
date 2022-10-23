@@ -1,5 +1,5 @@
-from novelai_api._low_level import Low_Level
-from novelai_api._high_level import High_Level
+from novelai_api._low_level import LowLevel
+from novelai_api._high_level import HighLevel
 
 from http.cookies import SimpleCookie
 from aiohttp import ClientSession, ClientTimeout
@@ -11,7 +11,7 @@ from typing import NoReturn, Optional
 from os.path import dirname, abspath
 
 
-class NovelAI_API:
+class NovelAIAPI:
     # Constants
     BASE_ADDRESS: str = "https://api.novelai.net"
 
@@ -25,8 +25,8 @@ class NovelAI_API:
     headers: CIMultiDict
     cookies: SimpleCookie
 
-    low_level: Low_Level
-    high_level: High_Level
+    low_level: LowLevel
+    high_level: HighLevel
 
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
         # variable passing
@@ -42,15 +42,16 @@ class NovelAI_API:
         self.cookies = SimpleCookie()
 
         # API parts
-        self.low_level = Low_Level(self)
-        self.high_level = High_Level(self)
+        self.low_level = LowLevel(self)
+        self.high_level = HighLevel(self)
 
     def attach_session(self, session: ClientSession) -> NoReturn:
         """
         Attach a ClientSession, making the requests asynchronous
         """
 
-        assert type(session) is ClientSession, f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
+        assert type(session) is ClientSession, \
+            f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
 
         self._session = session
 

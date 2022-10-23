@@ -39,7 +39,7 @@ ORDER_TO_NAME = {
 def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
     if not hasattr(enum_class, "_member_values"):
         enum_class._member_values = list(enum_class.__members__.values())
-    values = enum_class._member_values
+    values = enum_class._member_values  # noqa
 
     assert len(values), f"Empty enum class {enum_class}"
 
@@ -47,6 +47,7 @@ def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
         for item in values:
             if item.value == value:
                 return True
+
     elif type(value) is enum_class:
         return value in values
 
@@ -72,9 +73,9 @@ class Model(StrEnum):
 
 class PresetView:
     model: Model
-    _official_values: Dict[str, "Preset"]
+    _official_values: Dict[str, List["Preset"]]
 
-    def __init__(self, model: Model, officials_values: Dict[str, "Preset"]):
+    def __init__(self, model: Model, officials_values: Dict[str, List["Preset"]]):
         self.model = model
         self._officials_values = officials_values
 
@@ -83,6 +84,8 @@ class PresetView:
 
 
 class _PresetMetaclass(type):
+    _officials_values: Dict[str, List["Preset"]]
+
     def __getitem__(cls, model: Model):
         assert type(model) is Model
 
@@ -130,8 +133,8 @@ class Preset(metaclass = _PresetMetaclass):
         "stop_sequences": list
     }
 
-    _officials: Dict[str, "Preset"]
-    _officials_values: List["Preset"]
+    _officials: Dict[str, Dict[str, "Preset"]]
+    _officials_values: Dict[str, List["Preset"]]
     _defaults: Dict[str, Dict[str, str]]
 
     _enabled: List[bool]
@@ -151,13 +154,15 @@ class Preset(metaclass = _PresetMetaclass):
 
     def __setitem__(self, o: str, v: Any):
         assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
-        assert isinstance(v, self._TYPE_MAPPING[o]), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
+        assert isinstance(v, self._TYPE_MAPPING[o]), \
+            f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
 
         if o == "order":
             assert type(v) is list, f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
 
             for i in range(len(v)):
-                assert isinstance(v[i], (int, Order)), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
+                assert isinstance(v[i], (int, Order)), \
+                    f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
 
                 if type(v[i]) is int:
                     v[i] = Order(v[i])
@@ -269,7 +274,7 @@ class Preset(metaclass = _PresetMetaclass):
         return preset.copy()
 
 
-if not hasattr(Preset, "_officials"):
+def import_officials():
     cls = Preset
 
     cls._officials_values = {}
@@ -291,3 +296,7 @@ if not hasattr(Preset, "_officials"):
 
         cls._officials_values[model.value] = list(officials.values())
         cls._officials[model.value] = officials
+
+
+if not hasattr(Preset, "_officials"):
+    import_officials()

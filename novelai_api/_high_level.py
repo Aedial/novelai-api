@@ -8,15 +8,18 @@ from novelai_api.BanList import BanList
 from novelai_api.utils import get_access_key, compress_user_data, encrypt_user_data
 
 from hashlib import sha256
-from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
+from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable, AsyncIterable
 
-class High_Level:
-    _parent: "NovelAI_API"
 
-    def __init__(self, parent: "NovelAI_API"):
+class HighLevel:
+    _parent: "NovelAIAPI" # noqa
+
+    def __init__(self, parent: "NovelAIAPI"): # noqa
         self._parent = parent
 
-    async def register(self, recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None) -> bool:
+    async def register(self,
+        recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None
+    ) -> bool:
         """
         Register a new account
 
@@ -108,7 +111,9 @@ class High_Level:
 
         return modules["objects"]
 
-    async def upload_user_content(self, data: Dict[str, Any], encrypt: bool = False, keystore: Optional[Keystore] = None) -> bool:
+    async def upload_user_content(self,
+        data: Dict[str, Any], encrypt: bool = False, keystore: Optional[Keystore] = None
+    ) -> bool:
         """
         Upload an user content. If it has been decrypted with decrypt_user_data,
         it should be re-encrypted with encrypt_user_data, even if the decryption failed
@@ -163,18 +168,18 @@ class High_Level:
 
         return status
 
-    async def _generate(self, input: Union[List[int], str],
+    async def _generate(self, prompt: Union[List[int], str],
                               model: Model,
                               preset: Preset,
                               global_settings: GlobalSettings,
                               bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
                               biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
                               prefix: Optional[str] = None,
-                              stream: bool = False) -> Dict[str, Any]:
+                              stream: bool = False):
         """
         Generate content from an AI on the NovelAI server which support streaming
 
-        :param input: Context to give to the AI (raw text or list of tokens)
+        :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
         :param global_settings: Global settings (used for generation)
@@ -187,7 +192,8 @@ class High_Level:
         """
 
         assert preset is not None, "Uninitialized preset"
-        assert preset.model == model, f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
+        assert preset.model == model, \
+            f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
 
         preset_params = preset.to_settings()
         global_params = global_settings.to_settings(model)
@@ -207,7 +213,8 @@ class High_Level:
                 bad_words = [bad_words]
 
             for i, bad_word in enumerate(bad_words):
-                assert type(bad_word) is BanList, f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
+                assert type(bad_word) is BanList, \
+                    f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
                 params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
 
         if biases is not None:
@@ -215,7 +222,8 @@ class High_Level:
                 biases = [biases]
 
             for i, bias in enumerate(biases):
-                assert type(bias) is BiasGroup, f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
+                assert type(bias) is BiasGroup, \
+                    f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
                 params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
 
         # Delete the options that return an unknown error (success status code, but server error)
@@ -225,10 +233,10 @@ class High_Level:
         if not params["bad_words_ids"]:
             del params["bad_words_ids"]
 
-        async for i in self._parent.low_level.generate(input, model, params, stream):
+        async for i in self._parent.low_level.generate(prompt, model, params, stream):
             yield i
 
-    async def generate(self, input: Union[List[int], str],
+    async def generate(self, prompt: Union[List[int], str],
                              model: Model,
                              preset: Preset,
                              global_settings: GlobalSettings,
@@ -238,7 +246,7 @@ class High_Level:
         """
         Generate text from an AI on the NovelAI server which support streaming
 
-        :param input: Context to give to the AI (raw text or list of tokens)
+        :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
         :param global_settings: Global settings (used for generation)
@@ -249,20 +257,20 @@ class High_Level:
         :return: Content that has been generated
         """
 
-        async for e in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, False):
+        async for e in self._generate(prompt, model, preset, global_settings, bad_words, biases, prefix, False):
             return e
 
-    async def generate_stream(self, input: Union[List[int], str],
+    async def generate_stream(self, prompt: Union[List[int], str],
                                     model: Model,
                                     preset: Preset,
                                     global_settings: GlobalSettings,
                                     bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
                                     biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                                    prefix: Optional[str] = None) -> Dict[str, Any]:
+                                    prefix: Optional[str] = None) -> AsyncIterable[Dict[str, Any]]:
         """
         Generate text from an AI on the NovelAI server
 
-        :param input: Context to give to the AI (raw text or list of tokens)
+        :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
         :param global_settings: Global settings (used for generation)
@@ -273,7 +281,7 @@ class High_Level:
         :return: Content that has been generated
         """
 
-        async for e in self._generate(input, model, preset, global_settings, bad_words, biases, prefix, True):
+        async for e in self._generate(prompt, model, preset, global_settings, bad_words, biases, prefix, True):
             yield e
 
     async def generate_image(self, prompt: str,

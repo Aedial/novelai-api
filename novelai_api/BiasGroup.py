@@ -3,6 +3,7 @@ from novelai_api.utils import tokenize_if_not
 
 from typing import Dict, Iterable, List, Union, Any
 
+
 class BiasGroup:
     _sequences: List[Union[List[int], str]]
 
@@ -11,7 +12,9 @@ class BiasGroup:
     generate_once: bool
     enabled: bool
 
-    def __init__(self, bias: float, ensure_sequence_finish: bool = False, generate_once: bool = False, enabled: bool = True):
+    def __init__(self,
+        bias: float, ensure_sequence_finish: bool = False, generate_once: bool = False, enabled: bool = True
+    ):
         self._sequences = []
 
         self.bias = bias
@@ -36,7 +39,7 @@ class BiasGroup:
 
         return b
 
-    def add(self, *sequences: Union[List[int], str]) -> "BiasGroup":
+    def add(self, *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str]) -> "BiasGroup":
         for sequence in sequences:
             if type(sequence) is dict:
                 if "sequence" in sequence:
@@ -47,7 +50,8 @@ class BiasGroup:
             if type(sequence) is not str:
                 assert type(sequence) is list, f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
-                    assert type(s) is int, f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
+                    assert type(s) is int, \
+                        f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
 
             self._sequences.append(sequence)
 

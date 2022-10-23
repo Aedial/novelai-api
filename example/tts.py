@@ -1,31 +1,15 @@
-from sys import path
-from os import environ as env
-from os.path import join, abspath, dirname
-
-path.insert(0, abspath(join(dirname(__file__), '..')))
-
-from novelai_api import NovelAI_API
-from aiohttp import ClientSession
-
-from logging import Logger, StreamHandler
 from asyncio import run
 
-if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
-    raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
+from boilerplate import API
 
-username = env["NAI_USERNAME"]
-password = env["NAI_PASSWORD"]
-
-logger = Logger("NovelAI")
-logger.addHandler(StreamHandler())
-
-#tts_file = "tts.webm"
+# tts_file = "tts.webm"
 tts_file = "tts.mp3"
 
+
 async def main():
-    async with ClientSession() as session:
-        api = NovelAI_API(session, logger = logger)
-        logger.info(await api.high_level.login(username, password))
+    async with API() as api_handler:
+        api = api_handler.api
+        logger = api_handler.logger
 
         text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus ut faucibus pulvinar elementum integer enim neque volutpat. Sit amet massa vitae tortor condimentum lacinia. Vitae tempus quam pellentesque nec. Eu tincidunt tortor aliquam nulla facilisi cras fermentum odio. Vel risus commodo viverra maecenas accumsan lacus vel. Amet luctus venenatis lectus magna fringilla urna porttitor rhoncus dolor. Risus quis varius quam quisque. Rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Cras pulvinar mattis nunc sed blandit libero volutpat. Velit euismod in pellentesque massa placerat duis. Quam id leo in vitae turpis massa. Dui accumsan sit amet nulla facilisi.
 

@@ -1,33 +1,13 @@
-from sys import path
-from os import environ as env
-from os.path import join, abspath, dirname
-
-path.insert(0, abspath(join(dirname(__file__), '..')))
-
 import base64
-from novelai_api import NovelAI_API
-from novelai_api.ImagePreset import ImageModel, ImageResolution, UCPreset, ImagePreset
-from aiohttp import ClientSession
-
-from logging import Logger, StreamHandler
 from asyncio import run
 
-if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
-    raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
-
-username = env["NAI_USERNAME"]
-password = env["NAI_PASSWORD"]
-
-logger = Logger("NovelAI")
-logger.addHandler(StreamHandler())
+from boilerplate import API
+from novelai_api.ImagePreset import ImageModel, ImageResolution, UCPreset, ImagePreset
 
 
 async def main():
-    async with ClientSession() as session:
-        api = NovelAI_API(session, logger = logger)
-
-        login = await api.high_level.login(username, password)
-        logger.info(login)
+    async with API() as api_handler:
+        api = api_handler.api
 
         preset = ImagePreset()
 

@@ -1,7 +1,4 @@
-from typing import Dict, NoReturn, Union, Callable
-
 from uuid import uuid4
-from jsonschema import validate
 from json import loads, dumps
 from base64 import b64decode, b64encode
 
@@ -10,9 +7,12 @@ from nacl.secret import SecretBox
 
 from novelai_api.SchemaValidator import SchemaValidator
 
+from typing import Dict, NoReturn, Union, Callable, Any, Optional
+
+
 class Keystore:
-    data: Dict[str, str]
-    _keystore: Dict[str, bytes]
+    data: Dict[str, Any]
+    _keystore: Optional[Dict[str, bytes]]
     _nonce: bytes
     _version: int
 
@@ -58,7 +58,7 @@ class Keystore:
 
     def create(self) -> str:
         assert self._decrypted, "Can't set key in an encrypted keystore"
-        meta = self._keystore.keys()[0]
+        meta = next(iter(self._keystore.keys()))
         while meta in self._keystore:
             meta = str(uuid4())
 
@@ -125,11 +125,9 @@ class Keystore:
             }
 
         else:
-            keystore = self._keystore.copy()
-            for meta in keystore:
-                keystore[meta] = list(keystore[meta])
+            keystore_bytes = { meta: list(key) for meta, key in self._keystore.items() }
+            keys = { "keys": keystore_bytes }
 
-            keys = { "keys": keystore }
             json_data = dumps(keys, separators = (',', ':'), ensure_ascii = False)
             encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
             # remove automatically prepended nonce
@@ -141,4 +139,5 @@ class Keystore:
                 "sdata": list(encrypted_data)
             }
 
-        self.data["keystore"] = b64encode(dumps(keystore, separators = (',', ':'), ensure_ascii = False).encode()).decode()
+        keystore_str = dumps(keystore, separators = (',', ':'), ensure_ascii = False)
+        self.data["keystore"] = b64encode(keystore_str.encode()).decode()

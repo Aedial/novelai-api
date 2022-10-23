@@ -1,12 +1,12 @@
-from os.path import abspath, dirname, join, split
+from pathlib import Path
+import tokenizers
 
 from novelai_api.Preset import Model
 
 from typing import List
 
-import tokenizers
+tokenizers_path = Path(__file__).parent / "tokenizers"
 
-tokenizers_path = join(dirname(abspath(__file__)), "tokenizers")
 
 class Tokenizer:
     """
@@ -30,14 +30,14 @@ class Tokenizer:
     def get_tokenizer_name(cls, model: Model) -> str:
         return cls._tokenizers_name[model]
 
-    _GPT2_PATH = join(tokenizers_path, "gpt2_tokenizer.json")
-    _GPT2_TOKENIZER = tokenizers.Tokenizer.from_file(_GPT2_PATH)
+    _GPT2_PATH = tokenizers_path / "gpt2_tokenizer.json"
+    _GPT2_TOKENIZER = tokenizers.Tokenizer.from_file(str(_GPT2_PATH))
 
-    _GENJI_PATH = join(tokenizers_path, "gpt2-genji_tokenizer.json")
-    _GENJI_TOKENIZER = tokenizers.Tokenizer.from_file(_GENJI_PATH)
+    _GENJI_PATH = tokenizers_path / "gpt2-genji_tokenizer.json"
+    _GENJI_TOKENIZER = tokenizers.Tokenizer.from_file(str(_GENJI_PATH))
 
-    _PILE_PATH = join(tokenizers_path, "pile_tokenizer.json")
-    _PILE_TOKENIZER = tokenizers.Tokenizer.from_file(_PILE_PATH)
+    _PILE_PATH = tokenizers_path / "pile_tokenizer.json"
+    _PILE_TOKENIZER = tokenizers.Tokenizer.from_file(str(_PILE_PATH))
 
     _tokenizers = {
         "gpt2":             _GPT2_TOKENIZER,

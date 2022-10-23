@@ -3,6 +3,7 @@ from base64 import urlsafe_b64encode
 
 from typing import Set, NoReturn
 
+
 class Idstore:
     _ID_SIZE = 21
     _ids: Set[str]
@@ -31,10 +32,10 @@ class Idstore:
 
         :return: Created id
         """
-        id = self._ids[0]
-        while id in self._ids:
-            id = self._create_id()
+        new_id = next(iter(self._ids))
+        while new_id in self._ids:
+            new_id = self._create_id()
 
-        set.add(id)
+        self._ids.add(new_id)
 
-        return id
+        return new_id

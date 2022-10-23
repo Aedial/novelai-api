@@ -18,13 +18,13 @@ from typing import Union, Dict, Tuple, List, Any, Optional
 
 # === INTERNALS === #
 # === API === #
-class Low_Level:
-    _parent: "NovelAI_API"
+class LowLevel:
+    _parent: "NovelAIAPI" # noqa
     _is_async: bool
 
     is_schema_validation_enabled: bool
 
-    def __init__(self, parent: "NovelAI_API"):
+    def __init__(self, parent: "NovelAIAPI"): # noqa
         self._parent = parent
         self.is_schema_validation_enabled = True
 
@@ -99,7 +99,7 @@ class Low_Level:
                              data: Union[Dict[str, Any], str], stream: bool):
 
         kwargs = {
-            "timeout": self._parent._timeout,
+            "timeout": self._parent._timeout, # noqa
             "cookies": self._parent.cookies,
             "headers": self._parent.headers,
             "json" if type(data) is dict else "data": data
@@ -110,9 +110,6 @@ class Low_Level:
                 content = b''
 
                 async for chunk in rsp.content.iter_any():
-                    if chunk.startswith(b'event'):
-                        print(chunk)
-
                     # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
                     #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
                     if content and chunk.startswith(b'event:'):
@@ -136,21 +133,16 @@ class Low_Level:
         :param stream: Use data streaming for the response
         """
 
-        # FIXME: remove when NAI move everything back together (hopefully)
-        if endpoint.startswith("/ai/generate-image"):
-            BASE_ADDRESS: str = "https://backend-production-svc.novelai.net"
-            url = f"{BASE_ADDRESS}{endpoint}"
-        else:
-            url = f"{self._parent.BASE_ADDRESS}{endpoint}"
+        url = f"{self._parent.BASE_ADDRESS}{endpoint}"
 
-        is_sync = self._parent._session is None
-        session = ClientSession() if is_sync else self._parent._session
+        is_sync = self._parent._session is None # noqa
+        session = ClientSession() if is_sync else self._parent._session # noqa
 
         try:
             async for i in self._request(method, url, session, data, stream):
                 yield i
         except ClientConnectionError as e:      # No internet
-            raise NovelAIError(e.errno, str(e))
+            raise NovelAIError(e.errno, str(e)) # noqa
         # TODO: there may be other request errors to catch
         finally:
             if is_sync:
@@ -417,7 +409,10 @@ class Low_Level:
 
         assert len(meta) <= 128, f"Meta should be at most 128 characters, got length of {len(meta)}"
 
-        rsp, content = await self.request("patch", f"/user/objects/{object_type}/{object_id}", { "meta": meta, "data": data })
+        rsp, content = await self.request("patch", f"/user/objects/{object_type}/{object_id}", {
+            "meta": meta,
+            "data": data
+        })
         self._treat_response_object(rsp, content, 200)
 
         return content
@@ -508,7 +503,13 @@ class Low_Level:
         assert type(name) is str, f"Expected type 'str' for name, but got type '{type(name)}'"
         assert type(desc) is str, f"Expected type 'str' for desc, but got type '{type(desc)}'"
 
-        rsp, content = await self.request("post", "/ai/module/train", { "data": data, "lr": rate, "steps": steps, "name": name, "description": desc })
+        rsp, content = await self.request("post", "/ai/module/train", {
+            "data": data,
+            "lr": rate,
+            "steps": steps,
+            "name": name,
+            "description": desc
+        })
         self._treat_response_object(rsp, content, 201)
 
         # TODO: verify response ?

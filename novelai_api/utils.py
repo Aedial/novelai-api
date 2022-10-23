@@ -13,6 +13,7 @@ from novelai_api.Tokenizer import Tokenizer
 
 from typing import Dict, Union, List, Tuple, Any, Optional, Iterable, NoReturn
 
+
 def argon_hash(email: str, password: str, size: int, domain: str) -> str:
     pre_salt = password[:6] + email + domain
 
@@ -26,8 +27,10 @@ def argon_hash(email: str, password: str, size: int, domain: str) -> str:
 
     return hashed
 
+
 def get_access_key(email: str, password: str) -> str:
     return argon_hash(email, password, 64, "novelai_data_access_key")[:64]
+
 
 def get_encryption_key(email: str, password: str) -> bytes:
     pre_key = argon_hash(email, password, 128, "novelai_data_encryption_key")
@@ -37,16 +40,24 @@ def get_encryption_key(email: str, password: str) -> bytes:
     blake.update(pre_key.encode())
     return blake.digest()
 
-def decrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = None) -> Union[Tuple[str, bytes, bool], Tuple[None, None, bool]]:
+
+COMPRESSION_PREFIX = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01"
+
+
+def decrypt_data(
+    data: Union[str, bytes],
+    key: bytes,
+    nonce: Optional[bytes] = None
+) -> Union[Tuple[str, bytes, bool], Tuple[None, None, bool]]:
     box = SecretBox(key)
 
     if type(data) is not bytes:
         data = data.encode()
 
     # data is compressed
-    is_compressed = (len(data) >= 16 and data[:16] == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01")
+    is_compressed = data.startswith(COMPRESSION_PREFIX)
     if is_compressed:
-        data = data[16:]
+        data = data[len(COMPRESSION_PREFIX):]
 
     if nonce is None:
         nonce = data[:box.NONCE_SIZE]
@@ -57,11 +68,15 @@ def decrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
         if is_compressed:
             data = inflate(data, -MAX_WBITS)
 
-        return (data.decode(), nonce, is_compressed)
+        return data.decode(), nonce, is_compressed
     except CryptoError:
-        return (None, None, False)
+        return None, None, False
 
-def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = None, is_compressed: bool = False) -> bytes:
+
+def encrypt_data(
+    data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = None, is_compressed: bool = False
+) -> bytes:
+
     box = SecretBox(key)
 
     if type(data) is not bytes:
@@ -75,9 +90,10 @@ def encrypt_data(data: Union[str, bytes], key: bytes, nonce: Optional[bytes] = N
     data = bytes(box.encrypt(data, nonce))
 
     if is_compressed:
-        data = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01" + data
+        data = COMPRESSION_PREFIX + data
 
     return data
+
 
 # function injection to avoid circular import
 if not hasattr(Keystore, "_encrypt_data"):
@@ -85,6 +101,7 @@ if not hasattr(Keystore, "_encrypt_data"):
 
 if not hasattr(Keystore, "_decrypt_data"):
     Keystore._decrypt_data = decrypt_data
+
 
 def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
     """
@@ -106,9 +123,9 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> 
         try:
             data = b64decode(item["data"])
 
-            is_compressed = (len(data) >= 16 and data[:16] == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01")
+            is_compressed = data.startswith(COMPRESSION_PREFIX)
             if is_compressed:
-                data = data[16:]
+                data = data[len(COMPRESSION_PREFIX):]
                 data = inflate(data, -MAX_WBITS)
 
             item["data"] = json.loads(data.decode())
@@ -116,6 +133,7 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> 
             item["compressed"] = is_compressed
         except json.JSONDecodeError:
             item["decrypted"] = False
+
 
 def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
     """
@@ -139,11 +157,12 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> No
                     if item["compressed"]:
                         deflater = deflate_obj(Z_BEST_COMPRESSION, wbits = -MAX_WBITS)
                         data = deflater.compress(data) + deflater.flush()
-                        data = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01" + data
+                        data = COMPRESSION_PREFIX + data
                     del item["compressed"]
 
                 item["data"] = b64encode(data).decode()
             del item["decrypted"]
+
 
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
     """
@@ -190,6 +209,7 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 
         item["decrypted"] = False
 
+
 def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
     """
     Encrypt the data of each item in :ref: items
@@ -231,7 +251,12 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 
             del item["decrypted"]
 
-def assign_content_to_story(stories: Dict[str, Union[str, int]], story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+
+def assign_content_to_story(
+    stories: Dict[str, Union[str, int, Dict[str, Any]]],
+    story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]
+) -> NoReturn:
+
     if type(stories) is not list and type(stories) is not tuple:
         stories = [stories]
 
@@ -242,24 +267,31 @@ def assign_content_to_story(stories: Dict[str, Union[str, int]], story_contents:
 
     for story in stories:
         if story.get("decrypted"):
-            remoteId = story["data"].get("remoteStoryId")
+            remote_id = story["data"].get("remoteStoryId")
 
-            if remoteId and remoteId in story_contents and story_contents[remoteId].get("decrypted"):
-                story["content"] = story_contents[remoteId]
+            if remote_id and remote_id in story_contents and story_contents[remote_id].get("decrypted"):
+                story["content"] = story_contents[remote_id]
+
 
 def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
-    for i in range(len(items)):
+    i = 0
+
+    while i < len(items):
         if items[i].get("decrypted", False) is False:
             items.pop(i)
-            i -= 1
+        else:
+            i += 1
+
 
 def tokens_to_b64(tokens: Iterable[int]) -> str:
     return b64encode(b''.join(t.to_bytes(2, "little") for t in tokens)).decode()
+
 
 def b64_to_tokens(b64: str) -> List[int]:
     b = b64decode(b64)
 
     return list(int.from_bytes(b[i:i + 2], "little") for i in range(0, len(b), 2))
+
 
 def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
     preset_list = {}
@@ -268,6 +300,7 @@ def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
         preset_list[preset_data["id"]] = Preset.from_preset_data(preset_data["data"])
 
     return preset_list
+
 
 def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
     if type(o) is list:

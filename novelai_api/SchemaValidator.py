@@ -5,6 +5,7 @@ from os.path import splitext, dirname, abspath, join
 
 from typing import Any, Dict
 
+
 class SchemaValidator:
     _schemas: Dict[str, Dict[str, Any]]
     _resolver: RefResolver
@@ -28,6 +29,7 @@ class SchemaValidator:
     @classmethod
     def validate(cls, name: str, obj: Any):
         validate(obj, cls._schemas[name], resolver = cls._resolver)
+
 
 # initialize the schemas. A bit dirty, but the simplest
 SchemaValidator()

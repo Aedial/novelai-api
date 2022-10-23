@@ -3,6 +3,7 @@ from novelai_api.utils import tokenize_if_not
 
 from typing import List, Union, Iterable, Union
 
+
 class BanList:
     _sequences: List[Union[List[int], str]]
 
