@@ -8,7 +8,7 @@ from novelai_api.BanList import BanList
 from novelai_api.utils import get_access_key, compress_user_data, encrypt_user_data
 
 from hashlib import sha256
-from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable, AsyncIterable
+from typing import Union, Dict, Tuple, List, Any, Optional, Iterable, AsyncIterable
 
 
 class HighLevel:
@@ -58,7 +58,7 @@ class HighLevel:
 
         return rsp["accessToken"]
 
-    async def login_from_token(self, access_key: str) -> NoReturn:
+    async def login_from_token(self, access_key: str):
         rsp = await self._parent.low_level.login(access_key)
 
         self._parent.headers["Authorization"] = f"Bearer {rsp['accessToken']}"

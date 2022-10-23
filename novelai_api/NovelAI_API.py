@@ -6,7 +6,7 @@ from aiohttp import ClientSession, ClientTimeout
 from multidict import CIMultiDict
 
 from logging import Logger
-from typing import NoReturn, Optional
+from typing import Optional
 
 from os.path import dirname, abspath
 
@@ -45,7 +45,7 @@ class NovelAIAPI:
         self.low_level = LowLevel(self)
         self.high_level = HighLevel(self)
 
-    def attach_session(self, session: ClientSession) -> NoReturn:
+    def attach_session(self, session: ClientSession):
         """
         Attach a ClientSession, making the requests asynchronous
         """
@@ -55,7 +55,7 @@ class NovelAIAPI:
 
         self._session = session
 
-    def detach_session(self) -> NoReturn:
+    def detach_session(self):
         """
         Detach the current ClientSession, making the requests synchronous
         """
@@ -71,7 +71,7 @@ class NovelAIAPI:
         return self._timeout.total
 
     @timeout.setter
-    def timeout(self, value: float) -> NoReturn:
+    def timeout(self, value: float):
         """
         Timeout for a request (in seconds)
         """

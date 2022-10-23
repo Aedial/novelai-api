@@ -7,7 +7,7 @@ from nacl.secret import SecretBox
 
 from novelai_api.SchemaValidator import SchemaValidator
 
-from typing import Dict, NoReturn, Union, Callable, Any, Optional
+from typing import Dict, Union, Callable, Any, Optional
 
 
 class Keystore:
@@ -36,7 +36,7 @@ class Keystore:
         assert self._decrypted, "Can't get key from an encrypted keystore"
         return self._keystore[key]
 
-    def __setitem__(self, key: str, val: bytes) -> NoReturn:
+    def __setitem__(self, key: str, val: bytes):
         assert self._decrypted, "Can't set meta in an encrypted keystore"
         self._keystore[key] = val
 
@@ -66,7 +66,7 @@ class Keystore:
 
         return meta
 
-    def decrypt(self, key: bytes) -> NoReturn:
+    def decrypt(self, key: bytes):
         keystore = self.data.copy()
 
         if "keystore" in keystore and keystore["keystore"] is None:    # keystore is null when empty
@@ -109,7 +109,7 @@ class Keystore:
         self._compressed = is_compressed
         self._decrypted = True
 
-    def encrypt(self, key: bytes) -> NoReturn:
+    def encrypt(self, key: bytes):
         # keystore is not decrypted, no need to encrypt it
         if not self._decrypted:
             return

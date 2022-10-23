@@ -11,7 +11,7 @@ from novelai_api.Keystore import Keystore
 from novelai_api.Preset import Preset, Model
 from novelai_api.Tokenizer import Tokenizer
 
-from typing import Dict, Union, List, Tuple, Any, Optional, Iterable, NoReturn
+from typing import Dict, Union, List, Tuple, Any, Optional, Iterable
 
 
 def argon_hash(email: str, password: str, size: int, domain: str) -> str:
@@ -103,7 +103,7 @@ if not hasattr(Keystore, "_decrypt_data"):
     Keystore._decrypt_data = decrypt_data
 
 
-def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     """
     Decompress the data of each item in :ref: items
     Doesn't decrypt, but does a b64 to UTF8 translation
@@ -135,7 +135,7 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> 
             item["decrypted"] = False
 
 
-def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> NoReturn:
+def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     """
     Compress the data of each item in :ref: items
     Doesn't encrypt, but does a UTF8 to b64 translation
@@ -164,7 +164,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]) -> No
             del item["decrypted"]
 
 
-def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
+def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore):
     """
     Decrypt the data of each item in :ref: items
     If a item has already been decrypted, it won't be decrypted a second time
@@ -210,7 +210,7 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
         item["decrypted"] = False
 
 
-def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore) -> NoReturn:
+def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore):
     """
     Encrypt the data of each item in :ref: items
     If a item has already been encrypted, it won't be encrypted a second time
@@ -255,7 +255,7 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 def assign_content_to_story(
     stories: Dict[str, Union[str, int, Dict[str, Any]]],
     story_contents: Union[List[Dict[str, Any]], Dict[str, Any]]
-) -> NoReturn:
+):
 
     if type(stories) is not list and type(stories) is not tuple:
         stories = [stories]
@@ -273,7 +273,7 @@ def assign_content_to_story(
                 story["content"] = story_contents[remote_id]
 
 
-def remove_non_decrypted_user_data(items: List[Dict[str, Any]]) -> NoReturn:
+def remove_non_decrypted_user_data(items: List[Dict[str, Any]]):
     i = 0
 
     while i < len(items):

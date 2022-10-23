@@ -1,7 +1,7 @@
 from os import urandom
 from base64 import urlsafe_b64encode
 
-from typing import Set, NoReturn
+from typing import Set
 
 
 class Idstore:
@@ -17,7 +17,7 @@ class Idstore:
 
         return strid[:self._ID_SIZE]
 
-    def register(self, *args) -> NoReturn:
+    def register(self, *args):
         """
         Registers the ids in every item provided (must be retrieved with download_user_content)
         """
