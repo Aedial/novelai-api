@@ -5,4 +5,4 @@ jsonschema
 tokenizers
 pytest-asyncio
 pytest-xdist
-clip
+git+https://github.com/openai/CLIP.git
