@@ -13,7 +13,7 @@ import enum
 import json
 from urllib.parse import urlencode, quote
 
-from typing import Union, Dict, Tuple, List, Any, Optional
+from typing import Union, Dict, Tuple, List, Any, Optional, AsyncIterable
 
 
 # === INTERNALS === #
@@ -110,12 +110,16 @@ class LowLevel:
                 content = b''
 
                 async for chunk in rsp.content.iter_any():
-                    # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
-                    #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
-                    if content and chunk.startswith(b'event:'):
+                    # the event can be in the middle of a chunk... tfw...
+                    if content and b"event" in chunk:
+                        event_pos = chunk.find(b"event:")
+                        content += chunk[:event_pos]
+
                         yield rsp, await self._treat_response_stream(rsp, content)
-                        content = chunk
+                        content = chunk[event_pos:]
                     else:
+                        # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
+                        #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
                         content += chunk
 
                 yield rsp, await self._treat_response_stream(rsp, content)
@@ -633,7 +637,7 @@ class LowLevel:
 
         return content
 
-    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]):
+    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterable[str]:
         assert type(prompt) is str, f"Expected type 'list' for prompts, but got type '{type(prompt)}'"
         assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
         assert type(parameters) is dict, f"Expected type 'dict' for parameters, but got type '{type(parameters)}'"

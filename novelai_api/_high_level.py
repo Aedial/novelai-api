@@ -1,3 +1,5 @@
+import base64
+
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Keystore import Keystore
 from novelai_api.Preset import Preset, Model
@@ -284,9 +286,7 @@ class HighLevel:
         async for e in self._generate(prompt, model, preset, global_settings, bad_words, biases, prefix, True):
             yield e
 
-    async def generate_image(self, prompt: str,
-                                   model: ImageModel,
-                                   preset: ImagePreset):
+    async def generate_image(self, prompt: str, model: ImageModel, preset: ImagePreset) -> AsyncIterable[bytes]:
         """
         Generate image from an AI on the NovelAI server
 
@@ -308,4 +308,4 @@ class HighLevel:
             prompt = f"masterpiece, best quality, {prompt}"
 
         async for e in self._parent.low_level.generate_image(prompt, model, settings):
-            yield e
+            yield base64.b64decode(e)
