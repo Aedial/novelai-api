@@ -1,9 +1,28 @@
-from pathlib import Path
 import tokenizers
+import warnings
+
+
+class TrueWarningIgnore:
+    def __enter__(self):
+        warnings.filterwarnings("ignore")
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        ignore_id = warnings.filters.index(("ignore", None, Warning, None, 0))
+        del warnings.filters[ignore_id] # noqa
+
+
+# since requests is being a jerk with warnings, temporarily disable them
+with TrueWarningIgnore():
+    from clip.simple_tokenizer import SimpleTokenizer
+
+
+from pathlib import Path
 
 from novelai_api.Preset import Model
+from novelai_api.ImagePreset import ImageModel
 
-from typing import List
+from typing import List, Union
+AnyModel = Union[Model, ImageModel]
 
 tokenizers_path = Path(__file__).parent / "tokenizers"
 
@@ -14,16 +33,20 @@ class Tokenizer:
     """
 
     _tokenizers_name = {
-        # Model.Calliope:     "gpt2",
-        Model.Sigurd:       "gpt2",
-        Model.Euterpe:      "gpt2",
-        Model.Krake:        "pile",
+        # Model.Calliope:             "gpt2",
+        Model.Sigurd:               "gpt2",
+        Model.Euterpe:              "gpt2",
+        Model.Krake:                "pile",
 
-        Model.Snek:         "gpt2",
-        Model.Genji:        "gpt2-genji",
+        Model.Snek:                 "gpt2",
+        Model.Genji:                "gpt2-genji",
 
-        Model.HypeBot:      "gpt2",
-        Model.Inline:       "gpt2",
+        Model.HypeBot:              "gpt2",
+        Model.Inline:               "gpt2",
+
+        ImageModel.Anime_Curated:   "clip",
+        ImageModel.Anime_Full:      "clip",
+        ImageModel.Furry:           "clip",
     }
 
     @classmethod
@@ -39,20 +62,31 @@ class Tokenizer:
     _PILE_PATH = tokenizers_path / "pile_tokenizer.json"
     _PILE_TOKENIZER = tokenizers.Tokenizer.from_file(str(_PILE_PATH))
 
+    # TODO: check differences from NAI tokenizer (from my limited testing, there is None)
+    _CLIP_TOKENIZER = SimpleTokenizer()
+
     _tokenizers = {
-        "gpt2":             _GPT2_TOKENIZER,
-        "gpt2-genji":       _GENJI_TOKENIZER,
-        "pile":             _PILE_TOKENIZER,
+        "gpt2":       _GPT2_TOKENIZER,
+        "gpt2-genji": _GENJI_TOKENIZER,
+        "pile":       _PILE_TOKENIZER,
+        "clip":       _CLIP_TOKENIZER,
     }
 
     @classmethod
-    def decode(cls, model: Model, o: List[int]) -> str:
+    def decode(cls, model: AnyModel, o: List[int]) -> str:
         tokenizer_name = cls._tokenizers_name[model]
+        tokenizer = cls._tokenizers[tokenizer_name]
 
-        return cls._tokenizers[tokenizer_name].decode(o)
+        return tokenizer.decode(o)
 
     @classmethod
-    def encode(cls, model: Model, o: str) -> List[int]:
+    def encode(cls, model: AnyModel, o: str) -> List[int]:
         tokenizer_name = cls._tokenizers_name[model]
+        tokenizer = cls._tokenizers[tokenizer_name]
 
-        return cls._tokenizers[tokenizer_name].encode(o).ids
+        if isinstance(tokenizer, tokenizers.Tokenizer):
+            return tokenizer.encode(o).ids
+        elif isinstance(tokenizer, SimpleTokenizer):
+            return tokenizer.encode(o)
+        else:
+            raise ValueError(f"Tokenizer {tokenizer} ({tokenizer_name}) not recognized")

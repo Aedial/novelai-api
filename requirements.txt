@@ -5,3 +5,4 @@ jsonschema
 tokenizers
 pytest-asyncio
 pytest-xdist
+clip
