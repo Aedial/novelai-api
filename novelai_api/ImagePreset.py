@@ -1,6 +1,7 @@
 import enum
 import copy
 import json
+import math
 import random
 
 from typing import Dict, Any
@@ -142,6 +143,38 @@ class ImagePreset:
         settings["sampler"] = sampler.value
 
         return settings
+
+    def get_max_n_samples(self):
+        resolution = self._settings["resolution"]
+
+        if type(resolution) is ImageResolution:
+            resolution = resolution.value
+
+        w, h = resolution
+
+        if w * h < 512 * 1024:
+            return 4
+        else:
+            return 1
+
+    def calculate_cost(self, is_opus: bool):
+        steps = self._settings["steps"]
+        n_samples = self._settings["n_samples"]
+        resolution = self._settings["resolution"]
+
+        if type(resolution) is ImageResolution:
+            resolution = resolution.value
+
+        w, h = resolution
+
+        if is_opus and n_samples == 1 and steps <= 28 and w * h <= 640 * 640:
+            return 0
+
+        r = w * h / 1024 / 1024
+        per_step = (15.266497014243718 * math.exp(r * .6326248927474729) - 15.225164493059737) / 28
+        per_sample = max(math.ceil(per_step * steps), 2)
+
+        return per_sample * n_samples
 
     @classmethod
     def from_file(cls, path: str) -> "ImagePreset":

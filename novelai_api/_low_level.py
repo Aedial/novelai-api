@@ -616,27 +616,6 @@ class LowLevel:
 
         return content
 
-    async def request_price(self,
-        prompts: List[str], model: ImageModel, parameters: Dict[str, Any], tier: SubscriptionTier
-    ):
-        assert type(prompts) is list, f"Expected type 'list' for prompts, but got type '{type(prompts)}'"
-        assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
-        assert type(parameters) is dict, f"Expected type 'dict' for parameters, but got type '{type(parameters)}'"
-        assert type(tier) is self.SubscriptionTier, \
-            f"Expected type 'SubscriptionTier' for tier, but got type '{type(tier)}'"
-
-        args = {
-            "input": prompts,
-            "model": model,
-            "parameters": parameters,
-            "tier": tier
-        }
-
-        rsp, content = await self.request("post", "/ai/generate-image/request-price", args)
-        self._treat_response_object(rsp, content, 200)
-
-        return content
-
     async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterable[str]:
         assert type(prompt) is str, f"Expected type 'list' for prompts, but got type '{type(prompt)}'"
         assert type(model) is ImageModel, f"Expected type 'ImageModel' for model, but got type '{type(model)}'"
