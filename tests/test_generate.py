@@ -14,7 +14,6 @@ from novelai_api.utils import b64_to_tokens
 
 from aiohttp import ClientSession, ClientConnectionError
 from logging import Logger, StreamHandler
-from asyncio.exceptions import TimeoutError as AsyncTimeoutError
 from typing import Tuple
 
 import pytest
@@ -50,7 +49,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
             # inject api and execute the test
             return await asyncio.gather(test_func(), asyncio.sleep(MIN_TEST_TIME))
 
-        except AsyncTimeoutError:
+        except asyncio.TimeoutError:
             retry = True
 
         except NovelAIError as e:
@@ -72,7 +71,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
                     rsp.raise_for_status()
 
                     break
-                except (ClientConnectionError, AsyncTimeoutError):
+                except (ClientConnectionError, asyncio.TimeoutError):
                     pass
 
     raise e
