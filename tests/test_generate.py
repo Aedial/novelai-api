@@ -12,7 +12,7 @@ from novelai_api.BiasGroup import BiasGroup
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
 
-from aiohttp import ClientSession, ClientConnectionError
+from aiohttp import ClientSession, ClientConnectionError, ClientPayloadError
 from logging import Logger, StreamHandler
 from typing import Tuple
 
@@ -49,7 +49,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
             # inject api and execute the test
             return await asyncio.gather(test_func(), asyncio.sleep(MIN_TEST_TIME))
 
-        except asyncio.TimeoutError:
+        except (asyncio.TimeoutError, ClientPayloadError):
             retry = True
 
         except NovelAIError as e:
