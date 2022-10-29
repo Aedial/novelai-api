@@ -3,5 +3,7 @@ argon2-cffi
 pynacl
 jsonschema
 tokenizers
+ftfy
+regex
 pytest-asyncio
 pytest-xdist

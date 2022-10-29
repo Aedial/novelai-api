@@ -35,5 +35,7 @@ setuptools.setup(
         "pynacl",
         "jsonschema",
         "tokenizers",
+        "ftfy",
+        "regex",
     ]
 )
