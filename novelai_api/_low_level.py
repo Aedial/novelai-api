@@ -611,7 +611,7 @@ class LowLevel:
             "prompt": tag,
         }, quote_via = quote)
 
-        rsp, content = await self.request("post", f"/ai/generate-image/suggest-tags?{query}")
+        rsp, content = await self.request("get", f"/ai/generate-image/suggest-tags?{query}")
         self._treat_response_object(rsp, content, 200)
 
         return content
