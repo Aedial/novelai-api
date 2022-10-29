@@ -4,7 +4,7 @@ from os.path import join, abspath, dirname
 
 path.insert(0, abspath(join(dirname(__file__), '..')))
 
-from novelai_api import NovelAIAPI
+from novelai_api import NovelAIAPI, NovelAIError
 from novelai_api.Preset import Preset, Model
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.BanList import BanList
@@ -12,11 +12,70 @@ from novelai_api.BiasGroup import BiasGroup
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientConnectionError
 from logging import Logger, StreamHandler
+from asyncio.exceptions import TimeoutError as AsyncTimeoutError
 from typing import Tuple
 
 import pytest
+import asyncio
+
+
+# Text generation length
+GENERATION_LENGTH = 10
+
+WORKERS = int(env["PYTEST_XDIST_WORKER_COUNT"]) if "PYTEST_XDIST_WORKER_COUNT" in env else 1
+# Minimum time for a test (in seconds)
+MIN_TEST_TIME = 2 * WORKERS
+
+
+async def run_test(func, *args, is_async: bool, attempts: int = 3):
+    async def test_func():
+        if is_async:
+            try:
+                async with ClientSession() as test_session:
+                    api = NovelAIAPI(test_session)
+                    return await func(api, *args)
+            except Exception as test_exc:
+                await test_session.close()
+                raise test_exc
+
+        else:
+            api = NovelAIAPI()
+            return await func(api, *args)
+
+    e: Exception = RuntimeError("Unknown error")
+    for _ in range(attempts):
+        try:
+            # inject api and execute the test
+            return await asyncio.gather(test_func(), asyncio.sleep(MIN_TEST_TIME))
+
+        except AsyncTimeoutError:
+            retry = True
+
+        except NovelAIError as e:
+            retry = any([
+                e.status == 520,  # Cloudflare Unknown Error
+                e.status == 524,  # Cloudflare Gateway Error
+            ])
+
+        if not retry:
+            break
+
+        await asyncio.sleep(10)
+
+        # ping every 5 mins until connection is re-established
+        async with ClientSession() as session:
+            while True:
+                try:
+                    rsp = await session.get("https://www.google.com", timeout = 5 * 60)
+                    rsp.raise_for_status()
+
+                    break
+                except (ClientConnectionError, AsyncTimeoutError):
+                    pass
+
+    raise e
 
 
 def permutations(*args):
@@ -80,26 +139,20 @@ async def simple_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt:
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_simple_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await simple_generate(api, *model_preset, prompt, tokenize)
+    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_simple_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await simple_generate(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async = True)
 
 
 async def default_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -115,26 +168,20 @@ async def default_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize:
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_default_generate_sync(model: Model, prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await default_generate(api, model, prompt, tokenize)
+    await run_test(default_generate, model, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_default_generate_async(model: Model, prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await default_generate(api, model, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(default_generate, model, prompt, tokenize, is_async = True)
 
 
 async def official_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
 
     preset = Preset.from_official(model)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -150,24 +197,18 @@ async def official_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_official_generate_sync(model: Model, prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await official_generate(api, model, prompt, tokenize)
+    await run_test(official_generate, model, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_official_generate_async(model: Model, prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await official_generate(api, model, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(official_generate, model, prompt, tokenize, is_async = True)
 
 
 async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -185,24 +226,18 @@ async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset,
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_globalsettings_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await globalsettings_generate(api, *model_preset, prompt, tokenize)
+    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_globalsettings_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await globalsettings_generate(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async = True)
 
 
 async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -231,24 +266,18 @@ async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: s
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_bias_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await bias_generate(api, *model_preset, prompt, tokenize)
+    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_bias_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await bias_generate(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async = True)
 
 
 async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -273,24 +302,18 @@ async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: st
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await ban_generate(api, *model_preset, prompt, tokenize)
+    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await ban_generate(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async = True)
 
 
 async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -318,24 +341,18 @@ async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, p
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await ban_and_bias_generate(api, *model_preset, prompt, tokenize)
+    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await ban_generate(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async = True)
 
 
 async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
+    preset["max_length"] = GENERATION_LENGTH
 
     logger.info(f"Using model {model.value}, preset {preset.name}\n")
 
@@ -363,17 +380,10 @@ async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset:
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_streaming_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    api = NovelAIAPI()
-    await ban_and_bias_generate_streaming(api, *model_preset, prompt, tokenize)
+    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async = False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_streaming_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await ban_and_bias_generate_streaming(api, *model_preset, prompt, tokenize)
-    except Exception as e:
-        await session.close()
-        raise e
+    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async = True)
