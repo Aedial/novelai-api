@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name = "novelai-api",
-    version = "0.9",
-    author = "Arthus Leroy",
-    author_email = "arthus.leroy@epita.fr",
-    url = "https://github.com/arthus-leroy/novelai-api/",
+    version = "0.10",
+    author = "Aedial",
+    author_email = "aedial.dev@gmail.com",
+    url = "https://github.com/Aedial/novelai-api/",
     description= "Python API for the NovelAI REST API",
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -22,6 +22,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
@@ -29,10 +30,10 @@ setuptools.setup(
     python_requires = '>=3.7',
     keywords = [ "python", "NovelAI", "API" ],
     install_requires = [
-		"aiohttp[speedups]",
-		"argon2-cffi",
-		"pynacl",
+        "aiohttp[speedups]",
+        "argon2-cffi",
+        "pynacl",
         "jsonschema",
         "tokenizers",
-	]
+    ]
 )
