@@ -1,25 +1,11 @@
 import tokenizers
 import warnings
 
-
-class TrueWarningIgnore:
-    def __enter__(self):
-        warnings.filterwarnings("ignore")
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        ignore_id = warnings.filters.index(("ignore", None, Warning, None, 0))
-        del warnings.filters[ignore_id] # noqa
-
-
-# since requests is being a jerk with warnings, temporarily disable them
-with TrueWarningIgnore():
-    from clip.simple_tokenizer import SimpleTokenizer
-
-
 from pathlib import Path
 
 from novelai_api.Preset import Model
 from novelai_api.ImagePreset import ImageModel
+from novelai_api.tokenizers.simple_tokenizer import SimpleTokenizer
 
 from typing import List, Union
 AnyModel = Union[Model, ImageModel]
