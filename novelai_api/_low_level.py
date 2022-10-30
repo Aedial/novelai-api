@@ -1,6 +1,5 @@
 from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
-from aiohttp.client_exceptions import ClientConnectionError
 
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.utils import tokens_to_b64
@@ -145,9 +144,8 @@ class LowLevel:
         try:
             async for i in self._request(method, url, session, data, stream):
                 yield i
-        except ClientConnectionError as e:      # No internet
-            raise NovelAIError(e.errno, str(e)) # noqa
-        # TODO: there may be other request errors to catch
+        except Exception as e:
+            raise e
         finally:
             if is_sync:
                 await session.close()
