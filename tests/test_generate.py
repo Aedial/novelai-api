@@ -49,7 +49,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
             # inject api and execute the test
             return await asyncio.gather(test_func(), asyncio.sleep(MIN_TEST_TIME))
 
-        except (asyncio.TimeoutError, ClientPayloadError):
+        except (ClientConnectionError, asyncio.TimeoutError, ClientPayloadError):
             retry = True
 
         except NovelAIError as e:
@@ -71,7 +71,9 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
                     rsp.raise_for_status()
 
                     break
-                except (ClientConnectionError, asyncio.TimeoutError):
+                except ClientConnectionError:
+                    await asyncio.sleep(5 * 60)
+                except asyncio.TimeoutError:
                     pass
 
     raise e
