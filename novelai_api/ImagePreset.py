@@ -101,9 +101,14 @@ class ImagePreset:
 
     _settings: Dict[str, Any]
 
+    # Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle
+    last_seed: int
+
     def __init__(self, **kwargs):
         self._settings = self._DEFAULT.copy()
         self.update(kwargs)
+
+        self.last_seed = 0
 
     def __setitem__(self, o: str, v: Any):
         assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
@@ -134,6 +139,7 @@ class ImagePreset:
 
         if settings["seed"] == 0:
             settings["seed"] = random.randint(1, 0xFFFFFFFF)
+            self.last_seed = settings["seed"]
 
         uc_preset: UCPreset = settings.pop("uc_preset")
         uc: str = settings.pop("uc")
