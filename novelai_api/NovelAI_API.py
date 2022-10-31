@@ -2,7 +2,8 @@ from novelai_api._low_level import LowLevel
 from novelai_api._high_level import HighLevel
 
 from http.cookies import SimpleCookie
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, BasicAuth
+from aiohttp.typedefs import StrOrURL
 from multidict import CIMultiDict
 
 from logging import Logger
@@ -24,6 +25,8 @@ class NovelAIAPI:
     _timeout: ClientTimeout
     headers: CIMultiDict
     cookies: SimpleCookie
+    proxy: Optional[StrOrURL] = None
+    proxy_auth: Optional[BasicAuth] = None
 
     low_level: LowLevel
     high_level: HighLevel
@@ -40,6 +43,9 @@ class NovelAIAPI:
         self._timeout = ClientTimeout(300)
         self.headers = CIMultiDict()
         self.cookies = SimpleCookie()
+
+        self.proxy = None
+        self.proxy_auth = None
 
         # API parts
         self.low_level = LowLevel(self)

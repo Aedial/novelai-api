@@ -104,6 +104,12 @@ class LowLevel:
             "json" if type(data) is dict else "data": data
         }
 
+        if self._parent.proxy is not None:
+            kwargs["proxy"] = self._parent.proxy
+
+        if self._parent.proxy_auth is not None:
+            kwargs["proxy_auth"] = self._parent.proxy_auth
+
         async with session.request(method, url, **kwargs) as rsp:
             if stream:
                 content = b''

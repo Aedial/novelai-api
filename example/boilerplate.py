@@ -31,7 +31,7 @@ class API:
         self.logger = Logger("NovelAI")
         self.logger.addHandler(StreamHandler())
 
-        self.api = None
+        self.api = NovelAIAPI(logger = self.logger)
 
     @property
     def encryption_key(self):
@@ -41,7 +41,7 @@ class API:
         self._session = ClientSession()
         await self._session.__aenter__()
 
-        self.api = NovelAIAPI(self._session, logger = self.logger)
+        self.api.attach_session(self._session)
         await self.api.high_level.login(self._username, self._password)
 
         return self
