@@ -17,6 +17,8 @@ async def main():
         logger = api_handler.logger
 
         model = Model.Sigurd
+#        model = Model.Euterpe
+#        model = Model.Krake
 
         # plain text prompt
         prompt = "***"

@@ -3,16 +3,17 @@
 # novelai-api
 Python API for the NovelAI REST API
 
-The module is intended to be used by developers as a help for using NovelAI's REST API.
+This module is intended to be used by developers as a helper for using NovelAI's REST API.
 
 
 ## Prerequisites:
-For loging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed from the environment variables.
+Before anything, ensure that poetry is installed (pip install poetry), and that the virtual env is installed and up-to-date (poetry install).
+For loging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed via the environment variables.
 
 
 ### Examples:
 The examples are in the example folder. Each example is working and can be used as a test.
-Each example can be called with `python example/<name>.py`.
+Each example can be called with `poetry run python example/<name>.py`.
 
 Some tests act as example. The full list is as follows :
 - decryption and re-encryption: tests/test_decrypt_encrypt_integrity_check.py
@@ -20,7 +21,7 @@ Some tests act as example. The full list is as follows :
 - parallel generations: tests/test_generate_parallel.py
 
 ### Tests:
-The tests can be called with `pytest -n auto --tb=short tests`.
+The tests can be called with `poetry run pytest -n auto --tb=short tests`.
 Note that running `npm install fflate` and having node.js installed is required for test_decrypt_encrypt_integrity_check.py to run properly
 
 

@@ -1,6 +1,24 @@
+# python
+__pycache__
+
+# pytest
+.pytest_cache
+
+# build
 build/
 dist/
 *.egg-info/
 
-__pycache__
+# poetry
+poetry.lock
+
+# pycharm
+.idea
+
+# vscode
 .vscode
+
+# node.js
+package.json
+package-lock.json
+node_modules

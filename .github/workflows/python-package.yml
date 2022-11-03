@@ -27,11 +27,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install poetry
+        poetry install
         npm install fflate  # for integrity test
     - name: Test
       run: |
-        pytest --tb=short -n auto tests/
+        poetry run pytest --tb=short -n auto tests/
       env:
         NAI_USERNAME: ${{ secrets.NAI_USERNAME }}
         NAI_PASSWORD: ${{ secrets.NAI_PASSWORD }}
