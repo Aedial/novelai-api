@@ -28,7 +28,7 @@ WORKERS = int(env["PYTEST_XDIST_WORKER_COUNT"]) if "PYTEST_XDIST_WORKER_COUNT" i
 MIN_TEST_TIME = 2 * WORKERS
 
 
-async def run_test(func, *args, is_async: bool, attempts: int = 3):
+async def run_test(func, *args, is_async: bool, attempts: int = 5):
     async def test_func():
         if is_async:
             try:
@@ -43,16 +43,18 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
             api = NovelAIAPI()
             return await func(api, *args)
 
-    e: Exception = RuntimeError("Unknown error")
+    err: Exception = RuntimeError("Unknown error")
     for _ in range(attempts):
         try:
             # inject api and execute the test
             return await asyncio.gather(test_func(), asyncio.sleep(MIN_TEST_TIME))
 
-        except (ClientConnectionError, asyncio.TimeoutError, ClientPayloadError):
+        except (ClientConnectionError, asyncio.TimeoutError, ClientPayloadError) as e:
+            err = e
             retry = True
 
         except NovelAIError as e:
+            err = e
             retry = any([
                 e.status == 520,  # Cloudflare Unknown Error
                 e.status == 524,  # Cloudflare Gateway Error
@@ -76,7 +78,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 3):
                 except asyncio.TimeoutError:
                     pass
 
-    raise e
+    raise err
 
 
 def permutations(*args):
