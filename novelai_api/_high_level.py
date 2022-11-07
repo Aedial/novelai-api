@@ -177,7 +177,8 @@ class HighLevel:
                               bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
                               biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
                               prefix: Optional[str] = None,
-                              stream: bool = False):
+                              stream: bool = False,
+                              **kwargs):
         """
         Generate content from an AI on the NovelAI server which support streaming
 
@@ -204,6 +205,7 @@ class HighLevel:
 
         params.update(preset_params)
         params.update(global_params)
+        params.update(kwargs)
 
         params["prefix"] = "vanilla" if prefix is None else prefix
 
@@ -244,7 +246,8 @@ class HighLevel:
                              global_settings: GlobalSettings,
                              bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
                              biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                             prefix: Optional[str] = None) -> Dict[str, Any]:
+                             prefix: Optional[str] = None,
+                             **kwargs) -> Dict[str, Any]:
         """
         Generate text from an AI on the NovelAI server which support streaming
 
@@ -259,7 +262,9 @@ class HighLevel:
         :return: Content that has been generated
         """
 
-        async for e in self._generate(prompt, model, preset, global_settings, bad_words, biases, prefix, False):
+        async for e in self._generate(
+            prompt, model, preset, global_settings, bad_words, biases, prefix, False, **kwargs
+        ):
             return e
 
     async def generate_stream(self, prompt: Union[List[int], str],
@@ -268,7 +273,8 @@ class HighLevel:
                                     global_settings: GlobalSettings,
                                     bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
                                     biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                                    prefix: Optional[str] = None) -> AsyncIterable[Dict[str, Any]]:
+                                    prefix: Optional[str] = None,
+                                    **kwargs) -> AsyncIterable[Dict[str, Any]]:
         """
         Generate text from an AI on the NovelAI server
 
@@ -283,10 +289,14 @@ class HighLevel:
         :return: Content that has been generated
         """
 
-        async for e in self._generate(prompt, model, preset, global_settings, bad_words, biases, prefix, True):
+        async for e in self._generate(
+            prompt, model, preset, global_settings, bad_words, biases, prefix, True, **kwargs
+        ):
             yield e
 
-    async def generate_image(self, prompt: str, model: ImageModel, preset: ImagePreset) -> AsyncIterable[bytes]:
+    async def generate_image(self,
+        prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
+    ) -> AsyncIterable[bytes]:
         """
         Generate image from an AI on the NovelAI server
 
@@ -298,10 +308,11 @@ class HighLevel:
         """
 
         settings = preset.to_settings(model)
+        settings.update(kwargs)
 
         uc = settings["uc"]
         if "nsfw" in prompt and uc.startswith("nsfw,"):
-            settings["uc"] = uc[len("nsfw, "):]
+            settings["uc"] = uc[len("nsfw,"):].strip()
 
         quality_toggle = preset["quality_toggle"]
         if quality_toggle:
