@@ -56,8 +56,9 @@ async def run_test(func, *args, is_async: bool, attempts: int = 5):
         except NovelAIError as e:
             err = e
             retry = any([
-                e.status == 520,  # Cloudflare Unknown Error
-                e.status == 524,  # Cloudflare Gateway Error
+                e.status == 502,    # Bad Gateway
+                e.status == 520,    # Cloudflare Unknown Error
+                e.status == 524,    # Cloudflare Gateway Error
             ])
 
         if not retry:
