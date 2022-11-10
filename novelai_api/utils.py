@@ -1,4 +1,5 @@
-from argon2 import low_level
+import argon2
+
 from nacl.secret import SecretBox
 from nacl.exceptions import CryptoError
 
@@ -15,14 +16,22 @@ from typing import Dict, Union, List, Tuple, Any, Optional, Iterable
 
 
 def argon_hash(email: str, password: str, size: int, domain: str) -> str:
-    pre_salt = password[:6] + email + domain
+    pre_salt = f"{password[:6]}{email}{domain}"
 
     # salt
     blake = blake2b(digest_size = 16)
     blake.update(pre_salt.encode())
     salt = blake.digest()
 
-    raw = low_level.hash_secret_raw(password.encode(), salt, 2, int(2000000/1024), 1, size, low_level.Type.ID)
+    raw = argon2.low_level.hash_secret_raw(
+        password.encode(),
+        salt,
+        2,
+        int(2000000/1024),
+        1,
+        size,
+        argon2.low_level.Type.ID
+    )
     hashed = urlsafe_b64encode(raw).decode()
 
     return hashed
@@ -33,11 +42,11 @@ def get_access_key(email: str, password: str) -> str:
 
 
 def get_encryption_key(email: str, password: str) -> bytes:
-    pre_key = argon_hash(email, password, 128, "novelai_data_encryption_key")
-    pre_key = pre_key.replace('=', '')
+    pre_key = argon_hash(email, password, 128, "novelai_data_encryption_key").replace('=', '')
 
     blake = blake2b(digest_size = 32)
     blake.update(pre_key.encode())
+
     return blake.digest()
 
 
@@ -114,7 +123,7 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
 
     for item in items:
         assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
-        assert "data" in item, f"Expected key 'data' in item"
+        assert "data" in item, "Expected key 'data' in item"
 
         # skip already decompressed data
         if item.get("decrypted"):
@@ -129,7 +138,7 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
                 data = inflate(data, -MAX_WBITS)
 
             item["data"] = json.loads(data.decode())
-            item["decrypted"] = True    # not decrypted, per say, but for genericity
+            item["decrypted"] = True    # not decrypted, per se, but for genericity
             item["compressed"] = is_compressed
         except json.JSONDecodeError:
             item["decrypted"] = False
@@ -147,7 +156,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
 
     for item in items:
         assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
-        assert "data" in item, f"Expected key 'data' in item"
+        assert "data" in item, "Expected key 'data' in item"
 
         if "decrypted" in item:
             if item["decrypted"]:
@@ -167,7 +176,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
 def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore):
     """
     Decrypt the data of each item in :ref: items
-    If a item has already been decrypted, it won't be decrypted a second time
+    If an item has already been decrypted, it won't be decrypted a second time
 
     :param items: Item or list of items to decrypt
     :param keystore: Keystore retrieved with the get_keystore method
@@ -184,8 +193,8 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
             continue
 
         # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-        assert "data" in item, f"Expected key 'data' in item"
-        assert "meta" in item, f"Expected key 'meta' in item"
+        assert "data" in item, "Expected key 'data' in item"
+        assert "meta" in item, "Expected key 'meta' in item"
 
         meta = item["meta"]
 #       assert meta in keystore
@@ -213,7 +222,7 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore):
     """
     Encrypt the data of each item in :ref: items
-    If a item has already been encrypted, it won't be encrypted a second time
+    If an item has already been encrypted, it won't be encrypted a second time
     Must have been decrypted by decrypt_user_data()
 
     :param items: Item or list of items to encrypt
@@ -230,10 +239,10 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
         if "decrypted" in item:
             if item["decrypted"]:
                 # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-                assert "data" in item, f"Expected key 'data' in item"
-                assert "meta" in item, f"Expected key 'meta' in item"
-                assert "nonce" in item, f"Expected key 'nonce' in item"
-                assert "compressed" in item, f"Expected key 'compressed' in item"
+                assert "data" in item, "Expected key 'data' in item"
+                assert "meta" in item, "Expected key 'meta' in item"
+                assert "nonce" in item, "Expected key 'nonce' in item"
+                assert "compressed" in item, "Expected key 'compressed' in item"
 
                 meta = item["meta"]
     #            assert meta in keystore["keys"]

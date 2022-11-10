@@ -117,7 +117,7 @@ class HighLevel:
         data: Dict[str, Any], encrypt: bool = False, keystore: Optional[Keystore] = None
     ) -> bool:
         """
-        Upload an user content. If it has been decrypted with decrypt_user_data,
+        Upload user content. If it has been decrypted with decrypt_user_data,
         it should be re-encrypted with encrypt_user_data, even if the decryption failed
 
         :param data: Object to upload

@@ -43,7 +43,7 @@ def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
 
     assert len(values), f"Empty enum class {enum_class}"
 
-    if type(value) is type(values[0].value):
+    if isinstance(value, values[0].value):
         for item in values:
             if item.value == value:
                 return True
@@ -111,26 +111,26 @@ class Preset(metaclass = _PresetMetaclass):
     # generate_until_sentence       boolean
 
     _TYPE_MAPPING = {
-        "textGenerationSettingsVersion": int,
-        "temperature": (int, float),
-        "max_length": int,
-        "min_length": int,
-        "top_k": int,
-        "top_a": (int, float),
-        "top_p": (int, float),
-        "typical_p": (int, float),
-        "tail_free_sampling": (int, float),
-        "repetition_penalty": (int, float),
-        "repetition_penalty_range": int,
-        "repetition_penalty_slope": (float, int),
-        "repetition_penalty_frequency": (int, float),
-        "repetition_penalty_presence": int,
-        "repetition_penalty_whitelist": list,
-        "length_penalty": (int, float),
-        "diversity_penalty": (int, float),
-        "order": list,
-        "eos_token_id": int,
-        "stop_sequences": list
+        "textGenerationSettingsVersion":    int,
+        "temperature":                      (int, float),
+        "max_length":                       int,
+        "min_length":                       int,
+        "top_k":                            int,
+        "top_a":                            (int, float),
+        "top_p":                            (int, float),
+        "typical_p":                        (int, float),
+        "tail_free_sampling":               (int, float),
+        "repetition_penalty":               (int, float),
+        "repetition_penalty_range":         int,
+        "repetition_penalty_slope":         (int, float),
+        "repetition_penalty_frequency":     (int, float),
+        "repetition_penalty_presence":      int,
+        "repetition_penalty_whitelist":     list,
+        "length_penalty":                   (int, float),
+        "diversity_penalty":                (int, float),
+        "order":                            list,
+        "eos_token_id":                     int,
+        "stop_sequences":                   list
     }
 
     _officials: Dict[str, Dict[str, "Preset"]]
@@ -285,7 +285,7 @@ def import_officials():
         path = join(dirname(abspath(__file__)), "presets", f"presets_{model.value.replace('-', '_')}")
 
         if exists(join(path, "default.txt")):
-            with open(join(path, "default.txt")) as f:
+            with open(join(path, "default.txt"), encoding = "utf-8") as f:
                 cls._defaults[model.value] = f.read().splitlines()[0]
 
         officials = {}
