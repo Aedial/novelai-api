@@ -1,13 +1,12 @@
-from sys import argv
-from base64 import b64decode
-
-from sys import path
+from sys import path, argv
 from os.path import join, abspath, dirname
 
 path.insert(0, abspath(join(dirname(__file__), '..')))
 
+from base64 import b64decode
+
 from novelai_api.Tokenizer import Tokenizer
-from novelai_api.Preset import Model
+from Preset import Model
 
 assert 2 <= len(argv), "Expected argument"
 
