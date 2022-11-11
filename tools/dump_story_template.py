@@ -28,11 +28,12 @@ async def main():
             del e["decrypted"]
             del e["nonce"]
 
-        with open("template_story.txt", 'w') as f:
-            print(dumps(empty_story), file = f)
+        with open("template_story.txt", "w") as f:
+            print(dumps(empty_story), file=f)
 
-        with open("template_storycontent.txt", 'w') as f:
-            print(dumps(empty_storycontent), file = f)
+        with open("template_storycontent.txt", "w") as f:
+            print(dumps(empty_storycontent), file=f)
+
 
 run(main())
 

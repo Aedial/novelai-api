@@ -15,7 +15,7 @@ class Idstore:
         b = urandom(self._ID_SIZE)
         strid = urlsafe_b64encode(b).decode()
 
-        return strid[:self._ID_SIZE]
+        return strid[: self._ID_SIZE]
 
     def register(self, *args):
         """

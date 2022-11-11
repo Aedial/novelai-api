@@ -33,8 +33,9 @@ class NovelAIAPI:
 
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
         # variable passing
-        assert session is None or type(session) is ClientSession, \
-            f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
+        assert (
+            session is None or type(session) is ClientSession
+        ), f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
 
         # no session = synchronous
         self._logger = Logger("NovelAI_API") if logger is None else logger
@@ -56,8 +57,9 @@ class NovelAIAPI:
         Attach a ClientSession, making the requests asynchronous
         """
 
-        assert type(session) is ClientSession, \
-            f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
+        assert (
+            type(session) is ClientSession
+        ), f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
 
         self._session = session
 

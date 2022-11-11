@@ -1,4 +1,4 @@
-from enum import Enum, IntEnum, EnumMeta
+from enum import Enum, IntEnum
 from json import loads
 from os import listdir
 from os.path import join, abspath, dirname, exists
@@ -8,13 +8,14 @@ from random import choice
 from typing import Dict, List, Any, Union, Optional, NoReturn
 
 
+# NOTE: the noqa are there because of Enum, because Enum's type inference sucks
 class Order(IntEnum):
     Temperature = 0
-    Top_K       = 1
-    Top_P       = 2
-    TFS         = 3
-    Top_A       = 4
-    Typical_P   = 5
+    Top_K = 1
+    Top_P = 2
+    TFS = 3
+    Top_A = 4
+    Typical_P = 5
 
 
 NAME_TO_ORDER = {
@@ -23,7 +24,7 @@ NAME_TO_ORDER = {
     "top_p": Order.Top_P,
     "top_k": Order.Top_K,
     "top_a": Order.Top_A,
-    "typical_p": Order.Typical_P
+    "typical_p": Order.Typical_P,
 }
 
 ORDER_TO_NAME = {
@@ -32,26 +33,18 @@ ORDER_TO_NAME = {
     Order.Top_P: "top_p",
     Order.Top_K: "top_k",
     Order.Top_A: "top_a",
-    Order.Typical_P: "typical_p"
+    Order.Typical_P: "typical_p",
 }
 
 
-def enum_contains(enum_class: EnumMeta.__class__, value) -> bool:
-    if not hasattr(enum_class, "_member_values"):
-        enum_class._member_values = list(enum_class.__members__.values())
-    values = enum_class._member_values  # noqa
+def enum_contains(enum_class: Enum, value) -> bool:
+    if not hasattr(enum_class, "enum_member_values"):
+        enum_class.enum_member_values = list(e.value for e in enum_class)  # noqa
 
+    values = enum_class.enum_member_values
     assert len(values), f"Empty enum class {enum_class}"
 
-    if isinstance(value, values[0].value):
-        for item in values:
-            if item.value == value:
-                return True
-
-    elif type(value) is enum_class:
-        return value in values
-
-    return False
+    return value in values
 
 
 class StrEnum(str, Enum):
@@ -92,7 +85,7 @@ class _PresetMetaclass(type):
         return PresetView(model, cls._officials_values)
 
 
-class Preset(metaclass = _PresetMetaclass):
+class Preset(metaclass=_PresetMetaclass):
     # TODO
     # do_sample                     boolean
     # early_stopping                boolean
@@ -111,31 +104,31 @@ class Preset(metaclass = _PresetMetaclass):
     # generate_until_sentence       boolean
 
     _TYPE_MAPPING = {
-        "textGenerationSettingsVersion":    int,
-        "temperature":                      (int, float),
-        "max_length":                       int,
-        "min_length":                       int,
-        "top_k":                            int,
-        "top_a":                            (int, float),
-        "top_p":                            (int, float),
-        "typical_p":                        (int, float),
-        "tail_free_sampling":               (int, float),
-        "repetition_penalty":               (int, float),
-        "repetition_penalty_range":         int,
-        "repetition_penalty_slope":         (int, float),
-        "repetition_penalty_frequency":     (int, float),
-        "repetition_penalty_presence":      int,
-        "repetition_penalty_whitelist":     list,
-        "length_penalty":                   (int, float),
-        "diversity_penalty":                (int, float),
-        "order":                            list,
-        "eos_token_id":                     int,
-        "stop_sequences":                   list
+        "textGenerationSettingsVersion": int,
+        "temperature": (int, float),
+        "max_length": int,
+        "min_length": int,
+        "top_k": int,
+        "top_a": (int, float),
+        "top_p": (int, float),
+        "typical_p": (int, float),
+        "tail_free_sampling": (int, float),
+        "repetition_penalty": (int, float),
+        "repetition_penalty_range": int,
+        "repetition_penalty_slope": (int, float),
+        "repetition_penalty_frequency": (int, float),
+        "repetition_penalty_presence": int,
+        "repetition_penalty_whitelist": list,
+        "length_penalty": (int, float),
+        "diversity_penalty": (int, float),
+        "order": list,
+        "eos_token_id": int,
+        "stop_sequences": list,
     }
 
     _officials: Dict[str, Dict[str, "Preset"]]
     _officials_values: Dict[str, List["Preset"]]
-    _defaults: Dict[str, Dict[str, str]]
+    _defaults: Dict[str, str]
 
     _enabled: List[bool]
 
@@ -154,15 +147,17 @@ class Preset(metaclass = _PresetMetaclass):
 
     def __setitem__(self, o: str, v: Any):
         assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
-        assert isinstance(v, self._TYPE_MAPPING[o]), \
-            f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
+        assert isinstance(
+            v, self._TYPE_MAPPING[o]  # noqa
+        ), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
 
         if o == "order":
             assert type(v) is list, f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
 
             for i in range(len(v)):
-                assert isinstance(v[i], (int, Order)), \
-                    f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
+                assert isinstance(
+                    v[i], (int, Order)
+                ), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
 
                 if type(v[i]) is int:
                     v[i] = Order(v[i])
@@ -183,7 +178,7 @@ class Preset(metaclass = _PresetMetaclass):
         for o in Order:
             name = ORDER_TO_NAME[o]
             enabled = kwargs.pop(name, False)
-            self._enabled[o.value] = enabled
+            self._enabled[o.value] = enabled  # noqa
 
         assert len(kwargs) == 0, f"Invalid order name: {', '.join(kwargs)}"
 
@@ -193,7 +188,7 @@ class Preset(metaclass = _PresetMetaclass):
         settings = deepcopy(self._settings)
 
         if "textGenerationSettingsVersion" in settings:
-            del settings["textGenerationSettingsVersion"]   # not API relevant
+            del settings["textGenerationSettingsVersion"]  # not API relevant
 
         for i, o in enumerate(Order):
             if not self._enabled[i]:
@@ -223,7 +218,7 @@ class Preset(metaclass = _PresetMetaclass):
         name = data["name"] if "name" in data else "<?>"
 
         model_name = data["model"] if "model" in data else ""
-        model = Model(model_name) if enum_contains(Model, model_name) else None
+        model = Model(model_name) if enum_contains(Model, model_name) else None  # noqa
 
         settings = data["parameters"] if "parameters" in data else {}
 
@@ -231,9 +226,9 @@ class Preset(metaclass = _PresetMetaclass):
         settings["order"] = list(NAME_TO_ORDER[o["id"]] for o in order)
 
         # TODO: add support for token banning and bias in preset
-        settings.pop("bad_words_ids", None)     # get rid of unsupported option
-        settings.pop("logit_bias_exp", None)    # get rid of unsupported option
-        settings.pop("logit_bias_groups", None)    # get rid of unsupported option
+        settings.pop("bad_words_ids", None)  # get rid of unsupported option
+        settings.pop("logit_bias_exp", None)  # get rid of unsupported option
+        settings.pop("logit_bias_groups", None)  # get rid of unsupported option
 
         c = cls(name, model, settings)
 
@@ -251,10 +246,12 @@ class Preset(metaclass = _PresetMetaclass):
 
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:
+        model_value: str = model.value  # noqa
+
         if name is None:
-            preset = choice(cls._officials_values[model.value])
+            preset = choice(cls._officials_values[model_value])
         else:
-            preset = cls._officials[model.value].get(name)
+            preset = cls._officials[model_value].get(name)
 
         if preset is not None:
             preset = deepcopy(preset)
@@ -263,11 +260,13 @@ class Preset(metaclass = _PresetMetaclass):
 
     @classmethod
     def from_default(cls, model: Model) -> Union["Preset", None]:
-        default = cls._defaults.get(model.value)
+        model_value: str = model.value  # noqa
+
+        default = cls._defaults.get(model_value)
         if default is None:
             return None
 
-        preset = cls._officials[model.value].get(default)
+        preset = cls._officials[model_value].get(default)
         if preset is None:
             return None
 
@@ -282,10 +281,16 @@ def import_officials():
     cls._defaults = {}
 
     for model in Model:
-        path = join(dirname(abspath(__file__)), "presets", f"presets_{model.value.replace('-', '_')}")
+        model: Model
+
+        path = join(
+            dirname(abspath(__file__)),
+            "presets",
+            f"presets_{model.value.replace('-', '_')}",
+        )
 
         if exists(join(path, "default.txt")):
-            with open(join(path, "default.txt"), encoding = "utf-8") as f:
+            with open(join(path, "default.txt"), encoding="utf-8") as f:
                 cls._defaults[model.value] = f.read().splitlines()[0]
 
         officials = {}

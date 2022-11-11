@@ -14,6 +14,7 @@ from json import loads, dumps
 
 from typing import Dict, Iterator, List, NoReturn, Any, Optional, Union, Iterable
 
+
 def _get_time() -> int:
     """
     Get the current time, as formatted for createdAt and lastUpdatedAt
@@ -22,6 +23,7 @@ def _get_time() -> int:
     """
 
     return int(time() * 1000)
+
 
 def _get_short_time() -> int:
     """
@@ -32,13 +34,15 @@ def _get_short_time() -> int:
 
     return int(time())
 
+
 def _set_nested_item(item: Dict[str, Any], val: Any, path: str):
-    path = path.split('.')
+    path = path.split(".")
 
     for key in path[:-1]:
         item = item[key]
 
     item[path[-1]] = val
+
 
 class NovelAI_StoryProxy:
     TEXT_GENERATION_SETTINGS_VERSION = 2
@@ -65,7 +69,7 @@ class NovelAI_StoryProxy:
             data["bannedSequenceGroups"] = []
 
         ban_seq = data["bannedSequenceGroups"]
-        self.banlists = [BanList(*seq["sequences"], enabled = seq["enabled"]) for seq in ban_seq]
+        self.banlists = [BanList(*seq["sequences"], enabled=seq["enabled"]) for seq in ban_seq]
 
     def _handle_biasgroups(self, data: Dict[str, Any]) -> NoReturn:
         if "phraseBiasGroup" not in data:
@@ -107,7 +111,13 @@ class NovelAI_StoryProxy:
         self.preset.name = settings["preset"]
         self.preset.model = self.model
 
-    def __init__(self, parent: "NovelAI_Story", key: bytes, story: Dict[str, Any], storycontent: Dict[str, Any]):
+    def __init__(
+        self,
+        parent: "NovelAI_Story",
+        key: bytes,
+        story: Dict[str, Any],
+        storycontent: Dict[str, Any],
+    ):
         self._parent = parent
 
         self._api = parent._api
@@ -118,7 +128,7 @@ class NovelAI_StoryProxy:
 
         data = storycontent["data"]
 
-        print(dumps(data, indent = 4))
+        print(dumps(data, indent=4))
         self._handle_banlist(data)
         self._handle_biasgroups(data)
         self._handle_preset(data)
@@ -159,7 +169,7 @@ class NovelAI_StoryProxy:
             "dataFragment": fragment,
             "fragmentIndex": frag_index,
             "removedFragments": [],
-            "chain": False
+            "chain": False,
         }
         new_index = len(blocks)
         blocks.append(block)
@@ -201,7 +211,7 @@ class NovelAI_StoryProxy:
             if len(story_content) < story_content_size:
                 break
 
-        story_tokens = story_tokens[-self.context_size:]
+        story_tokens = story_tokens[-self.context_size :]
 
         # TODO: LB tokens
 
@@ -217,18 +227,25 @@ class NovelAI_StoryProxy:
     async def generate(self) -> "NovelAI_StoryProxy":
         input = self.build_context()
         # FIXME: find why the output is garbage
-        rsp = await self._api.high_level.generate(input, self.model, self.preset, self._parent.global_settings,
-                                                  self.banlists, self.biases, self.prefix)
+        rsp = await self._api.high_level.generate(
+            input,
+            self.model,
+            self.preset,
+            self._parent.global_settings,
+            self.banlists,
+            self.biases,
+            self.prefix,
+        )
 
         output = Tokenizer.decode(self.model, b64_to_tokens(rsp["output"]))
-        fragment = { "data": output, "origin": "ai" }
+        fragment = {"data": output, "origin": "ai"}
 
         self._create_datablock(fragment, 0)
 
     async def edit(self, start: int, end: int, replace: str):
         # FIXME: redo edit implementation
 
-        fragment = { "data": replace, "origin": "edit" }
+        fragment = {"data": replace, "origin": "edit"}
 
         self._create_datablock(fragment, end - start)
 
@@ -292,6 +309,7 @@ class NovelAI_StoryProxy:
         blocks = story["datablocks"]
         return [blocks[i] for i in self._tree]
 
+
 class NovelAI_Story:
     _story_instances: Dict[str, NovelAI_StoryProxy]
 
@@ -326,7 +344,9 @@ class NovelAI_Story:
         story_meta = story["meta"]
         story_id = story["data"]["remoteStoryId"]
 
-        assert story_meta == storycontent["meta"], f"Expected meta {story_meta} for storycontent, but got meta {storycontent['meta']}"
+        assert (
+            story_meta == storycontent["meta"]
+        ), f"Expected meta {story_meta} for storycontent, but got meta {storycontent['meta']}"
         assert story_id == storycontent["id"], f"Missmached id: expected {story_id}, but got {storycontent['id']}"
 
         proxy = NovelAI_StoryProxy(self, self._keystore[story_meta], story, storycontent)
@@ -336,7 +356,9 @@ class NovelAI_Story:
 
         return proxy
 
-    def loads(self, stories: Iterable[Dict[str, Any]], storycontents: Iterable[Dict[str, Any]]) -> List[NovelAI_StoryProxy]:
+    def loads(
+        self, stories: Iterable[Dict[str, Any]], storycontents: Iterable[Dict[str, Any]]
+    ) -> List[NovelAI_StoryProxy]:
         mapping = {}
         for story in stories:
             if story.get("decrypted"):
@@ -379,13 +401,15 @@ class NovelAI_Story:
 
         # local overwrites
         id_story = self._idstore.create()
-        for path, val in (("id", id_story),
-                          ("meta", meta),
-                          ("data.id", meta),
-                          ("data.remoteStoryId", id_story),
-                          ("data.createdAt", current_time),
-                          ("data.lastUpdatedAt", current_time),
-                          ("lastUpdatedAt", current_time_short)):
+        for path, val in (
+            ("id", id_story),
+            ("meta", meta),
+            ("data.id", meta),
+            ("data.remoteStoryId", id_story),
+            ("data.createdAt", current_time),
+            ("data.lastUpdatedAt", current_time),
+            ("lastUpdatedAt", current_time_short),
+        ):
             _set_nested_item(story, val, path)
 
         with open("templates/template_empty_storycontent.txt") as f:
@@ -393,15 +417,16 @@ class NovelAI_Story:
 
         # local overwrites
         id_storycontent = self._idstore.create()
-        id_lore_default = ""    # FIXME: get id
+        id_lore_default = ""  # FIXME: get id
 
-        for path, val in (("id", id_storycontent),
-                          ("meta", meta),
-                          ("lastUpdatedAt", current_time_short),
-                          ("data.contextDefaults.loreDefaults.id", id_lore_default),
-                          ("data.contextDefaults.loreDefaults.lastUpdatedAt", current_time)):
+        for path, val in (
+            ("id", id_storycontent),
+            ("meta", meta),
+            ("lastUpdatedAt", current_time_short),
+            ("data.contextDefaults.loreDefaults.id", id_lore_default),
+            ("data.contextDefaults.loreDefaults.lastUpdatedAt", current_time),
+        ):
             _set_nested_item(storycontent, val, path)
-
 
         proxy = self.load(story, storycontent)
 

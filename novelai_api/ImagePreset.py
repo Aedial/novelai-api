@@ -14,17 +14,17 @@ class ImageModel(enum.Enum):
 
 
 class ImageResolution(enum.Enum):
-    Small_Portrait      = ( 384,  640)
-    Small_Landscape     = ( 640,  384)
-    Small_Square        = ( 512,  512)
+    Small_Portrait = (384, 640)
+    Small_Landscape = (640, 384)
+    Small_Square = (512, 512)
 
-    Normal_Portrait     = ( 512,  768)
-    Normal_Landscape    = ( 768,  512)
-    Normal_Square       = ( 640,  640)
+    Normal_Portrait = (512, 768)
+    Normal_Landscape = (768, 512)
+    Normal_Square = (640, 640)
 
-    Large_Portrait      = ( 512, 1024)
-    Large_Landscape     = (1024,  512)
-    Large_Square        = (1024, 1024)
+    Large_Portrait = (512, 1024)
+    Large_Landscape = (1024, 512)
+    Large_Square = (1024, 1024)
 
 
 class ImageSampler(enum.Enum):
@@ -44,59 +44,53 @@ class UCPreset(enum.Enum):
 class ImagePreset:
     _UC_Presets = {
         ImageModel.Anime_Curated: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy:
-                "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, "
-                "cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, "
-                "twitter username, blurry",
-            UCPreset.Preset_Low_Quality:
-                "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature,"
-                "watermark, twitter username, blurry",
-            UCPreset.Preset_None: "lowres"
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: "nsfw, lowres, bad anatomy, bad hands, text, error, "
+            "missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, "
+            "jpeg artifacts, signature, watermark, twitter username, blurry",
+            UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
+            "jpeg artifacts, signature, watermark, twitter username, blurry",
+            UCPreset.Preset_None: "lowres",
         },
         ImageModel.Anime_Full: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy:
-                "lowres, bad anatomy, bad hands, text, error, missing fingers, "
-                "extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, "
-                "signature, watermark, username, blurry",
-            UCPreset.Preset_Low_Quality:
-                "lowres, text, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, "
-                "watermark, username, blurry",
-            UCPreset.Preset_None: "lowres"
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: "lowres, bad anatomy, bad hands, text, error, missing fingers, "
+            "extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, "
+            "signature, watermark, username, blurry",
+            UCPreset.Preset_Low_Quality: "lowres, text, cropped, worst quality, low quality, normal quality, "
+            "jpeg artifacts, signature, watermark, username, blurry",
+            UCPreset.Preset_None: "lowres",
         },
         ImageModel.Furry: {
             UCPreset.Preset_Low_Quality: "nsfw, {worst quality}, {bad quality}, text, signature, watermark",
-            UCPreset.Preset_None: "low res"
-        }
+            UCPreset.Preset_None: "low res",
+        },
     }
 
     _TYPE_MAPPING = {
         "quality_toggle": bool,
-        "resolution":       (ImageResolution, tuple),
-        "uc_preset":        UCPreset,
-
-        "n_samples":        int,
-        "seed":             int,
-        "sampler":          ImageSampler,
-        "noise":            (int, float),
-        "strength":         (int, float),
-        "scale":            (int, float),
-        "steps":            int,
-        "uc":               str
+        "resolution": (ImageResolution, tuple),
+        "uc_preset": UCPreset,
+        "n_samples": int,
+        "seed": int,
+        "sampler": ImageSampler,
+        "noise": (int, float),
+        "strength": (int, float),
+        "scale": (int, float),
+        "steps": int,
+        "uc": str,
     }
 
     _DEFAULT = {
         "quality_toggle": True,
-        "resolution":       ImageResolution.Normal_Portrait,
-        "uc_preset":        UCPreset.Preset_Low_Quality_Bad_Anatomy,
-
-        "n_samples":        1,
-        "seed":             0,
-        "sampler":          ImageSampler.k_euler_ancestral,
-        "noise":            0.2,
-        "strength":         0.7,
-        "steps":            28,
-        "scale":            11,
-        "uc":               ""
+        "resolution": ImageResolution.Normal_Portrait,
+        "uc_preset": UCPreset.Preset_Low_Quality_Bad_Anatomy,
+        "n_samples": 1,
+        "seed": 0,
+        "sampler": ImageSampler.k_euler_ancestral,
+        "noise": 0.2,
+        "strength": 0.7,
+        "steps": 28,
+        "scale": 11,
+        "uc": "",
     }
 
     _settings: Dict[str, Any]
@@ -112,8 +106,9 @@ class ImagePreset:
 
     def __setitem__(self, o: str, v: Any):
         assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
-        assert isinstance(v, self._TYPE_MAPPING[o]), \
-            f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
+        assert isinstance(
+            v, self._TYPE_MAPPING[o]
+        ), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
 
         self._settings[o] = v
 
@@ -123,9 +118,14 @@ class ImagePreset:
 
         return self
 
-    def copy(self) -> "ImagePreset":    return ImagePreset(**self._settings)
-    def __contains__(self, o: str):     return self._settings.__contains__(o)
-    def __getitem__(self, o: str):      return self._settings.__getitem__(o)
+    def copy(self) -> "ImagePreset":
+        return ImagePreset(**self._settings)
+
+    def __contains__(self, o: str):
+        return self._settings.__contains__(o)
+
+    def __getitem__(self, o: str):
+        return self._settings.__getitem__(o)
 
     def to_settings(self, model: ImageModel) -> Dict[str, Any]:
         settings = copy.deepcopy(self._settings)
@@ -179,18 +179,18 @@ class ImagePreset:
             return 0
 
         r = w * h / 1024 / 1024
-        per_step = (15.266497014243718 * math.exp(r * .6326248927474729) - 15.225164493059737) / 28
+        per_step = (15.266497014243718 * math.exp(r * 0.6326248927474729) - 15.225164493059737) / 28
         per_sample = max(math.ceil(per_step * steps), 2)
 
         return per_sample * n_samples
 
     @classmethod
     def from_file(cls, path: str) -> "ImagePreset":
-        with open(path, encoding = "utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             data = json.loads(f.read())
 
         return cls(**data)
 
     def to_file(self, path: str):
-        with open(path, 'w', encoding = "utf-8") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self._settings))

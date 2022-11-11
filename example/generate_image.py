@@ -39,4 +39,5 @@ async def main():
             with open("image_3.png", "wb") as f:
                 f.write(img)
 
+
 run(main())

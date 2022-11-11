@@ -2,7 +2,7 @@
 max-line-length = 120
 
 # Remove some checks pertaining to code formatting
-extend-ignore = E124, E127, E128, E201, E202, E221, E131, E251, E272, E402, E741
+extend-ignore = E124, E127, E128, E201, E202, E221, E131, E203, E251, E272, E402, E741
 
 exclude =
     # No need to traverse our git directory

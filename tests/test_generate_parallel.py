@@ -4,7 +4,7 @@ from sys import path
 from os import environ as env
 from os.path import join, abspath, dirname
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
+path.insert(0, abspath(join(dirname(__file__), "..")))
 
 from novelai_api import NovelAIAPI
 from novelai_api.Preset import Preset, Model
@@ -34,7 +34,7 @@ async def generate_5(api: NovelAIAPI, model: Model):
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)
-    global_settings = GlobalSettings(ban_brackets = True, bias_dinkus_asterism = True)
+    global_settings = GlobalSettings(ban_brackets=True, bias_dinkus_asterism=True)
 
     logger.info(f"Using model {model.value}\n")
 
@@ -68,7 +68,9 @@ async def test_run_5_generate_async(model: Model):
         await session.close()
         raise e
 
+
 if __name__ == "__main__":
+
     async def main():
         await test_run_5_generate_sync(Model.Sigurd)
         await test_run_5_generate_async(Model.Sigurd)

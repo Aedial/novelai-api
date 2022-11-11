@@ -12,8 +12,12 @@ class BiasGroup:
     generate_once: bool
     enabled: bool
 
-    def __init__(self,
-        bias: float, ensure_sequence_finish: bool = False, generate_once: bool = False, enabled: bool = True
+    def __init__(
+        self,
+        bias: float,
+        ensure_sequence_finish: bool = False,
+        generate_once: bool = False,
+        enabled: bool = True,
     ):
         self._sequences = []
 
@@ -25,12 +29,20 @@ class BiasGroup:
     @classmethod
     def from_data(cls, data: Dict[str, Any]) -> "BiasGroup":
         # FIXME: wtf is "whenInactive" in bias ?
-        ensure_sequence_finish = data["ensureSequenceFinish"] if "ensureSequenceFinish" in data else \
-                                 data["ensure_sequence_finish"] if "ensure_sequence_finish" in data else \
-                                 False
-        generate_once = data["generateOnce"] if "generateOnce" in data else \
-                        data["generate_once"] if "generate_once" in data else \
-                        False
+        ensure_sequence_finish = (
+            data["ensureSequenceFinish"]
+            if "ensureSequenceFinish" in data
+            else data["ensure_sequence_finish"]
+            if "ensure_sequence_finish" in data
+            else False
+        )
+        generate_once = (
+            data["generateOnce"]
+            if "generateOnce" in data
+            else data["generate_once"]
+            if "generate_once" in data
+            else False
+        )
 
         b = cls(data["bias"], ensure_sequence_finish, generate_once, data["enabled"])
 
@@ -39,7 +51,10 @@ class BiasGroup:
 
         return b
 
-    def add(self, *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str]) -> "BiasGroup":
+    def add(
+        self,
+        *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str],
+    ) -> "BiasGroup":
         for sequence in sequences:
             if type(sequence) is dict:
                 if "sequence" in sequence:
@@ -50,8 +65,9 @@ class BiasGroup:
             if type(sequence) is not str:
                 assert type(sequence) is list, f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
-                    assert type(s) is int, \
-                        f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
+                    assert (
+                        type(s) is int
+                    ), f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
 
             self._sequences.append(sequence)
 
@@ -63,24 +79,36 @@ class BiasGroup:
         return self
 
     def __iter__(self):
-        return ({ "bias": self.bias,
-                  "ensure_sequence_finish": self.ensure_sequence_finish,
-                  "generate_once": self.generate_once,
-                  "enabled": self.enabled,
-                  "sequence": s } for s in self._sequences)
+        return (
+            {
+                "bias": self.bias,
+                "ensure_sequence_finish": self.ensure_sequence_finish,
+                "generate_once": self.generate_once,
+                "enabled": self.enabled,
+                "sequence": s,
+            }
+            for s in self._sequences
+        )
 
     def get_tokenized_biases(self, model: Model) -> Iterable[Dict[str, any]]:
-        return ({ "bias": self.bias,
-                  "ensure_sequence_finish": self.ensure_sequence_finish,
-                  "generate_once": self.generate_once,
-                  "enabled": self.enabled,
-                  "sequence": tokenize_if_not(model, s) } for s in self._sequences)
+        return (
+            {
+                "bias": self.bias,
+                "ensure_sequence_finish": self.ensure_sequence_finish,
+                "generate_once": self.generate_once,
+                "enabled": self.enabled,
+                "sequence": tokenize_if_not(model, s),
+            }
+            for s in self._sequences
+        )
 
     def __str__(self) -> str:
-        return "{ " \
-                    f"bias: {self.bias}, " \
-                    f"ensure_sequence_finish: {self.ensure_sequence_finish}, " \
-                    f"generate_once: {self.generate_once}, " \
-                    f"enabled: {self.enabled}, " \
-                    f"sequences: {self._sequences}" \
-                "}"
+        return (
+            "{ "
+            f"bias: {self.bias}, "
+            f"ensure_sequence_finish: {self.ensure_sequence_finish}, "
+            f"generate_once: {self.generate_once}, "
+            f"enabled: {self.enabled}, "
+            f"sequences: {self._sequences}"
+            "}"
+        )

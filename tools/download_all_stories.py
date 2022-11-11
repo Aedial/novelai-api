@@ -9,7 +9,7 @@ from pathlib import Path
 
 async def main():
     parser = ArgumentParser()
-    parser.add_argument("directory", nargs = "?", default = ".", help = "Directory to dump the stories to")
+    parser.add_argument("directory", nargs="?", default=".", help="Directory to dump the stories to")
 
     args = parser.parse_args()
 
@@ -41,7 +41,7 @@ async def main():
                 content = {
                     "storyContainerVersion": 1,
                     "metadata": story["data"],
-                    "content": story["content"]["data"]
+                    "content": story["content"]["data"],
                 }
 
                 # remove useless keys
@@ -50,6 +50,7 @@ async def main():
                     del content["metadata"]["remoteId"]
 
                 with open(path, "w") as f:
-                    f.write(dumps(content, ensure_ascii = False, indent = 2))
+                    f.write(dumps(content, ensure_ascii=False, indent=2))
+
 
 run(main())

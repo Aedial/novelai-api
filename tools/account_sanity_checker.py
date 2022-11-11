@@ -16,11 +16,11 @@ def check_non_decrypted_item(type_name: str, items: List[Dict[str, Any]], logger
         if decrypted is False:
             failed.append((item["meta"], item["id"]))
 
-        fail_flags.append('O' if decrypted else 'X')
+        fail_flags.append("O" if decrypted else "X")
 
     if failed:
         logger.info(f"{len(failed)}/{len(items)} {type_name} couldn't be decrypted: {''.join(fail_flags)}")
-        logger.info('\n'.join(f"\tItem {id} of meta {meta}" for meta, id in failed))
+        logger.info("\n".join(f"\tItem {id} of meta {meta}" for meta, id in failed))
         logger.info("")
     else:
         logger.info(f"{len(items)}/{len(items)} {type_name} have been successfully decrypted\n")
@@ -70,8 +70,9 @@ def check_story_content_without_story(stories: List[Dict[str, Any]], story_conte
         assert "id" in story_content
 
         if story_content["meta"] not in story_metas:
-            print(f"Story content {story_content['id']} of meta {story_content['meta']} "
-                   "does not have an associated story")
+            print(
+                f"Story content {story_content['id']} of meta {story_content['meta']} does not have an associated story"
+            )
 
 
 async def main():
@@ -101,5 +102,6 @@ async def main():
         check_story_content_without_story(stories, story_contents)
 
         check_duplicate_meta(stories, story_contents, presets, modules)
+
 
 run(main())

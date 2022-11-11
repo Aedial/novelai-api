@@ -14,13 +14,18 @@ from typing import Union, Dict, Tuple, List, Any, Optional, Iterable, AsyncItera
 
 
 class HighLevel:
-    _parent: "NovelAIAPI" # noqa
+    _parent: "NovelAIAPI"  # noqa: F821
 
-    def __init__(self, parent: "NovelAIAPI"): # noqa
+    def __init__(self, parent: "NovelAIAPI"):  # noqa: F821
         self._parent = parent
 
-    async def register(self,
-        recapcha: str, email: str, password: str, send_mail: bool = True, giftkey: Optional[str] = None
+    async def register(
+        self,
+        recapcha: str,
+        email: str,
+        password: str,
+        send_mail: bool = True,
+        giftkey: Optional[str] = None,
     ) -> bool:
         """
         Register a new account
@@ -93,7 +98,9 @@ class HighLevel:
 
         return stories["objects"]
 
-    async def download_user_story_contents(self) -> Dict[str, Dict[str, Union[str, int]]]:
+    async def download_user_story_contents(
+        self,
+    ) -> Dict[str, Dict[str, Union[str, int]]]:
         story_contents = await self._parent.low_level.download_objects("storycontent")
 
         return story_contents["objects"]
@@ -113,8 +120,11 @@ class HighLevel:
 
         return modules["objects"]
 
-    async def upload_user_content(self,
-        data: Dict[str, Any], encrypt: bool = False, keystore: Optional[Keystore] = None
+    async def upload_user_content(
+        self,
+        data: Dict[str, Any],
+        encrypt: bool = False,
+        keystore: Optional[Keystore] = None,
     ) -> bool:
         """
         Upload user content. If it has been decrypted with decrypt_user_data,
@@ -136,7 +146,7 @@ class HighLevel:
             if object_type in ("stories", "storycontent", "aimodules", "shelf"):
                 assert keystore is not None, "Keystore is not set, cannot encrypt data"
                 encrypt_user_data(data, keystore)
-            elif object_type in ("presets", ):
+            elif object_type in ("presets",):
                 compress_user_data(data)
 
         # clean data introduced by decrypt_user_data
@@ -170,15 +180,18 @@ class HighLevel:
 
         return status
 
-    async def _generate(self, prompt: Union[List[int], str],
-                              model: Model,
-                              preset: Preset,
-                              global_settings: GlobalSettings,
-                              bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
-                              biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                              prefix: Optional[str] = None,
-                              stream: bool = False,
-                              **kwargs):
+    async def _generate(
+        self,
+        prompt: Union[List[int], str],
+        model: Model,
+        preset: Preset,
+        global_settings: GlobalSettings,
+        bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+        biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+        prefix: Optional[str] = None,
+        stream: bool = False,
+        **kwargs,
+    ):
         """
         Generate content from an AI on the NovelAI server which support streaming
 
@@ -195,8 +208,9 @@ class HighLevel:
         """
 
         assert preset is not None, "Uninitialized preset"
-        assert preset.model == model, \
-            f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
+        assert (
+            preset.model == model
+        ), f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
 
         preset_params = preset.to_settings()
         global_params = global_settings.to_settings(model)
@@ -217,8 +231,9 @@ class HighLevel:
                 bad_words = [bad_words]
 
             for i, bad_word in enumerate(bad_words):
-                assert type(bad_word) is BanList, \
-                    f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
+                assert (
+                    type(bad_word) is BanList
+                ), f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
                 params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
 
         if biases is not None:
@@ -226,8 +241,9 @@ class HighLevel:
                 biases = [biases]
 
             for i, bias in enumerate(biases):
-                assert type(bias) is BiasGroup, \
-                    f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
+                assert (
+                    type(bias) is BiasGroup
+                ), f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
                 params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
 
         # Delete the options that return an unknown error (success status code, but server error)
@@ -240,14 +256,17 @@ class HighLevel:
         async for i in self._parent.low_level.generate(prompt, model, params, stream):
             yield i
 
-    async def generate(self, prompt: Union[List[int], str],
-                             model: Model,
-                             preset: Preset,
-                             global_settings: GlobalSettings,
-                             bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
-                             biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                             prefix: Optional[str] = None,
-                             **kwargs) -> Dict[str, Any]:
+    async def generate(
+        self,
+        prompt: Union[List[int], str],
+        model: Model,
+        preset: Preset,
+        global_settings: GlobalSettings,
+        bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+        biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+        prefix: Optional[str] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
         """
         Generate text from an AI on the NovelAI server which support streaming
 
@@ -263,18 +282,29 @@ class HighLevel:
         """
 
         async for e in self._generate(
-            prompt, model, preset, global_settings, bad_words, biases, prefix, False, **kwargs
+            prompt,
+            model,
+            preset,
+            global_settings,
+            bad_words,
+            biases,
+            prefix,
+            False,
+            **kwargs,
         ):
             return e
 
-    async def generate_stream(self, prompt: Union[List[int], str],
-                                    model: Model,
-                                    preset: Preset,
-                                    global_settings: GlobalSettings,
-                                    bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
-                                    biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
-                                    prefix: Optional[str] = None,
-                                    **kwargs) -> AsyncIterable[Dict[str, Any]]:
+    async def generate_stream(
+        self,
+        prompt: Union[List[int], str],
+        model: Model,
+        preset: Preset,
+        global_settings: GlobalSettings,
+        bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
+        biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
+        prefix: Optional[str] = None,
+        **kwargs,
+    ) -> AsyncIterable[Dict[str, Any]]:
         """
         Generate text from an AI on the NovelAI server
 
@@ -290,12 +320,20 @@ class HighLevel:
         """
 
         async for e in self._generate(
-            prompt, model, preset, global_settings, bad_words, biases, prefix, True, **kwargs
+            prompt,
+            model,
+            preset,
+            global_settings,
+            bad_words,
+            biases,
+            prefix,
+            True,
+            **kwargs,
         ):
             yield e
 
-    async def generate_image(self,
-        prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
+    async def generate_image(
+        self, prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
     ) -> AsyncIterable[bytes]:
         """
         Generate image from an AI on the NovelAI server
@@ -312,7 +350,7 @@ class HighLevel:
 
         uc = settings["uc"]
         if "nsfw" in prompt and uc.startswith("nsfw,"):
-            settings["uc"] = uc[len("nsfw,"):].strip()
+            settings["uc"] = uc[len("nsfw,") :].strip()
 
         quality_toggle = preset["quality_toggle"]
         if quality_toggle:

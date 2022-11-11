@@ -26,7 +26,7 @@ class Keystore:
     def __init__(self, keystore: Union[Dict[str, bytes], None]):
         self.data = keystore
         self._keystore = None
-        self._nonce = b''
+        self._nonce = b""
         self._version = 0
 
         self._decrypted = False
@@ -69,18 +69,18 @@ class Keystore:
     def decrypt(self, key: bytes):
         keystore = self.data.copy()
 
-        if "keystore" in keystore and keystore["keystore"] is None:    # keystore is null when empty
+        if "keystore" in keystore and keystore["keystore"] is None:  # keystore is null when empty
             self._nonce = random(SecretBox.NONCE_SIZE)
             self._version = 2
             self.data = {
                 "keystore": {
                     "version": self._version,
                     "nonce": str(list(self._nonce)),
-                    "sdata": ""
+                    "sdata": "",
                 }
             }
 
-            self._keystore = { }
+            self._keystore = {}
 
             self._compressed = False
             self._decrypted = True
@@ -115,29 +115,29 @@ class Keystore:
             return
 
         # FIXME: find what type is 'bytes'
-#        validate(keystore, self._schemas["schema_keystore_setter"])
+        #        validate(keystore, self._schemas["schema_keystore_setter"])
 
         if len(self._keystore) == 0:
             keystore = {
                 "version": self._version,
                 "nonce": list(self._nonce),
-                "sdata": ""
+                "sdata": "",
             }
 
         else:
-            keystore_bytes = { meta: list(key) for meta, key in self._keystore.items() }
-            keys = { "keys": keystore_bytes }
+            keystore_bytes = {meta: list(key) for meta, key in self._keystore.items()}
+            keys = {"keys": keystore_bytes}
 
-            json_data = dumps(keys, separators = (',', ':'), ensure_ascii = False)
+            json_data = dumps(keys, separators=(",", ":"), ensure_ascii=False)
             encrypted_data = Keystore._encrypt_data(json_data, key, self._nonce, self._compressed)
             # remove automatically prepended nonce
-            encrypted_data = encrypted_data[SecretBox.NONCE_SIZE:]
+            encrypted_data = encrypted_data[SecretBox.NONCE_SIZE :]
 
             keystore = {
                 "version": self._version,
                 "nonce": list(self._nonce),
-                "sdata": list(encrypted_data)
+                "sdata": list(encrypted_data),
             }
 
-        keystore_str = dumps(keystore, separators = (',', ':'), ensure_ascii = False)
+        keystore_str = dumps(keystore, separators=(",", ":"), ensure_ascii=False)
         self.data["keystore"] = b64encode(keystore_str.encode()).decode()

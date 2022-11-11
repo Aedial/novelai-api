@@ -4,7 +4,7 @@ from aiohttp import ClientSession
 from sys import path
 from os.path import join, abspath, dirname
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
+path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI
 from novelai_api.utils import get_encryption_key
 
@@ -32,7 +32,7 @@ class API:
         self.logger = Logger("NovelAI")
         self.logger.addHandler(StreamHandler())
 
-        self.api = NovelAIAPI(logger = self.logger)
+        self.api = NovelAIAPI(logger=self.logger)
         self.access_token = None
 
     @property

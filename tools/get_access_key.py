@@ -2,7 +2,7 @@ from sys import path
 from os.path import join, abspath, dirname
 from os import environ as env
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
+path.insert(0, abspath(join(dirname(__file__), "..")))
 
 from novelai_api.utils import get_access_key
 

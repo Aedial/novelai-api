@@ -22,7 +22,7 @@ async def main():
             if "nonce" in story:
                 del story["nonce"]
 
-        logger.info(json.dumps(stories, indent = 4, ensure_ascii = False))
+        logger.info(json.dumps(stories, indent=4, ensure_ascii=False))
 
         story_contents = await api.high_level.download_user_story_contents()
         decrypt_user_data(story_contents, keystore)
@@ -34,6 +34,7 @@ async def main():
             if "nonce" in story_content:
                 del story_content["nonce"]
 
-        logger.info(json.dumps(story_contents, indent = 4, ensure_ascii = False))
+        logger.info(json.dumps(story_contents, indent=4, ensure_ascii=False))
+
 
 run(main())

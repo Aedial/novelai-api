@@ -2,22 +2,27 @@ from sys import path
 from os import environ as env
 from os.path import join, abspath, dirname
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
+path.insert(0, abspath(join(dirname(__file__), "..")))
 
 from aiohttp import ClientSession
 from subprocess import Popen, PIPE
 from asyncio import run
 
 from novelai_api import NovelAIAPI, utils
-from novelai_api.utils import get_encryption_key, decrypt_user_data, encrypt_user_data, decompress_user_data, \
-                              compress_user_data
+from novelai_api.utils import (
+    get_encryption_key,
+    decrypt_user_data,
+    encrypt_user_data,
+    decompress_user_data,
+    compress_user_data,
+)
 
 from typing import List, Any
 
 
 def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) -> bool:
-    fail_flags = ''.join(('O' if item_in == item_out else 'X') for item_in, item_out in zip(items_in, items_out))
-    if 'X' in fail_flags:
+    fail_flags = "".join(("O" if item_in == item_out else "X") for item_in, item_out in zip(items_in, items_out))
+    if "X" in fail_flags:
         print(f"{fail_flags.count('X')}/{len(fail_flags)} integrity checks failed for {type_name}")
         print(fail_flags)
         print("")
@@ -32,7 +37,7 @@ fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
 
 
 def inflate_js(data: bytes, _) -> bytes:
-    p = Popen(["node", fflate_path, str(len(data))], stdin = PIPE, stdout = PIPE)
+    p = Popen(["node", fflate_path, str(len(data))], stdin=PIPE, stdout=PIPE)
     out, _ = p.communicate(data)
 
     return out
@@ -248,6 +253,7 @@ async def test_shelves_integrity_async():
 
 
 if __name__ == "__main__":
+
     async def main():
         await test_keystore_integrity_sync()
         await test_keystore_integrity_async()

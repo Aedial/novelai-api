@@ -28,9 +28,14 @@ regex = "^2022.10.31"
 pytest-asyncio = "^0.20.1"
 pytest-xdist = "^3.0.2"
 
+# TODO: add flake when supports come
+
 [tool.bandit]
 exclude_dirs = ["tests/test_decrypt_encrypt_integrity_check.py"]
 skips = ["B101", "B311"]
+
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]

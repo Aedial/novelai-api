@@ -2,7 +2,7 @@ from sys import path
 from os import environ as env
 from os.path import join, abspath, dirname
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
+path.insert(0, abspath(join(dirname(__file__), "..")))
 
 from novelai_api import NovelAIAPI, NovelAIError
 from novelai_api.Preset import Preset, Model
@@ -55,11 +55,13 @@ async def run_test(func, *args, is_async: bool, attempts: int = 5):
 
         except NovelAIError as e:
             err = e
-            retry = any([
-                e.status == 502,    # Bad Gateway
-                e.status == 520,    # Cloudflare Unknown Error
-                e.status == 524,    # Cloudflare Gateway Error
-            ])
+            retry = any(
+                [
+                    e.status == 502,  # Bad Gateway
+                    e.status == 520,  # Cloudflare Unknown Error
+                    e.status == 524,  # Cloudflare Gateway Error
+                ]
+            )
 
         if not retry:
             break
@@ -70,7 +72,7 @@ async def run_test(func, *args, is_async: bool, attempts: int = 5):
         async with ClientSession() as session:
             while True:
                 try:
-                    rsp = await session.get("https://www.google.com", timeout = 5 * 60)
+                    rsp = await session.get("https://www.google.com", timeout=5 * 60)
                     rsp.raise_for_status()
 
                     break
@@ -143,13 +145,13 @@ async def simple_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt:
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_simple_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_simple_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(simple_generate, *model_preset, prompt, tokenize, is_async=True)
 
 
 async def default_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize: bool):
@@ -172,13 +174,13 @@ async def default_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize:
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_default_generate_sync(model: Model, prompt: str, tokenize: bool):
     # sync handler
-    await run_test(default_generate, model, prompt, tokenize, is_async = False)
+    await run_test(default_generate, model, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_default_generate_async(model: Model, prompt: str, tokenize: bool):
     # async handler
-    await run_test(default_generate, model, prompt, tokenize, is_async = True)
+    await run_test(default_generate, model, prompt, tokenize, is_async=True)
 
 
 async def official_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize: bool):
@@ -201,13 +203,13 @@ async def official_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_official_generate_sync(model: Model, prompt: str, tokenize: bool):
     # sync handler
-    await run_test(official_generate, model, prompt, tokenize, is_async = False)
+    await run_test(official_generate, model, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model,prompt,tokenize", model_input_permutation)
 async def test_official_generate_async(model: Model, prompt: str, tokenize: bool):
     # async handler
-    await run_test(official_generate, model, prompt, tokenize, is_async = True)
+    await run_test(official_generate, model, prompt, tokenize, is_async=True)
 
 
 async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
@@ -219,8 +221,11 @@ async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset,
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
 
-    global_settings = GlobalSettings(bias_dinkus_asterism = True, ban_brackets = True,
-                                     num_logprobs = GlobalSettings.NO_LOGPROBS)
+    global_settings = GlobalSettings(
+        bias_dinkus_asterism=True,
+        ban_brackets=True,
+        num_logprobs=GlobalSettings.NO_LOGPROBS,
+    )
 
     gen = await api.high_level.generate(prompt, model, preset, global_settings)
     logger.info(gen)
@@ -230,13 +235,13 @@ async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset,
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_globalsettings_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_globalsettings_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(globalsettings_generate, *model_preset, prompt, tokenize, is_async=True)
 
 
 async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
@@ -253,16 +258,17 @@ async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: s
     global_settings["ban_brackets"] = True
     global_settings["num_logprobs"] = 1
 
-    bias1 = BiasGroup(-0.1).add("It is", " It is", "It was", " It was",
-                                Tokenizer.encode(model, "There is")) \
-                           .add(Tokenizer.encode(model, "There are"))
+    bias1 = (
+        BiasGroup(-0.1)
+        .add("It is", " It is", "It was", " It was", Tokenizer.encode(model, "There is"))
+        .add(Tokenizer.encode(model, "There are"))
+    )
     bias1 += " as it is"
 
     bias2 = BiasGroup(0.1).add(" because", " since").add(" why").add(" when", " about")
     bias2 += "as it is"
 
-    gen = await api.high_level.generate(prompt, model, preset, global_settings,
-                                        biases = (bias1, bias2))
+    gen = await api.high_level.generate(prompt, model, preset, global_settings, biases=(bias1, bias2))
     logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
@@ -270,13 +276,13 @@ async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: s
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_bias_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_bias_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(bias_generate, *model_preset, prompt, tokenize, is_async=True)
 
 
 async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
@@ -297,8 +303,7 @@ async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: st
     banned += "commonly"
     banned += " commonly"
 
-    gen = await api.high_level.generate(prompt, model, preset, global_settings,
-                                        bad_words = banned)
+    gen = await api.high_level.generate(prompt, model, preset, global_settings, bad_words=banned)
     logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
@@ -306,13 +311,13 @@ async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: st
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(ban_generate, *model_preset, prompt, tokenize, is_async=True)
 
 
 async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
@@ -336,8 +341,7 @@ async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, p
     bias2 = BiasGroup(0.1).add(" because", " since").add(" why").add(" when", " about")
     bias2 += "as it is"
 
-    gen = await api.high_level.generate(prompt, model, preset, global_settings,
-                                        bad_words = banned, biases = [bias2])
+    gen = await api.high_level.generate(prompt, model, preset, global_settings, bad_words=banned, biases=[bias2])
     logger.info(gen)
     logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
 
@@ -345,13 +349,13 @@ async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, p
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(ban_and_bias_generate, *model_preset, prompt, tokenize, is_async=True)
 
 
 async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
@@ -375,8 +379,9 @@ async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset:
     bias2 = BiasGroup(0.1).add(" because", " since").add(" why").add(" when", " about")
     bias2 += "as it is"
 
-    async for i in api.high_level.generate_stream(prompt, model, preset, global_settings,
-                                                  bad_words = banned, biases = [bias2]):
+    async for i in api.high_level.generate_stream(
+        prompt, model, preset, global_settings, bad_words=banned, biases=[bias2]
+    ):
         logger.info(i)
         logger.info(Tokenizer.decode(model, b64_to_tokens(i["token"])))
 
@@ -384,10 +389,10 @@ async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset:
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_streaming_sync(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # sync handler
-    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async = False)
+    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async=False)
 
 
 @pytest.mark.parametrize("model_preset,prompt,tokenize", model_preset_input_permutation)
 async def test_ban_and_bias_generate_streaming_async(model_preset: Tuple[Model, Preset], prompt: str, tokenize: bool):
     # async handler
-    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async = True)
+    await run_test(ban_and_bias_generate_streaming, *model_preset, prompt, tokenize, is_async=True)

@@ -7,6 +7,7 @@ from novelai_api.ImagePreset import ImageModel
 from novelai_api.tokenizers.simple_tokenizer import SimpleTokenizer
 
 from typing import List, Union
+
 AnyModel = Union[Model, ImageModel]
 
 tokenizers_path = Path(__file__).parent / "tokenizers"
@@ -19,19 +20,16 @@ class Tokenizer:
 
     _tokenizers_name = {
         # Model.Calliope:             "gpt2",
-        Model.Sigurd:               "gpt2",
-        Model.Euterpe:              "gpt2",
-        Model.Krake:                "pile",
-
-        Model.Snek:                 "gpt2",
-        Model.Genji:                "gpt2-genji",
-
-        Model.HypeBot:              "gpt2",
-        Model.Inline:               "gpt2",
-
-        ImageModel.Anime_Curated:   "clip",
-        ImageModel.Anime_Full:      "clip",
-        ImageModel.Furry:           "clip",
+        Model.Sigurd: "gpt2",
+        Model.Euterpe: "gpt2",
+        Model.Krake: "pile",
+        Model.Snek: "gpt2",
+        Model.Genji: "gpt2-genji",
+        Model.HypeBot: "gpt2",
+        Model.Inline: "gpt2",
+        ImageModel.Anime_Curated: "clip",
+        ImageModel.Anime_Full: "clip",
+        ImageModel.Furry: "clip",
     }
 
     @classmethod
@@ -51,10 +49,10 @@ class Tokenizer:
     _CLIP_TOKENIZER = SimpleTokenizer()
 
     _tokenizers = {
-        "gpt2":       _GPT2_TOKENIZER,
+        "gpt2": _GPT2_TOKENIZER,
         "gpt2-genji": _GENJI_TOKENIZER,
-        "pile":       _PILE_TOKENIZER,
-        "clip":       _CLIP_TOKENIZER,
+        "pile": _PILE_TOKENIZER,
+        "clip": _CLIP_TOKENIZER,
     }
 
     @classmethod
