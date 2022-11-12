@@ -1,0 +1,60 @@
+repos:
+# modification
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-json
+    -   id: check-toml
+    -   id: check-ast
+    -   id: check-merge-conflict
+    -   id: mixed-line-ending
+
+    # nearly useless, needs contribute (manual code matching)
+-   repo: https://github.com/domdfcoding/flake2lint
+    rev: v0.4.2
+    hooks:
+    -   id: flake2lint
+
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+    -   id: isort
+
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
+        args: [
+            "--safe"  # don't change AST
+        ]
+
+# check
+-   repo: https://github.com/pycqa/flake8
+    rev: 5.0.4
+    hooks:
+    -   id: flake8
+        exclude: novelai_api/tokenizers # config file not respected (wontfix from flake8)
+
+-   repo: https://github.com/PyCQA/bandit
+    rev: 1.7.4
+    hooks:
+    -   id: bandit
+        additional_dependencies: [ "bandit[toml]" ]
+        args: [
+            "-c", "pyproject.toml",     # configuration file
+            "-r"                        # scan
+        ]
+
+-   repo: local
+    hooks:
+    -   id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [
+            "-j 0"                      # parallel execution
+        ]
