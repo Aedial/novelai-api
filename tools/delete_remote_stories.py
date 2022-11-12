@@ -1,24 +1,24 @@
-from boilerplate import API
-from novelai_api.utils import decrypt_user_data, assign_content_to_story
-
-from argparse import ArgumentParser, ArgumentError
+from argparse import ArgumentParser, Namespace
 from asyncio import run
 from json import dumps
 from pathlib import Path
+from typing import Any, Dict, List, NoReturn, Union
 
-from typing import Dict, Any, NoReturn, List, Union
+from boilerplate import API
+
+from novelai_api.utils import assign_content_to_story, decrypt_user_data
 
 
 def str_to_bool(s: str) -> bool:
     ret = True if s.lower() == "true" else False if s.lower() == "false" else None
 
     if ret is None:
-        raise ArgumentError(f"{s} must be 'true' or 'false'")
+        raise ValueError(f"{s} must be 'true' or 'false'")
 
     return ret
 
 
-def save_story(i: int, story: Dict[str, Any], args: ArgumentParser) -> NoReturn:
+def save_story(i: int, story: Dict[str, Any], args: Namespace) -> NoReturn:
     name = story["metadata"]["title"]
     path = Path(args.backup_directory) / f"{i}-{name}.scenario"
 
@@ -27,11 +27,11 @@ def save_story(i: int, story: Dict[str, Any], args: ArgumentParser) -> NoReturn:
     if "remoteId" in story["metadata"]:
         del story["metadata"]["remoteId"]
 
-    with open(path, "w") as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.write(dumps(story, ensure_ascii=False, indent=2))
 
 
-def creation_date_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
+def creation_date_predicate(args: Namespace, story: Dict[str, Any]) -> bool:
     creation_date = story["metadata"]["createdAt"]
 
     return (
@@ -41,7 +41,7 @@ def creation_date_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool
     )
 
 
-def update_date_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
+def update_date_predicate(args: Namespace, story: Dict[str, Any]) -> bool:
     update_date = story["metadata"]["lastUpdatedAt"]
 
     return (
@@ -51,7 +51,7 @@ def update_date_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
     )
 
 
-def shelves_predicate(args: ArgumentParser, _story: Dict[str, Any]) -> bool:
+def shelves_predicate(args: Namespace, _story: Dict[str, Any]) -> bool:
     # FIXME: need to import shelves, isn't it ?
     shelf = None
 
@@ -62,7 +62,7 @@ def match_and_then_or(args: List[List[str]], to_match: Union[str, List[str]]) ->
     return any(all((e in to_match) for e in items) for items in args)
 
 
-def memory_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
+def memory_predicate(args: Namespace, story: Dict[str, Any]) -> bool:
     memory = story["content"]["context"][0]["text"]
 
     return (args.has_memory is None or args.has_memory is bool(memory)) and (
@@ -70,7 +70,7 @@ def memory_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
     )
 
 
-def an_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
+def an_predicate(args: Namespace, story: Dict[str, Any]) -> bool:
     an = story["content"]["context"][1]["text"]
 
     return (args.has_an is None or args.has_an is bool(an)) and (
@@ -78,7 +78,7 @@ def an_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
     )
 
 
-def lorebook_predicate(args: ArgumentParser, story: Dict[str, Any]) -> bool:
+def lorebook_predicate(args: Namespace, story: Dict[str, Any]) -> bool:
     entries = story["content"]["lorebook"]["entries"]
     keys = [key for e in entries for key in e["keys"]]
 
@@ -99,8 +99,8 @@ PREDICATES = (
 
 async def main():
     parser = ArgumentParser(
-        description="Delete the stories matching all the selected filters, "
-        "and save them in <backup_directory>. Filters that are not set are ignored"
+        description="Delete the stories matching all the selected filters, and save them in <backup_directory>. "
+        "Filters that are not set are ignored "
     )
     parser.add_argument(
         "backup_directory",
@@ -150,7 +150,7 @@ async def main():
         nargs=2,
         default=[],
         action="append",
-        help="Select all items last updated strictly between these times " "(in ms since Epoch)",
+        help="Select all items last updated strictly between these times (in ms since Epoch)",
     )
 
     # TODO: need to query shelves for that

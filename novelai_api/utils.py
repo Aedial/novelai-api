@@ -1,25 +1,19 @@
 import json
-import argon2
 import operator
-
-from nacl.secret import SecretBox
-from nacl.exceptions import CryptoError
-
+from base64 import b64decode, b64encode, urlsafe_b64encode
 from hashlib import blake2b
-from base64 import urlsafe_b64encode, b64encode, b64decode
-from zlib import (
-    decompress as inflate,
-    compressobj as deflate_obj,
-    MAX_WBITS,
-    Z_BEST_COMPRESSION,
-)
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+from zlib import MAX_WBITS, Z_BEST_COMPRESSION
+from zlib import compressobj as deflate_obj
+from zlib import decompress as inflate
+
+import argon2
+from nacl.exceptions import CryptoError
+from nacl.secret import SecretBox
 
 from novelai_api.Keystore import Keystore
-from novelai_api.Preset import Preset, Model
+from novelai_api.Preset import Model, Preset
 from novelai_api.Tokenizer import Tokenizer
-
-from typing import Dict, Union, List, Tuple, Any, Optional, Iterable
-
 
 # boilerplate
 NoneType: type = type(None)
@@ -70,10 +64,14 @@ def argon_hash(email: str, password: str, size: int, domain: str) -> str:
 
 
 def get_access_key(email: str, password: str) -> str:
+    assert_type(str, email=email, password=password)
+
     return argon_hash(email, password, 64, "novelai_data_access_key")[:64]
 
 
 def get_encryption_key(email: str, password: str) -> bytes:
+    assert_type(str, email=email, password=password)
+
     pre_key = argon_hash(email, password, 128, "novelai_data_encryption_key").replace("=", "")
 
     blake = blake2b(digest_size=32)
@@ -90,7 +88,7 @@ def decrypt_data(
 ) -> Union[Tuple[str, bytes, bool], Tuple[None, None, bool]]:
     box = SecretBox(key)
 
-    if type(data) is not bytes:
+    if not isinstance(data, bytes):
         data = data.encode()
 
     # data is compressed
@@ -121,7 +119,7 @@ def encrypt_data(
 
     box = SecretBox(key)
 
-    if type(data) is not bytes:
+    if not isinstance(data, bytes):
         data = data.encode()
 
     # NOTE: zlib results in different data than the library used by NAI, but they are fully compatible
@@ -151,11 +149,11 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     Doesn't decrypt, but does a b64 to UTF8 translation
     """
 
-    if type(items) is not list and type(items) is not tuple:
+    if not isinstance(items, (list, tuple)):
         items = [items]
 
     for item in items:
-        assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
         assert "data" in item, "Expected key 'data' in item"
 
         # skip already decompressed data
@@ -184,11 +182,11 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     Must have been decompressed by decompress_user_data()
     """
 
-    if type(items) is not list and type(items) is not tuple:
+    if isinstance(items, (list, tuple)):
         items = [items]
 
     for item in items:
-        assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
         assert "data" in item, "Expected key 'data' in item"
 
         if "decrypted" in item:
@@ -216,11 +214,11 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
     """
 
     # 1 item
-    if type(items) is not list and type(items) is not tuple:
+    if not isinstance(items, (list, tuple)):
         items = [items]
 
     for item in items:
-        assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
 
         if item.get("decrypted"):
             continue
@@ -263,11 +261,11 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
     """
 
     # 1 item
-    if type(items) is not list and type(items) is not tuple:
+    if not isinstance(items, (list, tuple)):
         items = [items]
 
     for item in items:
-        assert type(item) is dict, f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
 
         if "decrypted" in item:
             if item["decrypted"]:
@@ -299,10 +297,10 @@ def assign_content_to_story(
     story_contents: Union[List[Dict[str, Any]], Dict[str, Any]],
 ):
 
-    if type(stories) is not list and type(stories) is not tuple:
+    if not isinstance(stories, (list, tuple)):
         stories = [stories]
 
-    if type(story_contents) is not list and type(story_contents) is not tuple:
+    if not isinstance(story_contents, (list, tuple)):
         story_contents = [story_contents]
 
     story_contents = {content["id"]: content for content in story_contents}
@@ -332,7 +330,7 @@ def tokens_to_b64(tokens: Iterable[int]) -> str:
 def b64_to_tokens(b64: str) -> List[int]:
     b = b64decode(b64)
 
-    return list(int.from_bytes(b[i : i + 2], "little") for i in range(0, len(b), 2))
+    return [int.from_bytes(b[i : i + 2], "little") for i in range(0, len(b), 2)]
 
 
 def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
@@ -345,10 +343,10 @@ def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
 
 
 def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
-    if type(o) is list:
+    if isinstance(o, list):
         return o
 
-    assert type(o) is str
+    assert isinstance(o, str)
     return Tokenizer.encode(model, o)
 
 

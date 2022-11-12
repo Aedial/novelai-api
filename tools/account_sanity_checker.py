@@ -1,10 +1,10 @@
-from boilerplate import API
-from novelai_api.utils import decrypt_user_data, decompress_user_data
-
-from logging import Logger
 from asyncio import run
+from logging import Logger
+from typing import Any, Dict, List, NoReturn, Set, Tuple
 
-from typing import List, Tuple, Dict, Set, Any, NoReturn
+from boilerplate import API
+
+from novelai_api.utils import decompress_user_data, decrypt_user_data
 
 
 def check_non_decrypted_item(type_name: str, items: List[Dict[str, Any]], logger: Logger) -> NoReturn:
@@ -47,14 +47,14 @@ def check_duplicate_meta(*args):
             item_types[meta].append(item["type"])
 
     # Detect items that have duplicate meta
-    for meta in meta_list:
+    for meta, items in meta_list.items():
         if meta == "":
             continue
 
         item_type = item_types[meta]
 
         if len(item_type) > 1 and sorted(item_type) != story_and_content_set:
-            ids = ", ".join(f"{item['id']} ({item['type']})" for item in meta_list[meta])
+            ids = ", ".join(f"{item['id']} ({item['type']})" for item in items)
             print(f"Duplicate items with meta {meta}: {ids}")
 
 

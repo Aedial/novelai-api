@@ -1,9 +1,9 @@
-from jsonschema import validate, RefResolver
 from json import loads
 from os import listdir
-from os.path import splitext, dirname, abspath, join
-
+from os.path import abspath, dirname, join, splitext
 from typing import Any, Dict
+
+from jsonschema import RefResolver, validate
 
 
 class SchemaValidator:

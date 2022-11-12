@@ -15,7 +15,7 @@ classifiers = [
 packages = [{include = "novelai_api"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.7.2,<3.11"
 aiohttp = {extras = ["speedups"], version = "^3.8.3"}
 argon2-cffi = "^21.3.0"
 PyNaCl = "^1.5.0"
@@ -27,7 +27,9 @@ regex = "^2022.10.31"
 [tool.poetry.group.dev.dependencies]
 pytest-asyncio = "^0.20.1"
 pytest-xdist = "^3.0.2"
+pylint = "^2.15.5"
 
+[tool.flake8]
 # TODO: add flake when supports come
 
 [tool.bandit]
@@ -36,6 +38,34 @@ skips = ["B101", "B311"]
 
 [tool.black]
 line-length = 120
+
+[tool.isort]
+line_length = 120
+profile = "black"
+
+[tool.pylint]
+max-line-length = 120
+ignore-paths = [
+    # Code imported as is
+    "novelai_api/tokenizers",
+    # Code unused atm
+    "novelai_api/story.py",
+    "tests/disabled_test_manipulate_stories"
+]
+disable = [
+    # access to private members
+    "W0212",
+    # FIXMEs and TODOs
+    "W0511",
+    # names
+    "C0103",
+    # missing docstring
+    "C0114", "C0115", "C0116",
+    # duplicate code between files (dumb how far it overreaches)
+    "R0801",
+    # too many/few methods/arguments/X (splitting just makes the code messier)
+    "R0902", "R0903", "R0904", "R0913", "R0914"
+]
 
 [build-system]
 requires = ["poetry-core"]

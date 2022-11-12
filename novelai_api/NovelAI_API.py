@@ -1,15 +1,14 @@
-from novelai_api._low_level import LowLevel
-from novelai_api._high_level import HighLevel
-
 from http.cookies import SimpleCookie
-from aiohttp import ClientSession, ClientTimeout, BasicAuth
+from logging import Logger
+from os.path import abspath, dirname
+from typing import Optional
+
+from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.typedefs import StrOrURL
 from multidict import CIMultiDict
 
-from logging import Logger
-from typing import Optional
-
-from os.path import dirname, abspath
+from novelai_api._high_level import HighLevel
+from novelai_api._low_level import LowLevel
 
 
 class NovelAIAPI:
@@ -33,8 +32,8 @@ class NovelAIAPI:
 
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
         # variable passing
-        assert (
-            session is None or type(session) is ClientSession
+        assert session is None or isinstance(
+            session, ClientSession
         ), f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
 
         # no session = synchronous
@@ -57,8 +56,8 @@ class NovelAIAPI:
         Attach a ClientSession, making the requests asynchronous
         """
 
-        assert (
-            type(session) is ClientSession
+        assert isinstance(
+            session, ClientSession
         ), f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
 
         self._session = session

@@ -1,6 +1,6 @@
-from boilerplate import API
-
 from asyncio import run
+
+from boilerplate import API
 
 
 async def main():

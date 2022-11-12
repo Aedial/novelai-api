@@ -1,12 +1,11 @@
-from sys import path, argv
-from os.path import join, abspath, dirname
-
-path.insert(0, abspath(join(dirname(__file__), "..")))
-
 from base64 import b64decode
+from os.path import abspath, dirname, join
+from sys import argv, path
 
+# pylint: disable=C0413,C0415
+path.insert(0, abspath(join(dirname(__file__), "..")))
+from novelai_api.Preset import Model
 from novelai_api.Tokenizer import Tokenizer
-from Preset import Model
 
 assert 2 <= len(argv), "Expected argument"
 

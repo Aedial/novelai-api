@@ -1,8 +1,8 @@
+from typing import Any, Dict
+
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.Preset import Model
 from novelai_api.Tokenizer import Tokenizer
-
-from typing import Dict, Any
 
 
 class GlobalSettings:
@@ -601,8 +601,8 @@ class GlobalSettings:
     def __init__(self, **kwargs):
         self._settings = {}
 
-        for setting in self._DEFAULT_SETTINGS:
-            self._settings[setting] = kwargs.pop(setting, self._DEFAULT_SETTINGS[setting])
+        for setting, default in self._DEFAULT_SETTINGS.items():
+            self._settings[setting] = kwargs.pop(setting, default)
 
         assert len(kwargs) == 0, f"Invalid global setting name: {', '.join(kwargs)}"
 

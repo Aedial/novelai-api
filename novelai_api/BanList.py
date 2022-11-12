@@ -1,7 +1,7 @@
+from typing import Dict, Iterable, List, Union
+
 from novelai_api.Preset import Model
 from novelai_api.utils import tokenize_if_not
-
-from typing import List, Iterable, Union, Dict
 
 
 class BanList:
@@ -26,11 +26,11 @@ class BanList:
             elif "sequences" in sequence:
                 sequence = sequence["sequences"][0]
 
-            if type(sequence) is not str:
-                assert type(sequence) is list, f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
+            if isinstance(sequence, str):
+                assert isinstance(sequence, list), f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
-                    assert (
-                        type(s) is int
+                    assert isinstance(
+                        s, int
                     ), f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
 
             self._sequences.append(sequence)

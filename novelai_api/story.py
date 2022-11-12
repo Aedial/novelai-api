@@ -1,18 +1,17 @@
+from copy import deepcopy
+from json import dumps, loads
+from time import time
+from typing import Any, Dict, Iterable, Iterator, List, NoReturn, Optional, Union
+
 from novelai_api import NovelAI_API
-from novelai_api.utils import encrypt_user_data, decrypt_user_data, b64_to_tokens
-from novelai_api.Tokenizer import Tokenizer
-from novelai_api.Keystore import Keystore
-from novelai_api.Idstore import Idstore
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
-from novelai_api.Preset import Preset, Model
 from novelai_api.GlobalSettings import GlobalSettings
-
-from copy import deepcopy
-from time import time
-from json import loads, dumps
-
-from typing import Dict, Iterator, List, NoReturn, Any, Optional, Union, Iterable
+from novelai_api.Idstore import Idstore
+from novelai_api.Keystore import Keystore
+from novelai_api.Preset import Model, Preset
+from novelai_api.Tokenizer import Tokenizer
+from novelai_api.utils import b64_to_tokens, decrypt_user_data, encrypt_user_data
 
 
 def _get_time() -> int:

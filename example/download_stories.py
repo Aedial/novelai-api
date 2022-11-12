@@ -1,6 +1,7 @@
 from asyncio import run
 
 from boilerplate import API
+
 from novelai_api.utils import decrypt_user_data
 
 

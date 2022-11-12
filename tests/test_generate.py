@@ -1,24 +1,22 @@
-from sys import path
-from os import environ as env
-from os.path import join, abspath, dirname
-
-path.insert(0, abspath(join(dirname(__file__), "..")))
-
-from novelai_api import NovelAIAPI, NovelAIError
-from novelai_api.Preset import Preset, Model
-from novelai_api.GlobalSettings import GlobalSettings
-from novelai_api.BanList import BanList
-from novelai_api.BiasGroup import BiasGroup
-from novelai_api.Tokenizer import Tokenizer
-from novelai_api.utils import b64_to_tokens
-
-from aiohttp import ClientSession, ClientConnectionError, ClientPayloadError
+import asyncio
 from logging import Logger, StreamHandler
+from os import environ as env
+from os.path import abspath, dirname, join
+from sys import path
 from typing import Tuple
 
 import pytest
-import asyncio
+from aiohttp import ClientConnectionError, ClientPayloadError, ClientSession
 
+# pylint: disable=C0413,C0415
+path.insert(0, abspath(join(dirname(__file__), "..")))
+from novelai_api import NovelAIAPI, NovelAIError
+from novelai_api.BanList import BanList
+from novelai_api.BiasGroup import BiasGroup
+from novelai_api.GlobalSettings import GlobalSettings
+from novelai_api.Preset import Model, Preset
+from novelai_api.Tokenizer import Tokenizer
+from novelai_api.utils import b64_to_tokens
 
 # Text generation length
 GENERATION_LENGTH = 10
@@ -97,9 +95,9 @@ def permutations(*args):
             if ilist[i] == len(args[i]):
                 if i + 1 == l:  # end, don't overflow
                     return
-                else:
-                    ilist[i + 1] += 1
-                    ilist[i] = 0
+
+                ilist[i + 1] += 1
+                ilist[i] = 0
             else:
                 break
 
@@ -113,7 +111,7 @@ password = env["NAI_PASSWORD"]
 logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
-input_txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."  # noqa: E501
+input_txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."  # noqa: E501  # pylint: disable=C0301
 prompts = [input_txt]
 tokenize_prompt = [False, True]
 
@@ -131,7 +129,7 @@ model_preset_input_permutation = [*permutations(models_presets, prompts, tokeniz
 async def simple_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: str, tokenize: bool):
     await api.high_level.login(username, password)
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -160,7 +158,7 @@ async def default_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize:
     preset = Preset.from_default(model)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -189,7 +187,7 @@ async def official_generate(api: NovelAIAPI, model: Model, prompt: str, tokenize
     preset = Preset.from_official(model)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -216,7 +214,7 @@ async def globalsettings_generate(api: NovelAIAPI, model: Model, preset: Preset,
     await api.high_level.login(username, password)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model {model.value}, preset {preset.name}\n")
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -248,7 +246,7 @@ async def bias_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: s
     await api.high_level.login(username, password)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -289,7 +287,7 @@ async def ban_generate(api: NovelAIAPI, model: Model, preset: Preset, prompt: st
     await api.high_level.login(username, password)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -324,7 +322,7 @@ async def ban_and_bias_generate(api: NovelAIAPI, model: Model, preset: Preset, p
     await api.high_level.login(username, password)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)
@@ -362,7 +360,7 @@ async def ban_and_bias_generate_streaming(api: NovelAIAPI, model: Model, preset:
     await api.high_level.login(username, password)
     preset["max_length"] = GENERATION_LENGTH
 
-    logger.info(f"Using model {model.value}, preset {preset.name}\n")
+    logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
     if tokenize:
         prompt = Tokenizer.encode(model, prompt)

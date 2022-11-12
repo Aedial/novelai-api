@@ -1,19 +1,18 @@
-from aiohttp import ClientSession
-from aiohttp.client_reqrep import ClientResponse
-
-from novelai_api.NovelAIError import NovelAIError
-from novelai_api.utils import NoneType, assert_type, assert_len, tokens_to_b64
-from novelai_api.Tokenizer import Tokenizer
-from novelai_api.SchemaValidator import SchemaValidator
-from novelai_api.Preset import Model
-from novelai_api.ImagePreset import ImageModel
-
 import enum
 import json
 import operator
-from urllib.parse import urlencode, quote
+from typing import Any, AsyncIterable, Dict, List, NoReturn, Optional, Tuple, Union
+from urllib.parse import quote, urlencode
 
-from typing import Union, Dict, Tuple, List, Any, Optional, AsyncIterable, NoReturn
+from aiohttp import ClientSession
+from aiohttp.client_reqrep import ClientResponse
+
+from novelai_api.ImagePreset import ImageModel
+from novelai_api.NovelAIError import NovelAIError
+from novelai_api.Preset import Model
+from novelai_api.SchemaValidator import SchemaValidator
+from novelai_api.Tokenizer import Tokenizer
+from novelai_api.utils import NoneType, assert_len, assert_type, tokens_to_b64
 
 
 # === INTERNALS === #
@@ -31,7 +30,7 @@ class LowLevel:
     @staticmethod
     def _treat_response_object(rsp: ClientResponse, content: Any, status: int) -> Any:
         # error is an unexpected fail and usually come with a success status
-        if type(content) is dict and "error" in content:
+        if isinstance(content, dict) and "error" in content:
             raise NovelAIError(rsp.status, content["error"])
 
         # success
@@ -39,13 +38,14 @@ class LowLevel:
             return content
 
         # not success, but valid response
-        if type(content) is dict and "message" in content:  # NovelAI REST API error
+        if isinstance(content, dict) and "message" in content:  # NovelAI REST API error
             raise NovelAIError(rsp.status, content["message"])
+
         # HTTPException error
-        elif hasattr(rsp, "reason"):
+        if hasattr(rsp, "reason"):
             raise NovelAIError(rsp.status, str(rsp.reason))
-        else:
-            raise NovelAIError(rsp.status, "Unknown error")
+
+        raise NovelAIError(rsp.status, "Unknown error")
 
     def _treat_response_bool(self, rsp: ClientResponse, content: Any, status: int) -> bool:
         if rsp.status == status:
@@ -59,10 +59,10 @@ class LowLevel:
         if rsp.content_type == "application/json":
             return await data.json()
 
-        if rsp.content_type == "text/plain" or rsp.content_type == "text/html":
+        if rsp.content_type in ("text/plain", "text/html"):
             return await data.text()
 
-        if rsp.content_type == "audio/mpeg" or rsp.content_type == "audio/webm":
+        if rsp.content_type in ("audio/mpeg", "audio/webm"):
             return await data.read()
 
         raise RuntimeError(f"Unsupported type: {rsp.content_type}")
@@ -104,7 +104,7 @@ class LowLevel:
             "timeout": self._parent._timeout,  # noqa
             "cookies": self._parent.cookies,
             "headers": self._parent.headers,
-            "json" if type(data) is dict else "data": data,
+            "json" if isinstance(data, dict) else "data": data,
         }
 
         if self._parent.proxy is not None:
@@ -457,7 +457,7 @@ class LowLevel:
         assert_type(dict, params=params)
         assert_type(bool, stream=stream)
 
-        if type(prompt) is str:
+        if isinstance(prompt, str):
             prompt = Tokenizer.encode(model, prompt)
 
         prompt = tokens_to_b64(prompt)

@@ -1,8 +1,9 @@
-from boilerplate import API
-from novelai_api.utils import decrypt_user_data
-
 from asyncio import run
 from json import dumps
+
+from boilerplate import API
+
+from novelai_api.utils import decrypt_user_data
 
 # step 1: make a new, empty story on NAI
 # step 2: switch on/off remote storage to upload it
@@ -28,10 +29,10 @@ async def main():
             del e["decrypted"]
             del e["nonce"]
 
-        with open("template_story.txt", "w") as f:
+        with open("template_story.txt", "w", encoding="utf-8") as f:
             print(dumps(empty_story), file=f)
 
-        with open("template_storycontent.txt", "w") as f:
+        with open("template_storycontent.txt", "w", encoding="utf-8") as f:
             print(dumps(empty_storycontent), file=f)
 
 

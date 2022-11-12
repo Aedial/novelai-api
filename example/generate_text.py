@@ -1,14 +1,14 @@
+from asyncio import run
+from typing import List, Optional
+
 from boilerplate import API
-from novelai_api.Preset import Model, Preset
-from novelai_api.GlobalSettings import GlobalSettings
+
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
+from novelai_api.GlobalSettings import GlobalSettings
+from novelai_api.Preset import Model, Preset
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
-
-from asyncio import run
-
-from typing import Optional, List
 
 
 async def main():

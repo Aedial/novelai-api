@@ -1,4 +1,4 @@
-{ 
+{
 	"type": "object",
 	"properties": {
 		"emailVerified": { "type": "boolean" },

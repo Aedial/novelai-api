@@ -1,7 +1,8 @@
 from asyncio import run
 
 from boilerplate import API
-from novelai_api.ImagePreset import ImageModel, ImageResolution, UCPreset, ImagePreset
+
+from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageResolution, UCPreset
 
 
 async def main():

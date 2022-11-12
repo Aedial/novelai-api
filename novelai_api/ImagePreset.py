@@ -1,10 +1,9 @@
-import enum
 import copy
+import enum
 import json
 import math
 import random
-
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class ImageModel(enum.Enum):
@@ -114,7 +113,7 @@ class ImagePreset:
 
     def update(self, values: Dict[str, Any]) -> "ImagePreset":
         for k, v in values.items():
-            self.__setitem__(k, v)
+            self[k] = v
 
         return self
 
@@ -122,10 +121,10 @@ class ImagePreset:
         return ImagePreset(**self._settings)
 
     def __contains__(self, o: str):
-        return self._settings.__contains__(o)
+        return o in self._settings
 
     def __getitem__(self, o: str):
-        return self._settings.__getitem__(o)
+        return self._settings[o]
 
     def to_settings(self, model: ImageModel) -> Dict[str, Any]:
         settings = copy.deepcopy(self._settings)
@@ -133,7 +132,7 @@ class ImagePreset:
         del settings["quality_toggle"]
 
         resolution = settings.pop("resolution")
-        if type(resolution) is ImageResolution:
+        if isinstance(resolution, ImageResolution):
             resolution = resolution.value
         settings["width"], settings["height"] = resolution
 
@@ -155,22 +154,22 @@ class ImagePreset:
     def get_max_n_samples(self):
         resolution = self._settings["resolution"]
 
-        if type(resolution) is ImageResolution:
+        if isinstance(resolution, ImageResolution):
             resolution = resolution.value
 
         w, h = resolution
 
         if w * h < 512 * 1024:
             return 4
-        else:
-            return 1
+
+        return 1
 
     def calculate_cost(self, is_opus: bool):
         steps = self._settings["steps"]
         n_samples = self._settings["n_samples"]
         resolution = self._settings["resolution"]
 
-        if type(resolution) is ImageResolution:
+        if isinstance(resolution, ImageResolution):
             resolution = resolution.value
 
         w, h = resolution

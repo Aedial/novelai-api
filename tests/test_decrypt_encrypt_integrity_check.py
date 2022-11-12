@@ -1,23 +1,22 @@
-from sys import path
+from asyncio import run
 from os import environ as env
-from os.path import join, abspath, dirname
-
-path.insert(0, abspath(join(dirname(__file__), "..")))
+from os.path import abspath, dirname, join
+from subprocess import PIPE, Popen
+from sys import path
+from typing import Any, List
 
 from aiohttp import ClientSession
-from subprocess import Popen, PIPE
-from asyncio import run
 
+# pylint: disable=C0413,C0415
+path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI, utils
 from novelai_api.utils import (
-    get_encryption_key,
+    compress_user_data,
+    decompress_user_data,
     decrypt_user_data,
     encrypt_user_data,
-    decompress_user_data,
-    compress_user_data,
+    get_encryption_key,
 )
-
-from typing import List, Any
 
 
 def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) -> bool:
@@ -28,17 +27,17 @@ def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) ->
         print("")
 
         return False
-    else:
-        print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
-        return True
+
+    print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
+    return True
 
 
 fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
 
 
 def inflate_js(data: bytes, _) -> bytes:
-    p = Popen(["node", fflate_path, str(len(data))], stdin=PIPE, stdout=PIPE)
-    out, _ = p.communicate(data)
+    with Popen(["node", fflate_path, str(len(data))], stdin=PIPE, stdout=PIPE) as p:
+        out, _ = p.communicate(data)
 
     return out
 

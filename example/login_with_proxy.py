@@ -11,7 +11,7 @@ async def main():
     # insert proxy auth here
     api_inst.api.proxy_auth = None
 
-    async with api_inst as api_handler:  # noqa: F841
+    async with api_inst as api_handler:  # noqa: F841  # pylint: disable=W0612
         pass
 
 

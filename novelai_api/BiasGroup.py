@@ -1,7 +1,7 @@
+from typing import Any, Dict, Iterable, List, Union
+
 from novelai_api.Preset import Model
 from novelai_api.utils import tokenize_if_not
-
-from typing import Dict, Iterable, List, Union, Any
 
 
 class BiasGroup:
@@ -56,17 +56,17 @@ class BiasGroup:
         *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str],
     ) -> "BiasGroup":
         for sequence in sequences:
-            if type(sequence) is dict:
+            if isinstance(sequence, dict):
                 if "sequence" in sequence:
                     sequence = sequence["sequence"]
                 elif "sequences" in sequence:
                     sequence = sequence["sequences"][0]
 
-            if type(sequence) is not str:
-                assert type(sequence) is list, f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
+            if isinstance(sequence, str):
+                assert isinstance(sequence, list), f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
-                    assert (
-                        type(s) is int
+                    assert isinstance(
+                        s, int
                     ), f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
 
             self._sequences.append(sequence)

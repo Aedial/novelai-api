@@ -1,14 +1,14 @@
 from logging import Logger, StreamHandler
+from os.path import abspath, dirname, join
+from sys import path
+from typing import Optional
+
 from aiohttp import ClientSession
 
-from sys import path
-from os.path import join, abspath, dirname
-
+# pylint: disable=C0413,C0415
 path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI
 from novelai_api.utils import get_encryption_key
-
-from typing import Optional
 
 
 class API:

@@ -1,11 +1,10 @@
+from copy import deepcopy
 from enum import Enum, IntEnum
 from json import loads
 from os import listdir
-from os.path import join, abspath, dirname, exists
-from copy import deepcopy
+from os.path import abspath, dirname, exists, join
 from random import choice
-
-from typing import Dict, List, Any, Union, Optional, NoReturn
+from typing import Any, Dict, List, NoReturn, Optional, Union
 
 
 # NOTE: the noqa are there because of Enum, because Enum's type inference sucks
@@ -80,7 +79,7 @@ class _PresetMetaclass(type):
     _officials_values: Dict[str, List["Preset"]]
 
     def __getitem__(cls, model: Model):
-        assert type(model) is Model
+        assert isinstance(model, Model)
 
         return PresetView(model, cls._officials_values)
 
@@ -152,15 +151,15 @@ class Preset(metaclass=_PresetMetaclass):
         ), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
 
         if o == "order":
-            assert type(v) is list, f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
+            assert isinstance(v, list), f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
 
-            for i in range(len(v)):
+            for i, e in enumerate(v):
                 assert isinstance(
-                    v[i], (int, Order)
+                    e, (int, Order)
                 ), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
 
-                if type(v[i]) is int:
-                    v[i] = Order(v[i])
+                if isinstance(e, int):
+                    v[i] = Order(e)
 
         self._settings[o] = v
 
@@ -239,7 +238,7 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_file(cls, path: str) -> "Preset":
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             data = loads(f.read())
 
         return cls.from_preset_data(data)

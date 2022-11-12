@@ -1,10 +1,11 @@
-from boilerplate import API
-from novelai_api.utils import decrypt_user_data, assign_content_to_story
-
+from argparse import ArgumentParser
 from asyncio import run
 from json import dumps
-from argparse import ArgumentParser
 from pathlib import Path
+
+from boilerplate import API
+
+from novelai_api.utils import assign_content_to_story, decrypt_user_data
 
 
 async def main():
@@ -49,7 +50,7 @@ async def main():
                 if "remoteId" in content["metadata"]:
                     del content["metadata"]["remoteId"]
 
-                with open(path, "w") as f:
+                with open(path, "w", encoding="utf-8") as f:
                     f.write(dumps(content, ensure_ascii=False, indent=2))
 
 

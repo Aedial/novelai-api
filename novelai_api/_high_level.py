@@ -1,16 +1,15 @@
 import base64
-
-from novelai_api.NovelAIError import NovelAIError
-from novelai_api.Keystore import Keystore
-from novelai_api.Preset import Preset, Model
-from novelai_api.ImagePreset import ImageModel, ImagePreset
-from novelai_api.GlobalSettings import GlobalSettings
-from novelai_api.BiasGroup import BiasGroup
-from novelai_api.BanList import BanList
-from novelai_api.utils import get_access_key, compress_user_data, encrypt_user_data
-
 from hashlib import sha256
-from typing import Union, Dict, Tuple, List, Any, Optional, Iterable, AsyncIterable
+from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Union
+
+from novelai_api.BanList import BanList
+from novelai_api.BiasGroup import BiasGroup
+from novelai_api.GlobalSettings import GlobalSettings
+from novelai_api.ImagePreset import ImageModel, ImagePreset
+from novelai_api.Keystore import Keystore
+from novelai_api.NovelAIError import NovelAIError
+from novelai_api.Preset import Model, Preset
+from novelai_api.utils import assert_type, compress_user_data, encrypt_user_data, get_access_key
 
 
 class HighLevel:
@@ -39,8 +38,7 @@ class HighLevel:
         :return: True if success
         """
 
-        assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
-        assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
+        assert assert_type(str, email=email)
 
         hashed_email = sha256(email.encode()).hexdigest() if send_mail else None
         key = get_access_key(email, password)
@@ -55,8 +53,6 @@ class HighLevel:
 
         :return: User's access token
         """
-        assert type(email) is str, f"Expected type 'str' for email, but got type '{type(email)}'"
-        assert type(password) is str, f"Expected type 'str' for password, but got type '{type(password)}'"
 
         access_key = get_access_key(email, password)
         rsp = await self._parent.low_level.login(access_key)
@@ -227,22 +223,22 @@ class HighLevel:
             del params["num_logprobs"]
 
         if bad_words is not None:
-            if type(bad_words) is BanList:
+            if isinstance(bad_words, BanList):
                 bad_words = [bad_words]
 
             for i, bad_word in enumerate(bad_words):
-                assert (
-                    type(bad_word) is BanList
+                assert isinstance(
+                    bad_word, BanList
                 ), f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
                 params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
 
         if biases is not None:
-            if type(biases) is BiasGroup:
+            if isinstance(biases, BiasGroup):
                 biases = [biases]
 
             for i, bias in enumerate(biases):
-                assert (
-                    type(bias) is BiasGroup
+                assert isinstance(
+                    bias, BiasGroup
                 ), f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
                 params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
 

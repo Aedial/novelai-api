@@ -1,6 +1,5 @@
-from os import urandom
 from base64 import urlsafe_b64encode
-
+from os import urandom
 from typing import Set
 
 

@@ -1,21 +1,19 @@
-from sys import path
 from os import environ as env
-from os.path import join, abspath, dirname
+from os.path import abspath, dirname, join
+from sys import path
 
-path.insert(0, abspath(join(dirname(__file__), '..')))
-
-from novelai_api import NovelAI_API
-from novelai_api.utils import get_encryption_key
-from novelai_api.story import NovelAI_Story
-from novelai_api.GlobalSettings import GlobalSettings
+path.insert(0, abspath(join(dirname(__file__), "..")))
 
 import asyncio
-from json import dumps
-from random import choice
-from aiohttp import ClientSession
 from logging import Logger, StreamHandler
+from random import choice
 
-import pytest
+from aiohttp import ClientSession
+
+from novelai_api import NovelAIAPI
+from novelai_api.GlobalSettings import GlobalSettings
+from novelai_api.story import NovelAI_Story
+from novelai_api.utils import get_encryption_key
 
 if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
     raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
@@ -26,7 +24,8 @@ password = env["NAI_PASSWORD"]
 logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
-async def story_manipulation(api: NovelAI_API):
+
+async def story_manipulation(api: NovelAIAPI):
     api.timeout = 30
 
     await api.high_level.login(username, password)
@@ -46,24 +45,29 @@ async def story_manipulation(api: NovelAI_API):
 
     for _ in range(10):
         await story.generate()
+
+
 #        logger.info(story)
 #        logger.info(dumps(story._storycontent["data"]["story"]["fragments"], indent = 4))
 #        logger.info("")
 
+
 async def test_story_manipulation_sync():
     # sync handler
-    api = NovelAI_API()
+    api = NovelAIAPI()
     await story_manipulation(api)
+
 
 async def test_story_manipulation_async():
     # async handler
     try:
         async with ClientSession() as session:
-            api = NovelAI_API(session)
+            api = NovelAIAPI(session)
             await story_manipulation(api)
     except Exception as e:
         await session.close()
         raise e
+
 
 if __name__ == "__main__":
     asyncio.run(test_story_manipulation_async())

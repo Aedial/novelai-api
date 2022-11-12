@@ -1,12 +1,11 @@
+from pathlib import Path
+from typing import List, Union
+
 import tokenizers
 
-from pathlib import Path
-
-from novelai_api.Preset import Model
 from novelai_api.ImagePreset import ImageModel
+from novelai_api.Preset import Model
 from novelai_api.tokenizers.simple_tokenizer import SimpleTokenizer
-
-from typing import List, Union
 
 AnyModel = Union[Model, ImageModel]
 
@@ -69,7 +68,8 @@ class Tokenizer:
 
         if isinstance(tokenizer, tokenizers.Tokenizer):
             return tokenizer.encode(o).ids
-        elif isinstance(tokenizer, SimpleTokenizer):
+
+        if isinstance(tokenizer, SimpleTokenizer):
             return tokenizer.encode(o)
-        else:
-            raise ValueError(f"Tokenizer {tokenizer} ({tokenizer_name}) not recognized")
+
+        raise ValueError(f"Tokenizer {tokenizer} ({tokenizer_name}) not recognized")

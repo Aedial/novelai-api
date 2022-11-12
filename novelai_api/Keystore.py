@@ -1,13 +1,12 @@
-from uuid import uuid4
-from json import loads, dumps
 from base64 import b64decode, b64encode
+from json import dumps, loads
+from typing import Any, Callable, Dict, Optional, Union
+from uuid import uuid4
 
-from nacl.utils import random
 from nacl.secret import SecretBox
+from nacl.utils import random
 
 from novelai_api.SchemaValidator import SchemaValidator
-
-from typing import Dict, Union, Callable, Any, Optional
 
 
 class Keystore:
