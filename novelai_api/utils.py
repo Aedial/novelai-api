@@ -182,7 +182,7 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     Must have been decompressed by decompress_user_data()
     """
 
-    if isinstance(items, (list, tuple)):
+    if not isinstance(items, (list, tuple)):
         items = [items]
 
     for item in items:

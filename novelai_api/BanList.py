@@ -26,7 +26,7 @@ class BanList:
             elif "sequences" in sequence:
                 sequence = sequence["sequences"][0]
 
-            if isinstance(sequence, str):
+            if not isinstance(sequence, str):
                 assert isinstance(sequence, list), f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
                 for i, s in enumerate(sequence):
                     assert isinstance(
