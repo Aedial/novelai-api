@@ -33,7 +33,7 @@ pylint = "^2.15.5"
 # TODO: add flake when supports come
 
 [tool.bandit]
-exclude_dirs = ["tests/test_decrypt_encrypt_integrity_check.py"]
+exclude_dirs = ["tests/api/test_decrypt_encrypt_integrity_check.py"]
 skips = ["B101", "B311"]
 
 [tool.black]
@@ -50,7 +50,7 @@ ignore-paths = [
     "novelai_api/tokenizers",
     # Code unused atm
     "novelai_api/story.py",
-    "tests/disabled_test_manipulate_stories"
+    "tests/api/disabled_test_manipulate_stories"
 ]
 disable = [
     # access to private members
@@ -66,6 +66,14 @@ disable = [
     # too many/few methods/arguments/X (splitting just makes the code messier)
     "R0902", "R0903", "R0904", "R0913", "R0914"
 ]
+
+[tool.pylint.MASTER]
+# add novelai_api to the path, as pylint fails to detect the package (waiting for https://github.com/PyCQA/pylint/projects/1)
+init-hook="""
+from sys import path
+from pylint.config import find_default_config_files
+path.extend(p.parent for p in find_default_config_files())
+"""
 
 [build-system]
 requires = ["poetry-core"]

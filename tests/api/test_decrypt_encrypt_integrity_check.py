@@ -1,14 +1,11 @@
 from asyncio import run
 from os import environ as env
-from os.path import abspath, dirname, join
+from pathlib import Path
 from subprocess import PIPE, Popen
-from sys import path
 from typing import Any, List
 
 from aiohttp import ClientSession
 
-# pylint: disable=C0413,C0415
-path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI, utils
 from novelai_api.utils import (
     compress_user_data,
@@ -32,7 +29,7 @@ def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) ->
     return True
 
 
-fflate_path = join(dirname(abspath(__file__)), "fflate_inflate.js")
+fflate_path = Path("fflate_inflate.js").absolute()
 
 
 def inflate_js(data: bytes, _) -> bytes:

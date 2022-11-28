@@ -3,14 +3,10 @@
 from asyncio import gather, run
 from logging import Logger, StreamHandler
 from os import environ as env
-from os.path import abspath, dirname, join
-from sys import path
 
 import pytest
 from aiohttp import ClientSession
 
-# pylint: disable=C0413,C0415
-path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.Preset import Model, Preset

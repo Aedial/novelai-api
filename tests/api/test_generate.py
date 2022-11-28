@@ -1,15 +1,11 @@
 import asyncio
 from logging import Logger, StreamHandler
 from os import environ as env
-from os.path import abspath, dirname, join
-from sys import path
 from typing import Tuple
 
 import pytest
 from aiohttp import ClientConnectionError, ClientPayloadError, ClientSession
 
-# pylint: disable=C0413,C0415
-path.insert(0, abspath(join(dirname(__file__), "..")))
 from novelai_api import NovelAIAPI, NovelAIError
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup

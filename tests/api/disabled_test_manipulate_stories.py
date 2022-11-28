@@ -1,11 +1,6 @@
-from os import environ as env
-from os.path import abspath, dirname, join
-from sys import path
-
-path.insert(0, abspath(join(dirname(__file__), "..")))
-
 import asyncio
 from logging import Logger, StreamHandler
+from os import environ as env
 from random import choice
 
 from aiohttp import ClientSession
