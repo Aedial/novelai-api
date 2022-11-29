@@ -72,10 +72,13 @@ class LowLevel:
         stream_data = {}
 
         for line in stream_content.strip("\n").splitlines():
+            if line == "":
+                continue
+
             colon = line.find(":")
             # TODO: replace by a meaningful error
-            if ":" == -1:
-                raise NovelAIError(0, f"Malformed data stream line: {line}")
+            if colon == -1:
+                raise NovelAIError(0, f"Malformed data stream line: '{line}'")
 
             stream_data[line[:colon]] = line[colon + 1 :].strip()
 

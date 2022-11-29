@@ -60,7 +60,7 @@ def test_mock(session: nox.Session):
 @nox.session(py=test_py_versions, name="test-api")
 def test_api(session: nox.Session):
     install_package(session, dev=True)
-    session.run("npm", "install", "fflate")
+    session.run("npm", "install", "fflate", external=True)
     session.run("pytest", "--tb=short", "-n", "auto", "tests/api/")
 
 
