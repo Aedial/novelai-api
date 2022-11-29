@@ -59,7 +59,8 @@ class ImagePreset:
             UCPreset.Preset_None: "lowres",
         },
         ImageModel.Furry: {
-            UCPreset.Preset_Low_Quality: "nsfw, {worst quality}, {bad quality}, text, signature, watermark",
+            UCPreset.Preset_Low_Quality: "nsfw, worst quality, low quality, what has science done, what, "
+            "nightmare fuel, eldritch horror, where is your god now, why",
             UCPreset.Preset_None: "low res",
         },
     }
