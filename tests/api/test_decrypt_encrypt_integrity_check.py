@@ -29,7 +29,7 @@ def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) ->
     return True
 
 
-fflate_path = Path("fflate_inflate.js").absolute()
+fflate_path = Path(__file__).parent.absolute() / "fflate_inflate.js"
 
 
 def inflate_js(data: bytes, _) -> bytes:
