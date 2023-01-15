@@ -23,6 +23,12 @@ def get_wheel_path():
 
 def install_package(session: nox.Session, *packages: str, dev: bool = False):
     session.install("poetry")
+    session.install("python-dotenv")
+
+    # load the env vars from a .env, if any
+    from dotenv import dotenv_values  # pylint: disable=C0415
+
+    session.env.update(dotenv_values())
 
     # update deps
     session.run("poetry", "lock")
