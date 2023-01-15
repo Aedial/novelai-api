@@ -38,6 +38,7 @@ class UCPreset(enum.Enum):
     Preset_Low_Quality_Bad_Anatomy = 2
     Preset_Low_Quality = 1
     Preset_None = 0
+    Preset_Custom = -1
 
 
 class ImagePreset:
@@ -49,6 +50,7 @@ class ImagePreset:
             UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres",
+            UCPreset.Preset_Custom: "",
         },
         ImageModel.Anime_Full: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy: "lowres, bad anatomy, bad hands, text, error, missing fingers, "
@@ -57,11 +59,13 @@ class ImagePreset:
             UCPreset.Preset_Low_Quality: "lowres, text, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, username, blurry",
             UCPreset.Preset_None: "lowres",
+            UCPreset.Preset_Custom: "",
         },
         ImageModel.Furry: {
             UCPreset.Preset_Low_Quality: "nsfw, worst quality, low quality, what has science done, what, "
             "nightmare fuel, eldritch horror, where is your god now, why",
             UCPreset.Preset_None: "low res",
+            UCPreset.Preset_Custom: "",
         },
     }
 
@@ -130,8 +134,6 @@ class ImagePreset:
     def to_settings(self, model: ImageModel) -> Dict[str, Any]:
         settings = copy.deepcopy(self._settings)
 
-        del settings["quality_toggle"]
-
         resolution = settings.pop("resolution")
         if isinstance(resolution, ImageResolution):
             resolution = resolution.value
@@ -142,6 +144,7 @@ class ImagePreset:
             self.last_seed = settings["seed"]
 
         uc_preset: UCPreset = settings.pop("uc_preset")
+
         uc: str = settings.pop("uc")
         default_uc = self._UC_Presets[model][uc_preset]
         combined_uc = f"{default_uc}, {uc}" if uc else default_uc
@@ -149,6 +152,10 @@ class ImagePreset:
 
         sampler: ImageSampler = settings.pop("sampler")
         settings["sampler"] = sampler.value
+
+        # special arguments kept for metadata purposes (no effect on result)
+        settings["qualityToggle"] = settings.pop("quality_toggle")
+        settings["ucPreset"] = uc_preset.value
 
         return settings
 
