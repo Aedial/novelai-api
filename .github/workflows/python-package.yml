@@ -50,7 +50,7 @@ jobs:
         pip install nox
     - name: Test
       run: |
-        nox -s test-api
+        nox -s test-api-3.10
       env:
         NAI_USERNAME: ${{ secrets.NAI_USERNAME }}
         NAI_PASSWORD: ${{ secrets.NAI_PASSWORD }}
