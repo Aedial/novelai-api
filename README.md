@@ -14,14 +14,14 @@ This module is intended to be used by developers as a helper for using NovelAI's
 
 
 ### Prerequisites
-Before anything, ensure that nox is installed (pip install poetry).
-For logging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed via the environment variables.
+Before anything, ensure that nox is installed (pip install nox).
+For logging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed via the environment variables (dotenv file supported).
 
 ### Examples
 The examples are in the example folder. Each example is standalone and can be used as a test.
 Examples should be ran with `nox -s run -- python example/<name>.py`.
 
-Some tests act as example. The full list is as follows :
+Some tests can act as example. The full list is as follows :
 - decryption and re-encryption: tests/test_decrypt_encrypt_integrity_check.py
 - diverse generations: tests/test_generate.py
 - parallel generations: tests/test_generate_parallel.py
@@ -33,7 +33,7 @@ The examples and tests showcase how this API should be used and can be regarded 
 ### Contributing
 You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.
 
-The tests against the API can be ran with `nox -s test_api`. Note that having node.js installed is required for the test to run properly
+The tests against the API can be ran with `nox -s test_api`. Note that having node.js installed is required for the test to run properly.
 /!\ WIP /!\ The tests against the mocked backend can be ran with `nox -s test_mock`.
 
 To install and run the pre-commit hook, run `nox -s pre-commit`. This hook should be installed before committing anything.

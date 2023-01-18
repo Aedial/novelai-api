@@ -1,4 +1,4 @@
-import pathlib
+import json
 import shutil
 
 import nox
@@ -9,26 +9,27 @@ nox.options.sessions = []
 nox.options.error_on_external_run = False
 
 
-def get_wheel_path():
-    # pylint: disable=C0415
-    from poetry.core.masonry.api import WheelBuilder
-    from poetry.factory import Factory
+def get_wheel_path(session: nox.Session):
+    path_str = session.run("python", "noxfile_utils.py", "wheel_path", silent=True)
+    if not path_str:
+        raise RuntimeError("get_wheel_path util failed")
 
-    poetry = Factory().create_poetry()
-    wheel = WheelBuilder(poetry)
-    package_file = pathlib.Path("dist") / wheel.wheel_filename
+    return path_str
 
-    return package_file
+
+def get_dotenv(session: nox.Session):
+    dotenv_str = session.run("python", "noxfile_utils.py", "dotenv", silent=True)
+    if not dotenv_str:
+        raise RuntimeError("get_dotenv util failed")
+
+    return json.loads(dotenv_str)
 
 
 def install_package(session: nox.Session, *packages: str, dev: bool = False):
     session.install("poetry")
     session.install("python-dotenv")
 
-    # load the env vars from a .env, if any
-    from dotenv import dotenv_values  # pylint: disable=C0415
-
-    session.env.update(dotenv_values())
+    session.env.update(get_dotenv(session))
 
     # update deps
     session.run("poetry", "lock")
@@ -41,8 +42,8 @@ def install_package(session: nox.Session, *packages: str, dev: bool = False):
     session.run("python", "-m", "poetry", "export", "--output=requirements.txt", "--without-hashes", *poetry_groups)
     session.run("python", "-m", "poetry", "build", "--format=wheel")
 
-    package_file = get_wheel_path()
-    session.install("-r", "requirements.txt", str(package_file), *(str(p) for p in packages))
+    package_file = get_wheel_path(session)
+    session.install("-r", "requirements.txt", package_file, *(str(p) for p in packages))
 
 
 @nox.session(name="pre-commit")
