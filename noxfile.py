@@ -45,6 +45,10 @@ def install_package(session: nox.Session, *packages: str, dev: bool = False):
     package_file = get_wheel_path(session)
     session.install("-r", "requirements.txt", package_file, *(str(p) for p in packages))
 
+    username = session.env.get('NAI_USERNAME', '<UNKNOWN>')
+    version = session.python or session.run("python", "--version", silent = True)
+    print(f"Using {username} with {version}")
+
 
 @nox.session(name="pre-commit")
 def pre_commit(session: nox.Session):
