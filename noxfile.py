@@ -55,7 +55,7 @@ def pre_commit(session: nox.Session):
     session.run("pre-commit", "run", "--all-files")
 
 
-test_py_versions = ["3.7", "3.8", "3.9", "3.10"]
+test_py_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 
 @nox.session(py=test_py_versions, name="test-mock")
