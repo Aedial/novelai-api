@@ -1,9 +1,12 @@
+from asyncio import run
 from copy import deepcopy
 from json import dumps, loads
 from time import time
-from typing import Any, Dict, Iterable, Iterator, List, NoReturn, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional
 
-from novelai_api import NovelAI_API
+from aiohttp import ClientSession
+
+from novelai_api import NovelAIAPI
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.GlobalSettings import GlobalSettings
@@ -43,19 +46,20 @@ def _set_nested_item(item: Dict[str, Any], val: Any, path: str):
     item[path[-1]] = val
 
 
-class NovelAI_StoryProxy:
+class NovelAIStory:
     TEXT_GENERATION_SETTINGS_VERSION = 2
 
     DEFAULT_MODEL = Model.Euterpe
 
-    _parent: "NovelAI_Story"
+    api: NovelAIAPI
+    keystore: Keystore
 
-    _api: NovelAI_API
-    _key: bytes
-    _story: Dict[str, Any]
-    _storycontent: Dict[str, Any]
-    _tree: List[int]
+    key: bytes
+    story: Dict[str, Any]
+    storycontent: Dict[str, Any]
+    tree: List[int]
 
+    global_settings: GlobalSettings
     banlists: List[BanList]
     biases: List[BiasGroup]
     model: Model
@@ -63,14 +67,14 @@ class NovelAI_StoryProxy:
     prefix: str
     context_size: int
 
-    def _handle_banlist(self, data: Dict[str, Any]) -> NoReturn:
+    def _handle_banlist(self, data: Dict[str, Any]):
         if "bannedSequenceGroups" not in data:
             data["bannedSequenceGroups"] = []
 
         ban_seq = data["bannedSequenceGroups"]
         self.banlists = [BanList(*seq["sequences"], enabled=seq["enabled"]) for seq in ban_seq]
 
-    def _handle_biasgroups(self, data: Dict[str, Any]) -> NoReturn:
+    def _handle_biasgroups(self, data: Dict[str, Any]):
         if "phraseBiasGroup" not in data:
             data["phraseBiasGroups"] = []
 
@@ -78,7 +82,7 @@ class NovelAI_StoryProxy:
         for bias in data["phraseBiasGroups"]:
             self.biases.append(BiasGroup.from_data(bias))
 
-    def _handle_preset(self, data: Dict[str, Any]) -> NoReturn:
+    def _handle_preset(self, data: Dict[str, Any]):
         settings = data["settings"]
 
         if "textGenerationSettingsVersion" not in settings:
@@ -112,20 +116,22 @@ class NovelAI_StoryProxy:
 
     def __init__(
         self,
-        parent: "NovelAI_Story",
-        key: bytes,
+        api: NovelAIAPI,
+        keystore: Keystore,
+        meta: str,
+        global_settings: GlobalSettings,
         story: Dict[str, Any],
         storycontent: Dict[str, Any],
     ):
-        self._parent = parent
-
-        self._api = parent._api
-        self._key = key
-        self._story = story
-        self._storycontent = storycontent
-        self._tree = []
+        self.api = api
+        self.key = keystore[meta]
+        self.story = story
+        self.storycontent = storycontent
+        self.tree = []
 
         data = storycontent["data"]
+
+        self.global_settings = global_settings.copy()
 
         print(dumps(data, indent=4))
         self._handle_banlist(data)
@@ -145,7 +151,7 @@ class NovelAI_StoryProxy:
         # TODO: Lorebook
 
     def _create_datablock(self, fragment: Dict[str, str], end_offset: int):
-        story = self._storycontent["data"]["story"]
+        story = self.storycontent["data"]["story"]
         blocks = story["datablocks"]
         fragments = story["fragments"]
 
@@ -176,10 +182,10 @@ class NovelAI_StoryProxy:
         cur_block["nextBlock"].append(new_index)
 
         story["currentBlock"] = new_index
-        self._tree.append(new_index)
+        self.tree.append(new_index)
 
     def __str__(self) -> str:
-        story_fragments = self._storycontent["data"]["story"]["fragments"]
+        story_fragments = self.storycontent["data"]["story"]["fragments"]
 
         story_content = "".join(fragment["data"] for fragment in story_fragments)
 
@@ -223,14 +229,14 @@ class NovelAI_StoryProxy:
 
         return tokens
 
-    async def generate(self) -> "NovelAI_StoryProxy":
-        input = self.build_context()
+    async def generate(self):
+        prompt = self.build_context()
         # FIXME: find why the output is garbage
-        rsp = await self._api.high_level.generate(
-            input,
+        rsp = await self.api.high_level.generate(
+            prompt,
             self.model,
             self.preset,
-            self._parent.global_settings,
+            self.global_settings,
             self.banlists,
             self.biases,
             self.prefix,
@@ -241,6 +247,8 @@ class NovelAI_StoryProxy:
 
         self._create_datablock(fragment, 0)
 
+        return self
+
     async def edit(self, start: int, end: int, replace: str):
         # FIXME: redo edit implementation
 
@@ -249,7 +257,7 @@ class NovelAI_StoryProxy:
         self._create_datablock(fragment, end - start)
 
     async def undo(self):
-        story = self._storycontent["data"]["story"]
+        story = self.storycontent["data"]["story"]
 
         cur_index = story["currentBlock"]
         blocks = story["datablocks"]
@@ -258,7 +266,7 @@ class NovelAI_StoryProxy:
         story["currentBlock"] = cur_block["prevBlock"]
 
     async def redo(self):
-        story = self._storycontent["data"]["story"]
+        story = self.storycontent["data"]["story"]
 
         cur_index = story["currentBlock"]
         blocks = story["datablocks"]
@@ -267,76 +275,81 @@ class NovelAI_StoryProxy:
         story["currentBlock"] = cur_block["nextBlock"][-1]
 
     async def save(self, upload: bool = False) -> bool:
-        encrypted_story = encrypt_user_data(deepcopy(self._story), self._parent._keystore)
-        encrypted_storycontent = encrypt_user_data(deepcopy(self._storycontent), self._parent._keystore)
+        encrypted_story = encrypt_user_data(deepcopy(self.story), self.keystore)
+        encrypted_storycontent = encrypt_user_data(deepcopy(self.storycontent), self.keystore)
 
         success = True
 
         # TODO: keep local copy if upload ?
         if upload:
-            success = success and await self._api.high_level.upload_user_content(encrypted_storycontent)
-            success = success and await self._api.high_level.upload_user_content(encrypted_story)
+            success = success and await self.api.high_level.upload_user_content(encrypted_storycontent)
+            success = success and await self.api.high_level.upload_user_content(encrypted_story)
 
         return success
 
-    async def choose(self, index: int) -> NoReturn:
-        story = self._storycontent["data"]["story"]
+    async def choose(self, index: int):
+        story = self.storycontent["data"]["story"]
 
         cur_index = story["currentBlock"]
         blocks = story["datablocks"]
 
         cur_block = blocks[cur_index]
         next_blocks = cur_block["nextBlock"]
-        assert 0 <= index < len(next_blocks), f"Expected index between 0 and {len(next_blocks)}, but got {index}"
+        if not (0 <= index < len(next_blocks)):
+            raise ValueError(f"Expected index between 0 and {len(next_blocks)}, but got {index}")
 
         story["currentBlock"] = next_blocks[index]
 
-    async def flatten(self) -> NoReturn:
-        story = self._storycontent["data"]["story"]
+    async def flatten(self):
+        story = self.storycontent["data"]["story"]
 
         blocks = story["datablocks"]
-        new_datablocks = [blocks[i] for i in self._tree]
-        self._tree = [i for i in range(len(new_datablocks))]
+        new_datablocks = [blocks[i] for i in self.tree]
+        self.tree = [i for i in range(len(new_datablocks))]
         story["datablocks"] = new_datablocks
 
     async def delete(self):
         pass
 
     async def get_current_tree(self) -> List[Dict[str, Any]]:
-        story = self._storycontent["data"]["story"]
+        story = self.storycontent["data"]["story"]
 
         blocks = story["datablocks"]
-        return [blocks[i] for i in self._tree]
+        return [blocks[i] for i in self.tree]
 
 
-class NovelAI_Story:
-    _story_instances: Dict[str, NovelAI_StoryProxy]
+class NovelAIStoryStorage:
+    """
+    General storage for the NovelAIStory objects. Instances of this class should be loaded or created from here.
+    """
 
-    _api: NovelAI_API
-    _keystore: Keystore
-    _idstore: Idstore
+    _story_instances: Dict[str, NovelAIStory]
+
+    api: NovelAIAPI
+    keystore: Keystore
+    idstore: Idstore
 
     global_settings: GlobalSettings
 
-    def __init__(self, api: NovelAI_API, keystore: Keystore, global_settings: GlobalSettings):
-        self._api = api
-        self._keystore = keystore
-        self._idstore = Idstore()
+    def __init__(self, api: NovelAIAPI, keystore: Keystore, global_settings: Optional[GlobalSettings] = None):
+        self.api = api
+        self.keystore = keystore
+        self.idstore = Idstore()
 
-        self.global_settings = global_settings
+        self.global_settings = global_settings or GlobalSettings()
 
         self._story_instances = {}
 
-    def __iter__(self) -> Iterator[NovelAI_StoryProxy]:
-        return self._story_instances.__iter__()
+    def __iter__(self) -> Iterator[NovelAIStory]:
+        return self._story_instances.values().__iter__()
 
-    def __getitem__(self, story_id: str) -> NovelAI_StoryProxy:
+    def __getitem__(self, story_id: str) -> NovelAIStory:
         return self._story_instances[story_id]
 
     def __len__(self) -> int:
         return len(self._story_instances)
 
-    def load(self, story: Dict[str, Any], storycontent: Dict[str, Any]) -> NovelAI_StoryProxy:
+    def load(self, story: Dict[str, Any], storycontent: Dict[str, Any]) -> NovelAIStory:
         """
         Load a story proxy from a story and storycontent object
         """
@@ -348,16 +361,14 @@ class NovelAI_Story:
         ), f"Expected meta {story_meta} for storycontent, but got meta {storycontent['meta']}"
         assert story_id == storycontent["id"], f"Missmached id: expected {story_id}, but got {storycontent['id']}"
 
-        proxy = NovelAI_StoryProxy(self, self._keystore[story_meta], story, storycontent)
+        story = NovelAIStory(self.api, self.keystore, story_meta, self.global_settings, story, storycontent)
 
         # FIXME: ignore or overwrite if id exists ?
-        self._story_instances[story_id] = proxy
+        self._story_instances[story_id] = story
 
-        return proxy
+        return story
 
-    def loads(
-        self, stories: Iterable[Dict[str, Any]], storycontents: Iterable[Dict[str, Any]]
-    ) -> List[NovelAI_StoryProxy]:
+    def loads(self, stories: Dict[str, Dict[str, Any]], storycontents: Dict[str, Dict[str, Any]]) -> List[NovelAIStory]:
         mapping = {}
         for story in stories:
             if story.get("decrypted"):
@@ -369,7 +380,7 @@ class NovelAI_Story:
                 story_id = storycontent["id"]
 
                 if story_id not in mapping:
-                    self._api._logger.warning(f"Storycontent {story_id} has no associated story")
+                    self.api.logger.warning(f"Storycontent {story_id} has no associated story")
                 else:
                     proxy = self.load(mapping[story_id], storycontent)
                     del mapping[story_id]
@@ -377,21 +388,21 @@ class NovelAI_Story:
                     loaded.append(proxy)
 
         for story_id in mapping.keys():
-            self._api._logger.warning(f"Story {story_id} has no associated storycontent")
+            self.api.logger.warning(f"Story {story_id} has no associated storycontent")
 
         return loaded
 
-    async def load_from_remote(self) -> List[NovelAI_StoryProxy]:
-        stories = await self._api.high_level.download_user_stories()
-        storycontents = await self._api.high_level.download_user_story_contents()
+    async def load_from_remote(self) -> List[NovelAIStory]:
+        stories = await self.api.high_level.download_user_stories()
+        storycontents = await self.api.high_level.download_user_story_contents()
 
-        decrypt_user_data(stories, self._keystore)
-        decrypt_user_data(storycontents, self._keystore)
+        decrypt_user_data(stories, self.keystore)
+        decrypt_user_data(storycontents, self.keystore)
 
         return self.loads(stories, storycontents)
 
-    def create(self) -> NovelAI_StoryProxy:
-        meta = self._keystore.create()
+    def create(self) -> NovelAIStory:
+        meta = self.keystore.create()
         current_time = _get_time()
         current_time_short = _get_short_time()
 
@@ -399,7 +410,7 @@ class NovelAI_Story:
             story = loads(f.read())
 
         # local overwrites
-        id_story = self._idstore.create()
+        id_story = self.idstore.create()
         for path, val in (
             ("id", id_story),
             ("meta", meta),
@@ -415,7 +426,7 @@ class NovelAI_Story:
             storycontent = loads(f.read())
 
         # local overwrites
-        id_storycontent = self._idstore.create()
+        id_storycontent = self.idstore.create()
         id_lore_default = ""  # FIXME: get id
 
         for path, val in (
@@ -431,7 +442,7 @@ class NovelAI_Story:
 
         return proxy
 
-    def select(self, story_id: str) -> Optional[NovelAI_StoryProxy]:
+    def select(self, story_id: str) -> Optional[NovelAIStory]:
         """
         Select a story proxy from the previously created/loaded ones
 
@@ -445,7 +456,7 @@ class NovelAI_Story:
 
         return self._story_instances[story_id]
 
-    def unload(self, story_id: str) -> NoReturn:
+    def unload(self, story_id: str):
         """
         Unload a previously created/loaded story, free'ing the NovelAI_StoryProxy object
         """

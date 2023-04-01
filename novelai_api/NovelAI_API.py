@@ -14,14 +14,13 @@ from novelai_api._low_level import LowLevel
 class NovelAIAPI:
     # Constants
     BASE_ADDRESS: str = "https://api.novelai.net"
+    LIB_ROOT: str = dirname(abspath(__file__))
 
     # Variables
-    _logger: Logger
-    _session: Optional[ClientSession]
+    logger: Logger
+    session: Optional[ClientSession]
 
-    _lib_root: str = dirname(abspath(__file__))
-
-    _timeout: ClientTimeout
+    timeout: ClientTimeout
     headers: CIMultiDict
     cookies: SimpleCookie
     proxy: Optional[StrOrURL] = None
@@ -37,10 +36,10 @@ class NovelAIAPI:
         ), f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
 
         # no session = synchronous
-        self._logger = Logger("NovelAI_API") if logger is None else logger
-        self._session = session
+        self.logger = Logger("NovelAI_API") if logger is None else logger
+        self.session = session
 
-        self._timeout = ClientTimeout(300)
+        self.timeout = ClientTimeout(300)
         self.headers = CIMultiDict()
         self.cookies = SimpleCookie()
 
@@ -60,14 +59,14 @@ class NovelAIAPI:
             session, ClientSession
         ), f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
 
-        self._session = session
+        self.session = session
 
     def detach_session(self):
         """
         Detach the current ClientSession, making the requests synchronous
         """
 
-        self._session = None
+        self.session = None
 
     @property
     def timeout(self) -> float:

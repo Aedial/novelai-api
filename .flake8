@@ -14,7 +14,7 @@ exclude =
     # Code imported as is
     novelai_api/tokenizers,
     # Code unused atm
-    novelai_api/story.py
+    novelai_api/StoryHandler.py
 
 per-file-ignores =
     # imported but unused

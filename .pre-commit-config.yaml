@@ -1,7 +1,7 @@
 repos:
 # modification
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -19,12 +19,12 @@ repos:
     -   id: flake2lint
 
 -   repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
     -   id: isort
 
 -   repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 23.3.0
     hooks:
     -   id: black
         args: [
@@ -33,13 +33,13 @@ repos:
 
 # check
 -   repo: https://github.com/pycqa/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
     -   id: flake8
         exclude: novelai_api/tokenizers # config file not respected (wontfix from flake8)
 
 -   repo: https://github.com/PyCQA/bandit
-    rev: 1.7.4
+    rev: 1.7.5
     hooks:
     -   id: bandit
         additional_dependencies: [ "bandit[toml]" ]

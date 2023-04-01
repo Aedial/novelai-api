@@ -116,7 +116,7 @@ class Preset(metaclass=_PresetMetaclass):
         "repetition_penalty_range": int,
         "repetition_penalty_slope": (int, float),
         "repetition_penalty_frequency": (int, float),
-        "repetition_penalty_presence": int,
+        "repetition_penalty_presence": (int, float),
         "repetition_penalty_whitelist": list,
         "length_penalty": (int, float),
         "diversity_penalty": (int, float),

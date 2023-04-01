@@ -353,4 +353,8 @@ class HighLevel:
             prompt = f"masterpiece, best quality, {prompt}"
 
         async for e in self._parent.low_level.generate_image(prompt, model, settings):
-            yield base64.b64decode(e)
+            # FIXME: check back when normalized
+            if "api2" in self._parent.BASE_ADDRESS:
+                yield e
+            else:
+                yield base64.b64decode(e)

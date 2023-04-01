@@ -11,6 +11,7 @@ dist/
 
 # poetry
 poetry.lock
+requirements.txt
 
 # pycharm
 .idea

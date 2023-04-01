@@ -18,6 +18,8 @@ from novelai_api.utils import b64_to_tokens
 GENERATION_LENGTH = 10
 
 WORKERS = int(env["PYTEST_XDIST_WORKER_COUNT"]) if "PYTEST_XDIST_WORKER_COUNT" in env else 1
+PROXY = env["NAI_PROXY"] if "NAI_PROXY" in env else None
+
 # Minimum time for a test (in seconds)
 MIN_TEST_TIME = 2 * WORKERS
 
@@ -28,6 +30,8 @@ async def run_test(func, *args, is_async: bool, attempts: int = 5):
             try:
                 async with ClientSession() as test_session:
                     api = NovelAIAPI(test_session)
+                    api.proxy = PROXY
+
                     return await func(api, *args)
             except Exception as test_exc:
                 await test_session.close()
@@ -35,6 +39,8 @@ async def run_test(func, *args, is_async: bool, attempts: int = 5):
 
         else:
             api = NovelAIAPI()
+            api.proxy = PROXY
+
             return await func(api, *args)
 
     err: Exception = RuntimeError("Unknown error")

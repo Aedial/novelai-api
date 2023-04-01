@@ -20,12 +20,14 @@ if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
 
 username = env["NAI_USERNAME"]
 password = env["NAI_PASSWORD"]
+PROXY = env["NAI_PROXY"] if "NAI_PROXY" in env else None
 
 logger = Logger("NovelAI")
 logger.addHandler(StreamHandler())
 
 
 async def generate_5(api: NovelAIAPI, model: Model):
+    api.proxy = PROXY
     await api.high_level.login(username, password)
 
     preset = Preset.from_default(model)

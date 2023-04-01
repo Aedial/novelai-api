@@ -616,6 +616,9 @@ class GlobalSettings:
 
         return self._settings[o]
 
+    def copy(self):
+        return GlobalSettings(**self._settings)
+
     def to_settings(self, model: Model) -> Dict[str, Any]:
         settings = {
             "generate_until_sentence": self._settings["generate_until_sentence"],

@@ -12,6 +12,14 @@ class ImageModel(enum.Enum):
     Furry = "nai-diffusion-furry"
 
 
+class ControlNetModel(enum.Enum):
+    Palette_Lock = "hed"
+    Form_Lock = "midas"
+    Scrible = "fake_scribble"
+    Building_Control = "mlsd"
+    Lanscaper = "uniformer"
+
+
 class ImageResolution(enum.Enum):
     Small_Portrait = (384, 640)
     Small_Landscape = (640, 384)
@@ -30,8 +38,20 @@ class ImageSampler(enum.Enum):
     k_lms = "k_lms"
     k_euler = "k_euler"
     k_euler_ancestral = "k_euler_ancestral"
-    plms = "plms"
+    k_heun = "k_heun"  # api doesn't work
+    plms = "plms"  # api2 doesn't work
     ddim = "ddim"
+
+    nai_smea = "nai_smea"  # api, api2 doesn't work
+    nai_smea_dyn = "nai_smea_dyn"  # api doesn't work
+
+    k_dpmpp_2m = "k_dpmpp_2m"
+    k_dpmpp_2s_ancestral = "k_dpmpp_2s_ancestral"
+    k_dpmpp_sde = "k_dpmpp_sde"
+    k_dpm_2 = "k_dpm_2"
+    k_dpm_2_ancestral = "k_dpm_2_ancestral"  # api doesn't work
+    k_dpm_adaptive = "k_dpm_adaptive"  # api doesn't work
+    k_dpm_fast = "k_dpm_fast"
 
 
 class UCPreset(enum.Enum):
@@ -69,18 +89,48 @@ class ImagePreset:
         },
     }
 
+    _CONTROLNET_MODELS = {
+        ControlNetModel.Palette_Lock: "hed",
+        ControlNetModel.Form_Lock: "depth",
+        ControlNetModel.Scrible: "scribble",
+        ControlNetModel.Building_Control: "mlsd",
+        ControlNetModel.Lanscaper: "seg",
+    }
+
     _TYPE_MAPPING = {
         "quality_toggle": bool,
+        # (width, height)
         "resolution": (ImageResolution, tuple),
+        # default UC to prepend to the uc
         "uc_preset": UCPreset,
+        # number of images to return
         "n_samples": int,
+        # random seed
         "seed": int,
+        # see official docs
         "sampler": ImageSampler,
+        # see official docs
         "noise": (int, float),
+        # 0-1 factor to which steps are multiplied in img2img
         "strength": (int, float),
+        # see official docs
         "scale": (int, float),
+        # see official docs
         "steps": int,
+        # Undesired Content
         "uc": str,
+        # use SMEA mode
+        "smea": bool,
+        # use DYN mode for SMEA
+        "smea_dyn": bool,
+        # png image b64 encoded for img2img
+        "image": str,
+        # controlnet mask gotten by the generate_controlnet_mask method
+        "controlnet_condition": str,
+        # model to use for the controlnet
+        "controlnet_model": ControlNetModel,
+        # ???
+        "dynamic_thresholding": bool,
     }
 
     _DEFAULT = {
@@ -95,6 +145,8 @@ class ImagePreset:
         "steps": 28,
         "scale": 11,
         "uc": "",
+        "smea": False,
+        "smea_dyn": False,
     }
 
     _settings: Dict[str, Any]
@@ -108,13 +160,20 @@ class ImagePreset:
 
         self.last_seed = 0
 
-    def __setitem__(self, o: str, v: Any):
-        assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
-        assert isinstance(
-            v, self._TYPE_MAPPING[o]
-        ), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
+    def __setitem__(self, key: str, value: Any):
+        if key not in self._TYPE_MAPPING:
+            raise ValueError(f"'{key}' is not a valid setting")
 
-        self._settings[o] = v
+        if isinstance(value, self._TYPE_MAPPING[key]):
+            ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
+
+        self._settings[key] = value
+
+    def __delitem__(self, key):
+        if key in self._DEFAULT:
+            raise ValueError(f"{key} is a default setting, set it instead of deleting")
+
+        del self._settings[key]
 
     def update(self, values: Dict[str, Any]) -> "ImagePreset":
         for k, v in values.items():
@@ -153,6 +212,16 @@ class ImagePreset:
         sampler: ImageSampler = settings.pop("sampler")
         settings["sampler"] = sampler.value
 
+        if settings.pop("smea", False):
+            settings["sm"] = True
+
+            if settings.pop("smea_dyn", False):
+                settings["sm_dyn"] = True
+
+        controlnet_model = settings.pop("controlnet_model", None)
+        if controlnet_model is not None:
+            settings["controlnet_model"] = self._CONTROLNET_MODELS[controlnet_model]
+
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")
         settings["ucPreset"] = uc_preset.value
@@ -167,8 +236,17 @@ class ImagePreset:
 
         w, h = resolution
 
-        if w * h < 512 * 1024:
+        if w * h <= 512 * 704:
+            return 8
+
+        if w * h <= 640 * 640:
+            return 6
+
+        if w * h <= 512 * 2560:
             return 4
+
+        if w * h <= 1024 * 1536:
+            return 2
 
         return 1
 

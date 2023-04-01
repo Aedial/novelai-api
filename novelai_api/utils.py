@@ -116,7 +116,6 @@ def encrypt_data(
     nonce: Optional[bytes] = None,
     is_compressed: bool = False,
 ) -> bytes:
-
     box = SecretBox(key)
 
     if not isinstance(data, bytes):
@@ -296,7 +295,6 @@ def assign_content_to_story(
     stories: Dict[str, Union[str, int, Dict[str, Any]]],
     story_contents: Union[List[Dict[str, Any]], Dict[str, Any]],
 ):
-
     if not isinstance(stories, (list, tuple)):
         stories = [stories]
 

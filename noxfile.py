@@ -45,6 +45,10 @@ def install_package(session: nox.Session, *packages: str, dev: bool = False):
     package_file = get_wheel_path(session)
     session.install("-r", "requirements.txt", package_file, *(str(p) for p in packages))
 
+    username = session.env.get("NAI_USERNAME", "<UNKNOWN>")
+    version = session.run("python", "--version", silent=True)
+    print(f"Using {username} with {version}")
+
 
 @nox.session(name="pre-commit")
 def pre_commit(session: nox.Session):
@@ -55,7 +59,7 @@ def pre_commit(session: nox.Session):
     session.run("pre-commit", "run", "--all-files")
 
 
-test_py_versions = ["3.7", "3.8", "3.9", "3.10"]
+test_py_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 
 @nox.session(py=test_py_versions, name="test-mock")

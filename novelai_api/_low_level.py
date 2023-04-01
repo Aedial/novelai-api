@@ -1,13 +1,15 @@
 import enum
+import io
 import json
 import operator
+import zipfile
 from typing import Any, AsyncIterable, Dict, List, NoReturn, Optional, Tuple, Union
 from urllib.parse import quote, urlencode
 
 from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
 
-from novelai_api.ImagePreset import ImageModel
+from novelai_api.ImagePreset import ControlNetModel, ImageModel
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model
 from novelai_api.SchemaValidator import SchemaValidator
@@ -84,10 +86,17 @@ class LowLevel:
 
         return stream_data
 
-    async def _treat_response_stream(self, rsp: ClientResponse, data: bytes) -> Any:
-        data = data.decode()
+    async def _treat_response_stream(self, rsp: ClientResponse, data: bytes):
+        if rsp.content_type == "application/x-zip-compressed":
+            z = zipfile.ZipFile(io.BytesIO(data))
 
-        if rsp.content_type == "text/event-stream":
+            for name in z.namelist():
+                yield z.read(name)
+
+            z.close()
+
+        elif rsp.content_type == "text/event-stream":
+            data = data.decode()
             stream_data = self._parse_stream_data(data)
 
             # TODO: replace by a meaningful error
@@ -95,16 +104,16 @@ class LowLevel:
             data = stream_data["data"]
 
             if data.startswith("{") and data.endswith("}"):
-                data = json.loads(data)
+                yield json.loads(data)
 
-        return data
+        else:
+            yield data.decode()
 
     async def _request(
         self, method: str, url: str, session: ClientSession, data: Union[Dict[str, Any], str], stream: bool
     ):
-
         kwargs = {
-            "timeout": self._parent._timeout,  # noqa
+            "timeout": self._parent.timeout,
             "cookies": self._parent.cookies,
             "headers": self._parent.headers,
             "json" if isinstance(data, dict) else "data": data,
@@ -126,14 +135,17 @@ class LowLevel:
                         event_pos = chunk.find(b"event:")
                         content += chunk[:event_pos]
 
-                        yield rsp, await self._treat_response_stream(rsp, content)
+                        async for e in self._treat_response_stream(rsp, content):
+                            yield rsp, e
+
                         content = chunk[event_pos:]
                     else:
                         # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
                         #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
                         content += chunk
 
-                yield rsp, await self._treat_response_stream(rsp, content)
+                async for e in self._treat_response_stream(rsp, content):
+                    yield rsp, e
             else:
                 yield rsp, await self._treat_response(rsp, rsp)
 
@@ -151,8 +163,8 @@ class LowLevel:
 
         url = f"{self._parent.BASE_ADDRESS}{endpoint}"
 
-        is_sync = self._parent._session is None  # noqa
-        session = ClientSession() if is_sync else self._parent._session  # noqa
+        is_sync = self._parent.session is None
+        session = ClientSession() if is_sync else self._parent.session
 
         try:
             async for i in self._request(method, url, session, data, stream):
@@ -619,6 +631,24 @@ class LowLevel:
         }
 
         async for rsp, content in self.request_stream("post", "/ai/generate-image", args):
-            self._treat_response_object(rsp, content, 201)
+            # FIXME: check back when normalized
+            if "api2" in self._parent.BASE_ADDRESS:
+                self._treat_response_object(rsp, content, 200)
+            else:
+                self._treat_response_object(rsp, content, 201)
 
             yield content
+
+    async def generate_controlnet_mask(self, model: ControlNetModel, image: str):
+        """
+        Get the ControlNet's mask for the image. Used for ImageSampler["controlnet_condition"]
+        """
+        assert_type(ControlNetModel, model=model)
+        assert_type(str, image=image)
+
+        args = {"model": model.value, "parameters": {"image": image}}
+
+        async for rsp, content in self.request_stream("post", "/ai/annotate-image", args):
+            self._treat_response_object(rsp, content, 200)
+
+            return content

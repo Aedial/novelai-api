@@ -44,10 +44,12 @@ if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
 
 username = env["NAI_USERNAME"]
 password = env["NAI_PASSWORD"]
+PROXY = env["NAI_PROXY"] if "NAI_PROXY" in env else None
 
 
 async def keystore_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
@@ -80,6 +82,7 @@ async def test_keystore_integrity_async():
 
 async def stories_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
@@ -114,6 +117,7 @@ async def test_stories_integrity_async():
 
 async def storycontent_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
@@ -154,6 +158,7 @@ async def test_storycontent_integrity_async():
 
 async def presets_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
@@ -185,6 +190,7 @@ async def test_presets_integrity_async():
 
 async def aimodules_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
@@ -219,6 +225,7 @@ async def test_aimodules_integrity_async():
 
 async def shelves_integrity(api: NovelAIAPI):
     api.timeout = 30
+    api.proxy = PROXY
 
     await api.high_level.login(username, password)
 
