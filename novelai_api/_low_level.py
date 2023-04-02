@@ -603,6 +603,15 @@ class LowLevel:
         return content
 
     async def suggest_tags(self, tag: str, model: ImageModel):
+        """
+        Suggest tags with a certain confidence, considering how much the tag is used in the dataset
+
+        :param tag: Tag to suggest others of
+        :param model: Image model to get the tags from
+
+        :return: List of similar tags with a confidence level
+        """
+
         assert_type(str, tag=tag)
         assert_type(ImageModel, model=model)
 
@@ -620,6 +629,16 @@ class LowLevel:
         return content
 
     async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterable[str]:
+        """
+        Generate an image
+
+        :param prompt: Prompt for the image
+        :param model: Model to generate the image
+        :param parameters: Parameters for the images
+
+        :return: A b64 encoded PNG image (API 1, deprecated) or a raw PNG image (API 2)
+        """
+
         assert_type(str, prompt=prompt)
         assert_type(ImageModel, model=model)
         assert_type(dict, parameters=parameters)
@@ -642,13 +661,41 @@ class LowLevel:
     async def generate_controlnet_mask(self, model: ControlNetModel, image: str):
         """
         Get the ControlNet's mask for the image. Used for ImageSampler["controlnet_condition"]
+
+        :param model: ControlNet model to use
+        :param image: b64 encoded PNG image to get the mask of
+
+        :return: A raw PNG image
         """
+
         assert_type(ControlNetModel, model=model)
         assert_type(str, image=image)
 
         args = {"model": model.value, "parameters": {"image": image}}
 
         async for rsp, content in self.request_stream("post", "/ai/annotate-image", args):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
+
+    async def upscale_image(self, image: str, width: int, height: int, scale: int):
+        """
+        Upscale the image. Afaik, the only allowed values for scale are 2 and 4.
+
+        :param image: b64 encoded PNG image to upscale
+        :param width: Width of the starting image
+        :param height: Height of the starting image
+        :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)
+
+        :return: A raw PNG image
+        """
+
+        assert_type(str, image=image)
+        assert_type(int, width=width, height=height, scale=scale)
+
+        args = {"image": image, "width": width, "height": height, "scale": scale}
+
+        async for rsp, content in self.request_stream("post", "/ai/upscale", args):
             self._treat_response_object(rsp, content, 200)
 
             return content
