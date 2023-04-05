@@ -1,4 +1,3 @@
-import base64
 from hashlib import sha256
 from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Union
 
@@ -353,8 +352,4 @@ class HighLevel:
             prompt = f"masterpiece, best quality, {prompt}"
 
         async for e in self._parent.low_level.generate_image(prompt, model, settings):
-            # FIXME: check back when normalized
-            if "api2" in self._parent.BASE_ADDRESS:
-                yield e
-            else:
-                yield base64.b64decode(e)
+            yield e

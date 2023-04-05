@@ -10,7 +10,6 @@ from novelai_api.NovelAIError import NovelAIError
 async def main():
     async with API() as api_handler:
         api = api_handler.api
-        api.BASE_ADDRESS = api.BASE_ADDRESS.replace("api", "api2")
 
         with open("image.png", "rb") as f:
             image = base64.b64encode(f.read()).decode()

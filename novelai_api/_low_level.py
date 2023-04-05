@@ -126,6 +126,8 @@ class LowLevel:
             kwargs["proxy_auth"] = self._parent.proxy_auth
 
         async with session.request(method, url, **kwargs) as rsp:
+            #            print(rsp.content_type)
+
             if stream:
                 content = b""
 
@@ -650,11 +652,7 @@ class LowLevel:
         }
 
         async for rsp, content in self.request_stream("post", "/ai/generate-image", args):
-            # FIXME: check back when normalized
-            if "api2" in self._parent.BASE_ADDRESS:
-                self._treat_response_object(rsp, content, 200)
-            else:
-                self._treat_response_object(rsp, content, 201)
+            self._treat_response_object(rsp, content, 200)
 
             yield content
 
