@@ -72,7 +72,11 @@ def test_mock(session: nox.Session):
 def test_api(session: nox.Session):
     install_package(session, dev=True)
     session.run("npm", "install", "fflate", external=True)
-    session.run("pytest", "--tb=short", "-n", "auto", "tests/api/")
+
+    if session.posargs:
+        session.run("pytest", "--tb=short", "-n", "auto", *(f"tests/api/{e}" for e in session.posargs))
+    else:
+        session.run("pytest", "--tb=short", "-n", "auto", "tests/api/")
 
 
 @nox.session()
