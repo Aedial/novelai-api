@@ -3,7 +3,7 @@ import io
 import json
 import operator
 import zipfile
-from typing import Any, AsyncIterable, Dict, List, NoReturn, Optional, Tuple, Union
+from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Union
 from urllib.parse import quote, urlencode
 
 from aiohttp import ClientSession
@@ -57,61 +57,82 @@ class LowLevel:
         return False
 
     @staticmethod
-    async def _treat_response(rsp: ClientResponse, data: Any) -> Any:
-        if rsp.content_type == "application/json":
-            return await data.json()
+    async def _parse_event_stream(rsp: ClientResponse):
+        content = b""
 
-        if rsp.content_type in ("text/plain", "text/html"):
-            return await data.text()
+        async for chunk in rsp.content.iter_any():
+            # the event can be in the middle of a chunk... tfw...
+            if content and b"event" in chunk:
+                event_pos = chunk.find(b"event:")
+                content += chunk[:event_pos]
 
-        if rsp.content_type in ("audio/mpeg", "audio/webm"):
-            return await data.read()
+                stream_data = {}
+                for line in content.decode().strip("\n").splitlines():
+                    if line == "":
+                        continue
 
-        raise RuntimeError(f"Unsupported type: {rsp.content_type}")
+                    colon = line.find(":")
+                    # TODO: replace by a meaningful error
+                    if colon == -1:
+                        raise NovelAIError(-1, f"Malformed data stream line: '{line}'")
 
-    @staticmethod
-    def _parse_stream_data(stream_content: str) -> Dict[str, Any]:
-        stream_data = {}
+                    stream_data[line[:colon].strip()] = line[colon + 1 :].strip()
 
-        for line in stream_content.strip("\n").splitlines():
-            if line == "":
-                continue
+                # TODO: replace by a meaningful error
+                assert "data" in stream_data
+                data = stream_data["data"]
 
-            colon = line.find(":")
-            # TODO: replace by a meaningful error
-            if colon == -1:
-                raise NovelAIError(0, f"Malformed data stream line: '{line}'")
+                if data.startswith("{") and data.endswith("}"):
+                    data = json.loads(data)
 
-            stream_data[line[:colon]] = line[colon + 1 :].strip()
+                yield data
 
-        return stream_data
+                content = chunk[event_pos:]
+            else:
+                # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
+                #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
+                content += chunk
 
-    async def _treat_response_stream(self, rsp: ClientResponse, data: bytes):
-        if rsp.content_type == "application/x-zip-compressed":
-            z = zipfile.ZipFile(io.BytesIO(data))
+    @classmethod
+    async def _parse_response(cls, rsp: ClientResponse):
+        content_type = rsp.content_type
 
+        if content_type == "application/json":
+            yield await rsp.json()
+
+        elif content_type in ("text/plain", "text/html"):
+            yield await rsp.text()
+
+        elif content_type in ("audio/mpeg", "audio/webm"):
+            yield await rsp.read()
+
+        elif content_type == "application/x-zip-compressed":
+            z = zipfile.ZipFile(io.BytesIO(await rsp.read()))
             for name in z.namelist():
                 yield z.read(name)
-
             z.close()
 
-        elif rsp.content_type == "text/event-stream":
-            data = data.decode()
-            stream_data = self._parse_stream_data(data)
-
-            # TODO: replace by a meaningful error
-            assert "data" in stream_data
-            data = stream_data["data"]
-
-            if data.startswith("{") and data.endswith("}"):
-                yield json.loads(data)
+        elif content_type == "text/event-stream":
+            async for e in cls._parse_event_stream(rsp):
+                yield e
 
         else:
-            yield data.decode()
+            raise NovelAIError(-1, f"Unsupported type: {rsp.content_type}")
 
-    async def _request(
-        self, method: str, url: str, session: ClientSession, data: Union[Dict[str, Any], str], stream: bool
-    ):
+    async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None):
+        """
+        Send request with support for data streaming
+
+        :param method: Method of the request (get, post, delete)
+        :param endpoint: Endpoint of the request
+        :param data: Data to pass to the method if needed
+        """
+
+        url = f"{self._parent.BASE_ADDRESS}{endpoint}"
+
+        is_sync = self._parent.session is None
+        session = ClientSession() if is_sync else self._parent.session
+
         kwargs = {
             "timeout": self._parent.timeout,
             "cookies": self._parent.cookies,
@@ -125,71 +146,15 @@ class LowLevel:
         if self._parent.proxy_auth is not None:
             kwargs["proxy_auth"] = self._parent.proxy_auth
 
-        async with session.request(method, url, **kwargs) as rsp:
-            #            print(rsp.content_type)
-
-            if stream:
-                content = b""
-
-                async for chunk in rsp.content.iter_any():
-                    # the event can be in the middle of a chunk... tfw...
-                    if content and b"event" in chunk:
-                        event_pos = chunk.find(b"event:")
-                        content += chunk[:event_pos]
-
-                        async for e in self._treat_response_stream(rsp, content):
-                            yield rsp, e
-
-                        content = chunk[event_pos:]
-                    else:
-                        # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
-                        #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
-                        content += chunk
-
-                async for e in self._treat_response_stream(rsp, content):
-                    yield rsp, e
-            else:
-                yield rsp, await self._treat_response(rsp, rsp)
-
-    async def request_stream(
-        self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None, stream: bool = True
-    ):
-        """
-        Send request with support for data streaming
-
-        :param method: Method of the request (get, post, delete)
-        :param endpoint: Endpoint of the request
-        :param data: Data to pass to the method if needed
-        :param stream: Use data streaming for the response
-        """
-
-        url = f"{self._parent.BASE_ADDRESS}{endpoint}"
-
-        is_sync = self._parent.session is None
-        session = ClientSession() if is_sync else self._parent.session
-
         try:
-            async for i in self._request(method, url, session, data, stream):
-                yield i
+            async with session.request(method, url, **kwargs) as rsp:
+                async for e in self._parse_response(rsp):
+                    yield rsp, e
         except Exception as e:
             raise e
         finally:
             if is_sync:
                 await session.close()
-
-    async def request(
-        self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None
-    ) -> Tuple[ClientResponse, Any]:
-        """
-        Send request
-
-        :param method: Method of the request (get, post, delete)
-        :param endpoint: Endpoint of the request
-        :param data: Data to pass to the method if needed
-        """
-
-        async for i in self.request_stream(method, endpoint, data, False):
-            return i
 
     async def is_reachable(self) -> bool:
         """
@@ -198,8 +163,8 @@ class LowLevel:
         :return: True if reachable, False if not
         """
 
-        rsp, content = await self.request("get", "/")
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("get", "/"):
+            return self._treat_response_bool(rsp, content, 200)
 
     async def register(
         self, recapcha: str, access_key: str, email: Optional[str], giftkey: Optional[str] = None
@@ -227,13 +192,13 @@ class LowLevel:
         if giftkey is not None:
             data["giftkey"] = giftkey
 
-        rsp, content = await self.request("post", "/user/register", data)
-        self._treat_response_object(rsp, content, 201)
+        async for rsp, content in self.request("post", "/user/register", data):
+            self._treat_response_object(rsp, content, 201)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
 
-        return content
+            return content
 
     async def login(self, access_key: str) -> Dict[str, str]:
         """
@@ -247,13 +212,13 @@ class LowLevel:
         assert_type(str, access_key=access_key)
         assert_len(64, access_key=access_key)
 
-        rsp, content = await self.request("post", "/user/login", {"key": access_key})
-        self._treat_response_object(rsp, content, 201)
+        async for rsp, content in self.request("post", "/user/login", {"key": access_key}):
+            self._treat_response_object(rsp, content, 201)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
 
-        return content
+            return content
 
     async def change_access_key(
         self, current_key: str, new_key: str, new_email: Optional[str] = None
@@ -267,41 +232,41 @@ class LowLevel:
         if new_email is not None:
             data["newEmail"] = new_email
 
-        rsp, content = await self.request("post", "/user/change-access-key", data)
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("post", "/user/change-access-key", data):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
 
-        return content
+            return content
 
     async def send_email_verification(self, email: str) -> bool:
         assert_type(str, email=email)
 
-        rsp, content = await self.request("post", "/user/resend-email-verification", {"email": email})
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("post", "/user/resend-email-verification", {"email": email}):
+            return self._treat_response_bool(rsp, content, 200)
 
     async def verify_email(self, verification_token: str) -> bool:
         assert_type(str, verification_token=verification_token)
         assert_len(64, verification_token=verification_token)
 
-        rsp, content = await self.request("post", "/user/verify-email", {"verificationToken": verification_token})
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("post", "/user/verify-email", {"verificationToken": verification_token}):
+            return self._treat_response_bool(rsp, content, 200)
 
     async def get_information(self) -> Dict[str, Any]:
-        rsp, content = await self.request("get", "/user/information")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/information"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_AccountInformationResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_AccountInformationResponse", content)
 
-        return content
+            return content
 
     async def request_account_recovery(self, email: str) -> bool:
         assert_type(str, email=email)
 
-        rsp, content = await self.request("post", "/user/recovery/request", {"email": email})
-        return self._treat_response_bool(rsp, content, 202)
+        async for rsp, content in self.request("post", "/user/recovery/request", {"email": email}):
+            return self._treat_response_bool(rsp, content, 202)
 
     async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> Dict[str, Any]:
         assert_type(str, recovery_token=recovery_token, new_key=new_key)
@@ -309,43 +274,41 @@ class LowLevel:
         assert_len(16, operator.ge, recovery_token=recovery_token)
         assert_len(64, new_key=new_key)
 
-        rsp, content = await self.request(
-            "post",
-            "/user/recovery/recover",
-            {
-                "recoveryToken": recovery_token,
-                "newAccessKey": new_key,
-                "deleteContent": delete_content,
-            },
-        )
-        self._treat_response_object(rsp, content, 201)
+        data = {
+            "recoveryToken": recovery_token,
+            "newAccessKey": new_key,
+            "deleteContent": delete_content,
+        }
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+        async for rsp, content in self.request("post", "/user/recovery/recover", data):
+            self._treat_response_object(rsp, content, 201)
 
-        return content
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_SuccessfulLoginResponse", content)
+
+            return content
 
     async def delete_account(self) -> bool:
-        rsp, content = await self.request("post", "/user/delete", None)
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("post", "/user/delete", None):
+            return self._treat_response_bool(rsp, content, 200)
 
     async def get_data(self) -> Dict[str, Any]:
-        rsp, content = await self.request("get", "/user/data")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/data"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_AccountInformationResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_AccountInformationResponse", content)
 
-        return content
+            return content
 
     async def get_priority(self) -> Dict[str, Any]:
-        rsp, content = await self.request("get", "/user/priority")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/priority"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_PriorityResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_PriorityResponse", content)
 
-        return content
+            return content
 
     class SubscriptionTier(enum.IntEnum):
         PAPER = 0
@@ -354,112 +317,101 @@ class LowLevel:
         OPUS = 3
 
     async def get_subscription(self) -> Dict[str, Any]:
-        rsp, content = await self.request("get", "/user/subscription")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/subscription"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_SubscriptionResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_SubscriptionResponse", content)
 
-        return content
+            return content
 
     async def get_keystore(self) -> Dict[str, str]:
-        rsp, content = await self.request("get", "/user/keystore")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/keystore"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_GetKeystoreResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_GetKeystoreResponse", content)
 
-        return content
+            return content
 
     async def set_keystore(self, keystore: Dict[str, str]) -> bool:
         assert_type(dict, keystore=keystore)
 
-        rsp, content = await self.request("put", "/user/keystore", keystore)
-        return self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("put", "/user/keystore", keystore):
+            return self._treat_response_object(rsp, content, 200)
 
     async def download_objects(self, object_type: str) -> Dict[str, List[Dict[str, Union[str, int]]]]:
         assert_type(str, object_type=object_type)
 
-        rsp, content = await self.request("get", f"/user/objects/{object_type}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", f"/user/objects/{object_type}"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_ObjectsResponse", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_ObjectsResponse", content)
 
-        return content
+            return content
 
     async def upload_objects(self, object_type: str, meta: str, data: str) -> bool:
         assert_type(str, object_type=object_type, meta=meta, data=data)
         assert_len(128, operator.le, meta=meta)
 
-        rsp, content = await self.request("put", f"/user/objects/{object_type}", {"meta": meta, "data": data})
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("put", f"/user/objects/{object_type}", {"meta": meta, "data": data}):
+            self._treat_response_object(rsp, content, 200)
 
-        return content
+            return content
 
     async def download_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
         assert_type(str, object_type=object_type, object_id=object_id)
 
-        rsp, content = await self.request("get", f"/user/objects/{object_type}/{object_id}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", f"/user/objects/{object_type}/{object_id}"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_userData", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_userData", content)
 
-        return content
+            return content
 
     async def upload_object(self, object_type: str, object_id: str, meta: str, data: str) -> bool:
         assert_type(str, object_type=object_type, object_id=object_id, meta=meta, data=data)
         assert_len(128, operator.le, meta=meta)
 
-        rsp, content = await self.request(
-            "patch",
-            f"/user/objects/{object_type}/{object_id}",
-            {"meta": meta, "data": data},
-        )
-        self._treat_response_object(rsp, content, 200)
+        params = {"meta": meta, "data": data}
+        async for rsp, content in self.request("patch", f"/user/objects/{object_type}/{object_id}", params):
+            self._treat_response_object(rsp, content, 200)
 
-        return content
+            return content
 
     async def delete_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
         assert_type(str, object_type=object_type, object_id=object_id)
 
-        rsp, content = await self.request("delete", f"/user/objects/{object_type}/{object_id}")
-        return self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("delete", f"/user/objects/{object_type}/{object_id}"):
+            return self._treat_response_object(rsp, content, 200)
 
     async def get_settings(self) -> str:
-        rsp, content = await self.request("get", "/user/clientsettings")
-        return self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/user/clientsettings"):
+            return self._treat_response_object(rsp, content, 200)
 
     async def set_settings(self, value: str) -> bool:
         assert_type(str, value=value)
 
-        rsp, content = await self.request("put", "/user/clientsettings", value)
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("put", "/user/clientsettings", value):
+            return self._treat_response_bool(rsp, content, 200)
 
     async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
         assert_type(str, payment_processor=payment_processor, subscription_id=subscription_id)
 
-        rsp, content = await self.request(
-            "post",
-            "/user/subscription/bind",
-            {"paymentProcessor": payment_processor, "subscriptionId": subscription_id},
-        )
-        return self._treat_response_bool(rsp, content, 201)
+        data = {"paymentProcessor": payment_processor, "subscriptionId": subscription_id}
+
+        async for rsp, content in self.request("post", "/user/subscription/bind", data):
+            return self._treat_response_bool(rsp, content, 201)
 
     async def change_subscription(self, new_plan: str) -> bool:
         assert_type(str, new_plan=new_plan)
 
-        rsp, content = await self.request("post", "/user/subscription/change", {"newSubscriptionPlan": new_plan})
-        return self._treat_response_bool(rsp, content, 200)
+        async for rsp, content in self.request("post", "/user/subscription/change", {"newSubscriptionPlan": new_plan}):
+            return self._treat_response_bool(rsp, content, 200)
 
-    async def generate(
-        self,
-        prompt: Union[List[int], str],
-        model: Model,
-        params: Dict[str, Any],
-        stream: bool = False,
-    ):
+    async def generate(self, prompt: Union[List[int], str], model: Model, params: Dict[str, Any], stream: bool = False):
         """
         :param prompt: Input to be sent the AI
         :param model: Model of the AI
@@ -482,7 +434,7 @@ class LowLevel:
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
-        async for rsp, content in self.request_stream("post", endpoint, args, stream):
+        async for rsp, content in self.request("post", endpoint, args):
             self._treat_response_object(rsp, content, 201)
 
             yield content
@@ -504,35 +456,33 @@ class LowLevel:
         assert_type(str, data=data, name=name, desc=desc)
         assert_type(int, rate=rate, steps=steps)
 
-        rsp, content = await self.request(
-            "post",
-            "/ai/module/train",
-            {
-                "data": data,
-                "lr": rate,
-                "steps": steps,
-                "name": name,
-                "description": desc,
-            },
-        )
-        self._treat_response_object(rsp, content, 201)
+        params = {
+            "data": data,
+            "lr": rate,
+            "steps": steps,
+            "name": name,
+            "description": desc,
+        }
 
-        # TODO: verify response ?
+        async for rsp, content in self.request("post", "/ai/module/train", params):
+            self._treat_response_object(rsp, content, 201)
 
-        return content
+            # TODO: verify response ?
+
+            return content
 
     async def get_trained_modules(self) -> List[Dict[str, Any]]:
         """
         :return: List of modules trained or in training
         """
 
-        rsp, content = await self.request("get", "/ai/module/all")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", "/ai/module/all"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_AiModuleDtos", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_AiModuleDtos", content)
 
-        return content
+            return content
 
     async def get_trained_module(self, module_id: str) -> Dict[str, Any]:
         """
@@ -543,13 +493,13 @@ class LowLevel:
 
         assert_type(str, module_id=module_id)
 
-        rsp, content = await self.request("get", f"/ai/module/{module_id}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", f"/ai/module/{module_id}"):
+            self._treat_response_object(rsp, content, 200)
 
-        if self.is_schema_validation_enabled:
-            SchemaValidator.validate("schema_AiModuleDto", content)
+            if self.is_schema_validation_enabled:
+                SchemaValidator.validate("schema_AiModuleDto", content)
 
-        return content
+            return content
 
     async def delete_module(self, module_id: str) -> Dict[str, Any]:
         """
@@ -562,12 +512,12 @@ class LowLevel:
 
         assert_type(str, module_id=module_id)
 
-        rsp, content = await self.request("delete", f"/ai/module/{module_id}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("delete", f"/ai/module/{module_id}"):
+            self._treat_response_object(rsp, content, 200)
 
-        # TODO: verify response ?
+            # TODO: verify response ?
 
-        return content
+            return content
 
     async def generate_voice(self, text: str, seed: str, voice: int, opus: bool, version: str) -> Dict[str, Any]:
         """
@@ -599,12 +549,12 @@ class LowLevel:
             quote_via=quote,
         )
 
-        rsp, content = await self.request("get", f"/ai/generate-voice?{query}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", f"/ai/generate-voice?{query}"):
+            self._treat_response_object(rsp, content, 200)
 
-        return content
+            return content
 
-    async def suggest_tags(self, tag: str, model: ImageModel):
+    async def suggest_tags(self, tag: str, model: ImageModel) -> Dict[str, Any]:
         """
         Suggest tags with a certain confidence, considering how much the tag is used in the dataset
 
@@ -625,20 +575,20 @@ class LowLevel:
             quote_via=quote,
         )
 
-        rsp, content = await self.request("get", f"/ai/generate-image/suggest-tags?{query}")
-        self._treat_response_object(rsp, content, 200)
+        async for rsp, content in self.request("get", f"/ai/generate-image/suggest-tags?{query}"):
+            self._treat_response_object(rsp, content, 200)
 
-        return content
+            return content
 
-    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterable[str]:
+    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterator[bytes]:
         """
-        Generate an image
+        Generate one or multiple images
 
         :param prompt: Prompt for the image
         :param model: Model to generate the image
         :param parameters: Parameters for the images
 
-        :return: A b64 encoded PNG image (API 1, deprecated) or a raw PNG image (API 2)
+        :return: Raw PNG image(s)
         """
 
         assert_type(str, prompt=prompt)
@@ -651,12 +601,12 @@ class LowLevel:
             "parameters": parameters,
         }
 
-        async for rsp, content in self.request_stream("post", "/ai/generate-image", args):
+        async for rsp, content in self.request("post", "/ai/generate-image", args):
             self._treat_response_object(rsp, content, 200)
 
             yield content
 
-    async def generate_controlnet_mask(self, model: ControlNetModel, image: str):
+    async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> bytes:
         """
         Get the ControlNet's mask for the image. Used for ImageSampler["controlnet_condition"]
 
@@ -671,12 +621,12 @@ class LowLevel:
 
         args = {"model": model.value, "parameters": {"image": image}}
 
-        async for rsp, content in self.request_stream("post", "/ai/annotate-image", args):
+        async for rsp, content in self.request("post", "/ai/annotate-image", args):
             self._treat_response_object(rsp, content, 200)
 
             return content
 
-    async def upscale_image(self, image: str, width: int, height: int, scale: int):
+    async def upscale_image(self, image: str, width: int, height: int, scale: int) -> bytes:
         """
         Upscale the image. Afaik, the only allowed values for scale are 2 and 4.
 
@@ -693,7 +643,7 @@ class LowLevel:
 
         args = {"image": image, "width": width, "height": height, "scale": scale}
 
-        async for rsp, content in self.request_stream("post", "/ai/upscale", args):
+        async for rsp, content in self.request("post", "/ai/upscale", args):
             self._treat_response_object(rsp, content, 200)
 
             return content
