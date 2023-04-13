@@ -23,6 +23,7 @@ jsonschema = "^4.17.0"
 tokenizers = "^0.13.1"
 ftfy = "^6.1.1"
 regex = "^2022.10.31"
+sentencepiece = "^0.1.98"
 
 [tool.poetry.group.dev.dependencies]
 pytest-asyncio = "^0.20.1"
