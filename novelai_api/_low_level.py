@@ -1,6 +1,5 @@
 import enum
 import io
-import json
 import operator
 import zipfile
 from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Union
@@ -16,8 +15,10 @@ from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import NoneType, assert_len, assert_type, tokens_to_b64
 
-
 # === INTERNALS === #
+SSE_FIELDS = ["event", "data", "id", "retry"]
+
+
 # === API === #
 class LowLevel:
     _parent: "NovelAIAPI"  # noqa: F821
@@ -57,41 +58,63 @@ class LowLevel:
         return False
 
     @staticmethod
-    async def _parse_event_stream(rsp: ClientResponse):
-        content = b""
+    async def _parse_sse_stream(rsp: ClientResponse) -> AsyncIterator[Dict[str, str]]:
+        """
+        Parse a stream of Server Sent Event from an aiohttp ClientResponse
+        Specs: https://html.spec.whatwg.org/multipage/server-sent-events.html
 
+        This function consider all end of line to be '\\n'. '\\r' is not handled, albeit legal in the spec
+        """
+
+        sse_data = {"data": []}
+        modified = False
+
+        partial_data: str = ""
         async for chunk in rsp.content.iter_any():
-            # the event can be in the middle of a chunk... tfw...
-            if content and b"event" in chunk:
-                event_pos = chunk.find(b"event:")
-                content += chunk[:event_pos]
+            for line in f"{partial_data}{chunk.decode('utf-8')}".splitlines(True):
+                if line in ("", "\n"):
+                    # empty line = dispatch event if modified
+                    if modified:
+                        sse_data["data"] = "\n".join(sse_data["data"])
+                        yield sse_data
 
-                stream_data = {}
-                for line in content.decode().strip("\n").splitlines():
-                    if line == "":
-                        continue
+                        sse_data = {"data": []}
+                        modified = False
 
-                    colon = line.find(":")
-                    # TODO: replace by a meaningful error
-                    if colon == -1:
-                        raise NovelAIError(-1, f"Malformed data stream line: '{line}'")
+                    continue
 
-                    stream_data[line[:colon].strip()] = line[colon + 1 :].strip()
+                # no newline = partial line
+                if not line.endswith("\n"):
+                    partial_data = line
+                    continue
 
-                # TODO: replace by a meaningful error
-                assert "data" in stream_data
-                data = stream_data["data"]
+                # strip the newline
+                line = line[:-1]
 
-                if data.startswith("{") and data.endswith("}"):
-                    data = json.loads(data)
+                colon = line.find(":")
 
-                yield data
+                # starting with colon = ignore the line
+                if colon == 0:
+                    continue
 
-                content = chunk[event_pos:]
-            else:
-                # TODO: Is there no way to check for malformed chunks here ? Massively sucks.
-                #       .iter_chunks() doesn't help either, as the request doesn't fit in an HTTP chunk
-                content += chunk
+                # no colon = line is field, value is empty
+                field = line if colon == -1 else line[:colon]
+                value = "" if colon == -1 else line[colon + 1 :]
+
+                if field not in SSE_FIELDS:
+                    continue
+
+                if value.startswith(" "):
+                    value = value[1:]
+
+                modified = True
+
+                # multiple data fields = we merge them with a newline
+                if field == "data":
+                    sse_data["data"].append(value)
+                else:
+                    # ignore special handling of "retry" and NULL in "id"
+                    sse_data[field] = value
 
     @classmethod
     async def _parse_response(cls, rsp: ClientResponse):
@@ -109,12 +132,13 @@ class LowLevel:
         elif content_type == "application/x-zip-compressed":
             z = zipfile.ZipFile(io.BytesIO(await rsp.read()))
             for name in z.namelist():
-                yield z.read(name)
+                yield name, z.read(name)
             z.close()
 
         elif content_type == "text/event-stream":
-            async for e in cls._parse_event_stream(rsp):
-                yield e
+            async for e in cls._parse_sse_stream(rsp):
+                print(e)
+                yield e["data"]
 
         else:
             raise NovelAIError(-1, f"Unsupported type: {rsp.content_type}")
@@ -588,7 +612,7 @@ class LowLevel:
         :param model: Model to generate the image
         :param parameters: Parameters for the images
 
-        :return: Raw PNG image(s)
+        :return: (name, data) pairs for the raw PNG image(s)
         """
 
         assert_type(str, prompt=prompt)
@@ -613,7 +637,7 @@ class LowLevel:
         :param model: ControlNet model to use
         :param image: b64 encoded PNG image to get the mask of
 
-        :return: A raw PNG image
+        :return: A pair (name, data) for the raw PNG image
         """
 
         assert_type(ControlNetModel, model=model)
@@ -635,7 +659,7 @@ class LowLevel:
         :param height: Height of the starting image
         :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)
 
-        :return: A raw PNG image
+        :return: A pair (name, data) for the raw PNG image
         """
 
         assert_type(str, image=image)

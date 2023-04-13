@@ -64,7 +64,9 @@ disable = [
     # duplicate code between files (dumb how far it overreaches)
     "R0801",
     # too many/few methods/arguments/X (splitting just makes the code messier)
-    "R0902", "R0903", "R0904", "R0913", "R0914"
+    "R0902", "R0903", "R0904", "R0913", "R0914",
+    # too many branches (mostly sanitization and formatting)
+    "R0912"
 ]
 
 [tool.pylint.MASTER]

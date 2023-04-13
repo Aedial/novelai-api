@@ -1,3 +1,4 @@
+import json
 from hashlib import sha256
 from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Union
 
@@ -37,7 +38,7 @@ class HighLevel:
         :return: True if success
         """
 
-        assert assert_type(str, email=email)
+        assert_type(str, email=email)
 
         hashed_email = sha256(email.encode()).hexdigest() if send_mail else None
         key = get_access_key(email, password)
@@ -139,7 +140,9 @@ class HighLevel:
 
         if encrypt:
             if object_type in ("stories", "storycontent", "aimodules", "shelf"):
-                assert keystore is not None, "Keystore is not set, cannot encrypt data"
+                if keystore is None:
+                    raise ValueError("'keystore' is not set, cannot encrypt data")
+
                 encrypt_user_data(data, keystore)
             elif object_type in ("presets",):
                 compress_user_data(data)
@@ -202,10 +205,10 @@ class HighLevel:
         :return: Content that has been generated
         """
 
-        assert preset is not None, "Uninitialized preset"
-        assert (
-            preset.model == model
-        ), f"Preset {preset.name} (model {preset.model}) is not compatible with model {model}"
+        if preset is None:
+            raise ValueError("Uninitialized preset")
+        if preset.model != model:
+            raise ValueError(f"Preset '{preset.name}' (model {preset.model}) is not compatible with model {model}")
 
         preset_params = preset.to_settings()
         global_params = global_settings.to_settings(model)
@@ -226,9 +229,11 @@ class HighLevel:
                 bad_words = [bad_words]
 
             for i, bad_word in enumerate(bad_words):
-                assert isinstance(
-                    bad_word, BanList
-                ), f"Expected type 'BanList' for item #{i} of bad_words, but got '{type(bad_word)}'"
+                if not isinstance(bad_word, BanList):
+                    raise ValueError(
+                        f"Expected type 'BanList' for item #{i} of 'bad_words', " f"but got '{type(bad_word)}'"
+                    )
+
                 params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
 
         if biases is not None:
@@ -236,9 +241,9 @@ class HighLevel:
                 biases = [biases]
 
             for i, bias in enumerate(biases):
-                assert isinstance(
-                    bias, BiasGroup
-                ), f"Expected type 'BiasGroup' for item #{i} of biases, but got '{type(bias)}'"
+                if not isinstance(bias, BiasGroup):
+                    raise ValueError(f"Expected type 'BiasGroup' for item #{i} of 'biases', but got '{type(bias)}'")
+
                 params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
 
         # Delete the options that return an unknown error (success status code, but server error)
@@ -325,7 +330,7 @@ class HighLevel:
             True,
             **kwargs,
         ):
-            yield e
+            yield json.loads(e)
 
     async def generate_image(
         self, prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
