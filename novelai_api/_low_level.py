@@ -137,7 +137,6 @@ class LowLevel:
 
         elif content_type == "text/event-stream":
             async for e in cls._parse_sse_stream(rsp):
-                print(e)
                 yield e["data"]
 
         else:

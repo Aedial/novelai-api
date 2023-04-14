@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "novelai-api"
-version = "0.11.3"
+version = "0.11.4"
 description = "Python API for the NovelAI REST API"
 license = "MIT"
 authors = ["Aedial <aedial.dev@gmail.com>"]
