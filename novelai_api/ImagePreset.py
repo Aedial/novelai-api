@@ -129,8 +129,11 @@ class ImagePreset:
         "controlnet_condition": str,
         # model to use for the controlnet
         "controlnet_model": ControlNetModel,
-        # ???
-        "dynamic_thresholding": bool,
+        # https://twitter.com/Birchlabs/status/1582165379832348672
+        "decrisper": bool,
+        # TODO
+        # 'dynamic_thresholding_mimic_scale': (int, float),
+        # 'dynamic_thresholding_percentile': (int, float),
     }
 
     _DEFAULT = {
@@ -147,6 +150,7 @@ class ImagePreset:
         "uc": "",
         "smea": False,
         "smea_dyn": False,
+        "decrisper": False,
     }
 
     _settings: Dict[str, Any]
@@ -209,7 +213,7 @@ class ImagePreset:
         uc: str = settings.pop("uc")
         default_uc = self._UC_Presets[model][uc_preset]
         combined_uc = f"{default_uc}, {uc}" if uc else default_uc
-        settings["uc"] = combined_uc
+        settings["negative_prompt"] = combined_uc
 
         sampler: ImageSampler = settings.pop("sampler")
         settings["sampler"] = sampler.value
@@ -223,6 +227,8 @@ class ImagePreset:
         controlnet_model = settings.pop("controlnet_model", None)
         if controlnet_model is not None:
             settings["controlnet_model"] = self._CONTROLNET_MODELS[controlnet_model]
+
+        settings["dynamic_thresholding"] = settings.pop("decrisper")
 
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")
