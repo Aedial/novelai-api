@@ -1,13 +1,11 @@
+import pathlib
 from copy import deepcopy
-from enum import Enum, IntEnum
+from enum import Enum, EnumMeta, IntEnum
 from json import loads
-from os import listdir
-from os.path import abspath, dirname, exists, join
 from random import choice
 from typing import Any, Dict, List, NoReturn, Optional, Union
 
 
-# NOTE: the noqa are there because of Enum, because Enum's type inference sucks
 class Order(IntEnum):
     Temperature = 0
     Top_K = 1
@@ -36,12 +34,13 @@ ORDER_TO_NAME = {
 }
 
 
-def enum_contains(enum_class: Enum, value) -> bool:
+def enum_contains(enum_class: EnumMeta, value) -> bool:
     if not hasattr(enum_class, "enum_member_values"):
-        enum_class.enum_member_values = list(e.value for e in enum_class)  # noqa
+        enum_class.enum_member_values = list(e.value for e in enum_class)
 
     values = enum_class.enum_member_values
-    assert len(values), f"Empty enum class {enum_class}"
+    if len(values) == 0:
+        raise ValueError(f"Empty enum class: '{enum_class}'")
 
     return value in values
 
@@ -79,50 +78,70 @@ class _PresetMetaclass(type):
     _officials_values: Dict[str, List["Preset"]]
 
     def __getitem__(cls, model: Model):
-        assert isinstance(model, Model)
+        if not isinstance(model, Model):
+            raise ValueError(f"Expected instance of {type(Model)}, got type '{type(model)}'")
 
         return PresetView(model, cls._officials_values)
 
 
 class Preset(metaclass=_PresetMetaclass):
     # TODO
-    # do_sample                     boolean
-    # early_stopping                boolean
-    # num_beams                     number
-    # pad_token_id                  number
-    # bos_token_id                  number
-    # eos_token_id                  number
     # no_repeat_ngram_size          number
     # encoder_no_repeat_ngram_size	number
     # num_return_sequences          number
-    # max_time                      number
-    # num_beam_groups               number
     # get_hidden_states             boolean
     # next_word                     boolean
     # output_nonzero_probs          boolean
-    # generate_until_sentence       boolean
 
     _TYPE_MAPPING = {
+        # preset version, only relevant for .preset files
         "textGenerationSettingsVersion": int,
-        "temperature": (int, float),
-        "max_length": int,
-        "min_length": int,
-        "top_k": int,
-        "top_a": (int, float),
-        "top_p": (int, float),
-        "typical_p": (int, float),
-        "tail_free_sampling": (int, float),
-        "repetition_penalty": (int, float),
-        "repetition_penalty_range": int,
-        "repetition_penalty_slope": (int, float),
-        "repetition_penalty_frequency": (int, float),
-        "repetition_penalty_presence": (int, float),
-        "repetition_penalty_whitelist": list,
-        "length_penalty": (int, float),
-        "diversity_penalty": (int, float),
-        "order": list,
-        "eos_token_id": int,
+        # list of tokenized strings (List[List[int]]) that should stop the generation early
         "stop_sequences": list,
+        # generate up to 20 tokens after max_length if an end of sentence if found within these 20 tokens
+        "generate_until_sentence": bool,
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Randomness_(Temperature)
+        "temperature": (int, float),
+        # response length, if no interrupted by a Stop Sequence
+        "max_length": int,
+        # minimum number of token, if interrupted by a Stop Sequence
+        "min_length": int,
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Top-K_Sampling
+        "top_k": int,
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Top-A_Sampling
+        "top_a": (int, float),
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Nucleus_Sampling
+        "top_p": (int, float),
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Typical_Sampling (https://arxiv.org/pdf/2202.00666.pdf
+        "typical_p": (int, float),
+        # https://naidb.miraheze.org/wiki/Generation_Settings#Tail-Free_Sampling
+        "tail_free_sampling": (int, float),
+        # https://arxiv.org/pdf/1909.05858.pdf
+        "repetition_penalty": (int, float),
+        # range (in tokens) the repetition penalty covers (https://arxiv.org/pdf/1909.05858.pdf)
+        "repetition_penalty_range": int,
+        # https://arxiv.org/pdf/1909.05858.pdf
+        "repetition_penalty_slope": (int, float),
+        # https://platform.openai.com/docs/api-reference/parameter-details
+        "repetition_penalty_frequency": (int, float),
+        # https://platform.openai.com/docs/api-reference/parameter-details
+        "repetition_penalty_presence": (int, float),
+        # list of tokens that are excluded from the repetition penalty (useful for colors and the likes)
+        "repetition_penalty_whitelist": list,
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.length_penalty
+        "length_penalty": (int, float),
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.diversity_penalty
+        "diversity_penalty": (int, float),
+        # list of Order (List[Order | int]) to set the sampling order
+        "order": list,
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.pad_token_id
+        "pad_token_id": int,
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.bos_token_id
+        "bos_token_id": int,
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.eos_token_id
+        "eos_token_id": int,
+        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.max_time(float,
+        "max_time": int,
     }
 
     _officials: Dict[str, Dict[str, "Preset"]]
@@ -144,30 +163,33 @@ class Preset(metaclass=_PresetMetaclass):
         self._settings = {}
         self.update(settings)
 
-    def __setitem__(self, o: str, v: Any):
-        assert o in self._TYPE_MAPPING, f"'{o}' is not a valid setting"
-        assert isinstance(
-            v, self._TYPE_MAPPING[o]  # noqa
-        ), f"Expected type '{self._TYPE_MAPPING[o]}' for {o}, but got type '{type(v)}'"
+    def __setitem__(self, key: str, value: Any):
+        if key not in self._TYPE_MAPPING:
+            raise ValueError(f"'{key}' is not a valid setting")
 
-        if o == "order":
-            assert isinstance(v, list), f"Expected type 'List[int|Order] for order, but got type '{type(v)}'"
+        if isinstance(value, self._TYPE_MAPPING[key]):  # noqa (pycharm PY-36317)
+            ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
 
-            for i, e in enumerate(v):
-                assert isinstance(
-                    e, (int, Order)
-                ), f"Expected type 'int' or 'Order for order #{i}, but got type '{type(v[i])}'"
+        self._settings[key] = value
+
+        if key == "order":
+            if not isinstance(value, list):
+                raise ValueError(f"Expected type 'List[int|Order] for order, but got type '{type(value)}'")
+
+            for i, e in enumerate(value):
+                if not isinstance(e, (int, Order)):
+                    raise ValueError(f"Expected type 'int' or 'Order for order #{i}, but got type '{type(value[i])}'")
 
                 if isinstance(e, int):
-                    v[i] = Order(e)
+                    value[i] = Order(e)
 
-        self._settings[o] = v
+        self._settings[key] = value
 
-    def __contains__(self, o: str) -> bool:
-        return o in self._settings
+    def __contains__(self, key: str) -> bool:
+        return key in self._settings
 
-    def __getitem__(self, o: str) -> Optional[Any]:
-        return self._settings.get(o)
+    def __getitem__(self, key: str) -> Optional[Any]:
+        return self._settings.get(key)
 
     def __repr__(self) -> str:
         model = self.model.value if self.model is not None else "<?>"
@@ -177,9 +199,10 @@ class Preset(metaclass=_PresetMetaclass):
         for o in Order:
             name = ORDER_TO_NAME[o]
             enabled = kwargs.pop(name, False)
-            self._enabled[o.value] = enabled  # noqa
+            self._enabled[o.value] = enabled
 
-        assert len(kwargs) == 0, f"Invalid order name: {', '.join(kwargs)}"
+        if len(kwargs):
+            raise ValueError(f"Invalid order name: {', '.join(kwargs)}")
 
         return self
 
@@ -217,12 +240,12 @@ class Preset(metaclass=_PresetMetaclass):
         name = data["name"] if "name" in data else "<?>"
 
         model_name = data["model"] if "model" in data else ""
-        model = Model(model_name) if enum_contains(Model, model_name) else None  # noqa
+        model = Model(model_name) if enum_contains(Model, model_name) else None
 
         settings = data["parameters"] if "parameters" in data else {}
 
-        order = settings["order"] if "order" in settings else {}
-        settings["order"] = list(NAME_TO_ORDER[o["id"]] for o in order)
+        order = settings["order"] if "order" in settings else []
+        settings["order"] = [NAME_TO_ORDER[o["id"]] for o in order]
 
         # TODO: add support for token banning and bias in preset
         settings.pop("bad_words_ids", None)  # get rid of unsupported option
@@ -245,7 +268,7 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:
-        model_value: str = model.value  # noqa
+        model_value: str = model.value
 
         if name is None:
             preset = choice(cls._officials_values[model_value])
@@ -259,7 +282,7 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_default(cls, model: Model) -> Union["Preset", None]:
-        model_value: str = model.value  # noqa
+        model_value: str = model.value
 
         default = cls._defaults.get(model_value)
         if default is None:
@@ -282,20 +305,16 @@ def import_officials():
     for model in Model:
         model: Model
 
-        path = join(
-            dirname(abspath(__file__)),
-            "presets",
-            f"presets_{model.value.replace('-', '_')}",
-        )
+        path = pathlib.Path(__file__).parent / "presets" / f"presets_{model.value.replace('-', '_')}"
 
-        if exists(join(path, "default.txt")):
-            with open(join(path, "default.txt"), encoding="utf-8") as f:
+        if (path / "default.txt").exists():
+            with open(path / "default.txt", encoding="utf-8") as f:
                 cls._defaults[model.value] = f.read().splitlines()[0]
 
         officials = {}
-        for filename in listdir(path):
-            if filename.endswith(".preset"):
-                preset = cls.from_file(join(path, filename))
+        for filename in path.iterdir():
+            if filename.suffix == ".preset":
+                preset = cls.from_file(str(path / filename))
                 officials[preset.name] = preset
 
         cls._officials_values[model.value] = list(officials.values())
