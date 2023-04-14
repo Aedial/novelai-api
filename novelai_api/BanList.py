@@ -20,18 +20,24 @@ class BanList:
         self,
         *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str],
     ) -> "BanList":
-        for sequence in sequences:
+        for i, sequence in enumerate(sequences):
             if "sequence" in sequence:
                 sequence = sequence["sequence"]
             elif "sequences" in sequence:
                 sequence = sequence["sequences"][0]
 
             if not isinstance(sequence, str):
-                assert isinstance(sequence, list), f"Expected type 'List[int]' for sequence, but got '{type(sequence)}'"
-                for i, s in enumerate(sequence):
-                    assert isinstance(
-                        s, int
-                    ), f"Expected type 'int' for item #{i} of sequence, but got '{type(s)}: {sequence}'"
+                if not isinstance(sequence, list):
+                    raise ValueError(
+                        f"Expected type 'List[int]' for sequence #{i} of 'sequences', " f"but got '{type(sequence)}'"
+                    )
+
+                for j, s in enumerate(sequence):
+                    if not isinstance(s, int):
+                        raise ValueError(
+                            f"Expected type 'int' for item #{j} of sequence #{i} of 'sequences', "
+                            f"but got '{type(s)}': {sequence}"
+                        )
 
             self._sequences.append(sequence)
 

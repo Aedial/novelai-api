@@ -604,17 +604,20 @@ class GlobalSettings:
         for setting, default in self._DEFAULT_SETTINGS.items():
             self._settings[setting] = kwargs.pop(setting, default)
 
-        assert len(kwargs) == 0, f"Invalid global setting name: {', '.join(kwargs)}"
+        if kwargs:
+            raise ValueError(f"Invalid global setting name: {', '.join(kwargs)}")
 
-    def __setitem__(self, o: str, v: Any) -> None:
-        assert o in self._settings, f"Invalid setting: {o}"
+    def __setitem__(self, key: str, value: Any) -> None:
+        if key not in self._settings:
+            raise ValueError(f"Invalid setting: '{key}'")
 
-        self._settings[o] = v
+        self._settings[key] = value
 
-    def __getitem__(self, o: str) -> Any:
-        assert o in self._settings, f"Invalid setting: {o}"
+    def __getitem__(self, key: str) -> Any:
+        if key not in self._settings:
+            raise ValueError(f"Invalid setting: '{key}'")
 
-        return self._settings[o]
+        return self._settings[key]
 
     def copy(self):
         return GlobalSettings(**self._settings)

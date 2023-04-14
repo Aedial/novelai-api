@@ -32,31 +32,45 @@ class Keystore:
         self._compressed = False
 
     def __getitem__(self, key: str) -> bytes:
-        assert self._decrypted, "Can't get key from an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot get key from an encrypted keystore")
+
         return self._keystore[key]
 
     def __setitem__(self, key: str, val: bytes):
-        assert self._decrypted, "Can't set meta in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot set key in an encrypted keystore")
+
         self._keystore[key] = val
 
     def __contains__(self, key):
-        assert self._decrypted, "Can't set meta in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot find key in an encrypted keystore")
+
         return key in self._keystore
 
     def __delitem__(self, key):
-        assert self._decrypted, "Can't set meta in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot delete key from an encrypted keystore")
+
         del self._keystore[key]
 
     def __len__(self) -> int:
-        assert self._decrypted, "Can't set meta in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot get length of an encrypted keystore")
+
         return len(self._keystore)
 
     def __str__(self) -> str:
-        assert self._decrypted, "Can't set meta in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot show an encrypted keystore")
+
         return str(self._keystore)
 
     def create(self) -> str:
-        assert self._decrypted, "Can't set key in an encrypted keystore"
+        if not self._decrypted:
+            raise ValueError("Cannot set key in an encrypted keystore")
+
         meta = next(iter(self._keystore.keys()))
         while meta in self._keystore:
             meta = str(uuid4())

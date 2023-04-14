@@ -12,6 +12,7 @@ from nacl.exceptions import CryptoError
 from nacl.secret import SecretBox
 
 from novelai_api.Keystore import Keystore
+from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
 from novelai_api.Tokenizer import Tokenizer
 
@@ -151,9 +152,11 @@ def decompress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     if not isinstance(items, (list, tuple)):
         items = [items]
 
-    for item in items:
-        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
-        assert "data" in item, "Expected key 'data' in item"
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValueError(f"Expected type 'dict' for item #{i} of 'items', got type '{type(item)}'")
+        if "data" not in item:
+            raise ValueError(f"Expected key 'data' in item #{i} of 'items'")
 
         # skip already decompressed data
         if item.get("decrypted"):
@@ -184,9 +187,12 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
     if not isinstance(items, (list, tuple)):
         items = [items]
 
-    for item in items:
-        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
-        assert "data" in item, "Expected key 'data' in item"
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValueError(f"Expected type 'dict' for item #{i} of 'items', got type '{type(item)}'")
+
+        if "data" not in item:
+            raise ValueError(f"Expected key 'data' in item #{i} of 'items'")
 
         if "decrypted" in item:
             if item["decrypted"]:
@@ -216,35 +222,36 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
     if not isinstance(items, (list, tuple)):
         items = [items]
 
-    for item in items:
-        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValueError(f"Expected type 'dict' for item #{i} of 'items', got type '{type(item)}'")
 
         if item.get("decrypted"):
             continue
 
-        # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-        assert "data" in item, "Expected key 'data' in item"
-        assert "meta" in item, "Expected key 'meta' in item"
+        if "data" not in item:
+            raise ValueError(f"Expected key 'data' in item #{i} of 'items'")
+        if "meta" not in item:
+            raise ValueError(f"Expected key 'meta' in item #{i} of 'items'")
 
         meta = item["meta"]
-        #       assert meta in keystore
         if meta not in keystore:
-            print("Meta missing:", meta)
-        else:
-            key = keystore[meta]
+            raise NovelAIError(-1, f"Meta of item #{i} ({meta}) missing from keystore")
 
-            data, nonce, is_compressed = decrypt_data(b64decode(item["data"]), key)
-            if data is not None:
-                try:
-                    data = json.loads(data)
-                    item["data"] = data
-                    item["nonce"] = nonce
-                    item["decrypted"] = True
-                    item["compressed"] = is_compressed
-                    continue
+        key = keystore[meta]
 
-                except json.JSONDecodeError:
-                    pass
+        data, nonce, is_compressed = decrypt_data(b64decode(item["data"]), key)
+        if data is not None:
+            try:
+                data = json.loads(data)
+                item["data"] = data
+                item["nonce"] = nonce
+                item["decrypted"] = True
+                item["compressed"] = is_compressed
+                continue
+
+            except json.JSONDecodeError:
+                pass
 
         item["decrypted"] = False
 
@@ -263,30 +270,33 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
     if not isinstance(items, (list, tuple)):
         items = [items]
 
-    for item in items:
-        assert isinstance(item, dict), f"Expected type 'dict' for item of 'items', got type '{type(item)}'"
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValueError(f"Expected type 'dict' for item #{i} of 'items', got type '{type(item)}'")
 
         if "decrypted" in item:
             if item["decrypted"]:
-                # FIXME: replace the assert by meaningful errors ? Expect the data to be right ?
-                assert "data" in item, "Expected key 'data' in item"
-                assert "meta" in item, "Expected key 'meta' in item"
-                assert "nonce" in item, "Expected key 'nonce' in item"
-                assert "compressed" in item, "Expected key 'compressed' in item"
+                if "data" not in item:
+                    raise ValueError(f"Expected key 'data' in item #{i} of 'items'")
+                if "meta" not in item:
+                    raise ValueError(f"Expected key 'meta' in item #{i} of 'items'")
+                if "nonce" not in item:
+                    raise ValueError(f"Expected key 'nonce' in item #{i} of 'items'")
+                if "compressed" not in item:
+                    raise ValueError(f"Expected key 'compressed' in item #{i} of 'items'")
 
                 meta = item["meta"]
-                #            assert meta in keystore["keys"]
                 if meta not in keystore:
-                    print("Meta missing:", meta)
-                else:
-                    key = keystore[meta]
+                    raise NovelAIError(-1, f"Meta of item #{i} ({meta}) missing from keystore")
 
-                    data = json.dumps(item["data"], separators=(",", ":"), ensure_ascii=False)
-                    data = b64encode(encrypt_data(data, key, item["nonce"], item["compressed"])).decode()
+                key = keystore[meta]
 
-                    item["data"] = data
-                    del item["nonce"]
-                    del item["compressed"]
+                data = json.dumps(item["data"], separators=(",", ":"), ensure_ascii=False)
+                data = b64encode(encrypt_data(data, key, item["nonce"], item["compressed"])).decode()
+
+                item["data"] = data
+                del item["nonce"]
+                del item["compressed"]
 
             del item["decrypted"]
 
@@ -344,7 +354,9 @@ def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
     if isinstance(o, list):
         return o
 
-    assert isinstance(o, str)
+    if not isinstance(o, str):
+        raise ValueError(f"Expected type 'str' for 'o', got type '{type(o)}'")
+
     return Tokenizer.encode(model, o)
 
 

@@ -31,9 +31,8 @@ class NovelAIAPI:
 
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
         # variable passing
-        assert session is None or isinstance(
-            session, ClientSession
-        ), f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'"
+        if session is not None and not isinstance(session, ClientSession):
+            raise ValueError(f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'")
 
         # no session = synchronous
         self.logger = Logger("NovelAI_API") if logger is None else logger
@@ -55,9 +54,8 @@ class NovelAIAPI:
         Attach a ClientSession, making the requests asynchronous
         """
 
-        assert isinstance(
-            session, ClientSession
-        ), f"Expected type 'ClientSession' for session, but got type '{type(session)}'"
+        if not isinstance(session, ClientSession):
+            raise ValueError(f"Expected type 'ClientSession' for session, but got type '{type(session)}'")
 
         self.session = session
 

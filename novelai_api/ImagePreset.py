@@ -164,7 +164,7 @@ class ImagePreset:
         if key not in self._TYPE_MAPPING:
             raise ValueError(f"'{key}' is not a valid setting")
 
-        if isinstance(value, self._TYPE_MAPPING[key]):
+        if isinstance(value, self._TYPE_MAPPING[key]):  # noqa (pycharm PY-36317)
             ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
 
         self._settings[key] = value
@@ -198,8 +198,10 @@ class ImagePreset:
             resolution = resolution.value
         settings["width"], settings["height"] = resolution
 
+        # seed 0 = random seed for the backend, but it is not set in metadata, so we set it ourself to be safe
+        # the seed of the ith image is seed + i, so we reserve space for them (makes valid images with invalid metadata)
         if settings["seed"] == 0:
-            settings["seed"] = random.randint(1, 0xFFFFFFFF)
+            settings["seed"] = random.randint(1, 0xFFFFFFFF - settings["n_samples"] + 1)
             self.last_seed = settings["seed"]
 
         uc_preset: UCPreset = settings.pop("uc_preset")
