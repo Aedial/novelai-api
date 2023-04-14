@@ -17,7 +17,7 @@ async def main():
 
         for controlnet in ControlNetModel:
             try:
-                img = await api.low_level.generate_controlnet_mask(controlnet, image)
+                _, img = await api.low_level.generate_controlnet_mask(controlnet, image)
                 with open(f"image_{controlnet.value}.png", "wb") as f:
                     f.write(img)
 

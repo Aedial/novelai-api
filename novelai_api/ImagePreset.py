@@ -13,7 +13,7 @@ class ImageModel(enum.Enum):
 
 
 class ControlNetModel(enum.Enum):
-    Palette_Lock = "hed"
+    Palette_Swap = "hed"
     Form_Lock = "midas"
     Scrible = "fake_scribble"
     Building_Control = "mlsd"
@@ -90,7 +90,7 @@ class ImagePreset:
     }
 
     _CONTROLNET_MODELS = {
-        ControlNetModel.Palette_Lock: "hed",
+        ControlNetModel.Palette_Swap: "hed",
         ControlNetModel.Form_Lock: "depth",
         ControlNetModel.Scrible: "scribble",
         ControlNetModel.Building_Control: "mlsd",

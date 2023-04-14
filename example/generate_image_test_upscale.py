@@ -17,7 +17,7 @@ async def main():
         # disable the type check on scale in _low_level.py to check on float values
         for scale in (2, 2.5, 3, 3.5, 4, 4.5, 5):
             try:
-                img = await api.low_level.upscale_image(image, 512, 768, scale)
+                _, img = await api.low_level.upscale_image(image, 512, 768, scale)
                 with open(f"image_upscaled_{scale}.png", "wb") as f:
                     f.write(img)
 

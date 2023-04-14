@@ -17,7 +17,7 @@ async def main():
             preset["sampler"] = sampler
 
             try:
-                async for img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
+                async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
                     with open(f"image_{sampler.value}.png", "wb") as f:
                         f.write(img)
 
