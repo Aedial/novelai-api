@@ -191,7 +191,7 @@ class HighLevel:
         **kwargs,
     ):
         """
-        Generate content from an AI on the NovelAI server which support streaming
+        Generate content from an AI on the NovelAI server, with streaming support
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -201,6 +201,7 @@ class HighLevel:
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation
         :param stream: Use data streaming for the response
+        :param kwargs: Additional parameters to pass to the requests
 
         :return: Content that has been generated
         """
@@ -268,7 +269,7 @@ class HighLevel:
         **kwargs,
     ) -> Dict[str, Any]:
         """
-        Generate text from an AI on the NovelAI server which support streaming
+        Generate text from an AI on the NovelAI server. The text is returned at once, when generation is finished.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -277,6 +278,7 @@ class HighLevel:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation
+        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
         """
@@ -306,7 +308,7 @@ class HighLevel:
         **kwargs,
     ) -> AsyncIterable[Dict[str, Any]]:
         """
-        Generate text from an AI on the NovelAI server
+        Generate text from an AI on the NovelAI server. The text is returned one token at a time, as it is generated.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -315,6 +317,7 @@ class HighLevel:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation
+        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
         """
@@ -334,13 +337,14 @@ class HighLevel:
 
     async def generate_image(
         self, prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
-    ) -> AsyncIterable[bytes]:
+    ) -> AsyncIterable[Union[str, bytes]]:
         """
         Generate image from an AI on the NovelAI server
 
         :param prompt: Prompt to give to the AI (raw text describing the wanted image)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
+        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
         """
@@ -348,11 +352,12 @@ class HighLevel:
         settings = preset.to_settings(model)
         settings.update(kwargs)
 
-        uc = settings["uc"]
+        # TODO: allow to disable the removal of nsfw ? How to tackle this cleanly
+        uc = settings["negative_prompt"]
         if "nsfw" in prompt and uc.startswith("nsfw,"):
-            settings["uc"] = uc[len("nsfw,") :].strip()
+            settings["negative_prompt"] = uc[len("nsfw,") :].strip()
 
-        quality_toggle = preset["quality_toggle"]
+        quality_toggle = settings["qualityToggle"]
         if quality_toggle:
             prompt = f"masterpiece, best quality, {prompt}"
 
