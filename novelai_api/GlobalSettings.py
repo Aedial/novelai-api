@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.Preset import Model
@@ -6,6 +6,7 @@ from novelai_api.Tokenizer import Tokenizer
 
 
 class GlobalSettings:
+    # TODO: store bracket ban in a file
     _BRACKETS = {
         "gpt2": [
             [58],
@@ -594,12 +595,25 @@ class GlobalSettings:
         "ban_ambiguous_genji_tokens": True,
     }
 
+    # type completion for __setitem__ and __getitem__
+    if TYPE_CHECKING:
+        # generate up to 20 tokens after max_length if an end of sentence if found within these 20 tokens
+        generate_until_sentence: bool
+        # number of logprobs to return for each token. Set to NO_LOGPROBS to disable
+        num_logprobs: int
+        # apply the BRACKET biases
+        ban_brackets: bool
+        # apply the DINKUS_ASTERISM biases
+        bias_dinkus_asterism: bool
+        # apply the GENJI_AMBIGUOUS_TOKENS if model is Genji
+        ban_ambiguous_genji_tokens: bool
+
     NO_LOGPROBS = -1
 
     _settings: Dict[str, Any]
 
     def __init__(self, **kwargs):
-        self._settings = {}
+        object.__setattr__(self, "_settings", {})
 
         for setting, default in self._DEFAULT_SETTINGS.items():
             self._settings[setting] = kwargs.pop(setting, default)
@@ -618,6 +632,19 @@ class GlobalSettings:
             raise ValueError(f"Invalid setting: '{key}'")
 
         return self._settings[key]
+
+    # give dot access capabilities to the object
+    def __setattr__(self, key, value):
+        if key in self._settings:
+            self[key] = value
+        else:
+            object.__setattr__(self, key, value)
+
+    def __getattr__(self, key):
+        if key in self._settings:
+            return self[key]
+
+        return object.__getattribute__(self, key)
 
     def copy(self):
         return GlobalSettings(**self._settings)

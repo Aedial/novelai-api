@@ -3,7 +3,7 @@ import enum
 import json
 import math
 import random
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
 
 class ImageModel(enum.Enum):
@@ -38,24 +38,25 @@ class ImageSampler(enum.Enum):
     k_lms = "k_lms"
     k_euler = "k_euler"
     k_euler_ancestral = "k_euler_ancestral"
-    k_heun = "k_heun"  # api doesn't work
-    plms = "plms"  # api2 doesn't work
+    k_heun = "k_heun"
+    plms = "plms"  # doesn't work
     ddim = "ddim"
 
-    nai_smea = "nai_smea"  # api, api2 doesn't work
-    nai_smea_dyn = "nai_smea_dyn"  # api doesn't work
+    nai_smea = "nai_smea"  # doesn't work
+    nai_smea_dyn = "nai_smea_dyn"
 
     k_dpmpp_2m = "k_dpmpp_2m"
     k_dpmpp_2s_ancestral = "k_dpmpp_2s_ancestral"
     k_dpmpp_sde = "k_dpmpp_sde"
     k_dpm_2 = "k_dpm_2"
-    k_dpm_2_ancestral = "k_dpm_2_ancestral"  # api doesn't work
-    k_dpm_adaptive = "k_dpm_adaptive"  # api doesn't work
+    k_dpm_2_ancestral = "k_dpm_2_ancestral"
+    k_dpm_adaptive = "k_dpm_adaptive"
     k_dpm_fast = "k_dpm_fast"
 
 
 class UCPreset(enum.Enum):
-    Preset_Low_Quality_Bad_Anatomy = 2
+    Preset_Low_Quality_Bad_Anatomy = 3
+    Preset_Bad_Anatomy = 2
     Preset_Low_Quality = 1
     Preset_None = 0
     Preset_Custom = -1
@@ -66,24 +67,29 @@ class ImagePreset:
         ImageModel.Anime_Curated: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy: "nsfw, lowres, bad anatomy, bad hands, text, error, "
             "missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, "
-            "jpeg artifacts, signature, watermark, twitter username, blurry",
+            "jpeg artifacts, signature, watermark, username, blurry",
+            UCPreset.Preset_Bad_Anatomy: None,
             UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres",
             UCPreset.Preset_Custom: "",
         },
         ImageModel.Anime_Full: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy: "lowres, bad anatomy, bad hands, text, error, missing fingers, "
-            "extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, "
-            "signature, watermark, username, blurry",
-            UCPreset.Preset_Low_Quality: "lowres, text, cropped, worst quality, low quality, normal quality, "
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: "nsfw, lowres, bad anatomy, bad hands, text, error, "
+            "missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, username, blurry",
+            UCPreset.Preset_Bad_Anatomy: None,
+            UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
+            "jpeg artifacts, signature, watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres",
             UCPreset.Preset_Custom: "",
         },
         ImageModel.Furry: {
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: None,
             UCPreset.Preset_Low_Quality: "nsfw, worst quality, low quality, what has science done, what, "
             "nightmare fuel, eldritch horror, where is your god now, why",
+            UCPreset.Preset_Bad_Anatomy: "{worst quality}, low quality, distracting watermark, [nightmare fuel], "
+            "{{unfinished}}, deformed, outline, pattern, simple background",
             UCPreset.Preset_None: "low res",
             UCPreset.Preset_Custom: "",
         },
@@ -99,42 +105,66 @@ class ImagePreset:
 
     _TYPE_MAPPING = {
         "quality_toggle": bool,
-        # (width, height)
         "resolution": (ImageResolution, tuple),
-        # default UC to prepend to the uc
         "uc_preset": UCPreset,
-        # number of images to return
         "n_samples": int,
-        # random seed
         "seed": int,
-        # see official docs
         "sampler": ImageSampler,
-        # see official docs
         "noise": (int, float),
-        # 0-1 factor to which steps are multiplied in img2img
         "strength": (int, float),
-        # see official docs
         "scale": (int, float),
-        # see official docs
         "steps": int,
-        # Undesired Content
         "uc": str,
-        # use SMEA mode
         "smea": bool,
-        # use DYN mode for SMEA
         "smea_dyn": bool,
-        # png image b64 encoded for img2img
         "image": str,
-        # controlnet mask gotten by the generate_controlnet_mask method
         "controlnet_condition": str,
-        # model to use for the controlnet
         "controlnet_model": ControlNetModel,
-        # https://twitter.com/Birchlabs/status/1582165379832348672
         "decrisper": bool,
         # TODO
-        # 'dynamic_thresholding_mimic_scale': (int, float),
-        # 'dynamic_thresholding_percentile': (int, float),
+        # "dynamic_thresholding_mimic_scale": (int, float),
+        # "dynamic_thresholding_percentile": (int, float),
     }
+
+    # type completion for __setitem__ and __getitem__
+    if TYPE_CHECKING:
+        # https://docs.novelai.net/image/qualitytags.html
+        quality_toggle: bool
+        # resolution of the image to generate as ImageResolution or a (width, height) tuple
+        resolution: Union[ImageResolution, Tuple[int, int]]
+        # default UC to prepend to the UC
+        uc_preset: UCPreset
+        # number of images to return
+        n_samples: int
+        # random seed to use for the image. The ith image has seed + i for seed
+        seed: int
+        # https://docs.novelai.net/image/sampling.html
+        sampler: ImageSampler
+        # https://docs.novelai.net/image/strengthnoise.html
+        noise: float
+        # https://docs.novelai.net/image/strengthnoise.html
+        strength: float
+        # https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
+        scale: float
+        # https://docs.novelai.net/image/stepsguidance.html
+        steps: int
+        # https://docs.novelai.net/image/undesiredcontent.html
+        uc: str
+        # enable SMEA for any sampler (makes Large+ generations
+        smea: bool
+        # enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
+        smea_dyn: bool
+        # b64-encoded png image for img2img
+        image: str
+        # controlnet mask gotten by the generate_controlnet_mask method
+        controlnet_condition: str
+        # model to use for the controlnet
+        controlnet_model: ControlNetModel
+        # reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
+        decrisper: bool
+        # TODO
+        # dynamic_thresholding_mimic_scale: float
+        # dynamic_thresholding_percentile: float
 
     _DEFAULT = {
         "quality_toggle": True,
@@ -159,10 +189,10 @@ class ImagePreset:
     last_seed: int
 
     def __init__(self, **kwargs):
-        self._settings = self._DEFAULT.copy()
+        object.__setattr__(self, "_settings", self._DEFAULT.copy())
         self.update(kwargs)
 
-        self.last_seed = 0
+        object.__setattr__(self, "last_seed", 0)
 
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:
@@ -173,11 +203,17 @@ class ImagePreset:
 
         self._settings[key] = value
 
+    def __getitem__(self, key: str):
+        return self._settings[key]
+
     def __delitem__(self, key):
         if key in self._DEFAULT:
-            raise ValueError(f"{key} is a default setting, set it instead of deleting")
+            raise ValueError(f"'{key}' is a default setting, set it instead of deleting")
 
         del self._settings[key]
+
+    def __contains__(self, key: str):
+        return key in self._settings
 
     def update(self, values: Dict[str, Any]) -> "ImagePreset":
         for k, v in values.items():
@@ -188,18 +224,31 @@ class ImagePreset:
     def copy(self) -> "ImagePreset":
         return ImagePreset(**self._settings)
 
-    def __contains__(self, o: str):
-        return o in self._settings
+    # give dot access capabilities to the object
+    def __setattr__(self, key, value):
+        if key in self._settings:
+            self[key] = value
+        else:
+            object.__setattr__(self, key, value)
 
-    def __getitem__(self, o: str):
-        return self._settings[o]
+    def __getattr__(self, key):
+        if key in self._settings:
+            return self[key]
+
+        return object.__getattribute__(self, key)
+
+    def __delattr__(self, name):
+        if name in self._settings:
+            del self[name]
+        else:
+            object.__delattr__(self, name)
 
     def to_settings(self, model: ImageModel) -> Dict[str, Any]:
         settings = copy.deepcopy(self._settings)
 
-        resolution = settings.pop("resolution")
+        resolution: Union[ImageResolution, Tuple[int, int]] = settings.pop("resolution")
         if isinstance(resolution, ImageResolution):
-            resolution = resolution.value
+            resolution: Tuple[int, int] = resolution.value
         settings["width"], settings["height"] = resolution
 
         # seed 0 = random seed for the backend, but it is not set in metadata, so we set it ourself to be safe
@@ -212,6 +261,9 @@ class ImagePreset:
 
         uc: str = settings.pop("uc")
         default_uc = self._UC_Presets[model][uc_preset]
+        if default_uc is None:
+            raise ValueError(f"Preset '{uc_preset.name}' is not valid for model '{model.value}'")
+
         combined_uc = f"{default_uc}, {uc}" if uc else default_uc
         settings["negative_prompt"] = combined_uc
 
@@ -224,7 +276,7 @@ class ImagePreset:
             if settings.pop("smea_dyn", False):
                 settings["sm_dyn"] = True
 
-        controlnet_model = settings.pop("controlnet_model", None)
+        controlnet_model: Optional[ControlNetModel] = settings.pop("controlnet_model", None)
         if controlnet_model is not None:
             settings["controlnet_model"] = self._CONTROLNET_MODELS[controlnet_model]
 
@@ -237,10 +289,10 @@ class ImagePreset:
         return settings
 
     def get_max_n_samples(self):
-        resolution = self._settings["resolution"]
+        resolution: Union[ImageResolution, Tuple[int, int]] = self._settings["resolution"]
 
         if isinstance(resolution, ImageResolution):
-            resolution = resolution.value
+            resolution: Tuple[int, int] = resolution.value
 
         w, h = resolution
 
@@ -259,23 +311,27 @@ class ImagePreset:
         return 1
 
     def calculate_cost(self, is_opus: bool):
-        steps = self._settings["steps"]
-        n_samples = self._settings["n_samples"]
-        resolution = self._settings["resolution"]
+        """
+        Calculate the cost (in Anlas) of generating with the current configuration
+
+        :param is_opus: Is the subscription tier Opus ? Account for free generations if so
+        """
+        steps: int = self._settings["steps"]
+        n_samples: int = self._settings["n_samples"]
+        resolution: Union[ImageResolution, Tuple[int, int]] = self._settings["resolution"]
 
         if isinstance(resolution, ImageResolution):
-            resolution = resolution.value
+            resolution: Tuple[int, int] = resolution.value
 
         w, h = resolution
 
-        if is_opus and n_samples == 1 and steps <= 28 and w * h <= 640 * 640:
-            return 0
+        opus_discount = is_opus & steps <= 28 and w * h <= 640 * 640
 
         r = w * h / 1024 / 1024
         per_step = (15.266497014243718 * math.exp(r * 0.6326248927474729) - 15.225164493059737) / 28
         per_sample = max(math.ceil(per_step * steps), 2)
 
-        return per_sample * n_samples
+        return per_sample * (n_samples - int(opus_discount))
 
     @classmethod
     def from_file(cls, path: str) -> "ImagePreset":
