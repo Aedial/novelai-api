@@ -2,7 +2,7 @@ import enum
 import io
 import operator
 import zipfile
-from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Union
+from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Tuple, Union
 from urllib.parse import quote, urlencode
 
 from aiohttp import ClientSession
@@ -546,7 +546,7 @@ class LowLevel:
         """
         Generate the Text-to-Speech of :ref: `text` using the given seed and voice
 
-        :param text: Text to synthetize into voice
+        :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)
         :param seed: Person to use the voice of
         :param voice: Index of the voice to use
         :param opus: True for WebM format, False for mp3 format
@@ -592,7 +592,7 @@ class LowLevel:
 
         query = urlencode(
             {
-                "model": model,
+                "model": model.value,
                 "prompt": tag,
             },
             quote_via=quote,
@@ -603,9 +603,11 @@ class LowLevel:
 
             return content
 
-    async def generate_image(self, prompt: str, model: ImageModel, parameters: Dict[str, Any]) -> AsyncIterator[bytes]:
+    async def generate_image(
+        self, prompt: str, model: ImageModel, parameters: Dict[str, Any]
+    ) -> AsyncIterator[Tuple[str, bytes]]:
         """
-        Generate one or multiple images
+        Generate one or multiple image(s)
 
         :param prompt: Prompt for the image
         :param model: Model to generate the image
@@ -629,7 +631,7 @@ class LowLevel:
 
             yield content
 
-    async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> bytes:
+    async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> Tuple[str, bytes]:
         """
         Get the ControlNet's mask for the image. Used for ImageSampler["controlnet_condition"]
 
@@ -649,7 +651,7 @@ class LowLevel:
 
             return content
 
-    async def upscale_image(self, image: str, width: int, height: int, scale: int) -> bytes:
+    async def upscale_image(self, image: str, width: int, height: int, scale: int) -> Tuple[str, bytes]:
         """
         Upscale the image. Afaik, the only allowed values for scale are 2 and 4.
 
