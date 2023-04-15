@@ -1,4 +1,5 @@
 from asyncio import run
+from pathlib import Path
 
 from boilerplate import API
 
@@ -7,6 +8,9 @@ tts_file = "tts.mp3"
 
 
 async def main():
+    d = Path("results")
+    d.mkdir(exist_ok=True)
+
     async with API() as api_handler:
         api = api_handler.api
         logger = api_handler.logger
@@ -26,7 +30,7 @@ async def main():
         logger.info(f"Generating a tts voice for {len(text)} characters of text")
 
         tts = await api.low_level.generate_voice(text, voice, seed, opus, version)
-        with open(tts_file, "wb") as f:
+        with open(d / tts_file, "wb") as f:
             f.write(tts)
 
         logger.info(f"TTS saved in {tts_file}")

@@ -221,19 +221,19 @@ class Preset(metaclass=_PresetMetaclass):
 
     # give dot access capabilities to the object
     def __setattr__(self, key, value):
-        if key in self._settings:
+        if key in self._TYPE_MAPPING:
             self[key] = value
         else:
             object.__setattr__(self, key, value)
 
     def __getattr__(self, key):
-        if key in self._settings:
+        if key in self._TYPE_MAPPING:
             return self[key]
 
         return object.__getattribute__(self, key)
 
     def __delattr__(self, name):
-        if name in self._settings:
+        if name in self._TYPE_MAPPING:
             del self[name]
         else:
             object.__delattr__(self, name)

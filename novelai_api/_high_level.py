@@ -5,7 +5,7 @@ from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Un
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.GlobalSettings import GlobalSettings
-from novelai_api.ImagePreset import ImageModel, ImagePreset
+from novelai_api.ImagePreset import ImageGenerationType, ImageModel, ImagePreset
 from novelai_api.Keystore import Keystore
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
@@ -336,7 +336,12 @@ class HighLevel:
             yield json.loads(e)
 
     async def generate_image(
-        self, prompt: str, model: ImageModel, preset: ImagePreset, **kwargs
+        self,
+        prompt: str,
+        model: ImageModel,
+        preset: ImagePreset,
+        action: ImageGenerationType = ImageGenerationType.NORMAL,
+        **kwargs,
     ) -> AsyncIterable[Union[str, bytes]]:
         """
         Generate image from an AI on the NovelAI server
@@ -344,6 +349,7 @@ class HighLevel:
         :param prompt: Prompt to give to the AI (raw text describing the wanted image)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
+        :param action: Type of image generation to use
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
@@ -361,5 +367,5 @@ class HighLevel:
         if quality_toggle:
             prompt = f"masterpiece, best quality, {prompt}"
 
-        async for e in self._parent.low_level.generate_image(prompt, model, settings):
+        async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
             yield e

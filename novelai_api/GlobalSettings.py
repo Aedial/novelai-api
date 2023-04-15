@@ -622,26 +622,26 @@ class GlobalSettings:
             raise ValueError(f"Invalid global setting name: {', '.join(kwargs)}")
 
     def __setitem__(self, key: str, value: Any) -> None:
-        if key not in self._settings:
+        if key not in self._DEFAULT_SETTINGS:
             raise ValueError(f"Invalid setting: '{key}'")
 
         self._settings[key] = value
 
     def __getitem__(self, key: str) -> Any:
-        if key not in self._settings:
+        if key not in self._DEFAULT_SETTINGS:
             raise ValueError(f"Invalid setting: '{key}'")
 
         return self._settings[key]
 
     # give dot access capabilities to the object
     def __setattr__(self, key, value):
-        if key in self._settings:
+        if key in self._DEFAULT_SETTINGS:
             self[key] = value
         else:
             object.__setattr__(self, key, value)
 
     def __getattr__(self, key):
-        if key in self._settings:
+        if key in self._DEFAULT_SETTINGS:
             return self[key]
 
         return object.__getattribute__(self, key)

@@ -11,6 +11,8 @@ class ImageModel(enum.Enum):
     Anime_Full = "nai-diffusion"
     Furry = "nai-diffusion-furry"
 
+    Anime_Inpainting = "anime-diffusion-inpainting"
+
 
 class ControlNetModel(enum.Enum):
     Palette_Swap = "hed"
@@ -55,11 +57,15 @@ class ImageSampler(enum.Enum):
 
 
 class UCPreset(enum.Enum):
-    Preset_Low_Quality_Bad_Anatomy = 3
-    Preset_Bad_Anatomy = 2
+    Preset_Low_Quality_Bad_Anatomy = 0
     Preset_Low_Quality = 1
-    Preset_None = 0
-    Preset_Custom = -1
+    Preset_Bad_Anatomy = 2
+    Preset_None = 3
+
+
+class ImageGenerationType(enum.Enum):
+    NORMAL = "generate"
+    IMG2IMG = "img2img"
 
 
 class ImagePreset:
@@ -72,7 +78,6 @@ class ImagePreset:
             UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres",
-            UCPreset.Preset_Custom: "",
         },
         ImageModel.Anime_Full: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy: "nsfw, lowres, bad anatomy, bad hands, text, error, "
@@ -82,7 +87,6 @@ class ImagePreset:
             UCPreset.Preset_Low_Quality: "nsfw, lowres, text, cropped, worst quality, low quality, normal quality, "
             "jpeg artifacts, signature, watermark, twitter username, blurry",
             UCPreset.Preset_None: "lowres",
-            UCPreset.Preset_Custom: "",
         },
         ImageModel.Furry: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy: None,
@@ -91,7 +95,6 @@ class ImagePreset:
             UCPreset.Preset_Bad_Anatomy: "{worst quality}, low quality, distracting watermark, [nightmare fuel], "
             "{{unfinished}}, deformed, outline, pattern, simple background",
             UCPreset.Preset_None: "low res",
-            UCPreset.Preset_Custom: "",
         },
     }
 
@@ -120,6 +123,7 @@ class ImagePreset:
         "image": str,
         "controlnet_condition": str,
         "controlnet_model": ControlNetModel,
+        "controlnet_strength": (int, float),
         "decrisper": bool,
         # TODO
         # "dynamic_thresholding_mimic_scale": (int, float),
@@ -133,7 +137,7 @@ class ImagePreset:
         # resolution of the image to generate as ImageResolution or a (width, height) tuple
         resolution: Union[ImageResolution, Tuple[int, int]]
         # default UC to prepend to the UC
-        uc_preset: UCPreset
+        uc_preset: Union[UCPreset, None]
         # number of images to return
         n_samples: int
         # random seed to use for the image. The ith image has seed + i for seed
@@ -160,6 +164,8 @@ class ImagePreset:
         controlnet_condition: str
         # model to use for the controlnet
         controlnet_model: ControlNetModel
+        # Influence of the chosen controlnet on the image
+        controlnet_strength: float
         # reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
         decrisper: bool
         # TODO
@@ -167,20 +173,20 @@ class ImagePreset:
         # dynamic_thresholding_percentile: float
 
     _DEFAULT = {
+        "legacy": False,
         "quality_toggle": True,
         "resolution": ImageResolution.Normal_Portrait,
         "uc_preset": UCPreset.Preset_Low_Quality_Bad_Anatomy,
         "n_samples": 1,
         "seed": 0,
         "sampler": ImageSampler.k_euler_ancestral,
-        "noise": 0.2,
-        "strength": 0.7,
         "steps": 28,
         "scale": 11,
         "uc": "",
         "smea": False,
         "smea_dyn": False,
         "decrisper": False,
+        "controlnet_strength": 1.0,
     }
 
     _settings: Dict[str, Any]
@@ -226,19 +232,19 @@ class ImagePreset:
 
     # give dot access capabilities to the object
     def __setattr__(self, key, value):
-        if key in self._settings:
+        if key in self._TYPE_MAPPING:
             self[key] = value
         else:
             object.__setattr__(self, key, value)
 
     def __getattr__(self, key):
-        if key in self._settings:
+        if key in self._TYPE_MAPPING:
             return self[key]
 
         return object.__getattribute__(self, key)
 
     def __delattr__(self, name):
-        if name in self._settings:
+        if name in self._TYPE_MAPPING:
             del self[name]
         else:
             object.__delattr__(self, name)
@@ -253,28 +259,30 @@ class ImagePreset:
 
         # seed 0 = random seed for the backend, but it is not set in metadata, so we set it ourself to be safe
         # the seed of the ith image is seed + i, so we reserve space for them (makes valid images with invalid metadata)
-        if settings["seed"] == 0:
-            settings["seed"] = random.randint(1, 0xFFFFFFFF - settings["n_samples"] + 1)
-            self.last_seed = settings["seed"]
+        seed = settings.pop("seed")
+        if seed == 0:
+            seed = random.randint(1, 0xFFFFFFFF - settings["n_samples"] + 1)
+            self.last_seed = seed
+        settings["seed"] = seed
+        settings["extra_noise_seed"] = seed
 
-        uc_preset: UCPreset = settings.pop("uc_preset")
+        uc_preset: Union[UCPreset, None] = settings.pop("uc_preset")
+        if uc_preset is None:
+            default_uc = ""
+        else:
+            default_uc = self._UC_Presets[model][uc_preset]
+            if default_uc is None:
+                raise ValueError(f"Preset '{uc_preset.name}' is not valid for model '{model.value}'")
 
         uc: str = settings.pop("uc")
-        default_uc = self._UC_Presets[model][uc_preset]
-        if default_uc is None:
-            raise ValueError(f"Preset '{uc_preset.name}' is not valid for model '{model.value}'")
-
         combined_uc = f"{default_uc}, {uc}" if uc else default_uc
         settings["negative_prompt"] = combined_uc
 
         sampler: ImageSampler = settings.pop("sampler")
         settings["sampler"] = sampler.value
 
-        if settings.pop("smea", False):
-            settings["sm"] = True
-
-            if settings.pop("smea_dyn", False):
-                settings["sm_dyn"] = True
+        settings["sm"] = settings.pop("smea", False)
+        settings["sm_dyn"] = settings.pop("smea_dyn", False)
 
         controlnet_model: Optional[ControlNetModel] = settings.pop("controlnet_model", None)
         if controlnet_model is not None:

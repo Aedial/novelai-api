@@ -8,7 +8,7 @@ from urllib.parse import quote, urlencode
 from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
 
-from novelai_api.ImagePreset import ControlNetModel, ImageModel
+from novelai_api.ImagePreset import ControlNetModel, ImageGenerationType, ImageModel
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model
 from novelai_api.SchemaValidator import SchemaValidator
@@ -604,13 +604,14 @@ class LowLevel:
             return content
 
     async def generate_image(
-        self, prompt: str, model: ImageModel, parameters: Dict[str, Any]
+        self, prompt: str, model: ImageModel, action: ImageGenerationType, parameters: Dict[str, Any]
     ) -> AsyncIterator[Tuple[str, bytes]]:
         """
         Generate one or multiple image(s)
 
         :param prompt: Prompt for the image
         :param model: Model to generate the image
+        :param action: Type of image generation to use
         :param parameters: Parameters for the images
 
         :return: (name, data) pairs for the raw PNG image(s)
@@ -623,6 +624,7 @@ class LowLevel:
         args = {
             "input": prompt,
             "model": model.value,
+            "action": action.value,
             "parameters": parameters,
         }
 

@@ -1,6 +1,7 @@
+import json
 from logging import Logger, StreamHandler
 from os import environ as env
-from typing import Optional
+from typing import Any, Optional
 
 from aiohttp import ClientSession
 
@@ -43,3 +44,15 @@ class API:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self._session.__aexit__(exc_type, exc_val, exc_tb)
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o: Any) -> Any:
+        if isinstance(o, bytes):
+            return o.hex()
+
+        return super().default(o)
+
+
+def dumps(e: Any) -> str:
+    return json.dumps(e, indent=4, ensure_ascii=False, cls=JSONEncoder)

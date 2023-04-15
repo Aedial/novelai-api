@@ -301,7 +301,7 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
             del item["decrypted"]
 
 
-def assign_content_to_story(
+def link_content_to_story(
     stories: Dict[str, Union[str, int, Dict[str, Any]]],
     story_contents: Union[List[Dict[str, Any]], Dict[str, Any]],
 ):
@@ -321,14 +321,17 @@ def assign_content_to_story(
                 story["content"] = story_contents[remote_id]
 
 
-def remove_non_decrypted_user_data(items: List[Dict[str, Any]]):
-    i = 0
+def unlink_content_from_story(stories: Dict[str, Union[str, int, Dict[str, Any]]]):
+    if not isinstance(stories, (list, tuple)):
+        stories = [stories]
 
-    while i < len(items):
-        if items[i].get("decrypted", False) is False:
-            items.pop(i)
-        else:
-            i += 1
+    for story in stories:
+        if story.get("decrypted") and "content" in story:
+            story.pop("content")
+
+
+def get_decrypted_user_data(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [item for item in items if item.get("decrypted", False)]
 
 
 def tokens_to_b64(tokens: Iterable[int]) -> str:

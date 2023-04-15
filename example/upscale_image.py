@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import time
+from pathlib import Path
 
 from boilerplate import API
 
@@ -8,16 +9,21 @@ from novelai_api.NovelAIError import NovelAIError
 
 
 async def main():
+    d = Path("results")
+    d.mkdir(exist_ok=True)
+
+    image_size = (512, 768)
+
     async with API() as api_handler:
         api = api_handler.api
 
-        with open("image.png", "rb") as f:
+        with open(d / "image.png", "rb") as f:
             image = base64.b64encode(f.read()).decode()
 
         # disable the type check on scale in _low_level.py to check on float values
-        for scale in (2, 2.5, 3, 3.5, 4, 4.5, 5):
+        for scale in (2, 4):
             try:
-                _, img = await api.low_level.upscale_image(image, 512, 768, scale)
+                _, img = await api.low_level.upscale_image(image, *image_size, scale)
                 with open(f"image_upscaled_{scale}.png", "wb") as f:
                     f.write(img)
 
