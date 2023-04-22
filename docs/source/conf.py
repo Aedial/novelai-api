@@ -37,7 +37,7 @@ autodoc_member_order = "bysource"
 
 extlinks = {"issue": ("https://github.com/sphinx-doc/sphinx/issues/%s", "[issue %s]")}
 
-suppress_warnings = ["myst.header"]
+suppress_warnings = ["myst.header", "git.too_shallow"]
 
 copybutton_exclude = ".linenos, .gp, .go"
 
