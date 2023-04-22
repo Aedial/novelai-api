@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>novelai_api.utils &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
+    
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/hoverxref.js"></script>
+    <script src="../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for novelai_api.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span><span class="p">,</span> <span class="n">b64encode</span><span class="p">,</span> <span class="n">urlsafe_b64encode</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">blake2b</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">zlib</span> <span class="kn">import</span> <span class="n">MAX_WBITS</span><span class="p">,</span> <span class="n">Z_BEST_COMPRESSION</span>
+<span class="kn">from</span> <span class="nn">zlib</span> <span class="kn">import</span> <span class="n">compressobj</span> <span class="k">as</span> <span class="n">deflate_obj</span>
+<span class="kn">from</span> <span class="nn">zlib</span> <span class="kn">import</span> <span class="n">decompress</span> <span class="k">as</span> <span class="n">inflate</span>
+
+<span class="kn">import</span> <span class="nn">argon2</span>
+<span class="kn">from</span> <span class="nn">nacl.exceptions</span> <span class="kn">import</span> <span class="n">CryptoError</span>
+<span class="kn">from</span> <span class="nn">nacl.secret</span> <span class="kn">import</span> <span class="n">SecretBox</span>
+
+<span class="kn">from</span> <span class="nn">novelai_api.Keystore</span> <span class="kn">import</span> <span class="n">Keystore</span>
+<span class="kn">from</span> <span class="nn">novelai_api.NovelAIError</span> <span class="kn">import</span> <span class="n">NovelAIError</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
+<span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">assert_type</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+
+
+<span class="c1"># API utils</span>
+<div class="viewcode-block" id="argon_hash"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.argon_hash">[docs]</a><span class="k">def</span> <span class="nf">argon_hash</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">pre_salt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">password</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}{</span><span class="n">email</span><span class="si">}{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># salt</span>
+    <span class="n">blake</span> <span class="o">=</span> <span class="n">blake2b</span><span class="p">(</span><span class="n">digest_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">blake</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pre_salt</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="n">blake</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">argon2</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">hash_secret_raw</span><span class="p">(</span>
+        <span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+        <span class="n">salt</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">(</span><span class="mi">2000000</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">),</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">,</span>
+        <span class="n">argon2</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hashed</span> <span class="o">=</span> <span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">hashed</span></div>
+
+
+<div class="viewcode-block" id="get_access_key"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.get_access_key">[docs]</a><span class="k">def</span> <span class="nf">get_access_key</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">argon_hash</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="s2">&quot;novelai_data_access_key&quot;</span><span class="p">)[:</span><span class="mi">64</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_encryption_key"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.get_encryption_key">[docs]</a><span class="k">def</span> <span class="nf">get_encryption_key</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="n">pre_key</span> <span class="o">=</span> <span class="n">argon_hash</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="s2">&quot;novelai_data_encryption_key&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">blake</span> <span class="o">=</span> <span class="n">blake2b</span><span class="p">(</span><span class="n">digest_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+    <span class="n">blake</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pre_key</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">blake</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span></div>
+
+
+<span class="n">COMPRESSION_PREFIX</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01</span><span class="s2">&quot;</span>
+
+
+<div class="viewcode-block" id="decrypt_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.decrypt_data">[docs]</a><span class="k">def</span> <span class="nf">decrypt_data</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]:</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="n">SecretBox</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+    <span class="c1"># data is compressed</span>
+    <span class="n">is_compressed</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">COMPRESSION_PREFIX</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_compressed</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">COMPRESSION_PREFIX</span><span class="p">)</span> <span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">nonce</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nonce</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span> <span class="n">box</span><span class="o">.</span><span class="n">NONCE_SIZE</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">box</span><span class="o">.</span><span class="n">NONCE_SIZE</span> <span class="p">:]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nonce</span><span class="o">=</span><span class="n">nonce</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_compressed</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">inflate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">-</span><span class="n">MAX_WBITS</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">is_compressed</span>
+    <span class="k">except</span> <span class="n">CryptoError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="encrypt_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.encrypt_data">[docs]</a><span class="k">def</span> <span class="nf">encrypt_data</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">is_compressed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="n">SecretBox</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+    <span class="c1"># NOTE: zlib results in different data than the library used by NAI, but they are fully compatible</span>
+    <span class="k">if</span> <span class="n">is_compressed</span><span class="p">:</span>
+        <span class="n">deflater</span> <span class="o">=</span> <span class="n">deflate_obj</span><span class="p">(</span><span class="n">Z_BEST_COMPRESSION</span><span class="p">,</span> <span class="n">wbits</span><span class="o">=-</span><span class="n">MAX_WBITS</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">deflater</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">deflater</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nonce</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">is_compressed</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">COMPRESSION_PREFIX</span> <span class="o">+</span> <span class="n">data</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="c1"># function injection to avoid circular import</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Keystore</span><span class="p">,</span> <span class="s2">&quot;_encrypt_data&quot;</span><span class="p">):</span>
+    <span class="n">Keystore</span><span class="o">.</span><span class="n">_encrypt_data</span> <span class="o">=</span> <span class="n">encrypt_data</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Keystore</span><span class="p">,</span> <span class="s2">&quot;_decrypt_data&quot;</span><span class="p">):</span>
+    <span class="n">Keystore</span><span class="o">.</span><span class="n">_decrypt_data</span> <span class="o">=</span> <span class="n">decrypt_data</span>
+
+
+<div class="viewcode-block" id="decompress_user_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.decompress_user_data">[docs]</a><span class="k">def</span> <span class="nf">decompress_user_data</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decompress the data of each item in :ref: items</span>
+<span class="sd">    Doesn&#39;t decrypt, but does a b64 to UTF8 translation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;dict&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;data&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># skip already decompressed data</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
+            <span class="n">is_compressed</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">COMPRESSION_PREFIX</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_compressed</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">COMPRESSION_PREFIX</span><span class="p">)</span> <span class="p">:]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">inflate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">-</span><span class="n">MAX_WBITS</span><span class="p">)</span>
+
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># not decrypted, per se, but for genericity</span>
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_compressed</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="compress_user_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.compress_user_data">[docs]</a><span class="k">def</span> <span class="nf">compress_user_data</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compress the data of each item in :ref: items</span>
+<span class="sd">    Doesn&#39;t encrypt, but does a UTF8 to b64 translation</span>
+<span class="sd">    Must have been decompressed by decompress_user_data()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;dict&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;data&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;decrypted&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="s2">&quot;compressed&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]:</span>
+                        <span class="n">deflater</span> <span class="o">=</span> <span class="n">deflate_obj</span><span class="p">(</span><span class="n">Z_BEST_COMPRESSION</span><span class="p">,</span> <span class="n">wbits</span><span class="o">=-</span><span class="n">MAX_WBITS</span><span class="p">)</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">deflater</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">deflater</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">COMPRESSION_PREFIX</span> <span class="o">+</span> <span class="n">data</span>
+                    <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]</span>
+
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="decrypt_user_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.decrypt_user_data">[docs]</a><span class="k">def</span> <span class="nf">decrypt_user_data</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decrypt the data of each item in :ref: items</span>
+<span class="sd">    If an item has already been decrypted, it won&#39;t be decrypted a second time</span>
+
+<span class="sd">    :param items: Item or list of items to decrypt</span>
+<span class="sd">    :param keystore: Keystore retrieved with the get_keystore method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 1 item</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;dict&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;data&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;meta&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;meta&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">meta</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keystore</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Meta of item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">) missing from keystore&quot;</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">keystore</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span>
+
+        <span class="n">data</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">is_compressed</span> <span class="o">=</span> <span class="n">decrypt_data</span><span class="p">(</span><span class="n">b64decode</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]),</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nonce</span>
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_compressed</span>
+                <span class="k">continue</span>
+
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="encrypt_user_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.encrypt_user_data">[docs]</a><span class="k">def</span> <span class="nf">encrypt_user_data</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encrypt the data of each item in :ref: items</span>
+<span class="sd">    If an item has already been encrypted, it won&#39;t be encrypted a second time</span>
+<span class="sd">    Must have been decrypted by decrypt_user_data()</span>
+
+<span class="sd">    :param items: Item or list of items to encrypt</span>
+<span class="sd">    :param keystore: Keystore retrieved with the get_keystore method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 1 item</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;dict&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;decrypted&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;data&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;meta&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;meta&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;nonce&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;nonce&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;compressed&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected key &#39;compressed&#39; in item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;items&#39;&quot;</span><span class="p">)</span>
+
+                <span class="n">meta</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">meta</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keystore</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Meta of item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">) missing from keystore&quot;</span><span class="p">)</span>
+
+                <span class="n">key</span> <span class="o">=</span> <span class="n">keystore</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span>
+
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">encrypt_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;compressed&quot;</span><span class="p">]</span>
+
+            <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;decrypted&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="link_content_to_story"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.link_content_to_story">[docs]</a><span class="k">def</span> <span class="nf">link_content_to_story</span><span class="p">(</span>
+    <span class="n">stories</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span>
+    <span class="n">story_contents</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">stories</span> <span class="o">=</span> <span class="p">[</span><span class="n">stories</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">story_contents</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">story_contents</span> <span class="o">=</span> <span class="p">[</span><span class="n">story_contents</span><span class="p">]</span>
+
+    <span class="n">story_contents</span> <span class="o">=</span> <span class="p">{</span><span class="n">content</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">content</span> <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">story_contents</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">story</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
+            <span class="n">remote_id</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;remoteStoryId&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">remote_id</span> <span class="ow">and</span> <span class="n">remote_id</span> <span class="ow">in</span> <span class="n">story_contents</span> <span class="ow">and</span> <span class="n">story_contents</span><span class="p">[</span><span class="n">remote_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
+                <span class="n">story</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">story_contents</span><span class="p">[</span><span class="n">remote_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="unlink_content_from_story"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.unlink_content_from_story">[docs]</a><span class="k">def</span> <span class="nf">unlink_content_from_story</span><span class="p">(</span><span class="n">stories</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">stories</span> <span class="o">=</span> <span class="p">[</span><span class="n">stories</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">story</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;content&quot;</span> <span class="ow">in</span> <span class="n">story</span><span class="p">:</span>
+            <span class="n">story</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_decrypted_user_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.get_decrypted_user_data">[docs]</a><span class="k">def</span> <span class="nf">get_decrypted_user_data</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="tokens_to_b64"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.tokens_to_b64">[docs]</a><span class="k">def</span> <span class="nf">tokens_to_b64</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="b64_to_tokens"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.b64_to_tokens">[docs]</a><span class="k">def</span> <span class="nf">b64_to_tokens</span><span class="p">(</span><span class="n">b64</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">b64</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="extract_preset_data"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.extract_preset_data">[docs]</a><span class="k">def</span> <span class="nf">extract_preset_data</span><span class="p">(</span><span class="n">presets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Preset</span><span class="p">]:</span>
+    <span class="n">preset_list</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">preset_data</span> <span class="ow">in</span> <span class="n">presets</span><span class="p">:</span>
+        <span class="n">decompress_user_data</span><span class="p">(</span><span class="n">preset_data</span><span class="p">)</span>
+        <span class="n">preset_list</span><span class="p">[</span><span class="n">preset_data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Preset</span><span class="o">.</span><span class="n">from_preset_data</span><span class="p">(</span><span class="n">preset_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">preset_list</span></div>
+
+
+<div class="viewcode-block" id="tokenize_if_not"><a class="viewcode-back" href="../../novelai_api.utils.html#novelai_api.utils.tokenize_if_not">[docs]</a><span class="k">def</span> <span class="nf">tokenize_if_not</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;str&#39; for &#39;o&#39;, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: story tree builder</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

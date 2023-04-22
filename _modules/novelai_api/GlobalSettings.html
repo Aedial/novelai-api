@@ -1,0 +1,774 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>novelai_api.GlobalSettings &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
+    
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/hoverxref.js"></script>
+    <script src="../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.GlobalSettings</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for novelai_api.GlobalSettings</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">novelai_api.BiasGroup</span> <span class="kn">import</span> <span class="n">BiasGroup</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">expand_kwargs</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+
+
+<div class="viewcode-block" id="GlobalSettings"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings">[docs]</a><span class="k">class</span> <span class="nc">GlobalSettings</span><span class="p">:</span>
+    <span class="c1"># TODO: store bracket ban in a file</span>
+    <span class="n">_BRACKETS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;gpt2&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">58</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">60</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">90</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">92</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">685</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1391</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1782</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2361</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3693</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4083</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4357</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4895</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5512</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5974</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7131</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8183</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8351</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8762</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8964</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8973</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9063</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11208</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11709</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11907</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11919</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12878</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12962</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13018</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13412</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14631</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14692</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14980</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15090</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15437</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16151</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16410</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16589</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17241</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17414</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17635</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17816</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17912</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18083</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18161</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18477</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19629</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19779</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19953</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20520</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20598</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20662</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20740</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21476</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21737</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22133</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22241</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22345</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22935</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23330</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23785</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23834</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23884</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25295</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25597</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25719</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25787</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25915</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26076</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26358</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26398</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26894</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26933</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27007</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27422</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28013</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29164</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29225</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29342</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29565</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29795</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30072</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30109</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30138</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30866</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31161</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31478</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32092</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32239</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32509</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33116</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33250</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33761</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34171</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34758</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34949</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35944</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36338</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36463</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36563</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36786</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36796</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36937</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37250</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37913</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37981</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38165</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38362</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38381</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38430</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38892</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39850</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39893</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41832</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41888</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42535</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42669</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42785</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42924</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43839</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44438</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44587</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44926</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45144</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45297</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46110</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46570</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46581</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46956</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47175</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47182</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47527</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47715</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48600</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48683</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48688</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48874</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48999</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49074</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49082</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49146</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49946</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10221</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4841</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1427</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2602</span><span class="p">,</span> <span class="mi">834</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29343</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37405</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35780</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2602</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">50256</span><span class="p">],</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;gpt2-genji&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;pile&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">60</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">62</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">544</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">683</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">696</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">880</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">905</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1008</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1019</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1084</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1092</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1181</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1184</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1254</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1447</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1570</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1656</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2194</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2470</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2479</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2498</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2947</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3138</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3291</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3455</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3725</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3851</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3891</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3921</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">3951</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4207</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4299</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4622</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">4681</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5013</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5032</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5180</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5218</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5290</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5413</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5456</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5709</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5749</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">5774</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6038</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6257</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6334</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6660</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">6904</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7082</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7086</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7254</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7444</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">7748</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8001</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8088</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8168</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8562</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8605</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8795</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">8850</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9014</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9102</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9259</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9318</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9336</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9502</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9686</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9793</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9855</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9899</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">9955</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10148</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10174</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">10943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11326</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11337</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">11661</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12004</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12084</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12159</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12520</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">12977</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13380</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13488</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13663</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13811</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">13976</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14412</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14598</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">14767</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15640</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15707</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15775</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">15830</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16079</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16354</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16369</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16445</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16595</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16614</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16731</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">16943</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17278</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17281</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17548</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17555</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">17981</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18022</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18095</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18297</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18413</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18736</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18772</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">18990</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">19181</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20095</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20197</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20481</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20629</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20871</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20879</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20924</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">20977</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21375</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21382</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21391</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21687</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21810</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21828</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">21938</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22367</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22372</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">22734</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23405</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23505</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23734</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23741</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">23781</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">24237</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">24254</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">24345</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">24430</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25416</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">25896</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26119</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26635</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26842</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26991</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">26997</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27075</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27114</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27468</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27501</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27618</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27655</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27720</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">27829</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28052</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28118</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28231</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28532</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28571</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28591</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">28653</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29013</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29547</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29650</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">29925</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30522</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30537</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">30996</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31011</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31053</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31096</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31148</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31258</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31350</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31379</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31422</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31789</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">31830</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32214</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32666</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">32871</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33094</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33376</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33440</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">33805</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34368</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34398</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34417</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34418</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34419</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34476</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34494</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34607</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34758</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34761</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34904</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">34993</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35117</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35138</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35237</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35487</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35830</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">35869</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36033</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36134</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36320</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36399</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36487</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36586</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36676</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36692</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">36786</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37077</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37594</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37596</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37786</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">37982</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38475</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">38791</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39083</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39258</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39487</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">39822</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40116</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40125</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41000</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41018</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41256</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41305</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41361</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41447</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41449</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41512</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">41604</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42041</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42274</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42368</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42696</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42767</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42804</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42854</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42944</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">42989</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43134</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43144</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43189</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43521</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">43782</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44082</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44162</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44270</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44308</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44479</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44524</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">44965</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45114</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45301</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45382</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45443</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45472</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45488</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45507</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45564</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">45662</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46265</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46267</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46275</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46295</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46462</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46468</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46576</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">46694</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47093</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47384</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47389</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47446</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47552</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47686</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47744</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">47916</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48064</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48167</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48392</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48471</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48664</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">48701</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49021</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49193</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49236</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49550</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49694</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49806</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">49824</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">50001</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">50256</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="c1"># this one is pretty much mandatory, else genji throws errors all the time</span>
+    <span class="c1"># NOTE: the list might reach more tokens than necessary, but better be safe than sorry</span>
+    <span class="n">_GENJI_AMBIGUOUS_TOKENS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">58</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">60</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">90</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">92</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">685</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1391</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1782</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">2361</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3693</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4083</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4357</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4895</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5512</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5974</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">7131</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">8183</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">8964</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">8973</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">11208</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">11709</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">11907</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">12878</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">12962</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">13412</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">14692</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">14980</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">15090</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">15437</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">16151</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">16589</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17241</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17414</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17635</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17816</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17912</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">18083</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">18161</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">18477</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">19629</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">19953</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">20520</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">20662</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">20740</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">21737</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">22241</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">23330</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">23834</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">26076</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">26398</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">26894</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">26933</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">27007</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">27422</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">29164</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">29795</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">30072</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">30109</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">30866</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">31478</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">32239</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">33250</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">34758</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">34949</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">36463</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">36786</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">36796</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">36937</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">37981</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">38165</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">38362</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">38381</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">38430</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">38892</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">39850</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">41832</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">41888</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">42535</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">42669</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">42924</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">43839</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">44587</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">45297</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">46956</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">47527</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">47715</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">48688</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">48874</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">48999</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">49146</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">49946</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">50256</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">8162</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">198</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">198</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">49564</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">49564</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">37605</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">22522</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">40265</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5099</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">39752</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">32368</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">49564</span><span class="p">,</span> <span class="mi">49564</span><span class="p">,</span> <span class="mi">49564</span><span class="p">,</span> <span class="mi">49564</span><span class="p">,</span> <span class="mi">49564</span><span class="p">,</span> <span class="mi">49564</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">31857</span><span class="p">,</span> <span class="mi">31857</span><span class="p">,</span> <span class="mi">31857</span><span class="p">,</span> <span class="mi">31857</span><span class="p">,</span> <span class="mi">31857</span><span class="p">,</span> <span class="mi">31857</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">17992</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">39187</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">40367</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">15790</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">47571</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">27032</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">628</span><span class="p">,</span> <span class="mi">198</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">628</span><span class="p">,</span> <span class="mi">628</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">49564</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">49564</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">28156</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">30298</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">34650</span><span class="p">],</span>
+    <span class="p">]</span>
+
+    <span class="n">_DINKUS_ASTERISM</span> <span class="o">=</span> <span class="n">BiasGroup</span><span class="p">(</span><span class="o">-</span><span class="mf">0.12</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;***&quot;</span><span class="p">,</span> <span class="s2">&quot;⁂&quot;</span><span class="p">)</span>
+
+    <span class="n">_DEFAULT_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;generate_until_sentence&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;num_logprobs&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;ban_brackets&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;bias_dinkus_asterism&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;ban_ambiguous_genji_tokens&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># type completion for __setitem__ and __getitem__</span>
+    <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+        <span class="c1">#: Generate up to 20 tokens after max_length if an end of sentence if found within these 20 tokens</span>
+        <span class="n">generate_until_sentence</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Number of logprobs to return for each token. Set to NO_LOGPROBS to disable</span>
+        <span class="n">num_logprobs</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: Apply the BRACKET biases</span>
+        <span class="n">ban_brackets</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Apply the DINKUS_ASTERISM biases</span>
+        <span class="n">bias_dinkus_asterism</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Apply the GENJI_AMBIGUOUS_TOKENS if model is Genji</span>
+        <span class="n">ban_ambiguous_genji_tokens</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="n">NO_LOGPROBS</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+
+    <span class="nd">@expand_kwargs</span><span class="p">(</span><span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">for</span> <span class="n">setting</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">setting</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">setting</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid global setting name: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid setting: &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid setting: &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="c1"># give dot access capabilities to the object</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GlobalSettings.copy"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">GlobalSettings</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GlobalSettings.to_settings"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.to_settings">[docs]</a>    <span class="k">def</span> <span class="nf">to_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;generate_until_sentence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;generate_until_sentence&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;num_logprobs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;bad_words_ids&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;return_full_text&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;use_string&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;use_cache&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">get_tokenizer_name</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;ban_brackets&quot;</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_BRACKETS</span><span class="p">[</span><span class="n">tokenizer_name</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;ban_ambiguous_genji_tokens&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">tokenizer_name</span> <span class="o">==</span> <span class="s2">&quot;gpt2-genji&quot;</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_GENJI_AMBIGUOUS_TOKENS</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;bias_dinkus_asterism&quot;</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DINKUS_ASTERISM</span><span class="o">.</span><span class="n">get_tokenized_biases</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">settings</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.GlobalSettings</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>novelai-api &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/micromodal.css" />
+    
+    <script src="_static/jquery.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/js/hoverxref.js"></script>
+    <script src="_static/js/tooltipster.bundle.min.js"></script>
+    <script src="_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="novelai_api package" href="novelai_api.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.html" title="novelai_api package"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai-api</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="novelai-api">
+<h1>novelai-api<a class="headerlink" href="#novelai-api" title="Permalink to this heading">¶</a></h1>
+<p>Python API for the NovelAI REST API</p>
+<p>This module is intended to be used by developers as a helper for using NovelAI’s REST API.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Badges</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pypi</p></td>
+<td><p><a class="reference external" href="https://pypi.org/project/novelai-api"><img alt="PyPI" src="https://img.shields.io/pypi/v/novelai-api" /></a> <a class="reference external" href="https://pypi.org/project/novelai-api"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/novelai-api" /></a> <a class="reference external" href="https://pypi.org/project/novelai-api/"><img alt="PyPI - License" src="https://img.shields.io/pypi/l/novelai-api" /></a> <a class="reference external" href="https://pypi.org/project/novelai-api/"><img alt="PyPI - Format" src="https://img.shields.io/pypi/format/novelai-api" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Quality checking</p></td>
+<td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/actions/workflows/python-package.yml"><img alt="Python package" src="https://github.com/Aedial/novelai-api/actions/workflows/python-package.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/Aedial/novelai-api/actions/workflows/codeql-analysis.yml"><img alt="Python package" src="https://github.com/Aedial/novelai-api/actions/workflows/codeql-analysis.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/PyCQA/pylint"><img alt="linting: pylint" src="https://img.shields.io/badge/linting-pylint-yellowgreen" /></a> <a class="reference external" href="https://github.com/PyCQA/bandit"><img alt="security: bandit" src="https://img.shields.io/badge/security-bandit-yellow.svg" /></a> <a class="reference external" href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Stats</p></td>
+<td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/search?l=python"><img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Aedial/novelai-api" /></a> <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/Aedial/novelai-api" /> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Aedial/novelai-api" /> <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/Aedial/novelai-api" /> <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/Aedial/novelai-api" /></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activity</p></td>
+<td><p><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Aedial/novelai-api" /> <img alt="GitHub commits since tagged version" src="https://img.shields.io/github/commits-since/Aedial/novelai-api/v0.11.2" /> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Aedial/novelai-api" /></p></td>
+</tr>
+</tbody>
+</table>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
+<p>Before anything, ensure that nox is installed (pip install nox).
+For logging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed via the environment variables (dotenv file supported).</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<p>The examples are in the example folder. Each example is standalone and can be used as a test.
+Examples should be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">run</span> <span class="pre">--</span> <span class="pre">python</span> <span class="pre">example/&lt;name&gt;.py</span></code>.</p>
+<p>Some tests can act as example. The full list is as follows :</p>
+<ul class="simple">
+<li><p>decryption and re-encryption: tests/test_decrypt_encrypt_integrity_check.py</p></li>
+<li><p>diverse generations: tests/test_generate.py</p></li>
+<li><p>parallel generations: tests/test_generate_parallel.py</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<p>The source and all the required functions are located in the novelai-api folder.
+The examples and tests showcase how this API should be used and can be regarded as the “right way” to use it. However, it doesn’t mean one can’t use the “low level” part, which is a thin implementation of the REST endpoints, while the “high level” part is an abstraction built on that low level.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
+<p>You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.</p>
+<p>The tests against the API can be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test_api</span></code>. Note that having node.js installed is required for the test to run properly.
+/!\ WIP /!\ The tests against the mocked backend can be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test_mock</span></code>.</p>
+<p>To install and run the pre-commit hook, run <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">pre-commit</span></code>. This hook should be installed before committing anything.</p>
+</section>
+</section>
+<section id="todo">
+<h1>TODO<a class="headerlink" href="#todo" title="Permalink to this heading">¶</a></h1>
+<section id="fixme">
+<h2>FIXME:<a class="headerlink" href="#fixme" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Controlnet mask
+</pre></div>
+</div>
+</section>
+<section id="reviewing-fixing">
+<h2>Reviewing/Fixing:<a class="headerlink" href="#reviewing-fixing" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Backend mocking
+</pre></div>
+</div>
+</section>
+<section id="work-in-progress">
+<h2>Work in Progress:<a class="headerlink" href="#work-in-progress" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- https://pre-commit.ci/
+
+- Story handling
+- Context building
+- Contribute to flake2pylint
+</pre></div>
+</div>
+</section>
+</section>
+<section id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="novelai_api.html">novelai_api package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.BanList.html">novelai_api.BanList module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.BiasGroup.html">novelai_api.BiasGroup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.GlobalSettings.html">novelai_api.GlobalSettings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.Idstore.html">novelai_api.Idstore module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.ImagePreset.html">novelai_api.ImagePreset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.Keystore.html">novelai_api.Keystore module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.NovelAIError.html">novelai_api.NovelAIError module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.NovelAI_API.html">novelai_api.NovelAI_API module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.Preset.html">novelai_api.Preset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.SchemaValidator.html">novelai_api.SchemaValidator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.StoryHandler.html">novelai_api.StoryHandler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.Tokenizer.html">novelai_api.Tokenizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.utils.html">novelai_api.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api.python_utils.html">novelai_api.python_utils module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">novelai-api</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#todo">TODO</a><ul>
+<li><a class="reference internal" href="#fixme">FIXME:</a></li>
+<li><a class="reference internal" href="#reviewing-fixing">Reviewing/Fixing:</a></li>
+<li><a class="reference internal" href="#work-in-progress">Work in Progress:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="novelai_api.html"
+                          title="next chapter">novelai_api package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.html" title="novelai_api package"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai-api</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

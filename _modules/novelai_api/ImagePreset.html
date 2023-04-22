@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
+    
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/hoverxref.js"></script>
+    <script src="../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for novelai_api.ImagePreset</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">expand_kwargs</span>
+
+
+<div class="viewcode-block" id="ImageModel"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel">[docs]</a><span class="k">class</span> <span class="nc">ImageModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Anime_Curated</span> <span class="o">=</span> <span class="s2">&quot;safe-diffusion&quot;</span>
+    <span class="n">Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion&quot;</span>
+    <span class="n">Furry</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry&quot;</span>
+
+    <span class="n">Anime_Inpainting</span> <span class="o">=</span> <span class="s2">&quot;anime-diffusion-inpainting&quot;</span></div>
+
+
+<div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span> <span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Palette_Swap</span> <span class="o">=</span> <span class="s2">&quot;hed&quot;</span>
+    <span class="n">Form_Lock</span> <span class="o">=</span> <span class="s2">&quot;midas&quot;</span>
+    <span class="n">Scrible</span> <span class="o">=</span> <span class="s2">&quot;fake_scribble&quot;</span>
+    <span class="n">Building_Control</span> <span class="o">=</span> <span class="s2">&quot;mlsd&quot;</span>
+    <span class="n">Lanscaper</span> <span class="o">=</span> <span class="s2">&quot;uniformer&quot;</span></div>
+
+
+<div class="viewcode-block" id="ImageResolution"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution">[docs]</a><span class="k">class</span> <span class="nc">ImageResolution</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Small_Portrait</span> <span class="o">=</span> <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
+    <span class="n">Small_Landscape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">384</span><span class="p">)</span>
+    <span class="n">Small_Square</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+
+    <span class="n">Normal_Portrait</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">768</span><span class="p">)</span>
+    <span class="n">Normal_Landscape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">768</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+    <span class="n">Normal_Square</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
+
+    <span class="n">Large_Portrait</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+    <span class="n">Large_Landscape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+    <span class="n">Large_Square</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ImageSampler"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageSampler">[docs]</a><span class="k">class</span> <span class="nc">ImageSampler</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">k_lms</span> <span class="o">=</span> <span class="s2">&quot;k_lms&quot;</span>
+    <span class="n">k_euler</span> <span class="o">=</span> <span class="s2">&quot;k_euler&quot;</span>
+    <span class="n">k_euler_ancestral</span> <span class="o">=</span> <span class="s2">&quot;k_euler_ancestral&quot;</span>
+    <span class="n">k_heun</span> <span class="o">=</span> <span class="s2">&quot;k_heun&quot;</span>
+    <span class="n">plms</span> <span class="o">=</span> <span class="s2">&quot;plms&quot;</span>  <span class="c1"># doesn&#39;t work</span>
+    <span class="n">ddim</span> <span class="o">=</span> <span class="s2">&quot;ddim&quot;</span>
+
+    <span class="n">nai_smea</span> <span class="o">=</span> <span class="s2">&quot;nai_smea&quot;</span>  <span class="c1"># doesn&#39;t work</span>
+    <span class="n">nai_smea_dyn</span> <span class="o">=</span> <span class="s2">&quot;nai_smea_dyn&quot;</span>
+
+    <span class="n">k_dpmpp_2m</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_2m&quot;</span>
+    <span class="n">k_dpmpp_2s_ancestral</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_2s_ancestral&quot;</span>
+    <span class="n">k_dpmpp_sde</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_sde&quot;</span>
+    <span class="n">k_dpm_2</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_2&quot;</span>
+    <span class="n">k_dpm_2_ancestral</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_2_ancestral&quot;</span>
+    <span class="n">k_dpm_adaptive</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_adaptive&quot;</span>
+    <span class="n">k_dpm_fast</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_fast&quot;</span></div>
+
+
+<div class="viewcode-block" id="UCPreset"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset">[docs]</a><span class="k">class</span> <span class="nc">UCPreset</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Preset_Low_Quality_Bad_Anatomy</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Preset_Low_Quality</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Preset_Bad_Anatomy</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Preset_None</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="ImageGenerationType"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType">[docs]</a><span class="k">class</span> <span class="nc">ImageGenerationType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NORMAL</span> <span class="o">=</span> <span class="s2">&quot;generate&quot;</span>
+    <span class="n">IMG2IMG</span> <span class="o">=</span> <span class="s2">&quot;img2img&quot;</span></div>
+
+
+<div class="viewcode-block" id="ImagePreset"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset">[docs]</a><span class="k">class</span> <span class="nc">ImagePreset</span><span class="p">:</span>
+    <span class="n">_UC_Presets</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, bad anatomy, bad hands, text, error, &quot;</span>
+            <span class="s2">&quot;missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, signature, watermark, username, blurry&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, text, cropped, worst quality, low quality, normal quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, signature, watermark, twitter username, blurry&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, bad anatomy, bad hands, text, error, &quot;</span>
+            <span class="s2">&quot;missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, signature, watermark, username, blurry&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, text, cropped, worst quality, low quality, normal quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, signature, watermark, twitter username, blurry&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;nsfw, worst quality, low quality, what has science done, what, &quot;</span>
+            <span class="s2">&quot;nightmare fuel, eldritch horror, where is your god now, why&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;{worst quality}, low quality, distracting watermark, [nightmare fuel], &quot;</span>
+            <span class="s2">&quot;{{unfinished}}, deformed, outline, pattern, simple background&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;low res&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Palette_Swap</span><span class="p">:</span> <span class="s2">&quot;hed&quot;</span><span class="p">,</span>
+        <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Form_Lock</span><span class="p">:</span> <span class="s2">&quot;depth&quot;</span><span class="p">,</span>
+        <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Scrible</span><span class="p">:</span> <span class="s2">&quot;scribble&quot;</span><span class="p">,</span>
+        <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Building_Control</span><span class="p">:</span> <span class="s2">&quot;mlsd&quot;</span><span class="p">,</span>
+        <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Lanscaper</span><span class="p">:</span> <span class="s2">&quot;seg&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_TYPE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;quality_toggle&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
+        <span class="s2">&quot;uc_preset&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">UCPreset</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">),</span>
+        <span class="s2">&quot;n_samples&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;sampler&quot;</span><span class="p">:</span> <span class="n">ImageSampler</span><span class="p">,</span>
+        <span class="s2">&quot;noise&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;uc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">&quot;smea&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;smea_dyn&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">&quot;controlnet_condition&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">&quot;controlnet_model&quot;</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span>
+        <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="c1"># TODO</span>
+        <span class="c1"># &quot;dynamic_thresholding_mimic_scale&quot;: (int, float),</span>
+        <span class="c1"># &quot;dynamic_thresholding_percentile&quot;: (int, float),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># type completion for __setitem__ and __getitem__</span>
+    <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+        <span class="c1">#: https://docs.novelai.net/image/qualitytags.html</span>
+        <span class="n">quality_toggle</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Resolution of the image to generate as ImageResolution or a (width, height) tuple</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+        <span class="c1">#: Default UC to prepend to the UC</span>
+        <span class="n">uc_preset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">UCPreset</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="c1">#: Number of images to return</span>
+        <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: Random seed to use for the image. The ith image has seed + i for seed</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://docs.novelai.net/image/sampling.html</span>
+        <span class="n">sampler</span><span class="p">:</span> <span class="n">ImageSampler</span>
+        <span class="c1">#: https://docs.novelai.net/image/strengthnoise.html</span>
+        <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/image/strengthnoise.html</span>
+        <span class="n">strength</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)</span>
+        <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/image/stepsguidance.html</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://docs.novelai.net/image/undesiredcontent.html</span>
+        <span class="n">uc</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="c1">#: Enable SMEA for any sampler (makes Large+ generations manageable)</span>
+        <span class="n">smea</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)</span>
+        <span class="n">smea_dyn</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: b64-encoded png image for img2img</span>
+        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="c1">#: Controlnet mask gotten by the generate_controlnet_mask method</span>
+        <span class="n">controlnet_condition</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="c1">#: Model to use for the controlnet</span>
+        <span class="n">controlnet_model</span><span class="p">:</span> <span class="n">ControlNetModel</span>
+        <span class="c1">#: Influence of the chosen controlnet on the image</span>
+        <span class="n">controlnet_strength</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)</span>
+        <span class="n">decrisper</span><span class="p">:</span> <span class="nb">bool</span>
+
+        <span class="c1"># TODO</span>
+        <span class="c1"># dynamic_thresholding_mimic_scale: float</span>
+        <span class="c1"># dynamic_thresholding_percentile: float</span>
+
+    <span class="n">_DEFAULT</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;legacy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;quality_toggle&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">ImageResolution</span><span class="o">.</span><span class="n">Normal_Portrait</span><span class="p">,</span>
+        <span class="s2">&quot;uc_preset&quot;</span><span class="p">:</span> <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">,</span>
+        <span class="s2">&quot;n_samples&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;sampler&quot;</span><span class="p">:</span> <span class="n">ImageSampler</span><span class="o">.</span><span class="n">k_euler_ancestral</span><span class="p">,</span>
+        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+        <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;uc&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;smea&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;smea_dyn&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+
+    <span class="c1"># Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle</span>
+    <span class="n">last_seed</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="nd">@expand_kwargs</span><span class="p">(</span><span class="n">_TYPE_MAPPING</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">_TYPE_MAPPING</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;last_seed&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a valid setting&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>  <span class="c1"># noqa (pycharm PY-36317)</span>
+            <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is a default setting, set it instead of deleting&quot;</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span>
+
+<div class="viewcode-block" id="ImagePreset.update"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ImagePreset.copy"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ImagePreset</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)</span></div>
+
+    <span class="c1"># give dot access capabilities to the object</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ImagePreset.to_settings"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.to_settings">[docs]</a>    <span class="k">def</span> <span class="nf">to_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)</span>
+
+        <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;resolution&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">ImageResolution</span><span class="p">):</span>
+            <span class="n">resolution</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">],</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span>
+
+        <span class="c1"># seed 0 = random seed for the backend, but it is not set in metadata, so we set it ourself to be safe</span>
+        <span class="c1"># the seed of the ith image is seed + i, so we reserve space for them (makes valid images with invalid metadata)</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;seed&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="o">-</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;n_samples&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;extra_noise_seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
+
+        <span class="n">uc_preset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">UCPreset</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;uc_preset&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uc_preset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">default_uc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">default_uc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_UC_Presets</span><span class="p">[</span><span class="n">model</span><span class="p">][</span><span class="n">uc_preset</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">default_uc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preset &#39;</span><span class="si">{</span><span class="n">uc_preset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not valid for model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">uc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;uc&quot;</span><span class="p">)</span>
+        <span class="n">combined_uc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_uc</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">uc</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">uc</span> <span class="k">else</span> <span class="n">default_uc</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;negative_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">combined_uc</span>
+
+        <span class="n">sampler</span><span class="p">:</span> <span class="n">ImageSampler</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;sampler&quot;</span><span class="p">)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;sampler&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;sm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;smea&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;sm_dyn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;smea_dyn&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">controlnet_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ControlNetModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;controlnet_model&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">controlnet_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;controlnet_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONTROLNET_MODELS</span><span class="p">[</span><span class="n">controlnet_model</span><span class="p">]</span>
+
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;dynamic_thresholding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;decrisper&quot;</span><span class="p">)</span>
+
+        <span class="c1"># special arguments kept for metadata purposes (no effect on result)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;quality_toggle&quot;</span><span class="p">)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;ucPreset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uc_preset</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">settings</span></div>
+
+<div class="viewcode-block" id="ImagePreset.get_max_n_samples"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.get_max_n_samples">[docs]</a>    <span class="k">def</span> <span class="nf">get_max_n_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">ImageResolution</span><span class="p">):</span>
+            <span class="n">resolution</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">resolution</span>
+
+        <span class="k">if</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">704</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">8</span>
+
+        <span class="k">if</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">640</span> <span class="o">*</span> <span class="mi">640</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">6</span>
+
+        <span class="k">if</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">2560</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">4</span>
+
+        <span class="k">if</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1536</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="ImagePreset.calculate_cost"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.calculate_cost">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_opus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the cost (in Anlas) of generating with the current configuration</span>
+
+<span class="sd">        :param is_opus: Is the subscription tier Opus ? Account for free generations if so</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">]</span>
+        <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;n_samples&quot;</span><span class="p">]</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">ImageResolution</span><span class="p">):</span>
+            <span class="n">resolution</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">resolution</span>
+
+        <span class="n">opus_discount</span> <span class="o">=</span> <span class="n">is_opus</span> <span class="o">&amp;</span> <span class="n">steps</span> <span class="o">&lt;=</span> <span class="mi">28</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">640</span> <span class="o">*</span> <span class="mi">640</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>
+        <span class="n">per_step</span> <span class="o">=</span> <span class="p">(</span><span class="mf">15.266497014243718</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mf">0.6326248927474729</span><span class="p">)</span> <span class="o">-</span> <span class="mf">15.225164493059737</span><span class="p">)</span> <span class="o">/</span> <span class="mi">28</span>
+        <span class="n">per_sample</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">per_step</span> <span class="o">*</span> <span class="n">steps</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">per_sample</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">opus_discount</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ImagePreset.from_file"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.to_file"><a class="viewcode-back" href="../../novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.to_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">))</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>novelai_api.Preset &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
+    
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/hoverxref.js"></script>
+    <script src="../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for novelai_api.Preset</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">IntEnum</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<div class="viewcode-block" id="Order"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Order">[docs]</a><span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">Temperature</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Top_K</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Top_P</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">TFS</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Top_A</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">Typical_P</span> <span class="o">=</span> <span class="mi">5</span></div>
+
+
+<span class="n">NAME_TO_ORDER</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;tfs&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">TFS</span><span class="p">,</span>
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Temperature</span><span class="p">,</span>
+    <span class="s2">&quot;top_p&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Top_P</span><span class="p">,</span>
+    <span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Top_K</span><span class="p">,</span>
+    <span class="s2">&quot;top_a&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Top_A</span><span class="p">,</span>
+    <span class="s2">&quot;typical_p&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Typical_P</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">ORDER_TO_NAME</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">TFS</span><span class="p">:</span> <span class="s2">&quot;tfs&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Temperature</span><span class="p">:</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Top_P</span><span class="p">:</span> <span class="s2">&quot;top_p&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Top_K</span><span class="p">:</span> <span class="s2">&quot;top_k&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Top_A</span><span class="p">:</span> <span class="s2">&quot;top_a&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Typical_P</span><span class="p">:</span> <span class="s2">&quot;typical_p&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="enum_contains"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.enum_contains">[docs]</a><span class="k">def</span> <span class="nf">enum_contains</span><span class="p">(</span><span class="n">enum_class</span><span class="p">:</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">enum_class</span><span class="p">,</span> <span class="s2">&quot;enum_member_values&quot;</span><span class="p">):</span>
+        <span class="n">enum_class</span><span class="o">.</span><span class="n">enum_member_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enum_class</span><span class="p">)</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">enum_class</span><span class="o">.</span><span class="n">enum_member_values</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty enum class: &#39;</span><span class="si">{</span><span class="n">enum_class</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="StrEnum"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.StrEnum">[docs]</a><span class="k">class</span> <span class="nc">StrEnum</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+    <span class="c1"># Calliope = &quot;2.7B&quot;</span>
+    <span class="n">Sigurd</span> <span class="o">=</span> <span class="s2">&quot;6B-v4&quot;</span>
+    <span class="n">Euterpe</span> <span class="o">=</span> <span class="s2">&quot;euterpe-v2&quot;</span>
+    <span class="n">Krake</span> <span class="o">=</span> <span class="s2">&quot;krake-v2&quot;</span>
+
+    <span class="n">Genji</span> <span class="o">=</span> <span class="s2">&quot;genji-jp-6b-v2&quot;</span>
+    <span class="n">Snek</span> <span class="o">=</span> <span class="s2">&quot;genji-python-6b&quot;</span>
+
+    <span class="n">HypeBot</span> <span class="o">=</span> <span class="s2">&quot;hypebot&quot;</span>
+    <span class="n">Inline</span> <span class="o">=</span> <span class="s2">&quot;infillmodel&quot;</span></div>
+
+
+<div class="viewcode-block" id="PresetView"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.PresetView">[docs]</a><span class="k">class</span> <span class="nc">PresetView</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
+    <span class="n">_official_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">officials_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_officials_values</span> <span class="o">=</span> <span class="n">officials_values</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_officials_values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">]</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span></div>
+
+
+<span class="k">class</span> <span class="nc">_PresetMetaclass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="n">_officials_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">Model</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected instance of </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span><span class="si">}</span><span class="s2">, got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">PresetView</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_officials_values</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Preset"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset">[docs]</a><span class="k">class</span> <span class="nc">Preset</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_PresetMetaclass</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="c1"># no_repeat_ngram_size          number</span>
+    <span class="c1"># encoder_no_repeat_ngram_size	number</span>
+    <span class="c1"># num_return_sequences          number</span>
+    <span class="c1"># get_hidden_states             boolean</span>
+    <span class="c1"># next_word                     boolean</span>
+    <span class="c1"># output_nonzero_probs          boolean</span>
+
+    <span class="n">_TYPE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;textGenerationSettingsVersion&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;stop_sequences&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;min_length&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;top_a&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;top_p&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;typical_p&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;tail_free_sampling&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;repetition_penalty&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;repetition_penalty_range&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;repetition_penalty_slope&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;repetition_penalty_frequency&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;repetition_penalty_presence&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;length_penalty&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;diversity_penalty&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;pad_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;bos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;eos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;max_time&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># type completion for __setitem__ and __getitem__</span>
+    <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+        <span class="c1">#: Preset version, only relevant for .preset files</span>
+        <span class="n">textGenerationSettingsVersion</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: List of tokenized strings that should stop the generation early</span>
+        <span class="c1"># TODO: add possibility for late tokenization</span>
+        <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Randomness_(Temperature)</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: Response length, if no interrupted by a Stop Sequence</span>
+        <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: Minimum number of token, if interrupted by a Stop Sequence</span>
+        <span class="n">min_length</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Top-K_Sampling</span>
+        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Top-A_Sampling</span>
+        <span class="n">top_a</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Nucleus_Sampling</span>
+        <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Typical_Sampling (https://arxiv.org/pdf/2202.00666.pdf)</span>
+        <span class="n">typical_p</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://naidb.miraheze.org/wiki/Generation_Settings#Tail-Free_Sampling</span>
+        <span class="n">tail_free_sampling</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://arxiv.org/pdf/1909.05858.pdf</span>
+        <span class="n">repetition_penalty</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: Range (in tokens) the repetition penalty covers (https://arxiv.org/pdf/1909.05858.pdf)</span>
+        <span class="n">repetition_penalty_range</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://arxiv.org/pdf/1909.05858.pdf</span>
+        <span class="n">repetition_penalty_slope</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://platform.openai.com/docs/api-reference/parameter-details</span>
+        <span class="n">repetition_penalty_frequency</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://platform.openai.com/docs/api-reference/parameter-details</span>
+        <span class="n">repetition_penalty_presence</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: List of tokens that are excluded from the repetition penalty (useful for colors and the likes)</span>
+        <span class="n">repetition_penalty_whitelist</span><span class="p">:</span> <span class="nb">list</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">length_penalty</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">diversity_penalty</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: list of Order to set the sampling order</span>
+        <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">pad_token_id</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">bos_token_id</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">eos_token_id</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
+        <span class="n">max_time</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="n">_officials</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Preset&quot;</span><span class="p">]]</span>
+    <span class="n">_officials_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">]]</span>
+    <span class="n">_defaults</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+    <span class="n">_enabled</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+
+    <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_enabled&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Order</span><span class="p">))</span>
+
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a valid setting&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>  <span class="c1"># noqa (pycharm PY-36317)</span>
+            <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;order&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;List[int|Order] for order, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Order</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;int&#39; or &#39;Order for order #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="c1"># give dot access capabilities to the object</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&lt;?&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Preset: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">)&#39;&quot;</span>
+
+<div class="viewcode-block" id="Preset.enable"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.enable">[docs]</a>    <span class="k">def</span> <span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">Order</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">ORDER_TO_NAME</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
+            <span class="n">enabled</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid order name: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Preset.to_settings"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.to_settings">[docs]</a>    <span class="k">def</span> <span class="nf">to_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;textGenerationSettingsVersion&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;textGenerationSettingsVersion&quot;</span><span class="p">]</span>  <span class="c1"># not API relevant</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Order</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">settings</span></div>
+
+<div class="viewcode-block" id="Preset.to_file"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.to_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Preset.copy"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Preset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Preset.set"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Preset.update"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Preset.from_preset_data"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.from_preset_data">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_preset_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="s2">&quot;&lt;?&gt;&quot;</span>
+
+        <span class="n">model_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span> <span class="k">if</span> <span class="n">enum_contains</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="n">order</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;order&quot;</span> <span class="ow">in</span> <span class="n">settings</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">NAME_TO_ORDER</span><span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">order</span><span class="p">]</span>
+
+        <span class="c1"># TODO: add support for token banning and bias in preset</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># get rid of unsupported option</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># get rid of unsupported option</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;logit_bias_groups&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># get rid of unsupported option</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+
+        <span class="n">enabled</span> <span class="o">=</span> <span class="p">{</span><span class="n">o</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">o</span><span class="p">[</span><span class="s2">&quot;enabled&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">order</span><span class="p">}</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="o">**</span><span class="n">enabled</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="Preset.from_file"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Preset&quot;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_preset_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Preset.from_official"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.from_official">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_official</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">model_value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">preset</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_officials_values</span><span class="p">[</span><span class="n">model_value</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preset</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_officials</span><span class="p">[</span><span class="n">model_value</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">preset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">preset</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">preset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">preset</span></div>
+
+<div class="viewcode-block" id="Preset.from_default"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.Preset.from_default">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_default</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Preset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">model_value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">default</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">preset</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_officials</span><span class="p">[</span><span class="n">model_value</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">preset</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="import_officials"><a class="viewcode-back" href="../../novelai_api.Preset.html#novelai_api.Preset.import_officials">[docs]</a><span class="k">def</span> <span class="nf">import_officials</span><span class="p">():</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="n">Preset</span>
+
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_officials_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_officials</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_defaults</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">Model</span><span class="p">:</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;presets&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;presets_</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;default.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;default.txt&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_defaults</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">officials</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.preset&quot;</span><span class="p">:</span>
+                <span class="n">preset</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="n">filename</span><span class="p">))</span>
+                <span class="n">officials</span><span class="p">[</span><span class="n">preset</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">preset</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_officials_values</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">officials</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_officials</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">officials</span></div>
+
+
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Preset</span><span class="p">,</span> <span class="s2">&quot;_officials&quot;</span><span class="p">):</span>
+    <span class="n">import_officials</span><span class="p">()</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>
