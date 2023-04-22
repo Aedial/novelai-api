@@ -121,52 +121,52 @@ class Preset(metaclass=_PresetMetaclass):
 
     # type completion for __setitem__ and __getitem__
     if TYPE_CHECKING:
-        # preset version, only relevant for .preset files
+        #: Preset version, only relevant for .preset files
         textGenerationSettingsVersion: int
-        # list of tokenized strings that should stop the generation early
+        #: List of tokenized strings that should stop the generation early
         # TODO: add possibility for late tokenization
         stop_sequences: List[List[int]]
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Randomness_(Temperature)
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Randomness_(Temperature)
         temperature: float
-        # response length, if no interrupted by a Stop Sequence
+        #: Response length, if no interrupted by a Stop Sequence
         max_length: int
-        # minimum number of token, if interrupted by a Stop Sequence
+        #: Minimum number of token, if interrupted by a Stop Sequence
         min_length: int
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Top-K_Sampling
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Top-K_Sampling
         top_k: int
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Top-A_Sampling
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Top-A_Sampling
         top_a: float
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Nucleus_Sampling
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Nucleus_Sampling
         top_p: float
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Typical_Sampling (https://arxiv.org/pdf/2202.00666.pdf
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Typical_Sampling (https://arxiv.org/pdf/2202.00666.pdf)
         typical_p: float
-        # https://naidb.miraheze.org/wiki/Generation_Settings#Tail-Free_Sampling
+        #: https://naidb.miraheze.org/wiki/Generation_Settings#Tail-Free_Sampling
         tail_free_sampling: float
-        # https://arxiv.org/pdf/1909.05858.pdf
+        #: https://arxiv.org/pdf/1909.05858.pdf
         repetition_penalty: float
-        # range (in tokens) the repetition penalty covers (https://arxiv.org/pdf/1909.05858.pdf)
+        #: Range (in tokens) the repetition penalty covers (https://arxiv.org/pdf/1909.05858.pdf)
         repetition_penalty_range: int
-        # https://arxiv.org/pdf/1909.05858.pdf
+        #: https://arxiv.org/pdf/1909.05858.pdf
         repetition_penalty_slope: float
-        # https://platform.openai.com/docs/api-reference/parameter-details
+        #: https://platform.openai.com/docs/api-reference/parameter-details
         repetition_penalty_frequency: float
-        # https://platform.openai.com/docs/api-reference/parameter-details
+        #: https://platform.openai.com/docs/api-reference/parameter-details
         repetition_penalty_presence: float
-        # list of tokens that are excluded from the repetition penalty (useful for colors and the likes)
+        #: List of tokens that are excluded from the repetition penalty (useful for colors and the likes)
         repetition_penalty_whitelist: list
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.length_penalty
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         length_penalty: float
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.diversity_penalty
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         diversity_penalty: float
-        # list of Order to set the sampling order
+        #: list of Order to set the sampling order
         order: List[Union[Order, int]]
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.pad_token_id
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         pad_token_id: int
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.bos_token_id
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         bos_token_id: int
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.eos_token_id
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         eos_token_id: int
-        # https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig.max_time(float,
+        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         max_time: int
 
     _officials: Dict[str, Dict[str, "Preset"]]

@@ -1,0 +1,5 @@
+sphinx==6.1.3
+myst-parser
+sphinx-copybutton
+sphinx_last_updated_by_git
+sphinx-hoverxref

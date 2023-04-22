@@ -1,5 +1,4 @@
 import json
-import operator
 from base64 import b64decode, b64encode, urlsafe_b64encode
 from hashlib import blake2b
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
@@ -14,31 +13,8 @@ from nacl.secret import SecretBox
 from novelai_api.Keystore import Keystore
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
+from novelai_api.python_utils import assert_type
 from novelai_api.Tokenizer import Tokenizer
-
-# boilerplate
-NoneType: type = type(None)
-
-
-def assert_type(expected, **types):
-    for k, v in types.items():
-        assert isinstance(v, expected), f"Expected type '{expected}' for {k}, but got type '{type(v)}'"
-
-
-operator_to_str = {
-    operator.eq: "exactly {} characters",
-    operator.lt: "less than {} characters",
-    operator.le: "{} characters or less",
-    operator.gt: "more than {} characters",
-    operator.ge: "{} characters or more",
-}
-
-
-def assert_len(expected, op: operator = operator.eq, **values):
-    op_str = operator_to_str[op].format(expected)
-
-    for k, v in values.items():
-        assert v is None or op(len(v), expected), f"'{k}' should be {op_str}, got length of {len(v)}'"
 
 
 # API utils

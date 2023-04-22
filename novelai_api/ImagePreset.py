@@ -5,6 +5,8 @@ import math
 import random
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
+from novelai_api.python_utils import NoneType, expand_kwargs
+
 
 class ImageModel(enum.Enum):
     Anime_Curated = "safe-diffusion"
@@ -109,7 +111,7 @@ class ImagePreset:
     _TYPE_MAPPING = {
         "quality_toggle": bool,
         "resolution": (ImageResolution, tuple),
-        "uc_preset": UCPreset,
+        "uc_preset": (UCPreset, NoneType),
         "n_samples": int,
         "seed": int,
         "sampler": ImageSampler,
@@ -132,42 +134,43 @@ class ImagePreset:
 
     # type completion for __setitem__ and __getitem__
     if TYPE_CHECKING:
-        # https://docs.novelai.net/image/qualitytags.html
+        #: https://docs.novelai.net/image/qualitytags.html
         quality_toggle: bool
-        # resolution of the image to generate as ImageResolution or a (width, height) tuple
+        #: Resolution of the image to generate as ImageResolution or a (width, height) tuple
         resolution: Union[ImageResolution, Tuple[int, int]]
-        # default UC to prepend to the UC
+        #: Default UC to prepend to the UC
         uc_preset: Union[UCPreset, None]
-        # number of images to return
+        #: Number of images to return
         n_samples: int
-        # random seed to use for the image. The ith image has seed + i for seed
+        #: Random seed to use for the image. The ith image has seed + i for seed
         seed: int
-        # https://docs.novelai.net/image/sampling.html
+        #: https://docs.novelai.net/image/sampling.html
         sampler: ImageSampler
-        # https://docs.novelai.net/image/strengthnoise.html
+        #: https://docs.novelai.net/image/strengthnoise.html
         noise: float
-        # https://docs.novelai.net/image/strengthnoise.html
+        #: https://docs.novelai.net/image/strengthnoise.html
         strength: float
-        # https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
+        #: https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
         scale: float
-        # https://docs.novelai.net/image/stepsguidance.html
+        #: https://docs.novelai.net/image/stepsguidance.html
         steps: int
-        # https://docs.novelai.net/image/undesiredcontent.html
+        #: https://docs.novelai.net/image/undesiredcontent.html
         uc: str
-        # enable SMEA for any sampler (makes Large+ generations
+        #: Enable SMEA for any sampler (makes Large+ generations manageable)
         smea: bool
-        # enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
+        #: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
         smea_dyn: bool
-        # b64-encoded png image for img2img
+        #: b64-encoded png image for img2img
         image: str
-        # controlnet mask gotten by the generate_controlnet_mask method
+        #: Controlnet mask gotten by the generate_controlnet_mask method
         controlnet_condition: str
-        # model to use for the controlnet
+        #: Model to use for the controlnet
         controlnet_model: ControlNetModel
-        # Influence of the chosen controlnet on the image
+        #: Influence of the chosen controlnet on the image
         controlnet_strength: float
-        # reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
+        #: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
         decrisper: bool
+
         # TODO
         # dynamic_thresholding_mimic_scale: float
         # dynamic_thresholding_percentile: float
@@ -194,6 +197,7 @@ class ImagePreset:
     # Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle
     last_seed: int
 
+    @expand_kwargs(_TYPE_MAPPING.keys(), _TYPE_MAPPING.values())
     def __init__(self, **kwargs):
         object.__setattr__(self, "_settings", self._DEFAULT.copy())
         self.update(kwargs)

@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import List, Union
 
-import sentencepiece
 import tokenizers
 
 from novelai_api.ImagePreset import ImageModel
@@ -48,18 +47,11 @@ class Tokenizer:
     # TODO: check differences from NAI tokenizer (from my limited testing, there is None)
     _CLIP_TOKENIZER = SimpleTokenizer()
 
-    _NERDSTASH_PATH = tokenizers_path / "nerdstash_tokenizer.model"
-    _NERDSTASH_TOKENIZER = sentencepiece.SentencePieceProcessor()
-    _NERDSTASH_TOKENIZER.LoadFromFile(str(_NERDSTASH_PATH))
-    _NERDSTASH_TOKENIZER.encode = _NERDSTASH_TOKENIZER.EncodeAsIds
-    _NERDSTASH_TOKENIZER.decode = _NERDSTASH_TOKENIZER.DecodeIds
-
     _tokenizers = {
         "gpt2": _GPT2_TOKENIZER,
         "gpt2-genji": _GENJI_TOKENIZER,
         "pile": _PILE_TOKENIZER,
         "clip": _CLIP_TOKENIZER,
-        "nerdstash": _NERDSTASH_TOKENIZER,
     }
 
     @classmethod
@@ -77,7 +69,7 @@ class Tokenizer:
         if isinstance(tokenizer, tokenizers.Tokenizer):
             return tokenizer.encode(o).ids
 
-        if isinstance(tokenizer, (sentencepiece.SentencePieceProcessor, SimpleTokenizer)):
+        if isinstance(tokenizer, SimpleTokenizer):
             return tokenizer.encode(o)
 
         raise ValueError(f"Tokenizer {tokenizer} ({tokenizer_name}) not recognized")

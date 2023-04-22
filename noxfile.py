@@ -1,4 +1,5 @@
 import json
+import pathlib
 import shutil
 
 import nox
@@ -91,3 +92,33 @@ def run(session: nox.Session):
 
     for file in files:
         session.run("python", file)
+
+
+@nox.session(name="build-docs")
+def build_docs(session: nox.Session):
+    docs_path = pathlib.Path(__file__).parent / "docs"
+    source_path = docs_path / "source"
+
+    install_package(session)
+    session.install("-r", str(docs_path / "requirements.txt"))
+
+    paths = [pathlib.Path(path) for path in session.posargs]
+    if not paths:
+        raise ValueError("No path provided (put the path(s) after the --)")
+
+    for path in paths:
+        if not path.exists():
+            raise ValueError(f"Path {path.resolve()} does not exist")
+
+    old_files_in_source = set(sorted(source_path.iterdir()))
+    for path in paths:
+        session.run("sphinx-apidoc", "-o", str(source_path.resolve()), "-Te", "-d", "2", str(path.resolve()))
+    new_files_in_source = set(sorted(source_path.iterdir()))
+
+    source_diff = new_files_in_source - old_files_in_source
+    if source_diff:
+        print("New files generated:", ", ".join(f"'{f}'" for f in source_diff))
+        print("Update the docs accordingly")
+
+    with session.chdir(docs_path):
+        session.run("make", "html", external=True)

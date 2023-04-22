@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Any, Dict
 
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.Preset import Model
+from novelai_api.python_utils import expand_kwargs
 from novelai_api.Tokenizer import Tokenizer
 
 
@@ -597,21 +598,22 @@ class GlobalSettings:
 
     # type completion for __setitem__ and __getitem__
     if TYPE_CHECKING:
-        # generate up to 20 tokens after max_length if an end of sentence if found within these 20 tokens
+        #: Generate up to 20 tokens after max_length if an end of sentence if found within these 20 tokens
         generate_until_sentence: bool
-        # number of logprobs to return for each token. Set to NO_LOGPROBS to disable
+        #: Number of logprobs to return for each token. Set to NO_LOGPROBS to disable
         num_logprobs: int
-        # apply the BRACKET biases
+        #: Apply the BRACKET biases
         ban_brackets: bool
-        # apply the DINKUS_ASTERISM biases
+        #: Apply the DINKUS_ASTERISM biases
         bias_dinkus_asterism: bool
-        # apply the GENJI_AMBIGUOUS_TOKENS if model is Genji
+        #: Apply the GENJI_AMBIGUOUS_TOKENS if model is Genji
         ban_ambiguous_genji_tokens: bool
 
     NO_LOGPROBS = -1
 
     _settings: Dict[str, Any]
 
+    @expand_kwargs(_DEFAULT_SETTINGS.keys(), (type(e) for e in _DEFAULT_SETTINGS.values()))
     def __init__(self, **kwargs):
         object.__setattr__(self, "_settings", {})
 

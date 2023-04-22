@@ -9,7 +9,8 @@ from novelai_api.ImagePreset import ImageGenerationType, ImageModel, ImagePreset
 from novelai_api.Keystore import Keystore
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
-from novelai_api.utils import assert_type, compress_user_data, encrypt_user_data, get_access_key
+from novelai_api.python_utils import assert_type
+from novelai_api.utils import compress_user_data, encrypt_user_data, get_access_key
 
 
 class HighLevel:

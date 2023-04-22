@@ -11,9 +11,10 @@ from aiohttp.client_reqrep import ClientResponse
 from novelai_api.ImagePreset import ControlNetModel, ImageGenerationType, ImageModel
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model
+from novelai_api.python_utils import NoneType, assert_len, assert_type
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Tokenizer import Tokenizer
-from novelai_api.utils import NoneType, assert_len, assert_type, tokens_to_b64
+from novelai_api.utils import tokens_to_b64
 
 # === INTERNALS === #
 SSE_FIELDS = ["event", "data", "id", "retry"]
