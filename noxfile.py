@@ -1,5 +1,6 @@
 import json
 import pathlib
+import re
 import shutil
 
 import nox
@@ -75,9 +76,9 @@ def test_api(session: nox.Session):
     session.run("npm", "install", "fflate", external=True)
 
     if session.posargs:
-        session.run("pytest", "--tb=short", "-n", "auto", *(f"tests/api/{e}" for e in session.posargs))
+        session.run("pytest", "--tb=short", *(f"tests/api/{e}" for e in session.posargs))
     else:
-        session.run("pytest", "--tb=short", "-n", "auto", "tests/api/")
+        session.run("pytest", "--tb=short", "tests/api/")
 
 
 @nox.session()
@@ -97,28 +98,53 @@ def run(session: nox.Session):
 @nox.session(name="build-docs")
 def build_docs(session: nox.Session):
     docs_path = pathlib.Path(__file__).parent / "docs"
-    source_path = docs_path / "source"
 
     install_package(session)
     session.install("-r", str(docs_path / "requirements.txt"))
 
-    paths = [pathlib.Path(path) for path in session.posargs]
-    if not paths:
-        raise ValueError("No path provided (put the path(s) after the --)")
-
-    for path in paths:
-        if not path.exists():
-            raise ValueError(f"Path {path.resolve()} does not exist")
-
-    old_files_in_source = set(sorted(source_path.iterdir()))
-    for path in paths:
-        session.run("sphinx-apidoc", "-o", str(source_path.resolve()), "-Te", "-d", "2", str(path.resolve()))
-    new_files_in_source = set(sorted(source_path.iterdir()))
-
-    source_diff = new_files_in_source - old_files_in_source
-    if source_diff:
-        print("New files generated:", ", ".join(f"'{f}'" for f in source_diff))
-        print("Update the docs accordingly")
-
     with session.chdir(docs_path):
         session.run("make", "html", external=True)
+
+
+@nox.session(name="bump-version")
+def bump_version(session: nox.Session):
+    if len(session.posargs) < 1:
+        raise ValueError("Expected `nox -s bump-version major|minor|patch`")
+
+    bump = session.posargs[0]
+
+    if bump not in ("major", "minor", "patch"):
+        raise ValueError(f"Expected bump rule to be 'major', 'minor', or 'patch', got '{bump}'")
+
+    # Check for staged files (you don't want to accidentally commit them)
+    staged_files = session.run("git", "diff", "--name-only", "--cached", external=True)
+    if staged_files:
+        raise RuntimeError(f"Staged files, commit them before bumping version:\n{staged_files}")
+
+    # Bump the pyproject.toml and get the versions
+    session.install("poetry")
+    current_version = session.run("poetry", "version", "-s", silent=True).strip()
+    session.run("poetry", "version", bump)
+    bumped_version = session.run("poetry", "version", "-s", silent=True).strip()
+
+    # Modify the version in README's badges
+    rgx_badge = re.compile(r"(https://img.shields.io[^)]+?)(v\d+(?:\.\d+(?:\.\d+)?)?)")
+    with open("README.md", "w+", encoding="utf-8") as f:
+        readme = f.read()
+        readme = rgx_badge.sub(f"\\1v{bumped_version}", readme)
+
+        f.truncate(0)
+        f.seek(0)
+        f.write(readme)
+
+    # Commit the bump
+    commit_message = f"[MISC] Bump version - {bump}: {current_version} -> {bumped_version}"
+    session.run("git", "commit", commit_message, external=True)
+
+    # Commit the tag
+    session.run("git", "tag", "-a", f"v{bumped_version}", external=True)
+
+    session.log(
+        f"You can now push the commit and the tag with `git push origin v{bumped_version}`.\n"
+        "Ensure you're really ready to push with `git status` and `git log`."
+    )
