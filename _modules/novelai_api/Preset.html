@@ -90,7 +90,14 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="enum_contains"><a class="viewcode-back" href="../../novelai_api/novelai_api.Preset.html#novelai_api.Preset.enum_contains">[docs]</a><span class="k">def</span> <span class="nf">enum_contains</span><span class="p">(</span><span class="n">enum_class</span><span class="p">:</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="enum_contains"><a class="viewcode-back" href="../../novelai_api/novelai_api.Preset.html#novelai_api.Preset.enum_contains">[docs]</a><span class="k">def</span> <span class="nf">enum_contains</span><span class="p">(</span><span class="n">enum_class</span><span class="p">:</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the value provided is valid for the enum</span>
+
+<span class="sd">    :param enum_class: Class of the Enum</span>
+<span class="sd">    :param value: Value to check</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">enum_class</span><span class="p">,</span> <span class="s2">&quot;enum_member_values&quot;</span><span class="p">):</span>
         <span class="n">enum_class</span><span class="o">.</span><span class="n">enum_member_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enum_class</span><span class="p">)</span>
 
@@ -99,6 +106,33 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty enum class: &#39;</span><span class="si">{</span><span class="n">enum_class</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span></div>
+
+
+<span class="k">def</span> <span class="nf">_strip_model_version</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">isdecimal</span><span class="p">():</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="collapse_model"><a class="viewcode-back" href="../../novelai_api/novelai_api.Preset.html#novelai_api.Preset.collapse_model">[docs]</a><span class="k">def</span> <span class="nf">collapse_model</span><span class="p">(</span><span class="n">enum_class</span><span class="p">:</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collapse multiple version of a model to the last model value</span>
+
+<span class="sd">    :param enum_class: Class of the Enum</span>
+<span class="sd">    :param value: Value of the model to collapse</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">enum_class</span><span class="p">,</span> <span class="s2">&quot;enum_member_values&quot;</span><span class="p">):</span>
+        <span class="n">enum_class</span><span class="o">.</span><span class="n">enum_member_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">_strip_model_version</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">):</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enum_class</span><span class="p">}</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">enum_class</span><span class="o">.</span><span class="n">enum_member_values</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty enum class: &#39;</span><span class="si">{</span><span class="n">enum_class</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_strip_model_version</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="StrEnum"><a class="viewcode-back" href="../../novelai_api/novelai_api.Preset.html#novelai_api.Preset.StrEnum">[docs]</a><span class="k">class</span> <span class="nc">StrEnum</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
@@ -401,7 +435,7 @@
 
         <span class="c1"># FIXME: collapse model version</span>
         <span class="n">model_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span> <span class="k">if</span> <span class="n">enum_contains</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">collapse_model</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
 
         <span class="n">settings</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{}</span>
 
