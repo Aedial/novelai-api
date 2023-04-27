@@ -34,7 +34,14 @@ ORDER_TO_NAME = {
 }
 
 
-def enum_contains(enum_class: EnumMeta, value) -> bool:
+def enum_contains(enum_class: EnumMeta, value: str) -> bool:
+    """
+    Check if the value provided is valid for the enum
+
+    :param enum_class: Class of the Enum
+    :param value: Value to check
+    """
+
     if not hasattr(enum_class, "enum_member_values"):
         enum_class.enum_member_values = list(e.value for e in enum_class)
 
@@ -43,6 +50,33 @@ def enum_contains(enum_class: EnumMeta, value) -> bool:
         raise ValueError(f"Empty enum class: '{enum_class}'")
 
     return value in values
+
+
+def _strip_model_version(value: str) -> str:
+    parts = value.split("-")
+
+    if parts[-1].startswith("v") and parts[-1][1:].isdecimal():
+        parts = parts[:-1]
+
+    return "-".join(parts)
+
+
+def collapse_model(enum_class: EnumMeta, value: str):
+    """
+    Collapse multiple version of a model to the last model value
+
+    :param enum_class: Class of the Enum
+    :param value: Value of the model to collapse
+    """
+
+    if not hasattr(enum_class, "enum_member_values"):
+        enum_class.enum_member_values = {_strip_model_version(e.value): e for e in enum_class}
+
+    values = enum_class.enum_member_values
+    if len(values) == 0:
+        raise ValueError(f"Empty enum class: '{enum_class}'")
+
+    return values.get(_strip_model_version(value))
 
 
 class StrEnum(str, Enum):
@@ -345,7 +379,7 @@ class Preset(metaclass=_PresetMetaclass):
 
         # FIXME: collapse model version
         model_name = data["model"] if "model" in data else ""
-        model = Model(model_name) if enum_contains(Model, model_name) else None
+        model = collapse_model(Model, model_name)
 
         settings = data["parameters"] if "parameters" in data else {}
 

@@ -19,14 +19,14 @@ Download via [pip](https://pypi.org/project/novelai-api):
 pip install novelai-api
 ```
 
-A full list of examples is available in the [example](/example) directory
+A full list of examples is available in the [example](example) directory
 
 The API works through the NovelAIAPI object.
 It is split in 2 groups: NovelAIAPI.low_level and NovelAIAPI.high_level
 
 ## low_level
 The low level interface is a strict implementation of the official API (<https://api.novelai.net/docs>).
-It only checks for input types via assert and output schema if NovelAIAPI.low_level.is_schema_validation_enabled is True
+It only checks for input types via assert, and output schema if NovelAIAPI.low_level.is_schema_validation_enabled is True
 
 ## high_level
 The high level interface builds on the low level one for easier handling of complex settings.
