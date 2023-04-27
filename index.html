@@ -33,7 +33,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="novelai_api package" href="novelai_api.html" /> 
+    <link rel="next" title="novelai-api package" href="novelai_api/novelai_api.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -45,7 +45,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="novelai_api.html" title="novelai_api package"
+          <a href="novelai_api/novelai_api.html" title="novelai-api package"
              accesskey="N">next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">NovelAI API 0.11.6 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai-api</a></li> 
@@ -78,37 +78,63 @@
 <td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/search?l=python"><img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Aedial/novelai-api" /></a> <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/Aedial/novelai-api" /> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Aedial/novelai-api" /> <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/Aedial/novelai-api" /> <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/Aedial/novelai-api" /></p></td>
 </tr>
 <tr class="row-odd"><td><p>Activity</p></td>
-<td><p><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Aedial/novelai-api" /> <img alt="GitHub commits since tagged version" src="https://img.shields.io/github/commits-since/Aedial/novelai-api/v0.11.2" /> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Aedial/novelai-api" /></p></td>
+<td><p><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Aedial/novelai-api" /> <img alt="GitHub commits since tagged version" src="https://img.shields.io/github/commits-since/Aedial/novelai-api/v0.11.6" /> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Aedial/novelai-api" /></p></td>
 </tr>
 </tbody>
 </table>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
-<p>Before anything, ensure that nox is installed (pip install nox).
-For logging in, credentials are needed (NAI_USERNAME and NAI_PASSWORD). They should be passed via the environment variables (dotenv file supported).</p>
-</section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
-<p>The examples are in the example folder. Each example is standalone and can be used as a test.
-Examples should be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">run</span> <span class="pre">--</span> <span class="pre">python</span> <span class="pre">example/&lt;name&gt;.py</span></code>.</p>
-<p>Some tests can act as example. The full list is as follows :</p>
-<ul class="simple">
-<li><p>decryption and re-encryption: tests/test_decrypt_encrypt_integrity_check.py</p></li>
-<li><p>diverse generations: tests/test_generate.py</p></li>
-<li><p>parallel generations: tests/test_generate_parallel.py</p></li>
-</ul>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
-<p>The source and all the required functions are located in the novelai-api folder.
-The examples and tests showcase how this API should be used and can be regarded as the “right way” to use it. However, it doesn’t mean one can’t use the “low level” part, which is a thin implementation of the REST endpoints, while the “high level” part is an abstraction built on that low level.</p>
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h1>
+<p>Download via <a class="reference external" href="https://pypi.org/project/novelai-api">pip</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">novelai</span><span class="o">-</span><span class="n">api</span>
+</pre></div>
+</div>
+<p>A full list of examples is available in the <a class="reference external" href="https://github.com/example">example</a> directory</p>
+<p>The API works through the NovelAIAPI object.
+It is split in 2 groups: NovelAIAPI.low_level and NovelAIAPI.high_level</p>
+<section id="low-level">
+<h2>low_level<a class="headerlink" href="#low-level" title="Permalink to this heading">¶</a></h2>
+<p>The low level interface is a strict implementation of the official API (<a class="reference external" href="https://api.novelai.net/docs">https://api.novelai.net/docs</a>).
+It only checks for input types via assert and output schema if NovelAIAPI.low_level.is_schema_validation_enabled is True</p>
 </section>
+<section id="high-level">
+<h2>high_level<a class="headerlink" href="#high-level" title="Permalink to this heading">¶</a></h2>
+<p>The high level interface builds on the low level one for easier handling of complex settings.
+It handles many tasks from the frontend</p>
+</section>
+</section>
+<section id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">¶</a></h1>
+<p>All relevant objects are in the <a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/novelai_api">novelai_api</a> directory. The <a class="reference external" href="https://pypi.org/project/nox/">nox</a> package is required (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">nox</span></code>).</p>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
-<p>You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.</p>
-<p>The tests against the API can be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test_api</span></code>. Note that having node.js installed is required for the test to run properly.
-/!\ WIP /!\ The tests against the mocked backend can be ran with <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test_mock</span></code>.</p>
-<p>To install and run the pre-commit hook, run <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">pre-commit</span></code>. This hook should be installed before committing anything.</p>
+<p>You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.
+The pre-commit hook can be installed via</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nox</span> <span class="o">-</span><span class="n">s</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-against-the-api">
+<h2>Testing against the API<a class="headerlink" href="#testing-against-the-api" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/tests/api">API</a></p>
+</section>
+<section id="testing-against-the-mocked-api">
+<h2>Testing against the mocked API<a class="headerlink" href="#testing-against-the-mocked-api" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>:warning: WIP, does not work yet :warning:</p></th>
+</tr>
+</thead>
+</table>
+<p><a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/tests/mock">Mock</a></p>
+</section>
+<section id="docs">
+<h2>Docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h2>
+<p>To build the docs, run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nox</span> <span class="o">-</span><span class="n">s</span> <span class="n">build</span><span class="o">-</span><span class="n">docs</span>
+</pre></div>
+</div>
+<p>The docs will be locally viewable at docs/build/html/index.html</p>
 </section>
 </section>
 <section id="todo">
@@ -138,27 +164,43 @@ The examples and tests showcase how this API should be used and can be regarded 
 </section>
 <section id="reference">
 <h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h1>
+<section id="novelai-api">
+<h2>novelai-api<a class="headerlink" href="#novelai-api" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="novelai_api.html">novelai_api package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.BanList.html">novelai_api.BanList module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.BiasGroup.html">novelai_api.BiasGroup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.GlobalSettings.html">novelai_api.GlobalSettings module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.Idstore.html">novelai_api.Idstore module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.ImagePreset.html">novelai_api.ImagePreset module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.Keystore.html">novelai_api.Keystore module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.NovelAIError.html">novelai_api.NovelAIError module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.NovelAI_API.html">novelai_api.NovelAI_API module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.Preset.html">novelai_api.Preset module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.SchemaValidator.html">novelai_api.SchemaValidator module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.StoryHandler.html">novelai_api.StoryHandler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.Tokenizer.html">novelai_api.Tokenizer module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.utils.html">novelai_api.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="novelai_api.python_utils.html">novelai_api.python_utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="novelai_api/novelai_api.html">novelai-api package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.BanList.html">novelai_api.BanList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.BiasGroup.html">novelai_api.BiasGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.GlobalSettings.html">novelai_api.GlobalSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.Idstore.html">novelai_api.Idstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.ImagePreset.html">novelai_api.ImagePreset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.Keystore.html">novelai_api.Keystore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.NovelAIError.html">novelai_api.NovelAIError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.NovelAI_API.html">novelai_api.NovelAI_API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.Preset.html">novelai_api.Preset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.SchemaValidator.html">novelai_api.SchemaValidator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.StoryHandler.html">novelai_api.StoryHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.Tokenizer.html">novelai_api.Tokenizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="novelai_api/novelai_api.utils.html">novelai_api.utils</a></li>
 </ul>
 </li>
 </ul>
 </div>
+</section>
+<section id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example/example.html">example directory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example/example.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/example.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/example.html#module-example.download_modules">Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/example.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -171,11 +213,17 @@ The examples and tests showcase how this API should be used and can be regarded 
   <div>
     <h3><a href="#">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">novelai-api</a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#examples">Examples</a></li>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#">novelai-api</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#low-level">low_level</a></li>
+<li><a class="reference internal" href="#high-level">high_level</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#development">Development</a><ul>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#testing-against-the-api">Testing against the API</a></li>
+<li><a class="reference internal" href="#testing-against-the-mocked-api">Testing against the mocked API</a></li>
+<li><a class="reference internal" href="#docs">Docs</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#todo">TODO</a><ul>
@@ -184,14 +232,18 @@ The examples and tests showcase how this API should be used and can be regarded 
 <li><a class="reference internal" href="#work-in-progress">Work in Progress:</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#reference">Reference</a><ul>
+<li><a class="reference internal" href="#novelai-api">novelai-api</a></li>
+<li><a class="reference internal" href="#example">example</a></li>
+</ul>
+</li>
 </ul>
 
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="novelai_api.html"
-                          title="next chapter">novelai_api package</a></p>
+    <p class="topless"><a href="novelai_api/novelai_api.html"
+                          title="next chapter">novelai-api package</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -224,7 +276,7 @@ The examples and tests showcase how this API should be used and can be regarded 
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="novelai_api.html" title="novelai_api package"
+          <a href="novelai_api/novelai_api.html" title="novelai-api package"
              >next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">NovelAI API 0.11.6 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai-api</a></li> 

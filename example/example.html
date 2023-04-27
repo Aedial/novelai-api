@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>example directory &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/micromodal.css" />
+    
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/hoverxref.js"></script>
+    <script src="../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="boilerplate" href="example.boilerplate.html" />
+    <link rel="prev" title="novelai_api.utils" href="../novelai_api/novelai_api.utils.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.boilerplate.html" title="boilerplate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../novelai_api/novelai_api.utils.html" title="novelai_api.utils"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">example directory</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="example-directory">
+<h1>example directory<a class="headerlink" href="#example-directory" title="Permalink to this heading">¶</a></h1>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<p>Requires the “NAI_USERNAME” and “NAI_PASSWORD” values provided via environment variables.</p>
+<p>The “NAI_PROXY” environment variable is also supported to inject a proxy address.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<p>If you have the novelai-api package installed via pip :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">example</span><span class="o">/&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<br/>
+<p>If you don’t have the novelai-api package installed, or you’re actively developing on the project :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nox</span> <span class="o">-</span><span class="n">s</span> <span class="n">run</span> <span class="o">--</span> <span class="n">example</span><span class="o">/&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This option supports providing environment variables through a .env file</p>
+</section>
+<section id="module-example.download_modules">
+<span id="content"></span><h2>Content<a class="headerlink" href="#module-example.download_modules" title="Permalink to this heading">¶</a></h2>
+<section id="download-modules-py">
+<h3>download_modules.py<a class="headerlink" href="#download-modules-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to download and decrypt modules from the provided account</p>
+</section>
+<span class="target" id="module-example.download_presets"></span><section id="download-presets-py">
+<h3>download_presets.py<a class="headerlink" href="#download-presets-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to download and decompress shelves from the provided account</p>
+</section>
+<span class="target" id="module-example.download_shelves"></span><section id="download-shelves-py">
+<h3>download_shelves.py<a class="headerlink" href="#download-shelves-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to download and decompress shelves from the provided account</p>
+</section>
+<span class="target" id="module-example.download_stories_and_content"></span><section id="download-stories-and-content-py">
+<h3>download_stories_and_content.py<a class="headerlink" href="#download-stories-and-content-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to download and decrypt stories from the provided account</p>
+</section>
+<span class="target" id="module-example.generate_controlnet_masks"></span><section id="generate-controlnet-masks-py">
+<h3>generate_controlnet_masks.py<a class="headerlink" href="#generate-controlnet-masks-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to query the controlnet masks for an image</div>
+<div class="line"><br /></div>
+<div class="line">It expects an image “results/image.png” to exist and will generate the resulting masks in this same folder</div>
+<div class="line">NOTE: Currently the returned mask is wrong due to an image conversion in frontend (see <a class="reference external" href="https://github.com/Aedial/novelai-api/issues/15">[issue 15]</a>)</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_image"></span><section id="generate-image-py">
+<h3>generate_image.py<a class="headerlink" href="#generate-image-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to generate an image</div>
+<div class="line"><br /></div>
+<div class="line">The resulting images will be placed in a folder named “results”</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_image_test_samplers"></span><section id="generate-image-test-samplers-py">
+<h3>generate_image_test_samplers.py<a class="headerlink" href="#generate-image-test-samplers-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Test on which sampler currently work. It will create one image per sampler</div>
+<div class="line"><br /></div>
+<div class="line">The resulting images will be placed in a folder named “results”</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_image_with_controlnet"></span><section id="generate-image-with-controlnet-py">
+<h3>generate_image_with_controlnet.py<a class="headerlink" href="#generate-image-with-controlnet-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to generate an image with a Control Net</div>
+<div class="line"><br /></div>
+<div class="line">The resulting image will be placed in a folder named “results”</div>
+<div class="line">NOTE: Currently the returned mask is wrong due to an image conversion in frontend (see <a class="reference external" href="https://github.com/Aedial/novelai-api/issues/15">[issue 15]</a>)</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_image_with_img2img"></span><section id="generate-image-with-img2img-py">
+<h3>generate_image_with_img2img.py<a class="headerlink" href="#generate-image-with-img2img-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to generate an image with img2img</div>
+<div class="line"><br /></div>
+<div class="line">The resulting image will be placed in a folder named “results”</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_text"></span><section id="generate-text-py">
+<h3>generate_text.py<a class="headerlink" href="#generate-text-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to generate a text</div>
+<div class="line"><br /></div>
+<div class="line">The resulting text will be directed to the standard error output (stderr)</div>
+</div>
+</section>
+<span class="target" id="module-example.generate_voice"></span><section id="generate-voice-py">
+<h3>generate_voice.py<a class="headerlink" href="#generate-voice-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to generate a voice (TTS - Text To Speech)</div>
+<div class="line"><br /></div>
+<div class="line">The resulting audio sample will be placed in a folder named “results”</div>
+<div class="line">The input is limited to 1000 characters (it will cut at 1000 in backend)</div>
+</div>
+</section>
+<span class="target" id="module-example.login"></span><section id="login-py">
+<h3>login.py<a class="headerlink" href="#login-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to login on the provided account</p>
+</section>
+<span class="target" id="module-example.login_with_proxy"></span><section id="login-with-proxy-py">
+<h3>login_with_proxy.py<a class="headerlink" href="#login-with-proxy-py" title="Permalink to this heading">¶</a></h3>
+<p>Example of how to login on the provided account with a proxy</p>
+</section>
+<span class="target" id="module-example.suggest_tags"></span><section id="suggest-tags-py">
+<h3>suggest_tags.py<a class="headerlink" href="#suggest-tags-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of tag suggestion for image gen</div>
+<div class="line"><br /></div>
+<div class="line">The result will be directed to the standard error output (stderr)</div>
+</div>
+</section>
+<span class="target" id="module-example.upscale_image"></span><section id="upscale-image-py">
+<h3>upscale_image.py<a class="headerlink" href="#upscale-image-py" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Example of how to upscale an image</div>
+<div class="line"><br /></div>
+<div class="line">It expects an image “results/image.png” to exist and will generate the resulting masks in this same folder</div>
+<div class="line">The image should be 512x768 by default, modify <code class="code docutils literal notranslate"><span class="pre">image_size</span></code> to change it</div>
+</div>
+</section>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.boilerplate.html">boilerplate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example.boilerplate.html#example.boilerplate.API"><code class="docutils literal notranslate"><span class="pre">API</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.boilerplate.html#example.boilerplate.JSONEncoder"><code class="docutils literal notranslate"><span class="pre">JSONEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.boilerplate.html#example.boilerplate.dumps"><code class="docutils literal notranslate"><span class="pre">dumps()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">example directory</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#module-example.download_modules">Content</a><ul>
+<li><a class="reference internal" href="#download-modules-py">download_modules.py</a></li>
+<li><a class="reference internal" href="#download-presets-py">download_presets.py</a></li>
+<li><a class="reference internal" href="#download-shelves-py">download_shelves.py</a></li>
+<li><a class="reference internal" href="#download-stories-and-content-py">download_stories_and_content.py</a></li>
+<li><a class="reference internal" href="#generate-controlnet-masks-py">generate_controlnet_masks.py</a></li>
+<li><a class="reference internal" href="#generate-image-py">generate_image.py</a></li>
+<li><a class="reference internal" href="#generate-image-test-samplers-py">generate_image_test_samplers.py</a></li>
+<li><a class="reference internal" href="#generate-image-with-controlnet-py">generate_image_with_controlnet.py</a></li>
+<li><a class="reference internal" href="#generate-image-with-img2img-py">generate_image_with_img2img.py</a></li>
+<li><a class="reference internal" href="#generate-text-py">generate_text.py</a></li>
+<li><a class="reference internal" href="#generate-voice-py">generate_voice.py</a></li>
+<li><a class="reference internal" href="#login-py">login.py</a></li>
+<li><a class="reference internal" href="#login-with-proxy-py">login_with_proxy.py</a></li>
+<li><a class="reference internal" href="#suggest-tags-py">suggest_tags.py</a></li>
+<li><a class="reference internal" href="#upscale-image-py">upscale_image.py</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../novelai_api/novelai_api.utils.html"
+                          title="previous chapter">novelai_api.utils</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="example.boilerplate.html"
+                          title="next chapter">boilerplate</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/example/example.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.boilerplate.html" title="boilerplate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../novelai_api/novelai_api.utils.html" title="novelai_api.utils"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">example directory</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

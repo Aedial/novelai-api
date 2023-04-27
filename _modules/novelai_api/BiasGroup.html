@@ -60,7 +60,7 @@
 <span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">tokenize_if_not</span>
 
 
-<div class="viewcode-block" id="BiasGroup"><a class="viewcode-back" href="../../novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup">[docs]</a><span class="k">class</span> <span class="nc">BiasGroup</span><span class="p">:</span>
+<div class="viewcode-block" id="BiasGroup"><a class="viewcode-back" href="../../novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup">[docs]</a><span class="k">class</span> <span class="nc">BiasGroup</span><span class="p">:</span>
     <span class="n">_sequences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span>
 
     <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span>
@@ -68,22 +68,35 @@
     <span class="n">generate_once</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="BiasGroup.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">ensure_sequence_finish</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">generate_once</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a bias group</span>
+
+<span class="sd">        :param bias: Bias value of the bias group. Negative is a downbias, positive is an upbias</span>
+<span class="sd">        :param ensure_sequence_finish: Ensures the bias completes</span>
+<span class="sd">        :param generate_once: Only biases for the first occurrence</span>
+<span class="sd">        :param enabled: Is the bias group enabled</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_sequences</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">bias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensure_sequence_finish</span> <span class="o">=</span> <span class="n">ensure_sequence_finish</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generate_once</span> <span class="o">=</span> <span class="n">generate_once</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span></div>
 
-<div class="viewcode-block" id="BiasGroup.from_data"><a class="viewcode-back" href="../../novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.from_data">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BiasGroup.from_data"><a class="viewcode-back" href="../../novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.from_data">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiasGroup&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a bias group from bias group data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># FIXME: wtf is &quot;whenInactive&quot; in bias ?</span>
         <span class="n">ensure_sequence_finish</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ensureSequenceFinish&quot;</span><span class="p">]</span>
@@ -92,6 +105,7 @@
             <span class="k">if</span> <span class="s2">&quot;ensure_sequence_finish&quot;</span> <span class="ow">in</span> <span class="n">data</span>
             <span class="k">else</span> <span class="kc">False</span>
         <span class="p">)</span>
+
         <span class="n">generate_once</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;generateOnce&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="s2">&quot;generateOnce&quot;</span> <span class="ow">in</span> <span class="n">data</span>
@@ -107,10 +121,15 @@
 
         <span class="k">return</span> <span class="n">b</span></div>
 
-<div class="viewcode-block" id="BiasGroup.add"><a class="viewcode-back" href="../../novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+<div class="viewcode-block" id="BiasGroup.add"><a class="viewcode-back" href="../../novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">sequences</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiasGroup&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add elements to the bias group. Elements can be string or tokenized strings</span>
+<span class="sd">        Using tokenized strings is not recommended, for flexibility between tokenizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">if</span> <span class="s2">&quot;sequence&quot;</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">:</span>
@@ -135,12 +154,23 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiasGroup&quot;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sequences</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiasGroup&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add elements to the bias group. Elements can be string or tokenized strings</span>
+<span class="sd">        Using tokenized strings is not recommended, for flexibility between tokenizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an iterator on the stored sequences</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span>
@@ -152,16 +182,22 @@
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequences</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="BiasGroup.get_tokenized_biases"><a class="viewcode-back" href="../../novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.get_tokenized_biases">[docs]</a>    <span class="k">def</span> <span class="nf">get_tokenized_biases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="BiasGroup.get_tokenized_biases"><a class="viewcode-back" href="../../novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.get_tokenized_biases">[docs]</a>    <span class="k">def</span> <span class="nf">get_tokenized_biases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the tokenized sequences for the bias group, if it is enabled</span>
+
+<span class="sd">        :param model: Model to use for tokenization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span>
                 <span class="s2">&quot;ensure_sequence_finish&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_sequence_finish</span><span class="p">,</span>
                 <span class="s2">&quot;generate_once&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_once</span><span class="p">,</span>
-                <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
                 <span class="s2">&quot;sequence&quot;</span><span class="p">:</span> <span class="n">tokenize_if_not</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span>
             <span class="p">}</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequences</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span>
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

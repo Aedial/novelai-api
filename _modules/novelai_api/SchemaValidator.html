@@ -62,11 +62,11 @@
 <span class="kn">from</span> <span class="nn">jsonschema</span> <span class="kn">import</span> <span class="n">RefResolver</span><span class="p">,</span> <span class="n">validate</span>
 
 
-<div class="viewcode-block" id="SchemaValidator"><a class="viewcode-back" href="../../novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator">[docs]</a><span class="k">class</span> <span class="nc">SchemaValidator</span><span class="p">:</span>
+<div class="viewcode-block" id="SchemaValidator"><a class="viewcode-back" href="../../novelai_api/novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator">[docs]</a><span class="k">class</span> <span class="nc">SchemaValidator</span><span class="p">:</span>
     <span class="n">_schemas</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
     <span class="n">_resolver</span><span class="p">:</span> <span class="n">RefResolver</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SchemaValidator.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_schemas&quot;</span><span class="p">):</span>
             <span class="n">schemas</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -80,9 +80,9 @@
                     <span class="n">schemas</span><span class="p">[</span><span class="n">schema_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
             <span class="n">SchemaValidator</span><span class="o">.</span><span class="n">_schemas</span> <span class="o">=</span> <span class="n">schemas</span>
-            <span class="n">SchemaValidator</span><span class="o">.</span><span class="n">_resolver</span> <span class="o">=</span> <span class="n">RefResolver</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span>
+            <span class="n">SchemaValidator</span><span class="o">.</span><span class="n">_resolver</span> <span class="o">=</span> <span class="n">RefResolver</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SchemaValidator.validate"><a class="viewcode-back" href="../../novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator.validate">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SchemaValidator.validate"><a class="viewcode-back" href="../../novelai_api/novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator.validate">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="n">validate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_schemas</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">resolver</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_resolver</span><span class="p">)</span></div></div>
 

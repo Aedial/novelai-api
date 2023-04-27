@@ -67,7 +67,7 @@
 <span class="kn">from</span> <span class="nn">novelai_api._low_level</span> <span class="kn">import</span> <span class="n">LowLevel</span>
 
 
-<div class="viewcode-block" id="NovelAIAPI"><a class="viewcode-back" href="../../novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI">[docs]</a><span class="k">class</span> <span class="nc">NovelAIAPI</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIAPI"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI">[docs]</a><span class="k">class</span> <span class="nc">NovelAIAPI</span><span class="p">:</span>
     <span class="c1"># Constants</span>
     <span class="n">BASE_ADDRESS</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://api.novelai.net&quot;</span>
     <span class="n">LIB_ROOT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
@@ -85,7 +85,7 @@
     <span class="n">low_level</span><span class="p">:</span> <span class="n">LowLevel</span>
     <span class="n">high_level</span><span class="p">:</span> <span class="n">HighLevel</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="c1"># variable passing</span>
         <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">ClientSession</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected None or type &#39;ClientSession&#39; for session, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">session</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -103,9 +103,9 @@
 
         <span class="c1"># API parts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low_level</span> <span class="o">=</span> <span class="n">LowLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">high_level</span> <span class="o">=</span> <span class="n">HighLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">high_level</span> <span class="o">=</span> <span class="n">HighLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NovelAIAPI.attach_session"><a class="viewcode-back" href="../../novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.attach_session">[docs]</a>    <span class="k">def</span> <span class="nf">attach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.attach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.attach_session">[docs]</a>    <span class="k">def</span> <span class="nf">attach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attach a ClientSession, making the requests asynchronous</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -115,7 +115,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span></div>
 
-<div class="viewcode-block" id="NovelAIAPI.detach_session"><a class="viewcode-back" href="../../novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.detach_session">[docs]</a>    <span class="k">def</span> <span class="nf">detach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.detach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.detach_session">[docs]</a>    <span class="k">def</span> <span class="nf">detach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detach the current ClientSession, making the requests synchronous</span>
 <span class="sd">        &quot;&quot;&quot;</span>

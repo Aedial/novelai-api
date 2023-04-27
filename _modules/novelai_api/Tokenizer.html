@@ -68,7 +68,7 @@
 <span class="n">tokenizers_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;tokenizers&quot;</span>
 
 
-<div class="viewcode-block" id="Tokenizer"><a class="viewcode-back" href="../../novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer">[docs]</a><span class="k">class</span> <span class="nc">Tokenizer</span><span class="p">:</span>
+<div class="viewcode-block" id="Tokenizer"><a class="viewcode-back" href="../../novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer">[docs]</a><span class="k">class</span> <span class="nc">Tokenizer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstraction of the tokenizer behind each Model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -87,8 +87,14 @@
         <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">:</span> <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
-<div class="viewcode-block" id="Tokenizer.get_tokenizer_name"><a class="viewcode-back" href="../../novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.get_tokenizer_name">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Tokenizer.get_tokenizer_name"><a class="viewcode-back" href="../../novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.get_tokenizer_name">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_tokenizer_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the tokenizer name a model uses</span>
+
+<span class="sd">        :param model: Model to get the tokenizer name of</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tokenizers_name</span><span class="p">[</span><span class="n">model</span><span class="p">]</span></div>
 
     <span class="n">_GPT2_PATH</span> <span class="o">=</span> <span class="n">tokenizers_path</span> <span class="o">/</span> <span class="s2">&quot;gpt2_tokenizer.json&quot;</span>
@@ -110,15 +116,33 @@
         <span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="n">_CLIP_TOKENIZER</span><span class="p">,</span>
     <span class="p">}</span>
 
-<div class="viewcode-block" id="Tokenizer.decode"><a class="viewcode-back" href="../../novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.decode">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Tokenizer.decode"><a class="viewcode-back" href="../../novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.decode">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AnyModel</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decode the provided tokens using the chosen tokenizer</span>
+
+<span class="sd">        :param model: Model to use the tokenizer of</span>
+<span class="sd">        :param o: List of tokens to decode</span>
+
+<span class="sd">        :return: Text the provided tokens decode into</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tokenizers_name</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
         <span class="n">tokenizer</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tokenizers</span><span class="p">[</span><span class="n">tokenizer_name</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">o</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Tokenizer.encode"><a class="viewcode-back" href="../../novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.encode">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Tokenizer.encode"><a class="viewcode-back" href="../../novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.encode">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AnyModel</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encode the provided text using the chosen tokenizer</span>
+
+<span class="sd">        :param model: Model to use the tokenizer of</span>
+<span class="sd">        :param o: Text to encode</span>
+
+<span class="sd">        :return: List of tokens the provided text encodes into</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tokenizers_name</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
         <span class="n">tokenizer</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tokenizers</span><span class="p">[</span><span class="n">tokenizer_name</span><span class="p">]</span>
 

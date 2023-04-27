@@ -59,12 +59,12 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Set</span>
 
 
-<div class="viewcode-block" id="Idstore"><a class="viewcode-back" href="../../novelai_api.Idstore.html#novelai_api.Idstore.Idstore">[docs]</a><span class="k">class</span> <span class="nc">Idstore</span><span class="p">:</span>
+<div class="viewcode-block" id="Idstore"><a class="viewcode-back" href="../../novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore">[docs]</a><span class="k">class</span> <span class="nc">Idstore</span><span class="p">:</span>
     <span class="n">_ID_SIZE</span> <span class="o">=</span> <span class="mi">21</span>
     <span class="n">_ids</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<div class="viewcode-block" id="Idstore.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_create_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">urandom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ID_SIZE</span><span class="p">)</span>
@@ -72,7 +72,7 @@
 
         <span class="k">return</span> <span class="n">strid</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ID_SIZE</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Idstore.register"><a class="viewcode-back" href="../../novelai_api.Idstore.html#novelai_api.Idstore.Idstore.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="Idstore.register"><a class="viewcode-back" href="../../novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Registers the ids in every item provided (must be retrieved with download_user_content)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -81,7 +81,7 @@
             <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Idstore.create"><a class="viewcode-back" href="../../novelai_api.Idstore.html#novelai_api.Idstore.Idstore.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Idstore.create"><a class="viewcode-back" href="../../novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new unique id, that hasn&#39;t been registered yet, and register it</span>
 

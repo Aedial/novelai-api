@@ -62,7 +62,11 @@
 <span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
 
 
-<div class="viewcode-block" id="GlobalSettings"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings">[docs]</a><span class="k">class</span> <span class="nc">GlobalSettings</span><span class="p">:</span>
+<div class="viewcode-block" id="GlobalSettings"><a class="viewcode-back" href="../../novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings">[docs]</a><span class="k">class</span> <span class="nc">GlobalSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object used to store global settings for the account</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># TODO: store bracket ban in a file</span>
     <span class="n">_BRACKETS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;gpt2&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -665,11 +669,12 @@
         <span class="c1">#: Apply the GENJI_AMBIGUOUS_TOKENS if model is Genji</span>
         <span class="n">ban_ambiguous_genji_tokens</span><span class="p">:</span> <span class="nb">bool</span>
 
+    <span class="c1">#: Value to set num_logprobs at to disable logprobs</span>
     <span class="n">NO_LOGPROBS</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
     <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 
-    <span class="nd">@expand_kwargs</span><span class="p">(</span><span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+<div class="viewcode-block" id="GlobalSettings.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.__init__">[docs]</a>    <span class="nd">@expand_kwargs</span><span class="p">(</span><span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">_DEFAULT_SETTINGS</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
@@ -677,7 +682,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">setting</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">setting</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid global setting name: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid global setting name: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_SETTINGS</span><span class="p">:</span>
@@ -704,10 +709,20 @@
 
         <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GlobalSettings.copy"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GlobalSettings.copy"><a class="viewcode-back" href="../../novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new GlobalSettings from the current</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="n">GlobalSettings</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GlobalSettings.to_settings"><a class="viewcode-back" href="../../novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.to_settings">[docs]</a>    <span class="k">def</span> <span class="nf">to_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="GlobalSettings.to_settings"><a class="viewcode-back" href="../../novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.to_settings">[docs]</a>    <span class="k">def</span> <span class="nf">to_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create text generation settings from the GlobalSettings object</span>
+
+<span class="sd">        :param model: Model to use the settings of</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;generate_until_sentence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;generate_until_sentence&quot;</span><span class="p">],</span>
             <span class="s2">&quot;num_logprobs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">],</span>
@@ -717,6 +732,9 @@
             <span class="s2">&quot;use_string&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;use_cache&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_LOGPROBS</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span>
 
         <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">get_tokenizer_name</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
