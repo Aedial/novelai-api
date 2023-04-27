@@ -21,6 +21,9 @@ def pytest_terminal_summary(terminalreporter):
         terminalreporter.line("")
 
 
+# TODO: add html reporting
+
+
 # cannot put in boilerplate because pytest is a mess
 @pytest.fixture(scope="session")
 def event_loop():

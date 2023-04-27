@@ -1,3 +1,10 @@
+"""
+{filename}
+==============================================================================
+
+Test if the generated content is consistent with the frontend
+"""
+
 import json
 from pathlib import Path
 from typing import Any, Dict, Tuple
@@ -8,7 +15,7 @@ from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.Preset import Model, Preset
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
-from tests.api.boilerplate import api_handle  # noqa: F401  # pylint: disable=W0611
+from tests.api.boilerplate import api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
 models = [*Model]
 # NOTE: uncomment that if you're not Opus
@@ -22,8 +29,8 @@ config_path = Path(__file__).parent / "sanity_text_sets"
 model_configs = [(model, p) for model in models for p in (config_path / model.value).iterdir()]
 
 
-# In case of error, the config path will be in the dump, as an argument
 @pytest.mark.parametrize("model_config", model_configs)
+@error_handler
 async def test_generate(api_handle, model_config: Tuple[Model, Path]):  # noqa: F811  # pylint: disable=W0621
     api = api_handle.api
     logger = api.logger
@@ -33,7 +40,7 @@ async def test_generate(api_handle, model_config: Tuple[Model, Path]):  # noqa: 
 
     missing_keys = {"prompt", "preset", "global_settings"} - set(config.keys())
     if missing_keys:
-        raise ValueError(f"Config missing keys {', '.join(missing_keys)}")
+        raise ValueError(f"Config {path} missing keys {', '.join(missing_keys)}")
 
     prompt = config["prompt"]
     preset_data = config["preset"]
@@ -47,7 +54,7 @@ async def test_generate(api_handle, model_config: Tuple[Model, Path]):  # noqa: 
     biases = None  # TODO
     module = config.get("module", None)
 
-    logger.info("Using model %s, preset %s\n", model.value, preset.name)
+    logger.info("Using model %s, preset %s (%s)\n", model.value, preset.name, path)
 
     gen = await api.high_level.generate(prompt, model, preset, global_settings, bans, biases, module)
     # logger.info(gen)

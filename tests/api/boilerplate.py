@@ -1,8 +1,9 @@
 import asyncio
+import functools
 import json
 from logging import Logger, StreamHandler
 from os import environ as env
-from typing import Any, NoReturn
+from typing import Any, Awaitable, Callable, NoReturn, Optional
 
 import pytest
 from aiohttp import ClientConnectionError, ClientPayloadError, ClientSession
@@ -57,58 +58,69 @@ class API:
         if not self._sync:
             await self._session.__aexit__(exc_type, exc_val, exc_tb)
 
-    async def run_test(self, func, *args, attempts: int = 5, wait: int = 5):
-        """
-        Run the function ``func`` with the provided arguments and retry on error handling
-        The function must accept a NovelAIAPI object as first arguments
 
-        :param func: Function to run
-        :param args: Arguments to provide to the function
-        :param attempts: Number of attempts to do before raising the error
-        :param wait: Time (in seconds) to wait after each call
-        """
+def error_handler(func_ext: Optional[Callable[[Any, Any], Awaitable[Any]]] = None, *, attempts: int = 5, wait: int = 5):
+    """
+    Add error handling to the function ``func_ext`` or ``func``
+    The function must accept a NovelAIAPI object as first arguments
 
-        err: Exception = RuntimeError("Error placeholder. Shouldn't happen")
-        for _ in range(attempts):
-            try:
-                res = await func(self.api, *args)
-                await asyncio.sleep(wait)
+    :param func_ext: Substitute for func if the decorator is run without argument
+    :param attempts: Number of attempts to do before raising the error
+    :param wait: Time (in seconds) to wait after each call
+    """
 
-                return res
-            except (ClientConnectionError, asyncio.TimeoutError, ClientPayloadError) as e:
-                err = e
-                retry = True
+    def decorator(func: Callable[[Any, Any], Awaitable[Any]]):
+        @functools.wraps(func)
+        async def wrap(*args, **kwargs):
+            err: Exception = RuntimeError("Error placeholder. Shouldn't happen")
+            for _ in range(attempts):
+                try:
+                    res = await func(*args, **kwargs)
+                    await asyncio.sleep(wait)
 
-            except NovelAIError as e:
-                err = e
-                retry = any(
-                    [
-                        e.status == 502,  # Bad Gateway
-                        e.status == 520,  # Cloudflare Unknown Error
-                        e.status == 524,  # Cloudflare Gateway Error
-                    ]
-                )
+                    return res
+                except (ClientConnectionError, asyncio.TimeoutError, ClientPayloadError) as e:
+                    err = e
+                    retry = True
 
-            if not retry:
-                break
+                except NovelAIError as e:
+                    err = e
+                    retry = any(
+                        [
+                            e.status == 502,  # Bad Gateway
+                            e.status == 520,  # Cloudflare Unknown Error
+                            e.status == 524,  # Cloudflare Gateway Error
+                        ]
+                    )
 
-            # 10s wait between each retry
-            await asyncio.sleep(10)
+                if not retry:
+                    break
 
-            # no internet: ping every 5 mins until connection is re-established
-            async with ClientSession() as session:
-                while True:
-                    try:
-                        rsp = await session.get("https://www.google.com", timeout=5 * 60)
-                        rsp.raise_for_status()
+                # 10s wait between each retry
+                await asyncio.sleep(10)
 
-                        break
-                    except ClientConnectionError:
-                        await asyncio.sleep(5 * 60)
-                    except asyncio.TimeoutError:
-                        pass
+                # no internet: ping every 5 mins until connection is re-established
+                async with ClientSession() as session:
+                    while True:
+                        try:
+                            rsp = await session.get("https://www.google.com", timeout=5 * 60)
+                            rsp.raise_for_status()
 
-        raise err
+                            break
+                        except ClientConnectionError:
+                            await asyncio.sleep(5 * 60)
+                        except asyncio.TimeoutError:
+                            pass
+
+            raise err
+
+        return wrap
+
+    # allow to run the function without argument
+    if func_ext is None:
+        return decorator
+
+    return decorator(func_ext)
 
 
 class JSONEncoder(json.JSONEncoder):
