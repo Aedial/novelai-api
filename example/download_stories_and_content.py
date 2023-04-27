@@ -1,7 +1,13 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
 
-from boilerplate import API, dumps
+Example of how to download and decrypt stories from the provided account
+"""
 
+import asyncio
+
+from example.boilerplate import API, dumps
 from novelai_api.utils import decrypt_user_data, encrypt_user_data, link_content_to_story, unlink_content_from_story
 
 
@@ -33,4 +39,5 @@ async def main():
         encrypt_user_data(story_contents, keystore)
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

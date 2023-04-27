@@ -33,6 +33,12 @@ class Tokenizer:
 
     @classmethod
     def get_tokenizer_name(cls, model: Model) -> str:
+        """
+        Get the tokenizer name a model uses
+
+        :param model: Model to get the tokenizer name of
+        """
+
         return cls._tokenizers_name[model]
 
     _GPT2_PATH = tokenizers_path / "gpt2_tokenizer.json"
@@ -56,6 +62,15 @@ class Tokenizer:
 
     @classmethod
     def decode(cls, model: AnyModel, o: List[int]) -> str:
+        """
+        Decode the provided tokens using the chosen tokenizer
+
+        :param model: Model to use the tokenizer of
+        :param o: List of tokens to decode
+
+        :return: Text the provided tokens decode into
+        """
+
         tokenizer_name = cls._tokenizers_name[model]
         tokenizer = cls._tokenizers[tokenizer_name]
 
@@ -63,6 +78,15 @@ class Tokenizer:
 
     @classmethod
     def encode(cls, model: AnyModel, o: str) -> List[int]:
+        """
+        Encode the provided text using the chosen tokenizer
+
+        :param model: Model to use the tokenizer of
+        :param o: Text to encode
+
+        :return: List of tokens the provided text encodes into
+        """
+
         tokenizer_name = cls._tokenizers_name[model]
         tokenizer = cls._tokenizers[tokenizer_name]
 

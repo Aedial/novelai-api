@@ -10,6 +10,10 @@ from novelai_api.utils import get_encryption_key
 
 
 class API:
+    """
+    Boilerplate for the redundant parts
+    """
+
     _username: str
     _password: str
     _session: ClientSession
@@ -47,6 +51,10 @@ class API:
 
 
 class JSONEncoder(json.JSONEncoder):
+    """
+    Extended JSON encoder to support bytes
+    """
+
     def default(self, o: Any) -> Any:
         if isinstance(o, bytes):
             return o.hex()
@@ -55,4 +63,8 @@ class JSONEncoder(json.JSONEncoder):
 
 
 def dumps(e: Any) -> str:
+    """
+    Shortcut to a configuration of json.dumps for consistency
+    """
+
     return json.dumps(e, indent=4, ensure_ascii=False, cls=JSONEncoder)

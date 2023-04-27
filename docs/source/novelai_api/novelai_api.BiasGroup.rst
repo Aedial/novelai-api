@@ -1,5 +1,5 @@
-novelai\_api.BiasGroup module
-=============================
+novelai\_api.BiasGroup
+======================
 
 .. automodule:: novelai_api.BiasGroup
    :members:

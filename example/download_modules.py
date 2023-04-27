@@ -1,7 +1,13 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
 
-from boilerplate import API, dumps
+Example of how to download and decrypt modules from the provided account
+"""
 
+import asyncio
+
+from example.boilerplate import API, dumps
 from novelai_api.utils import decrypt_user_data, encrypt_user_data
 
 
@@ -22,4 +28,5 @@ async def main():
         encrypt_user_data(modules, keystore)
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

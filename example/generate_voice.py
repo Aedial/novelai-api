@@ -1,7 +1,17 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
+
+| Example of how to generate a voice (TTS - Text To Speech)
+|
+| The resulting audio sample will be placed in a folder named "results"
+| The input is limited to 1000 characters (it will cut at 1000 in backend)
+"""
+
+import asyncio
 from pathlib import Path
 
-from boilerplate import API
+from example.boilerplate import API
 
 # tts_file = "tts.webm"
 tts_file = "tts.mp3"
@@ -36,4 +46,5 @@ async def main():
         logger.info(f"TTS saved in {tts_file}")
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

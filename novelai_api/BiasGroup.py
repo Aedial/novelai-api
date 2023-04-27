@@ -19,6 +19,15 @@ class BiasGroup:
         generate_once: bool = False,
         enabled: bool = True,
     ):
+        """
+        Create a bias group
+
+        :param bias: Bias value of the bias group. Negative is a downbias, positive is an upbias
+        :param ensure_sequence_finish: Ensures the bias completes
+        :param generate_once: Only biases for the first occurrence
+        :param enabled: Is the bias group enabled
+        """
+
         self._sequences = []
 
         self.bias = bias
@@ -28,6 +37,10 @@ class BiasGroup:
 
     @classmethod
     def from_data(cls, data: Dict[str, Any]) -> "BiasGroup":
+        """
+        Create a bias group from bias group data
+        """
+
         # FIXME: wtf is "whenInactive" in bias ?
         ensure_sequence_finish = (
             data["ensureSequenceFinish"]
@@ -36,6 +49,7 @@ class BiasGroup:
             if "ensure_sequence_finish" in data
             else False
         )
+
         generate_once = (
             data["generateOnce"]
             if "generateOnce" in data
@@ -55,6 +69,11 @@ class BiasGroup:
         self,
         *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str],
     ) -> "BiasGroup":
+        """
+        Add elements to the bias group. Elements can be string or tokenized strings
+        Using tokenized strings is not recommended, for flexibility between tokenizers
+        """
+
         for i, sequence in enumerate(sequences):
             if isinstance(sequence, dict):
                 if "sequence" in sequence:
@@ -79,12 +98,23 @@ class BiasGroup:
 
         return self
 
-    def __iadd__(self, o: List[int]) -> "BiasGroup":
-        self.add(o)
+    def __iadd__(
+        self, sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str]
+    ) -> "BiasGroup":
+        """
+        Add elements to the bias group. Elements can be string or tokenized strings
+        Using tokenized strings is not recommended, for flexibility between tokenizers
+        """
+
+        self.add(sequences)
 
         return self
 
     def __iter__(self):
+        """
+        Return an iterator on the stored sequences
+        """
+
         return (
             {
                 "bias": self.bias,
@@ -97,15 +127,21 @@ class BiasGroup:
         )
 
     def get_tokenized_biases(self, model: Model) -> Iterable[Dict[str, any]]:
+        """
+        Return the tokenized sequences for the bias group, if it is enabled
+
+        :param model: Model to use for tokenization
+        """
+
         return (
             {
                 "bias": self.bias,
                 "ensure_sequence_finish": self.ensure_sequence_finish,
                 "generate_once": self.generate_once,
-                "enabled": self.enabled,
                 "sequence": tokenize_if_not(model, s),
             }
             for s in self._sequences
+            if self.enabled
         )
 
     def __str__(self) -> str:

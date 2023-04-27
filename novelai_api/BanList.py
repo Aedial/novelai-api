@@ -10,6 +10,13 @@ class BanList:
     enabled: bool
 
     def __init__(self, *sequences: Union[List[int], str], enabled: bool = True):
+        """
+        Create a ban list with the given elements. Elements can be string or tokenized strings
+        Using tokenized strings is not recommended, for flexibility between tokenizers
+
+        :param enabled: Is the ban list enabled
+        """
+
         self.enabled = enabled
 
         self._sequences = []
@@ -20,6 +27,11 @@ class BanList:
         self,
         *sequences: Union[Dict[str, List[List[int]]], Dict[str, List[int]], List[int], str],
     ) -> "BanList":
+        """
+        Add elements to the ban list. Elements can be string or tokenized strings
+        Using tokenized strings is not recommended, for flexibility between tokenizers
+        """
+
         for i, sequence in enumerate(sequences):
             if "sequence" in sequence:
                 sequence = sequence["sequence"]
@@ -44,15 +56,30 @@ class BanList:
         return self
 
     def __iadd__(self, o: Union[List[int], str]) -> "BanList":
+        """
+        Add elements to the ban list. Elements can be string or tokenized strings
+        Using tokenized strings is not recommended, for flexibility between tokenizers
+        """
+
         self.add(o)
 
         return self
 
     def __iter__(self):
+        """
+        Return an iterator on the stored sequences
+        """
+
         return self._sequences.__iter__()
 
     def get_tokenized_banlist(self, model: Model) -> Iterable[List[int]]:
-        return (tokenize_if_not(model, s) for s in self._sequences)
+        """
+        Return the tokenized sequences for the ban list, if it is enabled
+
+        :param model: Model to use for tokenization
+        """
+
+        return (tokenize_if_not(model, s) for s in self._sequences if self.enabled)
 
     def __str__(self) -> str:
         return self._sequences.__str__()

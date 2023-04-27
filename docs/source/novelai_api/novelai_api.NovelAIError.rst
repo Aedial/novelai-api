@@ -1,7 +1,7 @@
-novelai\_api.utils module
+novelai\_api.NovelAIError
 =========================
 
-.. automodule:: novelai_api.utils
+.. automodule:: novelai_api.NovelAIError
    :members:
    :undoc-members:
    :show-inheritance:

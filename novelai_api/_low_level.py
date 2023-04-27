@@ -119,6 +119,12 @@ class LowLevel:
 
     @classmethod
     async def _parse_response(cls, rsp: ClientResponse):
+        """
+        Parse the content of a ClientResponse depending on the content-type
+
+        :param rsp: ClientResponse returned by a request
+        """
+
         content_type = rsp.content_type
 
         if content_type == "application/json":
@@ -247,6 +253,14 @@ class LowLevel:
     async def change_access_key(
         self, current_key: str, new_key: str, new_email: Optional[str] = None
     ) -> Dict[str, str]:
+        """
+        Change the access key of the given account
+
+        :param current_key: Current key of the account
+        :param new_key: New key of the account
+        :param new_email: New email, if it changed
+        """
+
         assert_type(str, current_key=current_key, new_key=new_key)
         assert_type((str, NoneType), new_email=new_email)
         assert_len(64, current_key=current_key, new_key=new_key)
@@ -265,12 +279,24 @@ class LowLevel:
             return content
 
     async def send_email_verification(self, email: str) -> bool:
+        """
+        Send the email for account verification
+
+        :param email: Address to send the email to
+        """
+
         assert_type(str, email=email)
 
         async for rsp, content in self.request("post", "/user/resend-email-verification", {"email": email}):
             return self._treat_response_bool(rsp, content, 200)
 
     async def verify_email(self, verification_token: str) -> bool:
+        """
+        Check the token sent for email verification
+
+        :param verification_token: Token sent to the email address
+        """
+
         assert_type(str, verification_token=verification_token)
         assert_len(64, verification_token=verification_token)
 
@@ -278,6 +304,10 @@ class LowLevel:
             return self._treat_response_bool(rsp, content, 200)
 
     async def get_information(self) -> Dict[str, Any]:
+        """
+        Get extensive information about the account
+        """
+
         async for rsp, content in self.request("get", "/user/information"):
             self._treat_response_object(rsp, content, 200)
 
@@ -287,12 +317,27 @@ class LowLevel:
             return content
 
     async def request_account_recovery(self, email: str) -> bool:
+        """
+        Send a recovery token to the provided email address, if the account has been lost
+        **WARNING**: the content will not be readable with a different encryption key
+
+        :param email: Address to send the email to
+        """
+
         assert_type(str, email=email)
 
         async for rsp, content in self.request("post", "/user/recovery/request", {"email": email}):
             return self._treat_response_bool(rsp, content, 202)
 
     async def recover_account(self, recovery_token: str, new_key: str, delete_content: bool = False) -> Dict[str, Any]:
+        """
+        Recover the lost account
+
+        :param recovery_token: Token sent to the given email address
+        :param new_key: New access key for the account
+        :param delete_content: Delete all content that was on the account
+        """
+
         assert_type(str, recovery_token=recovery_token, new_key=new_key)
         assert_type(bool, delete_content=delete_content)
         assert_len(16, operator.ge, recovery_token=recovery_token)
@@ -313,19 +358,34 @@ class LowLevel:
             return content
 
     async def delete_account(self) -> bool:
+        """
+        Delete the account
+        """
+
         async for rsp, content in self.request("post", "/user/delete", None):
             return self._treat_response_bool(rsp, content, 200)
 
     async def get_data(self) -> Dict[str, Any]:
+        """
+        Get various data about the account
+        """
+
         async for rsp, content in self.request("get", "/user/data"):
             self._treat_response_object(rsp, content, 200)
 
             if self.is_schema_validation_enabled:
+                # FIXME: doesn't seem right
                 SchemaValidator.validate("schema_AccountInformationResponse", content)
 
             return content
 
     async def get_priority(self) -> Dict[str, Any]:
+        """
+        Get the priority information of the account
+
+        The priority system is a legacy system and isn't really important
+        """
+
         async for rsp, content in self.request("get", "/user/priority"):
             self._treat_response_object(rsp, content, 200)
 
@@ -335,12 +395,22 @@ class LowLevel:
             return content
 
     class SubscriptionTier(enum.IntEnum):
+        """
+        Index of the subscription tiers
+
+        PAPER tier is the free trial
+        """
+
         PAPER = 0
         TABLET = 1
         SCROLL = 2
         OPUS = 3
 
     async def get_subscription(self) -> Dict[str, Any]:
+        """
+        Get various information about the account's subscription
+        """
+
         async for rsp, content in self.request("get", "/user/subscription"):
             self._treat_response_object(rsp, content, 200)
 
@@ -350,6 +420,13 @@ class LowLevel:
             return content
 
     async def get_keystore(self) -> Dict[str, str]:
+        """
+        Get the keystore
+
+        The keystore is the storage for the encryption keys of any content on the account.
+        Losing it is equal to losing all your encrypted content
+        """
+
         async for rsp, content in self.request("get", "/user/keystore"):
             self._treat_response_object(rsp, content, 200)
 
@@ -359,12 +436,25 @@ class LowLevel:
             return content
 
     async def set_keystore(self, keystore: Dict[str, str]) -> bool:
+        """
+        Set the keystore
+
+        The keystore is the storage for the encryption keys of any content on the account.
+        Losing it (or overwriting it with wrong data) is equal to losing all your encrypted content
+        """
+
         assert_type(dict, keystore=keystore)
 
         async for rsp, content in self.request("put", "/user/keystore", keystore):
             return self._treat_response_object(rsp, content, 200)
 
     async def download_objects(self, object_type: str) -> Dict[str, List[Dict[str, Union[str, int]]]]:
+        """
+        Download all the objects of a given type from the account
+
+        :param object_type: Type of the objects to download
+        """
+
         assert_type(str, object_type=object_type)
 
         async for rsp, content in self.request("get", f"/user/objects/{object_type}"):
@@ -376,6 +466,14 @@ class LowLevel:
             return content
 
     async def upload_objects(self, object_type: str, meta: str, data: str) -> bool:
+        """
+        Upload multiple objects of the given type
+
+        :param object_type: Type of the objects to upload
+        :param meta: Meta of the objects to upload (meta links to encryption key in keystore)
+        :param data: Serialized data of the content to upload
+        """
+
         assert_type(str, object_type=object_type, meta=meta, data=data)
         assert_len(128, operator.le, meta=meta)
 
@@ -385,6 +483,13 @@ class LowLevel:
             return content
 
     async def download_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
+        """
+        Download the selected object of a given type from the account
+
+        :param object_type: Type of the object to download
+        :param object_id: Id of the selected object
+        """
+
         assert_type(str, object_type=object_type, object_id=object_id)
 
         async for rsp, content in self.request("get", f"/user/objects/{object_type}/{object_id}"):
@@ -396,6 +501,15 @@ class LowLevel:
             return content
 
     async def upload_object(self, object_type: str, object_id: str, meta: str, data: str) -> bool:
+        """
+        Upload an object of then given type
+
+        :param object_type: Type of the object to upload
+        :param meta: Meta of the object to upload (meta links to encryption key in keystore)
+        :param data: Serialized data of the content to upload
+        :param object_id: Id of the selected object
+        """
+
         assert_type(str, object_type=object_type, object_id=object_id, meta=meta, data=data)
         assert_len(128, operator.le, meta=meta)
 
@@ -406,22 +520,41 @@ class LowLevel:
             return content
 
     async def delete_object(self, object_type: str, object_id: str) -> Dict[str, Union[str, int]]:
+        """
+        Download the selected object of a given type from the account
+
+        :param object_type: Type of the object to delete
+        :param object_id: Id of the selected object
+        """
+
         assert_type(str, object_type=object_type, object_id=object_id)
 
         async for rsp, content in self.request("delete", f"/user/objects/{object_type}/{object_id}"):
             return self._treat_response_object(rsp, content, 200)
 
     async def get_settings(self) -> str:
+        """
+        Get the account settings. The format is arbitrary.
+        """
+
         async for rsp, content in self.request("get", "/user/clientsettings"):
             return self._treat_response_object(rsp, content, 200)
 
     async def set_settings(self, value: str) -> bool:
+        """
+        Set the account settings. The format is arbitrary.
+        """
+
         assert_type(str, value=value)
 
         async for rsp, content in self.request("put", "/user/clientsettings", value):
             return self._treat_response_bool(rsp, content, 200)
 
     async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
+        """
+        Bind payment information to the account to renew subscription monthly
+        """
+
         assert_type(str, payment_processor=payment_processor, subscription_id=subscription_id)
 
         data = {"paymentProcessor": payment_processor, "subscriptionId": subscription_id}
@@ -430,6 +563,10 @@ class LowLevel:
             return self._treat_response_bool(rsp, content, 201)
 
     async def change_subscription(self, new_plan: str) -> bool:
+        """
+        Change the subscription tier. Payment information should still be bound to the account
+        """
+
         assert_type(str, new_plan=new_plan)
 
         async for rsp, content in self.request("post", "/user/subscription/change", {"newSubscriptionPlan": new_plan}):
@@ -437,6 +574,8 @@ class LowLevel:
 
     async def generate(self, prompt: Union[List[int], str], model: Model, params: Dict[str, Any], stream: bool = False):
         """
+        Generate text with streaming support
+
         :param prompt: Input to be sent the AI
         :param model: Model of the AI
         :param params: Generation parameters
@@ -464,10 +603,16 @@ class LowLevel:
             yield content
 
     async def classify(self) -> NoReturn:
+        """
+        Not implemented
+        """
+
         raise NotImplementedError("Function is not implemented yet")
 
     async def train_module(self, data: str, rate: int, steps: int, name: str, desc: str) -> Dict[str, Any]:
         """
+        Train a module for text gen
+
         :param data: Dataset of the module, in one single string
         :param rate: Learning rate of the training
         :param steps: Number of steps to train the module for
@@ -497,7 +642,7 @@ class LowLevel:
 
     async def get_trained_modules(self) -> List[Dict[str, Any]]:
         """
-        :return: List of modules trained or in training
+        Get the modules currently in training or that finished training
         """
 
         async for rsp, content in self.request("get", "/ai/module/all"):
@@ -510,9 +655,9 @@ class LowLevel:
 
     async def get_trained_module(self, module_id: str) -> Dict[str, Any]:
         """
-        :param module_id: Id of the module
+        Get a module currently in training or that finished training
 
-        :return: Selected module, trained or in training
+        :param module_id: Id of the selected module
         """
 
         assert_type(str, module_id=module_id)
@@ -527,9 +672,9 @@ class LowLevel:
 
     async def delete_module(self, module_id: str) -> Dict[str, Any]:
         """
-        Delete the module with id :ref: `module_id`
+        Delete a module currently in training or that finished training
 
-        :param module_id: Id of the module
+        :param module_id: Id of the selected module
 
         :return: Module that got deleted
         """
@@ -545,13 +690,13 @@ class LowLevel:
 
     async def generate_voice(self, text: str, seed: str, voice: int, opus: bool, version: str) -> Dict[str, Any]:
         """
-        Generate the Text-to-Speech of :ref: `text` using the given seed and voice
+        Generate the Text To Speech of the given text
 
         :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)
-        :param seed: Person to use the voice of
+        :param seed: Voice to use
         :param voice: Index of the voice to use
         :param opus: True for WebM format, False for mp3 format
-        :param version: Version of the TTS
+        :param version: Version of the TTS ("v1" or "v2")
 
         :return: TTS audio data of the text
         """
@@ -636,7 +781,7 @@ class LowLevel:
 
     async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> Tuple[str, bytes]:
         """
-        Get the ControlNet's mask for the image. Used for ImageSampler["controlnet_condition"]
+        Get the ControlNet's mask for the given image. Used for ImageSampler.controlnet_condition
 
         :param model: ControlNet model to use
         :param image: b64 encoded PNG image to get the mask of
@@ -656,7 +801,7 @@ class LowLevel:
 
     async def upscale_image(self, image: str, width: int, height: int, scale: int) -> Tuple[str, bytes]:
         """
-        Upscale the image. Afaik, the only allowed values for scale are 2 and 4.
+        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.
 
         :param image: b64 encoded PNG image to upscale
         :param width: Width of the starting image

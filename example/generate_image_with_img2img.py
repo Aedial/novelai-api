@@ -1,9 +1,17 @@
+"""
+{filename}
+==============================================================================
+
+| Example of how to generate an image with img2img
+|
+| The resulting image will be placed in a folder named "results"
+"""
+
 import asyncio
 import base64
 from pathlib import Path
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.ImagePreset import ImageGenerationType, ImageModel, ImagePreset
 
 
@@ -30,4 +38,5 @@ async def main():
                 f.write(img)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

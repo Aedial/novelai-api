@@ -1,5 +1,5 @@
-novelai\_api.Idstore module
-===========================
+novelai\_api.Idstore
+====================
 
 .. automodule:: novelai_api.Idstore
    :members:

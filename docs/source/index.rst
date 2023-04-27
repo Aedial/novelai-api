@@ -14,7 +14,20 @@ TODO
 
 Reference
 =========
+
+novelai-api
+-----------
+
 .. toctree::
    :maxdepth: 2
 
-   novelai_api
+   novelai_api/novelai_api
+
+
+example
+-------
+
+.. toctree::
+   :maxdepth: 2
+
+   example/example

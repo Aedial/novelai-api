@@ -1,5 +1,5 @@
-novelai\_api.Preset module
-==========================
+novelai\_api.Preset
+===================
 
 .. automodule:: novelai_api.Preset
    :members:

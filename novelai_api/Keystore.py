@@ -68,6 +68,10 @@ class Keystore:
         return str(self._keystore)
 
     def create(self) -> str:
+        """
+        Create a new meta that is not in the keystore and assign a random nonce to it
+        """
+
         if not self._decrypted:
             raise ValueError("Cannot set key in an encrypted keystore")
 
@@ -80,6 +84,12 @@ class Keystore:
         return meta
 
     def decrypt(self, key: bytes):
+        """
+        Decrypt the keystore. The encrypted data should be in Keystore.data
+
+        :param key: Encryption key computed from utils.get_encryption_key()
+        """
+
         keystore = self.data.copy()
 
         if "keystore" in keystore and keystore["keystore"] is None:  # keystore is null when empty
@@ -123,6 +133,12 @@ class Keystore:
         self._decrypted = True
 
     def encrypt(self, key: bytes):
+        """
+        Encrypt a decrypted keystore. The encrypted data will be at Keystore.data
+
+        :param key: Encryption key computed from utils.get_encryption_key()
+        """
+
         # keystore is not decrypted, no need to encrypt it
         if not self._decrypted:
             return

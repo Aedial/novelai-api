@@ -1,10 +1,19 @@
+"""
+{filename}
+==============================================================================
+
+| Example of how to upscale an image
+|
+| It expects an image "results/image.png" to exist and will generate the resulting masks in this same folder
+| The image should be 512x768 by default, modify :code:`image_size` to change it
+"""
+
 import asyncio
 import base64
 import time
 from pathlib import Path
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.NovelAIError import NovelAIError
 
 
@@ -35,4 +44,5 @@ async def main():
                 time.sleep(5)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

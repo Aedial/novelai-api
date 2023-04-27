@@ -16,19 +16,19 @@ class Order(IntEnum):
 
 
 NAME_TO_ORDER = {
-    "tfs": Order.TFS,
     "temperature": Order.Temperature,
-    "top_p": Order.Top_P,
     "top_k": Order.Top_K,
+    "top_p": Order.Top_P,
+    "tfs": Order.TFS,
     "top_a": Order.Top_A,
     "typical_p": Order.Typical_P,
 }
 
 ORDER_TO_NAME = {
-    Order.TFS: "tfs",
     Order.Temperature: "temperature",
-    Order.Top_P: "top_p",
     Order.Top_K: "top_k",
+    Order.Top_P: "top_p",
+    Order.TFS: "tfs",
     Order.Top_A: "top_a",
     Order.Typical_P: "typical_p",
 }
@@ -176,7 +176,10 @@ class Preset(metaclass=_PresetMetaclass):
     _enabled: List[bool]
 
     _settings: Dict[str, Any]
+
+    #: Name of the preset
     name: str
+    #: Model the preset is for
     model: Model
 
     def __init__(self, name: str, model: Model, settings: Optional[Dict[str, Any]] = None):
@@ -240,13 +243,28 @@ class Preset(metaclass=_PresetMetaclass):
 
     def __repr__(self) -> str:
         model = self.model.value if self.model is not None else "<?>"
-        return f"Preset: '{self.name} ({model})'"
+        enabled_keys = ", ".join(f"{k} = {v}" for k, v in zip(self._enabled, NAME_TO_ORDER.keys()))
+
+        return f"Preset: '{self.name} ({model}, {enabled_keys})'"
 
     def enable(self, **kwargs) -> "Preset":
+        """
+        Enable/disable the processing of sampling values (True to enable, False to disable).
+
+        The allowed keys are :
+            * tfs
+            * temperature
+            * top_p
+            * top_k
+            * top_a
+            * typical_p
+        """
+
         for o in Order:
             name = ORDER_TO_NAME[o]
-            enabled = kwargs.pop(name, False)
-            self._enabled[o.value] = enabled
+            enabled = kwargs.pop(name, None)
+            if enabled is not None:
+                self._enabled[o.value] = enabled
 
         if len(kwargs):
             raise ValueError(f"Invalid order name: {', '.join(kwargs)}")
@@ -254,6 +272,10 @@ class Preset(metaclass=_PresetMetaclass):
         return self
 
     def to_settings(self) -> Dict[str, Any]:
+        """
+        Return the values stored in the preset, for a generate function
+        """
+
         settings = deepcopy(self._settings)
 
         if "textGenerationSettingsVersion" in settings:
@@ -263,33 +285,65 @@ class Preset(metaclass=_PresetMetaclass):
             if not self._enabled[i]:
                 settings["order"].remove(o)
 
+        # Delete the options that return an unknown error (success status code, but server error)
+        if settings.get("repetition_penalty_slope", None) == 0:
+            del settings["repetition_penalty_slope"]
+
         return settings
 
     def to_file(self, path: str) -> NoReturn:
+        """
+        Write the current preset to a file
+
+        :param path: Path to the preset file to write
+        """
+
         raise NotImplementedError()
 
     def copy(self) -> "Preset":
+        """
+        Instantiate a new preset object from the current one
+        """
+
         return Preset(self.name, self.model, deepcopy(self._settings))
 
     def set(self, name: str, value: Any) -> "Preset":
+        """
+        Set a preset value. Same as `preset[name] = value`
+        """
+
         self[name] = value
 
         return self
 
-    def update(self, values: Dict[str, Any]) -> "Preset":
-        for k, v in values.items():
+    def update(self, values: Optional[Dict[str, Any]] = None, **kwargs) -> "Preset":
+        """
+        Update the settings stored in the preset. Works like dict.update()
+        """
+
+        if values is not None:
+            for k, v in values.items():
+                self[k] = v
+
+        for k, v in kwargs.items():
             self[k] = v
 
         return self
 
     @classmethod
     def from_preset_data(cls, data: Optional[Dict[str, Any]] = None, **kwargs) -> "Preset":
+        """
+        Instantiate a preset from preset data, the data should be the same as in a preset file.
+        Works like dict.update()
+        """
+
         if data is None:
             data = {}
         data.update(kwargs)
 
         name = data["name"] if "name" in data else "<?>"
 
+        # FIXME: collapse model version
         model_name = data["model"] if "model" in data else ""
         model = Model(model_name) if enum_contains(Model, model_name) else None
 
@@ -312,6 +366,12 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_file(cls, path: str) -> "Preset":
+        """
+        Instantiate a preset from the given file
+
+        :param path: Path to the preset file
+        """
+
         with open(path, encoding="utf-8") as f:
             data = loads(f.read())
 
@@ -319,6 +379,15 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_official(cls, model: Model, name: Optional[str] = None) -> Union["Preset", None]:
+        """
+        Return a copy of an official preset
+
+        :param model: Model to get the preset of
+        :param name: Name of the preset. None means a random official preset should be returned
+
+        :return: The chosen preset, or None if the name was not found in the list of official presets
+        """
+
         model_value: str = model.value
 
         if name is None:
@@ -333,6 +402,14 @@ class Preset(metaclass=_PresetMetaclass):
 
     @classmethod
     def from_default(cls, model: Model) -> Union["Preset", None]:
+        """
+        Return a copy of the default preset for the given model
+
+        :param model: Model to get the default preset of
+
+        :return: The chosen preset, or None if the default preset was not found for the model
+        """
+
         model_value: str = model.value
 
         default = cls._defaults.get(model_value)
@@ -340,13 +417,17 @@ class Preset(metaclass=_PresetMetaclass):
             return None
 
         preset = cls._officials[model_value].get(default)
-        if preset is None:
-            return None
+        if preset is not None:
+            preset = deepcopy(preset)
 
-        return preset.copy()
+        return preset
 
 
-def import_officials():
+def _import_officials():
+    """
+    Import the official presets under the 'presets' directory. Performed once, at import
+    """
+
     cls = Preset
 
     cls._officials_values = {}
@@ -373,4 +454,4 @@ def import_officials():
 
 
 if not hasattr(Preset, "_officials"):
-    import_officials()
+    _import_officials()

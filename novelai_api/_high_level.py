@@ -1,6 +1,6 @@
 import json
 from hashlib import sha256
-from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
@@ -63,13 +63,24 @@ class HighLevel:
         return rsp["accessToken"]
 
     async def login_from_token(self, access_key: str):
+        """
+        Log in with the access key, instead of email and password
+
+        :param access_key: Access key of the account (pre-computed via email and password)
+
+        :return: User's access token
+        """
+
         rsp = await self._parent.low_level.login(access_key)
 
         self._parent.headers["Authorization"] = f"Bearer {rsp['accessToken']}"
 
+        return rsp["accessToken"]
+
     async def get_keystore(self, key: bytes) -> Keystore:
         """
         Retrieve the keystore and decrypt it in a readable manner.
+
         The keystore is the mapping of meta -> encryption key of each object.
         If this function throws errors repeatedly at you,
         check your internet connection or the integrity of your keystore.
@@ -86,11 +97,29 @@ class HighLevel:
         return keystore
 
     async def set_keystore(self, keystore: Keystore, key: bytes) -> bytes:
+        """
+        Encrypt and upload the keystore.
+
+        The keystore is the mapping of meta -> encryption key of each object.
+        If this function throws errors repeatedly at you,
+        check your internet connection or the integrity of your keystore.
+        Losing your keystore, or overwriting it means losing all content on the account.
+
+        :param keystore: Keystore object to upload
+        :param key: Account's encryption key
+
+        :return: raw data of the serialized Keystore object
+        """
+
         keystore.encrypt(key)
 
         return await self._parent.low_level.set_keystore(keystore.data)
 
     async def download_user_stories(self) -> Dict[str, Dict[str, Union[str, int]]]:
+        """
+        Download all the objects of type 'stories' stored on the account
+        """
+
         stories = await self._parent.low_level.download_objects("stories")
 
         return stories["objects"]
@@ -98,21 +127,37 @@ class HighLevel:
     async def download_user_story_contents(
         self,
     ) -> Dict[str, Dict[str, Union[str, int]]]:
+        """
+        Download all the objects of type 'storycontent' stored on the account
+        """
+
         story_contents = await self._parent.low_level.download_objects("storycontent")
 
         return story_contents["objects"]
 
     async def download_user_presets(self) -> List[Dict[str, Union[str, int]]]:
+        """
+        Download all the objects of type 'presets' stored on the account
+        """
+
         presets = await self._parent.low_level.download_objects("presets")
 
         return presets["objects"]
 
     async def download_user_modules(self) -> List[Dict[str, Union[str, int]]]:
+        """
+        Download all the objects of type 'aimodules' stored on the account
+        """
+
         modules = await self._parent.low_level.download_objects("aimodules")
 
         return modules["objects"]
 
     async def download_user_shelves(self) -> List[Dict[str, Union[str, int]]]:
+        """
+        Download all the objects of type 'shelf' stored on the account
+        """
+
         modules = await self._parent.low_level.download_objects("shelf")
 
         return modules["objects"]
@@ -124,12 +169,11 @@ class HighLevel:
         keystore: Optional[Keystore] = None,
     ) -> bool:
         """
-        Upload user content. If it has been decrypted with decrypt_user_data,
-        it should be re-encrypted with encrypt_user_data, even if the decryption failed
+        Upload user content
 
         :param data: Object to upload
-        :param encrypt: Encrypt/compress the data if True and not already encrypted
-        :param keystore: Keystore to encrypt data if encrypt is True
+        :param encrypt: Re-encrypt/re-compress the data, if True
+        :param keystore: Keystore to encrypt the data, if encrypt is True
 
         :return: True if the upload succeeded, False otherwise
         """
@@ -157,12 +201,19 @@ class HighLevel:
 
         return await self._parent.low_level.upload_object(object_type, object_id, object_meta, object_data)
 
-    async def upload_user_contents(self, datas: Iterable[Dict[str, Any]]) -> List[Tuple[str, Optional[NovelAIError]]]:
+    async def upload_user_contents(
+        self,
+        datas: Iterable[Dict[str, Any]],
+        encrypt: bool = False,
+        keystore: Optional[Keystore] = None,
+    ) -> List[Tuple[str, Optional[NovelAIError]]]:
         """
         Upload multiple user contents. If the content has been decrypted with decrypt_user_data,
         it should be re-encrypted with encrypt_user_data, even if the decryption failed
 
         :param datas: Objects to upload
+        :param encrypt: Re-encrypt/re-compress the data, if True
+        :param keystore: Keystore to encrypt the data, if encrypt is True
 
         :return: A list of (id, error) of all the objects that failed to be uploaded
         """
@@ -171,7 +222,8 @@ class HighLevel:
 
         for data in datas:
             try:
-                success = await self.upload_user_content(data)
+                success = await self.upload_user_content(data, encrypt, keystore)
+
                 if not success:
                     status.append((data["id"], None))
             except NovelAIError as e:
@@ -192,7 +244,7 @@ class HighLevel:
         **kwargs,
     ):
         """
-        Generate content from an AI on the NovelAI server, with streaming support
+        Generate text with streaming support
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -202,14 +254,14 @@ class HighLevel:
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation
         :param stream: Use data streaming for the response
-        :param kwargs: Additional parameters to pass to the requests
+        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
         """
 
         if preset is None:
             raise ValueError("Uninitialized preset")
-        if preset.model != model:
+        if preset.model is not model:
             raise ValueError(f"Preset '{preset.name}' (model {preset.model}) is not compatible with model {model}")
 
         preset_params = preset.to_settings()
@@ -223,37 +275,23 @@ class HighLevel:
 
         params["prefix"] = "vanilla" if prefix is None else prefix
 
-        if params["num_logprobs"] == GlobalSettings.NO_LOGPROBS:
-            del params["num_logprobs"]
+        for k, v, c in (("bad_words_ids", bad_words, BanList), ("logit_bias_exp", biases, BiasGroup)):
+            k: str
+            v: Union[Iterable[BanList], Iterable[BiasGroup], BanList, BiasGroup, None]
+            c: Union[Type[BanList], Type[BiasGroup]]
 
-        if bad_words is not None:
-            if isinstance(bad_words, BanList):
-                bad_words = [bad_words]
+            if v is not None:
+                if isinstance(v, c):
+                    v = [v]
 
-            for i, bad_word in enumerate(bad_words):
-                if not isinstance(bad_word, BanList):
-                    raise ValueError(
-                        f"Expected type 'BanList' for item #{i} of 'bad_words', " f"but got '{type(bad_word)}'"
-                    )
+                for i, obj in enumerate(v):
+                    if not isinstance(obj, c):
+                        raise ValueError(f"Expected type '{c}' for item #{i} of '{k}', but got '{type(obj)}'")
 
-                params["bad_words_ids"].extend(bad_word.get_tokenized_banlist(model))
+                    params[k].extend(obj.get_tokenized_banlist(model))
 
-        if biases is not None:
-            if isinstance(biases, BiasGroup):
-                biases = [biases]
-
-            for i, bias in enumerate(biases):
-                if not isinstance(bias, BiasGroup):
-                    raise ValueError(f"Expected type 'BiasGroup' for item #{i} of 'biases', but got '{type(bias)}'")
-
-                params["logit_bias_exp"].extend(bias.get_tokenized_biases(model))
-
-        # Delete the options that return an unknown error (success status code, but server error)
-        if "repetition_penalty_slope" in params and params["repetition_penalty_slope"] == 0:
-            del params["repetition_penalty_slope"]
-
-        if not params["bad_words_ids"]:
-            del params["bad_words_ids"]
+            if k in params and not params[k]:
+                del params[k]
 
         async for i in self._parent.low_level.generate(prompt, model, params, stream):
             yield i
@@ -270,7 +308,7 @@ class HighLevel:
         **kwargs,
     ) -> Dict[str, Any]:
         """
-        Generate text from an AI on the NovelAI server. The text is returned at once, when generation is finished.
+        Generate text. The text is returned at once, when generation is finished.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -309,7 +347,7 @@ class HighLevel:
         **kwargs,
     ) -> AsyncIterable[Dict[str, Any]]:
         """
-        Generate text from an AI on the NovelAI server. The text is returned one token at a time, as it is generated.
+        Generate text. The text is returned one token at a time, as it is generated.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -345,7 +383,7 @@ class HighLevel:
         **kwargs,
     ) -> AsyncIterable[Union[str, bytes]]:
         """
-        Generate image from an AI on the NovelAI server
+        Generate one or multiple image(s)
 
         :param prompt: Prompt to give to the AI (raw text describing the wanted image)
         :param model: Model to use for the AI
@@ -353,7 +391,7 @@ class HighLevel:
         :param action: Type of image generation to use
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
-        :return: Content that has been generated
+        :return: Pair(s) (name, image) that have been generated
         """
 
         settings = preset.to_settings(model)

@@ -1,10 +1,19 @@
+"""
+{filename}
+==============================================================================
+
+| Example of how to query the controlnet masks for an image
+|
+| It expects an image "results/image.png" to exist and will generate the resulting masks in this same folder
+| NOTE: Currently the returned mask is wrong due to an image conversion in frontend (see :issue:`15`)
+"""
+
 import asyncio
 import base64
 import time
 from pathlib import Path
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.ImagePreset import ControlNetModel
 from novelai_api.NovelAIError import NovelAIError
 
@@ -33,4 +42,5 @@ async def main():
                 time.sleep(5)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

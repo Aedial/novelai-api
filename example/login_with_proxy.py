@@ -1,6 +1,13 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
 
-from boilerplate import API
+Example of how to login on the provided account with a proxy
+"""
+
+import asyncio
+
+from example.boilerplate import API
 
 
 async def main():
@@ -15,4 +22,5 @@ async def main():
         pass
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

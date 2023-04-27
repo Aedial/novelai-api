@@ -1,8 +1,16 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
+
+| Example of how to generate a text
+|
+| The resulting text will be directed to the standard error output (stderr)
+"""
+
+import asyncio
 from typing import List, Optional
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.GlobalSettings import GlobalSettings
@@ -102,4 +110,5 @@ async def main():
         # ... and more examples can be found in tests/test_generate.py
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,8 +1,16 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
+
+| Example of how to generate an image
+|
+| The resulting images will be placed in a folder named "results"
+"""
+
+import asyncio
 from pathlib import Path
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageResolution, UCPreset
 
 
@@ -42,4 +50,5 @@ async def main():
                 f.write(img)
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -7,6 +7,10 @@ from novelai_api.Tokenizer import Tokenizer
 
 
 class GlobalSettings:
+    """
+    Object used to store global settings for the account
+    """
+
     # TODO: store bracket ban in a file
     _BRACKETS = {
         "gpt2": [
@@ -609,6 +613,7 @@ class GlobalSettings:
         #: Apply the GENJI_AMBIGUOUS_TOKENS if model is Genji
         ban_ambiguous_genji_tokens: bool
 
+    #: Value to set num_logprobs at to disable logprobs
     NO_LOGPROBS = -1
 
     _settings: Dict[str, Any]
@@ -649,9 +654,19 @@ class GlobalSettings:
         return object.__getattribute__(self, key)
 
     def copy(self):
+        """
+        Create a new GlobalSettings from the current
+        """
+
         return GlobalSettings(**self._settings)
 
     def to_settings(self, model: Model) -> Dict[str, Any]:
+        """
+        Create text generation settings from the GlobalSettings object
+
+        :param model: Model to use the settings of
+        """
+
         settings = {
             "generate_until_sentence": self._settings["generate_until_sentence"],
             "num_logprobs": self._settings["num_logprobs"],
@@ -661,6 +676,9 @@ class GlobalSettings:
             "use_string": False,
             "use_cache": False,
         }
+
+        if self._settings["num_logprobs"] != self.NO_LOGPROBS:
+            settings["num_logprobs"] = self._settings["num_logprobs"]
 
         tokenizer_name = Tokenizer.get_tokenizer_name(model)
 

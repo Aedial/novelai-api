@@ -1,5 +1,5 @@
-novelai\_api.Tokenizer module
-=============================
+novelai\_api.Tokenizer
+======================
 
 .. automodule:: novelai_api.Tokenizer
    :members:

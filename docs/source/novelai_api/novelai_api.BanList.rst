@@ -1,5 +1,5 @@
-novelai\_api.BanList module
-===========================
+novelai\_api.BanList
+====================
 
 .. automodule:: novelai_api.BanList
    :members:

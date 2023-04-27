@@ -1,5 +1,5 @@
-novelai\_api.Keystore module
-============================
+novelai\_api.Keystore
+=====================
 
 .. automodule:: novelai_api.Keystore
    :members:

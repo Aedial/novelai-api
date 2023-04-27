@@ -1,5 +1,5 @@
-novelai\_api.NovelAI\_API module
-================================
+novelai\_api.NovelAI\_API
+=========================
 
 .. automodule:: novelai_api.NovelAI_API
    :members:

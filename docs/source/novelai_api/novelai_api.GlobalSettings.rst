@@ -1,5 +1,5 @@
-novelai\_api.GlobalSettings module
-==================================
+novelai\_api.GlobalSettings
+===========================
 
 .. automodule:: novelai_api.GlobalSettings
    :members:

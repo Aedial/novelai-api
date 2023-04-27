@@ -9,6 +9,10 @@ from novelai_api.python_utils import NoneType, expand_kwargs
 
 
 class ImageModel(enum.Enum):
+    """
+    Image model for low_level.suggest_tags() and low_level.generate_image()
+    """
+
     Anime_Curated = "safe-diffusion"
     Anime_Full = "nai-diffusion"
     Furry = "nai-diffusion-furry"
@@ -17,6 +21,10 @@ class ImageModel(enum.Enum):
 
 
 class ControlNetModel(enum.Enum):
+    """
+    ControlNet Model for ImagePreset.controlnet_model and low_level.generate_controlnet_mask()
+    """
+
     Palette_Swap = "hed"
     Form_Lock = "midas"
     Scrible = "fake_scribble"
@@ -25,6 +33,10 @@ class ControlNetModel(enum.Enum):
 
 
 class ImageResolution(enum.Enum):
+    """
+    Image resolution for ImagePreset.resolution
+    """
+
     Small_Portrait = (384, 640)
     Small_Landscape = (640, 384)
     Small_Square = (512, 512)
@@ -39,6 +51,10 @@ class ImageResolution(enum.Enum):
 
 
 class ImageSampler(enum.Enum):
+    """
+    Sampler for ImagePreset.sampler
+    """
+
     k_lms = "k_lms"
     k_euler = "k_euler"
     k_euler_ancestral = "k_euler_ancestral"
@@ -59,6 +75,10 @@ class ImageSampler(enum.Enum):
 
 
 class UCPreset(enum.Enum):
+    """
+    Default UC preset for ImagePreset.uc_preset
+    """
+
     Preset_Low_Quality_Bad_Anatomy = 0
     Preset_Low_Quality = 1
     Preset_Bad_Anatomy = 2
@@ -66,8 +86,13 @@ class UCPreset(enum.Enum):
 
 
 class ImageGenerationType(enum.Enum):
+    """
+    Image generation type for low_level.generate_image
+    """
+
     NORMAL = "generate"
     IMG2IMG = "img2img"
+    # inpainting should go there
 
 
 class ImagePreset:
@@ -182,6 +207,7 @@ class ImagePreset:
         "uc_preset": UCPreset.Preset_Low_Quality_Bad_Anatomy,
         "n_samples": 1,
         "seed": 0,
+        # TODO: set ImageSampler.k_dpmpp_2m as default ?
         "sampler": ImageSampler.k_euler_ancestral,
         "steps": 28,
         "scale": 11,
@@ -194,7 +220,7 @@ class ImagePreset:
 
     _settings: Dict[str, Any]
 
-    # Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle
+    #: Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle
     last_seed: int
 
     @expand_kwargs(_TYPE_MAPPING.keys(), _TYPE_MAPPING.values())
@@ -223,15 +249,27 @@ class ImagePreset:
         del self._settings[key]
 
     def __contains__(self, key: str):
-        return key in self._settings
+        return key in self._settings.keys()
 
-    def update(self, values: Dict[str, Any]) -> "ImagePreset":
-        for k, v in values.items():
+    def update(self, values: Optional[Dict[str, Any]] = None, **kwargs) -> "ImagePreset":
+        """
+        Update the settings stored in the preset. Works like dict.update()
+        """
+
+        if values is not None:
+            for k, v in values.items():
+                self[k] = v
+
+        for k, v in kwargs.items():
             self[k] = v
 
         return self
 
     def copy(self) -> "ImagePreset":
+        """
+        Create a new ImagePreset instance from the current one
+        """
+
         return ImagePreset(**self._settings)
 
     # give dot access capabilities to the object
@@ -254,6 +292,12 @@ class ImagePreset:
             object.__delattr__(self, name)
 
     def to_settings(self, model: ImageModel) -> Dict[str, Any]:
+        """
+        Return the values stored in the preset, for a generate_image function
+
+        :param model: Image model to get the settings of
+        """
+
         settings = copy.deepcopy(self._settings)
 
         resolution: Union[ImageResolution, Tuple[int, int]] = settings.pop("resolution")
@@ -301,6 +345,10 @@ class ImagePreset:
         return settings
 
     def get_max_n_samples(self):
+        """
+        Get the allowed max value of ImagePreset.n_samples using current preset values
+        """
+
         resolution: Union[ImageResolution, Tuple[int, int]] = self._settings["resolution"]
 
         if isinstance(resolution, ImageResolution):
@@ -347,11 +395,23 @@ class ImagePreset:
 
     @classmethod
     def from_file(cls, path: str) -> "ImagePreset":
+        """
+        Write the preset to a file
+
+        :param path: Path to the file to read the preset from
+        """
+
         with open(path, encoding="utf-8") as f:
             data = json.loads(f.read())
 
         return cls(**data)
 
     def to_file(self, path: str):
+        """
+        Load the preset from a file
+
+        :param path: Path to the file to write the preset to
+        """
+
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self._settings))

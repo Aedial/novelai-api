@@ -1,7 +1,15 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
 
-from boilerplate import API, dumps
+| Example of tag suggestion for image gen
+|
+| The result will be directed to the standard error output (stderr)
+"""
 
+import asyncio
+
+from example.boilerplate import API, dumps
 from novelai_api.ImagePreset import ImageModel
 
 tags = ["gi", "bo", "scal", "cre"]
@@ -19,4 +27,5 @@ async def main():
                 logger.info(dumps(e))
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

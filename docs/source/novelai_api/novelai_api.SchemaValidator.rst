@@ -1,5 +1,5 @@
-novelai\_api.SchemaValidator module
-===================================
+novelai\_api.SchemaValidator
+============================
 
 .. automodule:: novelai_api.SchemaValidator
    :members:

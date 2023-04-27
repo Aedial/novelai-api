@@ -1,5 +1,5 @@
-novelai\_api.ImagePreset module
-===============================
+novelai\_api.ImagePreset
+========================
 
 .. automodule:: novelai_api.ImagePreset
    :members:

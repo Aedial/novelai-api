@@ -1,9 +1,18 @@
+"""
+{filename}
+==============================================================================
+
+| Example of how to generate an image with a Control Net
+|
+| The resulting image will be placed in a folder named "results"
+| NOTE: Currently the returned mask is wrong due to an image conversion in frontend (see :issue:`15`)
+"""
+
 import asyncio
 import base64
 from pathlib import Path
 
-from boilerplate import API
-
+from example.boilerplate import API
 from novelai_api.ImagePreset import ControlNetModel, ImageModel, ImagePreset
 
 
@@ -31,4 +40,5 @@ async def main():
                 f.write(img)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

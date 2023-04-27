@@ -1,5 +1,5 @@
-novelai\_api package
-====================
+novelai-api package
+===================
 
 .. toctree::
    :maxdepth: 2
@@ -17,4 +17,3 @@ novelai\_api package
    novelai_api.StoryHandler
    novelai_api.Tokenizer
    novelai_api.utils
-   novelai_api.python_utils

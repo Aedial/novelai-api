@@ -1,5 +1,5 @@
-novelai\_api.StoryHandler module
-================================
+novelai\_api.StoryHandler
+=========================
 
 .. automodule:: novelai_api.StoryHandler
    :members:

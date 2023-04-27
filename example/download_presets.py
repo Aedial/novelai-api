@@ -1,7 +1,13 @@
-from asyncio import run
+"""
+{filename}
+==============================================================================
 
-from boilerplate import API, dumps
+Example of how to download and decompress shelves from the provided account
+"""
 
+import asyncio
+
+from example.boilerplate import API, dumps
 from novelai_api.utils import compress_user_data, decompress_user_data
 
 
@@ -18,4 +24,5 @@ async def main():
         compress_user_data(presets)
 
 
-run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
