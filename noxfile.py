@@ -76,9 +76,9 @@ def test_api(session: nox.Session):
     session.run("npm", "install", "fflate", external=True)
 
     if session.posargs:
-        session.run("pytest", "--tb=short", *(f"tests/api/{e}" for e in session.posargs))
+        session.run("pytest", *(f"tests/api/{e}" for e in session.posargs))
     else:
-        session.run("pytest", "--tb=short", "tests/api/")
+        session.run("pytest", "tests/api/")
 
 
 @nox.session()
