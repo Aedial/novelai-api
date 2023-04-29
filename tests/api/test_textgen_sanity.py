@@ -1,7 +1,4 @@
 """
-{filename}
-==============================================================================
-
 Test if the generated content is consistent with the frontend
 """
 
@@ -31,7 +28,7 @@ model_configs = [(model, p) for model in models for p in (config_path / model.va
 
 @pytest.mark.parametrize("model_config", model_configs)
 @error_handler
-async def test_generate(api_handle, model_config: Tuple[Model, Path]):  # noqa: F811  # pylint: disable=W0621
+async def test_textgen_sanity(api_handle, model_config: Tuple[Model, Path]):  # noqa: F811  # pylint: disable=W0621
     api = api_handle.api
     logger = api.logger
 

@@ -13,15 +13,13 @@ def pytest_terminal_summary(terminalreporter):
         terminalreporter.write_sep("=", "XFAIL summary info", cyan=True, bold=True)
 
     for rep in xfailed:
-        reason = getattr(rep, "wasxfail", "")
-        terminalreporter.write("XFAIL", yellow=True)
-        terminalreporter.write(f" {rep.nodeid} - {reason}\n")
+        if not rep.failed:
+            reason = getattr(rep, "wasxfail", "")
+            terminalreporter.write("XFAIL", yellow=True)
+            terminalreporter.write(f" {rep.nodeid} - {reason}\n")
 
-        rep.longrepr.toterminal(terminalreporter._tw)
-        terminalreporter.line("")
-
-
-# TODO: add html reporting
+            rep.longrepr.toterminal(terminalreporter._tw)
+            terminalreporter.line("")
 
 
 # cannot put in boilerplate because pytest is a mess
@@ -31,7 +29,7 @@ def event_loop():
     yield loop
 
     # clean any remaining task to avoid the warning about pending tasks
-    tasks = asyncio.Task.all_tasks(loop) if hasattr(asyncio.Task, "all_tasks") else asyncio.all_tasks(loop)
+    tasks = asyncio.all_tasks(loop)
     for task in tasks:
         # print(f"Cancelling task {task}")
         task.cancel()

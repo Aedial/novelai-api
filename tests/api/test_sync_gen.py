@@ -1,7 +1,4 @@
 """
-{filename}
-==============================================================================
-
 | Test if sync capabilities work without problem
 | This test only checks if sync works, not if the result is right, it's the job of the other tests
 """

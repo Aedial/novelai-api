@@ -1,7 +1,4 @@
 """
-{filename}
-==============================================================================
-
 Test which samplers currently work
 """
 
@@ -34,10 +31,6 @@ model_samplers = list(itertools.product(models, samplers))
 async def test_samplers(
     api_handle, model_sampler: Tuple[ImageModel, ImagePreset]  # noqa: F811  # pylint: disable=W0621
 ):
-    """
-    Test the presets to ensure they work with the API
-    """
-
     api = api_handle.api
     model, sampler = model_sampler
 

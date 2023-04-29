@@ -27,7 +27,7 @@ def get_dotenv(session: nox.Session):
     return json.loads(dotenv_str)
 
 
-def install_package(session: nox.Session, *packages: str, dev: bool = False):
+def install_package(session: nox.Session, *packages: str, dev: bool = False, docs: bool = False):
     session.install("poetry")
     session.install("python-dotenv")
 
@@ -40,6 +40,8 @@ def install_package(session: nox.Session, *packages: str, dev: bool = False):
     poetry_groups = []
     if dev:
         poetry_groups.extend(["--with", "dev"])
+    if docs:
+        poetry_groups.extend(["--with", "docs"])
 
     session.run("python", "-m", "poetry", "export", "--output=requirements.txt", "--without-hashes", *poetry_groups)
     session.run("python", "-m", "poetry", "build", "--format=wheel")
@@ -99,8 +101,7 @@ def run(session: nox.Session):
 def build_docs(session: nox.Session):
     docs_path = pathlib.Path(__file__).parent / "docs"
 
-    install_package(session)
-    session.install("-r", str(docs_path / "requirements.txt"))
+    install_package(session, dev=True, docs=True)
 
     with session.chdir(docs_path):
         session.run("make", "html", external=True)

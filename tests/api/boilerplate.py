@@ -124,6 +124,10 @@ def error_handler(func_ext: Optional[Callable[[Any, Any], Awaitable[Any]]] = Non
 
 
 class JSONEncoder(json.JSONEncoder):
+    """
+    Extended JSON encoder to support bytes
+    """
+
     def default(self, o: Any) -> Any:
         if isinstance(o, bytes):
             return o.hex()
@@ -132,6 +136,10 @@ class JSONEncoder(json.JSONEncoder):
 
 
 def dumps(e: Any) -> str:
+    """
+    Shortcut to a configuration of json.dumps for consistency
+    """
+
     return json.dumps(e, indent=4, ensure_ascii=False, cls=JSONEncoder)
 
 
