@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tests.api.test_decrypt_encrypt_integrity_check &#8212; NovelAI API 0.11.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/micromodal.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/hoverxref.js"></script>
+    <script src="../../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tests.api.test_decrypt_encrypt_integrity_check</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.api.test_decrypt_encrypt_integrity_check</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Test if the content decryption/decompression is consistent with encryption/compression for downloaded content</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">PIPE</span><span class="p">,</span> <span class="n">Popen</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">novelai_api</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">compress_user_data</span><span class="p">,</span> <span class="n">decompress_user_data</span><span class="p">,</span> <span class="n">decrypt_user_data</span><span class="p">,</span> <span class="n">encrypt_user_data</span>
+<span class="kn">from</span> <span class="nn">tests.api.boilerplate</span> <span class="kn">import</span> <span class="n">API</span><span class="p">,</span> <span class="n">api_handle</span><span class="p">,</span> <span class="n">api_handle_sync</span><span class="p">,</span> <span class="n">error_handler</span>  <span class="c1"># noqa: F401  # pylint: disable=W0611</span>
+
+
+<span class="k">def</span> <span class="nf">compare_in_out</span><span class="p">(</span><span class="n">type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">items_in</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">items_out</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">fail_flags</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;O&quot;</span> <span class="k">if</span> <span class="n">item_in</span> <span class="o">==</span> <span class="n">item_out</span> <span class="k">else</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">item_in</span><span class="p">,</span> <span class="n">item_out</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">items_in</span><span class="p">,</span> <span class="n">items_out</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">&quot;X&quot;</span> <span class="ow">in</span> <span class="n">fail_flags</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fail_flags</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">fail_flags</span><span class="p">)</span><span class="si">}</span><span class="s2"> integrity checks failed for </span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fail_flags</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">fail_flags</span><span class="p">)</span><span class="si">}</span><span class="s2"> integrity checks succeeded for </span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="n">fflate_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;fflate_inflate.js&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">inflate_js</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">fflate_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))],</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<div class="viewcode-block" id="keystore_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.keystore_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">keystore_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of the keystore on decryption - encryption</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">encryption_key</span>
+
+    <span class="n">keystore</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">get_keystore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">encrypted_keystore_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">keystore</span><span class="o">.</span><span class="n">data</span><span class="p">)]</span>
+    <span class="n">keystore</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">encrypted_keystore_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">keystore</span><span class="o">.</span><span class="n">data</span><span class="p">)]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;keystore&quot;</span><span class="p">,</span> <span class="n">encrypted_keystore_in</span><span class="p">,</span> <span class="n">encrypted_keystore_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_keystore_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">keystore_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_keystore_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">keystore_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="stories_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.stories_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">stories_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of &#39;stories&#39; objects on decryption - encryption</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">encryption_key</span>
+
+    <span class="n">keystore</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">get_keystore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">stories</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_stories</span><span class="p">()</span>
+    <span class="n">encrypted_stories_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">story</span><span class="p">)</span> <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span><span class="p">]</span>
+    <span class="n">decrypt_user_data</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">encrypted_stories_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">story</span><span class="p">)</span> <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;stories&quot;</span><span class="p">,</span> <span class="n">encrypted_stories_in</span><span class="p">,</span> <span class="n">encrypted_stories_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_stories_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">stories_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_stories_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">stories_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="storycontent_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.storycontent_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">storycontent_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of &#39;storycontent&#39; objects on decryption - encryption</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">encryption_key</span>
+
+    <span class="n">keystore</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">get_keystore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">story_contents</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_story_contents</span><span class="p">()</span>
+    <span class="n">decrypt_user_data</span><span class="p">(</span><span class="n">story_contents</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">decrypted_storycontent_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">story_content</span><span class="p">)</span> <span class="k">for</span> <span class="n">story_content</span> <span class="ow">in</span> <span class="n">story_contents</span><span class="p">]</span>
+    <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">story_contents</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+
+    <span class="n">inflate_backup</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">inflate</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">inflate</span> <span class="o">=</span> <span class="n">inflate_js</span>
+    <span class="n">decrypt_user_data</span><span class="p">(</span><span class="n">story_contents</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">inflate</span> <span class="o">=</span> <span class="n">inflate_backup</span>
+
+    <span class="n">decrypted_storycontent_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">story_content</span><span class="p">)</span> <span class="k">for</span> <span class="n">story_content</span> <span class="ow">in</span> <span class="n">story_contents</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;storycontent&quot;</span><span class="p">,</span> <span class="n">decrypted_storycontent_in</span><span class="p">,</span> <span class="n">decrypted_storycontent_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_storycontent_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">storycontent_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_storycontent_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">storycontent_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="presets_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.presets_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">presets_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of &#39;presets&#39; objects on decompression - compression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+
+    <span class="n">presets</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_presets</span><span class="p">()</span>
+    <span class="n">encrypted_presets_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">preset</span><span class="p">)</span> <span class="k">for</span> <span class="n">preset</span> <span class="ow">in</span> <span class="n">presets</span><span class="p">]</span>
+    <span class="n">decompress_user_data</span><span class="p">(</span><span class="n">presets</span><span class="p">)</span>
+    <span class="n">compress_user_data</span><span class="p">(</span><span class="n">presets</span><span class="p">)</span>
+    <span class="n">encrypted_presets_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">preset</span><span class="p">)</span> <span class="k">for</span> <span class="n">preset</span> <span class="ow">in</span> <span class="n">presets</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;presets&quot;</span><span class="p">,</span> <span class="n">encrypted_presets_in</span><span class="p">,</span> <span class="n">encrypted_presets_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_presets_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">presets_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_presets_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">presets_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="aimodules_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.aimodules_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">aimodules_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of &#39;aimodules&#39; objects on decryption - encryption</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">encryption_key</span>
+
+    <span class="n">keystore</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">get_keystore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_modules</span><span class="p">()</span>
+    <span class="n">encrypted_modules_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">]</span>
+    <span class="n">decrypt_user_data</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+    <span class="n">encrypted_modules_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;aimodules&quot;</span><span class="p">,</span> <span class="n">encrypted_modules_in</span><span class="p">,</span> <span class="n">encrypted_modules_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_aimodules_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">aimodules_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_aimodules_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">aimodules_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="shelves_integrity"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.shelves_integrity">[docs]</a><span class="nd">@error_handler</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">shelves_integrity</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">API</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify the integrity of &#39;shelves&#39; objects on decompression - compression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">api</span>
+
+    <span class="n">shelves</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_shelves</span><span class="p">()</span>
+    <span class="n">encrypted_shelves_in</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">shelf</span><span class="p">)</span> <span class="k">for</span> <span class="n">shelf</span> <span class="ow">in</span> <span class="n">shelves</span><span class="p">]</span>
+    <span class="n">decompress_user_data</span><span class="p">(</span><span class="n">shelves</span><span class="p">)</span>
+    <span class="n">compress_user_data</span><span class="p">(</span><span class="n">shelves</span><span class="p">)</span>
+    <span class="n">encrypted_shelves_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">shelf</span><span class="p">)</span> <span class="k">for</span> <span class="n">shelf</span> <span class="ow">in</span> <span class="n">shelves</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">compare_in_out</span><span class="p">(</span><span class="s2">&quot;shelves&quot;</span><span class="p">,</span> <span class="n">encrypted_shelves_in</span><span class="p">,</span> <span class="n">encrypted_shelves_out</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_shelves_integrity_sync</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">shelves_integrity</span><span class="p">(</span><span class="n">api_handle_sync</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">test_shelves_integrity_async</span><span class="p">(</span><span class="n">api_handle</span><span class="p">):</span>  <span class="c1"># noqa: F811  # pylint: disable=W0621</span>
+    <span class="k">await</span> <span class="n">shelves_integrity</span><span class="p">(</span><span class="n">api_handle</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">API</span><span class="p">()</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">test_keystore_integrity_async</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_stories_integrity_async</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_storycontent_integrity_async</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_presets_integrity_async</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_shelves_integrity_async</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">with</span> <span class="n">API</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">test_keystore_integrity_sync</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_stories_integrity_sync</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_storycontent_integrity_sync</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_presets_integrity_sync</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">test_shelves_integrity_sync</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+
+    <span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tests.api.test_decrypt_encrypt_integrity_check</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

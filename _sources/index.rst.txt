@@ -31,3 +31,12 @@ example
    :maxdepth: 2
 
    example/example
+
+
+API
+---
+
+.. toctree::
+   :maxdepth: 2
+
+   tests/api/api

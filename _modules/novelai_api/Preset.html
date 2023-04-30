@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
     
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
@@ -371,11 +372,19 @@
         <span class="k">if</span> <span class="s2">&quot;textGenerationSettingsVersion&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;textGenerationSettingsVersion&quot;</span><span class="p">]</span>  <span class="c1"># not API relevant</span>
 
+        <span class="c1"># remove disabled sampling options</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Order</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ORDER_TO_NAME</span><span class="p">[</span><span class="n">o</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="c1"># Delete the options that return an unknown error (success status code, but server error)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]]</span>
+
+        <span class="c1"># seems that 0 doesn&#39;t disable it, but does weird things</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_range&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;repetition_penalty_range&quot;</span><span class="p">]</span>
+
+        <span class="c1"># delete the options that return an unknown error (success status code, but server error)</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_slope&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;repetition_penalty_slope&quot;</span><span class="p">]</span>
 
@@ -583,7 +592,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, Aedial.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>
