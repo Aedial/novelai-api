@@ -1,5 +1,5 @@
 {
-  "prompt": "[ Prologue ]",
+  "prompt": "<|endoftext|>[ Prologue ]\n",
   "preset": {
     "presetVersion": 3,
     "name": "Redjack",
@@ -55,7 +55,7 @@
     "ban_brackets": true,
     "bias_dinkus_asterism": true
   },
-  "result": "\nThe sun was setting over the city of Kaldan, and the sky was painted in a beautiful array of colors. The city was bustling with activity, as it was the day before the annual festival.",
+  "result": "The sun was setting over the city of Kaldan, and the sky was painted in a beautiful array of colors. The city was bustling with activity, as it was the day before the annual festival.\n\"I'm so excited! I can't wait to see the fireworks!\"\n\"Me too! I'm looking forward to the festival!\"\n\"I'm glad we're going to the festival together.\"",
   "logprobs": [
     {
       "chosen": [[[510], [-1.9209, 0]]],

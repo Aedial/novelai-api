@@ -95,7 +95,7 @@ path.extend(p.parent for p in find_default_config_files())
 xfail_strict = true
 empty_parameter_set_mark = "fail_at_collect"
 asyncio_mode = "auto"
-addopts = "--tb=short"
+addopts = "--tb=short -vv"
 
 [build-system]
 requires = ["poetry-core"]

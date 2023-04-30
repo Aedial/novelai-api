@@ -1,5 +1,5 @@
 {
-  "prompt": "[ Prologue ]",
+  "prompt": "\n***\n",
   "preset": {
     "presetVersion": 3,
     "name": "Moonlit Chronicler",
@@ -55,7 +55,7 @@
     "ban_brackets": true,
     "bias_dinkus_asterism": true
   },
-  "result": "\nThe next morning, I woke up to the sound of my phone ringing. It was a number I didn't recognize, so I let it go to voicemail.\n\"Hey, it's me,\" said a familiar voice.",
+  "result": "The next morning, I woke up to the sound of my phone ringing. It was a number I didn't recognize, so I let it go to voicemail.\n\"Hey, it's me,\" said a familiar voice.",
   "logprobs": [
     {
       "chosen": [[[464], [-2.2207, 0]]],

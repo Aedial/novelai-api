@@ -61,10 +61,10 @@ class API:
 
 def error_handler(func_ext: Optional[Callable[[Any, Any], Awaitable[Any]]] = None, *, attempts: int = 5, wait: int = 5):
     """
-    Add error handling to the function ``func_ext`` or ``func``
-    The function must accept a NovelAIAPI object as first arguments
+    Decorator to add error handling to the decorated function
+    The function must accept an API object as first arguments
 
-    :param func_ext: Substitute for func if the decorator is run without argument
+    :param func_ext: Substitute for func if the decorator is run without argument. Do not provide it directly
     :param attempts: Number of attempts to do before raising the error
     :param wait: Time (in seconds) to wait after each call
     """
@@ -146,7 +146,7 @@ def dumps(e: Any) -> str:
 @pytest.fixture(scope="session")
 async def api_handle():
     """
-    API handle for an Async Test
+    API handle for an Async Test. Use it as a pytest fixture
     """
 
     async with API() as api:
@@ -156,7 +156,7 @@ async def api_handle():
 @pytest.fixture(scope="session")
 async def api_handle_sync():
     """
-    API handle for a Sync Test
+    API handle for a Sync Test. Use it as a pytest fixture
     """
 
     async with API(sync=True) as api:

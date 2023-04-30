@@ -1,5 +1,5 @@
 {
-  "prompt": "[ Prologue ]",
+  "prompt": "⁂\n",
   "preset": {
     "presetVersion": 3,
     "name": "Emperor Moth",
@@ -55,7 +55,7 @@
     "ban_brackets": true,
     "bias_dinkus_asterism": true
   },
-  "result": "\nThe first time I saw the man, he was standing on a street corner in New York City. He had his back to me and was talking into a cell phone. The conversation went on for several minutes, but I couldn't hear what he said.",
+  "result": "The first time I saw the man, he was standing on a street corner in New York City. He had his back to me and was talking into a cell phone. The conversation went on for several minutes, but I couldn't hear what he said.",
   "logprobs": [
     {
       "chosen": [[[464], [-2.3438, 0]]],
