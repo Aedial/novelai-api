@@ -8,8 +8,8 @@ import inspect
 import os
 import sys
 from pathlib import Path
-from types import ModuleType
-from typing import List
+from types import FunctionType
+from typing import List, Union
 
 from sphinx.application import Sphinx
 from sphinx.ext.autodoc import Options
@@ -32,6 +32,7 @@ sys.path.insert(0, os.path.abspath("."))
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
     "sphinx.ext.viewcode",
     "myst_parser",
@@ -39,6 +40,8 @@ extensions = [
     "sphinx_last_updated_by_git",
     "hoverxref.extension",
 ]
+
+add_module_names = False
 
 autodoc_class_signature = "separated"
 autodoc_member_order = "bysource"
@@ -81,7 +84,11 @@ html_theme = "classic"
 # -- Hooks -------------------------------------------------------------------
 
 
-def format_docstring(_app: Sphinx, what: str, name: str, obj: ModuleType, _options: Options, lines: List[str]):
+def format_docstring(_app: Sphinx, what: str, name: str, obj, _options: Options, lines: List[str]):
+    """
+    Inject metadata in docstrings if necessary
+    """
+
     kwargs = {
         "obj_type": what,
         "obj_name": name,
@@ -99,5 +106,25 @@ def format_docstring(_app: Sphinx, what: str, name: str, obj: ModuleType, _optio
             lines[i] = line.format(**kwargs)
 
 
+def hide_test_signature(
+    _app: Sphinx,
+    what: str,
+    name: str,
+    _obj: FunctionType,
+    _options: Options,
+    signature: str,
+    return_annotation: Union[str, None],
+):
+    if what == "function":
+        module_name, *_, file_name, _func_name = name.split(".")
+
+        # erase signature for functions from test files
+        if module_name == "tests" and file_name.startswith("test_"):
+            return "", None
+
+    return signature, return_annotation
+
+
 def setup(app):
     app.connect("autodoc-process-docstring", format_docstring)
+    app.connect("autodoc-process-signature", hide_test_signature)

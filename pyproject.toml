@@ -14,6 +14,9 @@ classifiers = [
 ]
 packages = [{include = "novelai_api"}]
 
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/Aedial/novelai-api/issues"
+
 [tool.poetry.dependencies]
 python = ">=3.7.2,<3.12"
 aiohttp = {extras = ["speedups"], version = "^3.8.3"}
@@ -26,12 +29,22 @@ regex = "^2022.10.31"
 sentencepiece = "^0.1.98"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
 pytest-asyncio = "^0.20.1"
-pytest-xdist = "^3.0.2"
+pytest-randomly = "^3.12.0"
 pylint = "^2.15.5"
 
+[tool.poetry.group.docs.dependencies]
+sphinx = "^5.3.0"
+# patched repo to work with relative links
+myst_parser = {git = "https://github.com/Aedial/MyST-Parser", rev = "adcdb9a"}
+linkify-it-py = "^2.0.0"
+sphinx-copybutton = "^0.5.2"
+sphinx-last-updated-by-git = "^0.3.4"
+sphinx-hoverxref = "^1.3.0"
+
 [tool.flake8]
-# TODO: add flake when supports come
+# TODO: add flake when supports come (https://github.com/PyCQA/flake8/issues/234)
 
 [tool.bandit]
 exclude_dirs = ["tests/api/test_decrypt_encrypt_integrity_check.py"]
@@ -77,6 +90,12 @@ from sys import path
 from pylint.config import find_default_config_files
 path.extend(p.parent for p in find_default_config_files())
 """
+
+[tool.pytest.ini_options]
+xfail_strict = true
+empty_parameter_set_mark = "fail_at_collect"
+asyncio_mode = "auto"
+addopts = "--tb=short -vv"
 
 [build-system]
 requires = ["poetry-core"]

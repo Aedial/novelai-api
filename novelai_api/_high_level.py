@@ -273,6 +273,11 @@ class HighLevel:
         params.update(global_params)
         params.update(kwargs)
 
+        # adjust repetition penalty value for Sigurd and Euterpe
+        if model in (Model.Sigurd, Model.Euterpe) and "repetition_penalty" in params:
+            rep_pen = params["repetition_penalty"]
+            params["repetition_penalty"] = (0.525 * (rep_pen - 1) / 7) + 1
+
         params["prefix"] = "vanilla" if prefix is None else prefix
 
         for k, v, c in (("bad_words_ids", bad_words, BanList), ("logit_bias_exp", biases, BiasGroup)):

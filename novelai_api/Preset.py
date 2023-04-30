@@ -315,11 +315,19 @@ class Preset(metaclass=_PresetMetaclass):
         if "textGenerationSettingsVersion" in settings:
             del settings["textGenerationSettingsVersion"]  # not API relevant
 
+        # remove disabled sampling options
         for i, o in enumerate(Order):
             if not self._enabled[i]:
                 settings["order"].remove(o)
+                settings.pop(ORDER_TO_NAME[o], None)
 
-        # Delete the options that return an unknown error (success status code, but server error)
+        settings["order"] = [e.value for e in settings["order"]]
+
+        # seems that 0 doesn't disable it, but does weird things
+        if settings.get("repetition_penalty_range", None) == 0:
+            del settings["repetition_penalty_range"]
+
+        # delete the options that return an unknown error (success status code, but server error)
         if settings.get("repetition_penalty_slope", None) == 0:
             del settings["repetition_penalty_slope"]
 

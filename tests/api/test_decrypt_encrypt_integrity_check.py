@@ -1,19 +1,15 @@
+"""
+Test if the content decryption/decompression is consistent with encryption/compression for downloaded content
+"""
+
 from asyncio import run
-from os import environ as env
 from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import Any, List
 
-from aiohttp import ClientSession
-
-from novelai_api import NovelAIAPI, utils
-from novelai_api.utils import (
-    compress_user_data,
-    decompress_user_data,
-    decrypt_user_data,
-    encrypt_user_data,
-    get_encryption_key,
-)
+from novelai_api import utils
+from novelai_api.utils import compress_user_data, decompress_user_data, decrypt_user_data, encrypt_user_data
+from tests.api.boilerplate import API, api_handle, api_handle_sync, error_handler  # noqa: F401  # pylint: disable=W0611
 
 
 def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) -> bool:
@@ -39,21 +35,15 @@ def inflate_js(data: bytes, _) -> bytes:
     return out
 
 
-if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
-    raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
+@error_handler(wait=0)
+async def keystore_integrity(handle: API):
+    """
+    Verify the integrity of the keystore on decryption - encryption
+    """
 
-username = env["NAI_USERNAME"]
-password = env["NAI_PASSWORD"]
-PROXY = env["NAI_PROXY"] if "NAI_PROXY" in env else None
+    api = handle.api
+    key = handle.encryption_key
 
-
-async def keystore_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
-
-    await api.high_level.login(username, password)
-
-    key = get_encryption_key(username, password)
     keystore = await api.high_level.get_keystore(key)
 
     encrypted_keystore_in = [str(keystore.data)]
@@ -63,30 +53,23 @@ async def keystore_integrity(api: NovelAIAPI):
     assert compare_in_out("keystore", encrypted_keystore_in, encrypted_keystore_out)
 
 
-async def test_keystore_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await keystore_integrity(api)
+async def test_keystore_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await keystore_integrity(api_handle_sync)
 
 
-async def test_keystore_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await keystore_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_keystore_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await keystore_integrity(api_handle)
 
 
-async def stories_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
+@error_handler(wait=0)
+async def stories_integrity(handle: API):
+    """
+    Verify the integrity of 'stories' objects on decryption - encryption
+    """
 
-    await api.high_level.login(username, password)
+    api = handle.api
+    key = handle.encryption_key
 
-    key = get_encryption_key(username, password)
     keystore = await api.high_level.get_keystore(key)
 
     stories = await api.high_level.download_user_stories()
@@ -98,30 +81,23 @@ async def stories_integrity(api: NovelAIAPI):
     assert compare_in_out("stories", encrypted_stories_in, encrypted_stories_out)
 
 
-async def test_stories_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await stories_integrity(api)
+async def test_stories_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await stories_integrity(api_handle_sync)
 
 
-async def test_stories_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await stories_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_stories_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await stories_integrity(api_handle)
 
 
-async def storycontent_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
+@error_handler(wait=0)
+async def storycontent_integrity(handle: API):
+    """
+    Verify the integrity of 'storycontent' objects on decryption - encryption
+    """
 
-    await api.high_level.login(username, password)
+    api = handle.api
+    key = handle.encryption_key
 
-    key = get_encryption_key(username, password)
     keystore = await api.high_level.get_keystore(key)
 
     story_contents = await api.high_level.download_user_story_contents()
@@ -139,28 +115,21 @@ async def storycontent_integrity(api: NovelAIAPI):
     assert compare_in_out("storycontent", decrypted_storycontent_in, decrypted_storycontent_out)
 
 
-async def test_storycontent_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await storycontent_integrity(api)
+async def test_storycontent_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await storycontent_integrity(api_handle_sync)
 
 
-async def test_storycontent_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await storycontent_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_storycontent_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await storycontent_integrity(api_handle)
 
 
-async def presets_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
+@error_handler(wait=0)
+async def presets_integrity(handle: API):
+    """
+    Verify the integrity of 'presets' objects on decompression - compression
+    """
 
-    await api.high_level.login(username, password)
+    api = handle.api
 
     presets = await api.high_level.download_user_presets()
     encrypted_presets_in = [str(preset) for preset in presets]
@@ -171,30 +140,23 @@ async def presets_integrity(api: NovelAIAPI):
     assert compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
 
 
-async def test_presets_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await presets_integrity(api)
+async def test_presets_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await presets_integrity(api_handle_sync)
 
 
-async def test_presets_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await presets_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_presets_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await presets_integrity(api_handle)
 
 
-async def aimodules_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
+@error_handler(wait=0)
+async def aimodules_integrity(handle: API):
+    """
+    Verify the integrity of 'aimodules' objects on decryption - encryption
+    """
 
-    await api.high_level.login(username, password)
+    api = handle.api
+    key = handle.encryption_key
 
-    key = get_encryption_key(username, password)
     keystore = await api.high_level.get_keystore(key)
 
     modules = await api.high_level.download_user_modules()
@@ -206,28 +168,21 @@ async def aimodules_integrity(api: NovelAIAPI):
     assert compare_in_out("aimodules", encrypted_modules_in, encrypted_modules_out)
 
 
-async def test_aimodules_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await aimodules_integrity(api)
+async def test_aimodules_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await aimodules_integrity(api_handle_sync)
 
 
-async def test_aimodules_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await aimodules_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_aimodules_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await aimodules_integrity(api_handle)
 
 
-async def shelves_integrity(api: NovelAIAPI):
-    api.timeout = 30
-    api.proxy = PROXY
+@error_handler(wait=0)
+async def shelves_integrity(handle: API):
+    """
+    Verify the integrity of 'shelves' objects on decompression - compression
+    """
 
-    await api.high_level.login(username, password)
+    api = handle.api
 
     shelves = await api.high_level.download_user_shelves()
     encrypted_shelves_in = [str(shelf) for shelf in shelves]
@@ -238,39 +193,29 @@ async def shelves_integrity(api: NovelAIAPI):
     assert compare_in_out("shelves", encrypted_shelves_in, encrypted_shelves_out)
 
 
-async def test_shelves_integrity_sync():
-    # sync handler
-    api = NovelAIAPI()
-    await shelves_integrity(api)
+async def test_shelves_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
+    await shelves_integrity(api_handle_sync)
 
 
-async def test_shelves_integrity_async():
-    # async handler
-    try:
-        async with ClientSession() as session:
-            api = NovelAIAPI(session)
-            await shelves_integrity(api)
-    except Exception as e:
-        await session.close()
-        raise e
+async def test_shelves_integrity_async(api_handle):  # noqa: F811  # pylint: disable=W0621
+    await shelves_integrity(api_handle)
 
 
 if __name__ == "__main__":
 
     async def main():
-        await test_keystore_integrity_sync()
-        await test_keystore_integrity_async()
+        async with API() as api:
+            await test_keystore_integrity_async(api)
+            await test_stories_integrity_async(api)
+            await test_storycontent_integrity_async(api)
+            await test_presets_integrity_async(api)
+            await test_shelves_integrity_async(api)
 
-        await test_stories_integrity_sync()
-        await test_stories_integrity_async()
-
-        await test_storycontent_integrity_sync()
-        await test_storycontent_integrity_async()
-
-        await test_presets_integrity_sync()
-        await test_presets_integrity_async()
-
-        await test_shelves_integrity_sync()
-        await test_shelves_integrity_async()
+        async with API(sync=True) as api:
+            await test_keystore_integrity_sync(api)
+            await test_stories_integrity_sync(api)
+            await test_storycontent_integrity_sync(api)
+            await test_presets_integrity_sync(api)
+            await test_shelves_integrity_sync(api)
 
     run(main())
