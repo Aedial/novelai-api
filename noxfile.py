@@ -110,7 +110,7 @@ def build_docs(session: nox.Session):
 @nox.session(name="bump-version")
 def bump_version(session: nox.Session):
     if len(session.posargs) < 1:
-        raise ValueError("Expected `nox -s bump-version major|minor|patch`")
+        raise ValueError("Expected `nox -s bump-version -- major|minor|patch`")
 
     bump = session.posargs[0]
 
@@ -118,7 +118,7 @@ def bump_version(session: nox.Session):
         raise ValueError(f"Expected bump rule to be 'major', 'minor', or 'patch', got '{bump}'")
 
     # Check for staged files (you don't want to accidentally commit them)
-    staged_files = session.run("git", "diff", "--name-only", "--cached", external=True)
+    staged_files = session.run("git", "diff", "--name-only", "--cached", external=True, silent=True)
     if staged_files:
         raise RuntimeError(f"Staged files, commit them before bumping version:\n{staged_files}")
 
@@ -130,7 +130,7 @@ def bump_version(session: nox.Session):
 
     # Modify the version in README's badges
     rgx_badge = re.compile(r"(https://img.shields.io[^)]+?)(v\d+(?:\.\d+(?:\.\d+)?)?)")
-    with open("README.md", "w+", encoding="utf-8") as f:
+    with open("README.md", "r+", encoding="utf-8") as f:
         readme = f.read()
         readme = rgx_badge.sub(f"\\1v{bumped_version}", readme)
 
@@ -140,7 +140,8 @@ def bump_version(session: nox.Session):
 
     # Commit the bump
     commit_message = f"[MISC] Bump version - {bump}: {current_version} -> {bumped_version}"
-    session.run("git", "commit", commit_message, external=True)
+    session.run("git", "add", "README.md", "pyproject.toml", external=True)
+    session.run("git", "commit", "-m", commit_message, external=True)
 
     # Commit the tag
     session.run("git", "tag", "-a", f"v{bumped_version}", external=True)
