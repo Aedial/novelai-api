@@ -69,7 +69,7 @@ test_py_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 @nox.session(py=test_py_versions, name="test-mock")
 def test_mock(session: nox.Session):
     install_package(session, dev=True)
-    session.run("pytest", "--tb=short", "-n", "auto", "tests/mock/")
+    session.run("pytest", "tests/mock/")
 
 
 @nox.session(py=test_py_versions, name="test-api")
