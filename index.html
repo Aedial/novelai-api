@@ -90,18 +90,45 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">novelai</span><span class="o">-</span><span class="n">api</span>
 </pre></div>
 </div>
+<section id="using-the-module-via-command-line">
+<h2>Using the module via Command Line<a class="headerlink" href="#using-the-module-via-command-line" title="Permalink to this heading">¶</a></h2>
+<section id="get-access-key">
+<h3>Get access key<a class="headerlink" href="#get-access-key" title="Permalink to this heading">¶</a></h3>
+<p>Get the access key for your account. This key is used to login to the API through the /login endpoint.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>novelai_api<span class="w"> </span>get_access_key<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
+</pre></div>
+</div>
+</section>
+<section id="get-access-token">
+<h3>Get access token<a class="headerlink" href="#get-access-token" title="Permalink to this heading">¶</a></h3>
+<p>Login to the API and get the access token. This token is valid 30 days and is required to use most of the API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>novelai_api<span class="w"> </span>get_access_token<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
+</pre></div>
+</div>
+</section>
+<section id="sanity-check">
+<h3>Sanity check<a class="headerlink" href="#sanity-check" title="Permalink to this heading">¶</a></h3>
+<p>Run a sanity check on your user content. It will print what content couldn’t be decrypted.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>novelai_api<span class="w"> </span>sanity_check<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="using-the-module-in-your-code">
+<h2>Using the module in your code<a class="headerlink" href="#using-the-module-in-your-code" title="Permalink to this heading">¶</a></h2>
 <p>A full list of examples is available in the <a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/example">example</a> directory</p>
 <p>The API works through the NovelAIAPI object.
 It is split in 2 groups: NovelAIAPI.low_level and NovelAIAPI.high_level</p>
 <section id="low-level">
-<h2>low_level<a class="headerlink" href="#low-level" title="Permalink to this heading">¶</a></h2>
+<h3>low_level<a class="headerlink" href="#low-level" title="Permalink to this heading">¶</a></h3>
 <p>The low level interface is a strict implementation of the official API (<a class="reference external" href="https://api.novelai.net/docs">https://api.novelai.net/docs</a>).
 It only checks for input types via assert, and output schema if NovelAIAPI.low_level.is_schema_validation_enabled is True</p>
 </section>
 <section id="high-level">
-<h2>high_level<a class="headerlink" href="#high-level" title="Permalink to this heading">¶</a></h2>
+<h3>high_level<a class="headerlink" href="#high-level" title="Permalink to this heading">¶</a></h3>
 <p>The high level interface builds on the low level one for easier handling of complex settings.
 It handles many tasks from the frontend</p>
+</section>
 </section>
 </section>
 <section id="development">
@@ -233,8 +260,17 @@ The pre-commit hook can be installed via</p>
     <ul>
 <li><a class="reference internal" href="#">novelai-api</a></li>
 <li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#using-the-module-via-command-line">Using the module via Command Line</a><ul>
+<li><a class="reference internal" href="#get-access-key">Get access key</a></li>
+<li><a class="reference internal" href="#get-access-token">Get access token</a></li>
+<li><a class="reference internal" href="#sanity-check">Sanity check</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-the-module-in-your-code">Using the module in your code</a><ul>
 <li><a class="reference internal" href="#low-level">low_level</a></li>
 <li><a class="reference internal" href="#high-level">high_level</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#development">Development</a><ul>
