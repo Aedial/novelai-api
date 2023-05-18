@@ -19,16 +19,37 @@ Download via [pip](https://pypi.org/project/novelai-api):
 pip install novelai-api
 ```
 
+## Using the module via Command Line
+
+### Get access key
+Get the access key for your account. This key is used to login to the API through the /login endpoint.
+```bash
+python -m novelai_api get_access_key <username> <password>
+```
+
+### Get access token
+Login to the API and get the access token. This token is valid 30 days and is required to use most of the API.
+```bash
+python -m novelai_api get_access_token <username> <password>
+```
+
+### Sanity check
+Run a sanity check on your user content. It will print what content couldn't be decrypted.
+```bash
+python -m novelai_api sanity_check <username> <password>
+```
+
+## Using the module in your code
 A full list of examples is available in the [example](example) directory
 
 The API works through the NovelAIAPI object.
 It is split in 2 groups: NovelAIAPI.low_level and NovelAIAPI.high_level
 
-## low_level
+### low_level
 The low level interface is a strict implementation of the official API (<https://api.novelai.net/docs>).
 It only checks for input types via assert, and output schema if NovelAIAPI.low_level.is_schema_validation_enabled is True
 
-## high_level
+### high_level
 The high level interface builds on the low level one for easier handling of complex settings.
 It handles many tasks from the frontend
 
