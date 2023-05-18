@@ -8,6 +8,7 @@ readme = "README.md"
 repository = "https://github.com/Aedial/novelai-api"
 keywords = ["python", "NovelAI", "NAI", "API"]
 classifiers = [
+    "Programming Language :: Python :: 3.7",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
@@ -101,11 +102,11 @@ asyncio_mode = "auto"
 addopts = "--tb=short -vv"
 
 [tool.poetry.scripts]
-pre-commit = "novelai_api.scripts:pre_commit"
-test-mock = "novelai_api.scripts:test_mock"
-test-api = "novelai_api.scripts:test_api"
-build-docs = "novelai_api.scripts:build_docs"
-bump-version = "novelai_api.scripts:bump_version"
+nai-pre-commit = "novelai_api.scripts:pre_commit"
+nai-test-mock = "novelai_api.scripts:test_mock"
+nai-test-api = "novelai_api.scripts:test_api"
+nai-build-docs = "novelai_api.scripts:build_docs"
+nai-bump-version = "novelai_api.scripts:bump_version"
 
 [build-system]
 requires = ["poetry-core"]

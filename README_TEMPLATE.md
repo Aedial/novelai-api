@@ -41,15 +41,15 @@ The [Poetry](https://pypi.org/project/poetry/) package is required (`pip install
 You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.
 The pre-commit hook can be installed via
 ```
-poetry run pre-commit
+poetry run nai-pre-commit
 ```
 
 ## Testing against the API
-To run against the API, you can use `poetry run test-api`.
+To run against the API, you can use `poetry run nai-test-api`.
 [API](tests/api)
 
 ## Testing against the mocked API
-To run against the mocked API, you can use `poetry run test-mock`.
+To run against the mocked API, you can use `poetry run nai-test-mock`.
 
 | :warning: WIP, does not work yet :warning: |
 |--------------------------------------------|
@@ -59,6 +59,6 @@ To run against the mocked API, you can use `poetry run test-mock`.
 ## Docs
 To build the docs, run
 ```
-poetry run build-docs
+poetry run nai-build-docs
 ```
 The docs will be locally viewable at docs/build/html/index.html
