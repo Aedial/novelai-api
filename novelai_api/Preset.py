@@ -229,8 +229,8 @@ class Preset(metaclass=_PresetMetaclass):
         if key not in self._TYPE_MAPPING:
             raise ValueError(f"'{key}' is not a valid setting")
 
-        if isinstance(value, self._TYPE_MAPPING[key]):  # noqa (pycharm PY-36317)
-            ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
+        if not isinstance(value, self._TYPE_MAPPING[key]):  # noqa (pycharm PY-36317)
+            raise ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
 
         self._settings[key] = value
 
