@@ -5,7 +5,7 @@ from pathlib import Path
 
 from boilerplate import API
 
-from novelai_api.utils import assign_content_to_story, decrypt_user_data
+from novelai_api.utils import decrypt_user_data, link_content_to_story
 
 
 async def main():
@@ -26,7 +26,7 @@ async def main():
         story_contents = await api.high_level.download_user_story_contents()
         decrypt_user_data(story_contents, keystore)
 
-        assign_content_to_story(stories, story_contents)
+        link_content_to_story(stories, story_contents)
 
         for i, story in enumerate(stories):
             if story.get("decrypted") and "content" in story:
