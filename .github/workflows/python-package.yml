@@ -56,6 +56,7 @@ jobs:
         pip install poetry
     - name: Test
       run: |
+        poetry install
         poetry run nai-test-api
       env:
         NAI_USERNAME: ${{ secrets.NAI_USERNAME }}

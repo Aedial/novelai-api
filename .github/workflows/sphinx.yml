@@ -16,7 +16,9 @@ jobs:
 
     - run: pip install poetry
     - name: Build HTML
-      run: poetry run nai-build-docs
+      run: |
+        poetry install
+        poetry run nai-build-docs
 
     - name: Deploy on Github Pages
       uses: peaceiris/actions-gh-pages@v3
