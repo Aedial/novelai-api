@@ -76,10 +76,10 @@
 <td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/actions/workflows/python-package.yml"><img alt="Python package" src="https://github.com/Aedial/novelai-api/actions/workflows/python-package.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/Aedial/novelai-api/actions/workflows/codeql-analysis.yml"><img alt="Python package" src="https://github.com/Aedial/novelai-api/actions/workflows/codeql-analysis.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/PyCQA/pylint"><img alt="linting: pylint" src="https://img.shields.io/badge/linting-pylint-yellowgreen" /></a> <a class="reference external" href="https://github.com/PyCQA/bandit"><img alt="security: bandit" src="https://img.shields.io/badge/security-bandit-yellow.svg" /></a> <a class="reference external" href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p></td>
 </tr>
 <tr class="row-even"><td><p>Stats</p></td>
-<td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/search?l=python"><img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Aedial/novelai-api" /></a> <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/Aedial/novelai-api" /> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Aedial/novelai-api" /> <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/Aedial/novelai-api" /> <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/Aedial/novelai-api" /></p></td>
+<td><p><a class="reference external" href="https://github.com/Aedial/novelai-api/search?l=python"><img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Aedial/novelai-api" /></a> <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/Aedial/novelai-api" /> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Aedial/novelai-api" /> <img alt="Pypi package size" src="https://byob.yarr.is/Aedial/novelai-api/pypi-size" /> <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/Aedial/novelai-api" /> <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/Aedial/novelai-api" /></p></td>
 </tr>
 <tr class="row-odd"><td><p>Activity</p></td>
-<td><p><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Aedial/novelai-api" /> <img alt="GitHub commits since tagged version" src="https://img.shields.io/github/commits-since/Aedial/novelai-api/v0.12.0" /> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Aedial/novelai-api" /></p></td>
+<td><p><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Aedial/novelai-api" /> <img alt="GitHub commits since tagged version" src="https://img.shields.io/github/commits-since/Aedial/novelai-api/0.12.1" /> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Aedial/novelai-api" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -106,21 +106,24 @@ It handles many tasks from the frontend</p>
 </section>
 <section id="development">
 <h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">¶</a></h1>
-<p>All relevant objects are in the <a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/novelai_api">novelai_api</a> directory. The <a class="reference external" href="https://pypi.org/project/nox/">nox</a> package is required (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">nox</span></code>).</p>
+<p>All relevant objects are in the <a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/novelai_api">novelai_api</a> directory.
+The <a class="reference external" href="https://pypi.org/project/poetry/">Poetry</a> package is required (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">poetry</span></code>) as the venv manager.</p>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
 <p>You can contribute features and enhancements through PR. Any PR should pass the tests and the pre-commits before submission.
 The pre-commit hook can be installed via</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nox</span> <span class="o">-</span><span class="n">s</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">nai</span><span class="o">-</span><span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
 </pre></div>
 </div>
 </section>
 <section id="testing-against-the-api">
 <h2>Testing against the API<a class="headerlink" href="#testing-against-the-api" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/tests/api">API</a></p>
+<p>To run against the API, you can use <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">nai-test-api</span></code>.
+<a class="reference external" href="https://github.com/Aedial/novelai-api/tree/main/tests/api">API</a></p>
 </section>
 <section id="testing-against-the-mocked-api">
 <h2>Testing against the mocked API<a class="headerlink" href="#testing-against-the-mocked-api" title="Permalink to this heading">¶</a></h2>
+<p>To run against the mocked API, you can use <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">nai-test-mock</span></code>.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>:warning: WIP, does not work yet :warning:</p></th>
@@ -132,7 +135,7 @@ The pre-commit hook can be installed via</p>
 <section id="docs">
 <h2>Docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h2>
 <p>To build the docs, run</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nox</span> <span class="o">-</span><span class="n">s</span> <span class="n">build</span><span class="o">-</span><span class="n">docs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">nai</span><span class="o">-</span><span class="n">build</span><span class="o">-</span><span class="n">docs</span>
 </pre></div>
 </div>
 <p>The docs will be locally viewable at docs/build/html/index.html</p>
