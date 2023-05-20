@@ -60,7 +60,7 @@ class Tokenizer:
     _NERDSTASH_TOKENIZER_v1.decode = _NERDSTASH_TOKENIZER_v1.DecodeIds
 
     _NERDSTASH_TOKENIZER_v2 = sentencepiece.SentencePieceProcessor()
-    _NERDSTASH_TOKENIZER_v2.Load(str(tokenizers_path / "nerdstash_v1.model"))
+    _NERDSTASH_TOKENIZER_v2.Load(str(tokenizers_path / "nerdstash_v2.model"))
     _NERDSTASH_TOKENIZER_v2.encode = _NERDSTASH_TOKENIZER_v2.EncodeAsIds
     _NERDSTASH_TOKENIZER_v2.decode = _NERDSTASH_TOKENIZER_v2.DecodeIds
 
