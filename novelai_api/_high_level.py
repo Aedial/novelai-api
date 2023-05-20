@@ -115,7 +115,7 @@ class HighLevel:
 
         return await self._parent.low_level.set_keystore(keystore.data)
 
-    async def download_user_stories(self) -> Dict[str, Dict[str, Union[str, int]]]:
+    async def download_user_stories(self) -> List[Dict[str, Dict[str, Union[str, int]]]]:
         """
         Download all the objects of type 'stories' stored on the account
         """
@@ -126,7 +126,7 @@ class HighLevel:
 
     async def download_user_story_contents(
         self,
-    ) -> Dict[str, Dict[str, Union[str, int]]]:
+    ) -> List[Dict[str, Dict[str, Union[str, int]]]]:
         """
         Download all the objects of type 'storycontent' stored on the account
         """

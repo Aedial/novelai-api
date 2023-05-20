@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List, Union
 
+import sentencepiece
 import tokenizers
 
 from novelai_api.ImagePreset import ImageModel
@@ -53,11 +54,23 @@ class Tokenizer:
     # TODO: check differences from NAI tokenizer (from my limited testing, there is None)
     _CLIP_TOKENIZER = SimpleTokenizer()
 
+    _NERDSTASH_TOKENIZER_v1 = sentencepiece.SentencePieceProcessor()
+    _NERDSTASH_TOKENIZER_v1.Load(str(tokenizers_path / "nerdstash_v1.model"))
+    _NERDSTASH_TOKENIZER_v1.encode = _NERDSTASH_TOKENIZER_v1.EncodeAsIds
+    _NERDSTASH_TOKENIZER_v1.decode = _NERDSTASH_TOKENIZER_v1.DecodeIds
+
+    _NERDSTASH_TOKENIZER_v2 = sentencepiece.SentencePieceProcessor()
+    _NERDSTASH_TOKENIZER_v2.Load(str(tokenizers_path / "nerdstash_v1.model"))
+    _NERDSTASH_TOKENIZER_v2.encode = _NERDSTASH_TOKENIZER_v2.EncodeAsIds
+    _NERDSTASH_TOKENIZER_v2.decode = _NERDSTASH_TOKENIZER_v2.DecodeIds
+
     _tokenizers = {
         "gpt2": _GPT2_TOKENIZER,
         "gpt2-genji": _GENJI_TOKENIZER,
         "pile": _PILE_TOKENIZER,
         "clip": _CLIP_TOKENIZER,
+        "nerdstash_v1": _NERDSTASH_TOKENIZER_v1,
+        "nerdstash_v2": _NERDSTASH_TOKENIZER_v2,
     }
 
     @classmethod
@@ -93,7 +106,7 @@ class Tokenizer:
         if isinstance(tokenizer, tokenizers.Tokenizer):
             return tokenizer.encode(o).ids
 
-        if isinstance(tokenizer, SimpleTokenizer):
+        if isinstance(tokenizer, (SimpleTokenizer, sentencepiece.SentencePieceProcessor)):
             return tokenizer.encode(o)
 
         raise ValueError(f"Tokenizer {tokenizer} ({tokenizer_name}) not recognized")
