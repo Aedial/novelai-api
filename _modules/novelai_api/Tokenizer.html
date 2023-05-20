@@ -58,6 +58,7 @@
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">sentencepiece</span>
 <span class="kn">import</span> <span class="nn">tokenizers</span>
 
 <span class="kn">from</span> <span class="nn">novelai_api.ImagePreset</span> <span class="kn">import</span> <span class="n">ImageModel</span>
@@ -110,11 +111,23 @@
     <span class="c1"># TODO: check differences from NAI tokenizer (from my limited testing, there is None)</span>
     <span class="n">_CLIP_TOKENIZER</span> <span class="o">=</span> <span class="n">SimpleTokenizer</span><span class="p">()</span>
 
+    <span class="n">_NERDSTASH_TOKENIZER_v1</span> <span class="o">=</span> <span class="n">sentencepiece</span><span class="o">.</span><span class="n">SentencePieceProcessor</span><span class="p">()</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tokenizers_path</span> <span class="o">/</span> <span class="s2">&quot;nerdstash_v1.model&quot;</span><span class="p">))</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="o">.</span><span class="n">encode</span> <span class="o">=</span> <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="o">.</span><span class="n">EncodeAsIds</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="o">.</span><span class="n">decode</span> <span class="o">=</span> <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="o">.</span><span class="n">DecodeIds</span>
+
+    <span class="n">_NERDSTASH_TOKENIZER_v2</span> <span class="o">=</span> <span class="n">sentencepiece</span><span class="o">.</span><span class="n">SentencePieceProcessor</span><span class="p">()</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tokenizers_path</span> <span class="o">/</span> <span class="s2">&quot;nerdstash_v1.model&quot;</span><span class="p">))</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="o">.</span><span class="n">encode</span> <span class="o">=</span> <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="o">.</span><span class="n">EncodeAsIds</span>
+    <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="o">.</span><span class="n">decode</span> <span class="o">=</span> <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="o">.</span><span class="n">DecodeIds</span>
+
     <span class="n">_tokenizers</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;gpt2&quot;</span><span class="p">:</span> <span class="n">_GPT2_TOKENIZER</span><span class="p">,</span>
         <span class="s2">&quot;gpt2-genji&quot;</span><span class="p">:</span> <span class="n">_GENJI_TOKENIZER</span><span class="p">,</span>
         <span class="s2">&quot;pile&quot;</span><span class="p">:</span> <span class="n">_PILE_TOKENIZER</span><span class="p">,</span>
         <span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="n">_CLIP_TOKENIZER</span><span class="p">,</span>
+        <span class="s2">&quot;nerdstash_v1&quot;</span><span class="p">:</span> <span class="n">_NERDSTASH_TOKENIZER_v1</span><span class="p">,</span>
+        <span class="s2">&quot;nerdstash_v2&quot;</span><span class="p">:</span> <span class="n">_NERDSTASH_TOKENIZER_v2</span><span class="p">,</span>
     <span class="p">}</span>
 
 <div class="viewcode-block" id="Tokenizer.decode"><a class="viewcode-back" href="../../novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.decode">[docs]</a>    <span class="nd">@classmethod</span>
@@ -150,7 +163,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">tokenizers</span><span class="o">.</span><span class="n">Tokenizer</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="o">.</span><span class="n">ids</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">SimpleTokenizer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="p">(</span><span class="n">SimpleTokenizer</span><span class="p">,</span> <span class="n">sentencepiece</span><span class="o">.</span><span class="n">SentencePieceProcessor</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokenizer </span><span class="si">{</span><span class="n">tokenizer</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">tokenizer_name</span><span class="si">}</span><span class="s2">) not recognized&quot;</span><span class="p">)</span></div></div>
