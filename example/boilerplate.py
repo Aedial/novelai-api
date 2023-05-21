@@ -3,6 +3,7 @@ from logging import Logger, StreamHandler
 from os import environ as env
 from typing import Any, Optional
 
+import dotenv
 from aiohttp import ClientSession
 
 from novelai_api import NovelAIAPI
@@ -22,6 +23,8 @@ class API:
     api: Optional[NovelAIAPI]
 
     def __init__(self):
+        dotenv.load_dotenv()
+
         if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
             raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
 

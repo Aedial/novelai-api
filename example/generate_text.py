@@ -14,7 +14,7 @@ from example.boilerplate import API
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
 from novelai_api.GlobalSettings import GlobalSettings
-from novelai_api.Preset import Model, Preset
+from novelai_api.Preset import PREAMBLE, Model, Preset
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
 
@@ -29,12 +29,14 @@ async def main():
         # model = Model.Krake
 
         # NOTE: plain text prompt
-        prompt = "***"
+        prompt = PREAMBLE[model]
         # NOTE: prompt encoded in tokens
-        # prompt = Tokenizer.encode(model, "***")
+        # prompt = Tokenizer.encode(model, PREAMBLE[model])
 
+        # NOTE: empty preset
+        preset = Preset("preset", model, {})
         # NOTE: instantiation from default (presets/presets_6B_v4/default.txt)
-        preset = Preset.from_default(model)
+        # preset = Preset.from_default(model)
         # NOTE: instantiation from official file (presets/presets_6B_v4)
         # preset = Preset.from_official(model, "Storywriter")
         # NOTE: instantiation from file
@@ -42,6 +44,7 @@ async def main():
         # NOTE: instantiation of a new reset
         # preset = Preset("new preset", model)
         # NOTE: modification of the preset
+        preset.min_length = 1
         preset.max_length = 20
 
         # NOTE: instantiate with arguments
