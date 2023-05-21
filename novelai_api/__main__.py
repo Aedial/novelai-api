@@ -1,4 +1,7 @@
 import asyncio
+import base64
+import inspect
+import sys
 from argparse import ArgumentParser
 from logging import Logger, StreamHandler
 from typing import Any, Dict, List, NoReturn, Optional, Set, Tuple
@@ -6,6 +9,8 @@ from typing import Any, Dict, List, NoReturn, Optional, Set, Tuple
 from aiohttp import ClientSession
 
 from novelai_api import NovelAIAPI
+from novelai_api.Preset import Model
+from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import decompress_user_data, decrypt_user_data, get_access_key, get_encryption_key
 
 
@@ -158,32 +163,59 @@ async def sanity_checker_func(username: str, password: str):
         _check_duplicate_meta(stories, story_contents, presets, modules)
 
 
+# decode
+async def decode_func(model: str, data: str):
+    model = Model(model)
+
+    tokens = base64.b64decode(data)
+    tokens = [int.from_bytes(tokens[i * 2 : (i + 1) * 2], "little") for i in range(len(tokens) // 2)]
+    print(f"Tokens = {tokens}")
+
+    text = Tokenizer.decode(model, tokens)
+    print(f"Text = {text}")
+
+
 if __name__ == "__main__":
     parser = ArgumentParser()
+
+    def add_credentials_arguments(p: ArgumentParser):
+        p.add_argument("username", help="NovelAI username")
+        p.add_argument("password", help="NovelAI password")
 
     subparser = parser.add_subparsers(help="Function to call")
 
     # Get access key
     access_key_parser = subparser.add_parser("access_key", help="Get access key")
     access_key_parser.set_defaults(func=get_access_key_func)
+    add_credentials_arguments(access_key_parser)
 
     # Get access token
     access_token_parser = subparser.add_parser("access_token", help="Get access token")
     access_token_parser.set_defaults(func=get_access_token_func)
+    add_credentials_arguments(access_token_parser)
 
     # Sanity check
     sanity_check_parser = subparser.add_parser("sanity_check", help="Sanity check")
     sanity_check_parser.set_defaults(func=sanity_checker_func)
+    add_credentials_arguments(sanity_check_parser)
 
-    # Generic arguments
-    parser.add_argument("username", help="NovelAI username")
-    parser.add_argument("password", help="NovelAI password")
+    # Decode
+    decode_parser = subparser.add_parser("decode", help="Decode")
+    decode_parser.add_argument("model", help="Model to use")
+    decode_parser.add_argument("data", help="Data to decode")
+    decode_parser.set_defaults(func=decode_func)
 
     # Parse arguments
     args = parser.parse_args()
     if getattr(args, "func", None) is None:
         parser.print_help()
-    elif asyncio.iscoroutinefunction(args.func):
-        asyncio.run(args.func(args.username, args.password))
+        sys.exit(1)
+
+    # Get the values of the arguments
+    arg_names = inspect.getfullargspec(args.func).args
+    args_values = {name: getattr(args, name) for name in arg_names}
+
+    if asyncio.iscoroutinefunction(args.func):
+        asyncio.run(args.func(**args_values))
     else:
-        args.func(args.username, args.password)
+        args.func(**args_values)

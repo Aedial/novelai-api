@@ -39,6 +39,12 @@ Run a sanity check on your user content. It will print what content couldn't be 
 python -m novelai_api sanity_check <username> <password>
 ```
 
+### Decode
+Decode a b64 encoded tokenized text. This will print the tokens and the decoded text.
+```bash
+python -m novelai_api decode <model> <data>
+```
+
 ## Using the module in your code
 A full list of examples is available in the [example](example) directory
 
