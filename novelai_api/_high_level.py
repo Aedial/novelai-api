@@ -293,7 +293,7 @@ class HighLevel:
                     if not isinstance(obj, c):
                         raise ValueError(f"Expected type '{c}' for item #{i} of '{k}', but got '{type(obj)}'")
 
-                    params[k].extend(obj.get_tokenized_banlist(model))
+                    params[k].extend(obj.get_tokenized_entries(model))
 
             if k in params and not params[k]:
                 del params[k]

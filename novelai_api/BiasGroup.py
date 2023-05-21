@@ -126,7 +126,7 @@ class BiasGroup:
             for s in self._sequences
         )
 
-    def get_tokenized_biases(self, model: Model) -> Iterable[Dict[str, any]]:
+    def get_tokenized_entries(self, model: Model) -> Iterable[Dict[str, any]]:
         """
         Return the tokenized sequences for the bias group, if it is enabled
 

@@ -72,7 +72,7 @@ class BanList:
 
         return self._sequences.__iter__()
 
-    def get_tokenized_banlist(self, model: Model) -> Iterable[List[int]]:
+    def get_tokenized_entries(self, model: Model) -> Iterable[List[int]]:
         """
         Return the tokenized sequences for the ban list, if it is enabled
 
