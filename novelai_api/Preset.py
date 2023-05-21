@@ -1,4 +1,6 @@
+import os
 import pathlib
+import warnings
 from copy import deepcopy
 from enum import Enum, EnumMeta, IntEnum
 from json import loads
@@ -96,6 +98,13 @@ class Model(StrEnum):
     Inline = "infillmodel"
 
 
+PREAMBLE = {
+    Model.Sigurd: "⁂\n",
+    Model.Euterpe: "\n***\n",
+    Model.Krake: "<|endoftext|>[ Prologue ]\n",
+}
+
+
 class PresetView:
     model: Model
     _official_values: Dict[str, List["Preset"]]
@@ -151,6 +160,27 @@ class Preset(metaclass=_PresetMetaclass):
         "bos_token_id": int,
         "eos_token_id": int,
         "max_time": int,
+    }
+
+    DEFAULTS = {
+        "stop_sequences": [],
+        "temperature": 1.0,
+        "max_length": 40,
+        "min_length": 1,
+        "top_k": 0,
+        "top_a": 1.0,
+        "top_p": 0.0,
+        "typical_p": 0.0,
+        "tail_free_sampling": 1.0,
+        "repetition_penalty": 1.0,
+        "repetition_penalty_range": 0,
+        "repetition_penalty_slope": 0.0,
+        "repetition_penalty_frequency": 0.0,
+        "repetition_penalty_presence": 0.0,
+        "repetition_penalty_whitelist": [],
+        "length_penalty": 1.0,
+        "diversity_penalty": 0.0,
+        "order": list(Order),
     }
 
     # type completion for __setitem__ and __getitem__
@@ -316,12 +346,13 @@ class Preset(metaclass=_PresetMetaclass):
             del settings["textGenerationSettingsVersion"]  # not API relevant
 
         # remove disabled sampling options
-        for i, o in enumerate(Order):
-            if not self._enabled[i]:
-                settings["order"].remove(o)
-                settings.pop(ORDER_TO_NAME[o], None)
+        if "order" in settings:
+            for i, o in enumerate(Order):
+                if not self._enabled[i]:
+                    settings["order"].remove(o)
+                    settings.pop(ORDER_TO_NAME[o], None)
 
-        settings["order"] = [e.value for e in settings["order"]]
+            settings["order"] = [e.value for e in settings["order"]]
 
         # seems that 0 doesn't disable it, but does weird things
         if settings.get("repetition_penalty_range", None) == 0:
@@ -332,6 +363,14 @@ class Preset(metaclass=_PresetMetaclass):
             del settings["repetition_penalty_slope"]
 
         return settings
+
+    def __str__(self):
+        settings = {k: self._settings.get(k, v) for k, v in self.DEFAULTS.items()}
+        is_default = {k: " (default)" if v == self.DEFAULTS[k] else "" for k, v in settings.items()}
+
+        values = "\n".join(f"    {k} = {v}{is_default[k]}" for k, v in settings.items())
+
+        return f"Preset<{self.name}, {self.model}> {{\n{values}\n}}"
 
     def to_file(self, path: str) -> NoReturn:
         """
@@ -407,7 +446,7 @@ class Preset(metaclass=_PresetMetaclass):
         return c
 
     @classmethod
-    def from_file(cls, path: str) -> "Preset":
+    def from_file(cls, path: Union[str, bytes, os.PathLike[str], os.PathLike[bytes], int]) -> "Preset":
         """
         Instantiate a preset from the given file
 
@@ -480,6 +519,9 @@ def _import_officials():
         model: Model
 
         path = pathlib.Path(__file__).parent / "presets" / f"presets_{model.value.replace('-', '_')}"
+        if not path.exists():
+            warnings.warn(f"Missing preset folder for model {model.value}")
+            continue
 
         if (path / "default.txt").exists():
             with open(path / "default.txt", encoding="utf-8") as f:
