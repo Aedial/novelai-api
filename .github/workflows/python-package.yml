@@ -31,9 +31,10 @@ jobs:
         cache: 'pip'
     - name: Install dependencies
       run: |
-        pip install nox
+        pip install poetry
     - name: Test
       run: |
+        poetry install
         poetry run nai-test-mock
 
   test:
