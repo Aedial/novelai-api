@@ -1,5 +1,7 @@
+import copy
 import enum
 import io
+import json
 import operator
 import zipfile
 from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Tuple, Union
@@ -18,6 +20,21 @@ from novelai_api.utils import tokens_to_b64
 
 # === INTERNALS === #
 SSE_FIELDS = ["event", "data", "id", "retry"]
+
+
+def print_with_parameters(args: Dict[str, Any]):
+    """
+    Print the provided parameters in a nice way
+    """
+
+    a = copy.deepcopy(args)
+    if "input" in a:
+        a["input"] = f"{a['input'][:10]}...{a['input'][-10:]}" if 30 < len(a["input"]) else a["input"]
+
+    if "parameters" in a:
+        a["parameters"] = {k: str(v) for k, v in a["parameters"].items()}
+
+    print(json.dumps(a, indent=4))
 
 
 # === API === #

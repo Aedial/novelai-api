@@ -23,7 +23,11 @@ models = [*Model]
 models = list(set(models) - {Model.Genji, Model.Snek, Model.HypeBot, Model.Inline})
 
 config_path = Path(__file__).parent / "sanity_text_sets"
-model_configs = [(model, p) for model in models for p in (config_path / model.value).iterdir()]
+
+model_configs = []
+for model_dir in config_path.iterdir():
+    m = Model(model_dir.stem)
+    model_configs.extend([(m, p) for p in model_dir.iterdir()])
 
 
 @pytest.mark.parametrize("model_config", model_configs)

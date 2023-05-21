@@ -521,6 +521,8 @@ def _import_officials():
         path = pathlib.Path(__file__).parent / "presets" / f"presets_{model.value.replace('-', '_')}"
         if not path.exists():
             warnings.warn(f"Missing preset folder for model {model.value}")
+            cls._officials_values[model.value] = []
+            cls._officials[model.value] = {}
             continue
 
         if (path / "default.txt").exists():

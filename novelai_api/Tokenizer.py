@@ -26,7 +26,7 @@ class SentencePiece(sentencepiece.SentencePieceProcessor):
     def encode(self, s: str) -> List[int]:
         """
         Encode the provided text using the SentencePiece tokenizer.
-        This workaround is needed because sentencepiece cannot handle <|endoftext|>
+        This workaround is needed because sentencepiece cannot handle `<|endoftext|>`
 
         :param s: Text to encode
 
