@@ -66,6 +66,47 @@
   <section id="module-novelai_api.Tokenizer">
 <span id="novelai-api-tokenizer"></span><h1>novelai_api.Tokenizer<a class="headerlink" href="#module-novelai_api.Tokenizer" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
+<dt class="sig sig-object py" id="novelai_api.Tokenizer.SentencePiece">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SentencePiece</span></span><a class="reference internal" href="../_modules/novelai_api/Tokenizer.html#SentencePiece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Tokenizer.SentencePiece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sentencepiece.SentencePieceProcessor</span></code></p>
+<p>Wrapper around sentencepiece.SentencePieceProcessor that adds the encode and decode methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.Tokenizer.SentencePiece.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/Tokenizer.html#SentencePiece.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Tokenizer.SentencePiece.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.Tokenizer.SentencePiece.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/Tokenizer.html#SentencePiece.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Tokenizer.SentencePiece.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode the provided text using the SentencePiece tokenizer.
+This workaround is needed because sentencepiece cannot handle <cite>&lt;|endoftext|&gt;</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> – Text to encode</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tokens the provided text encodes into</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.Tokenizer.SentencePiece.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/Tokenizer.html#SentencePiece.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Tokenizer.SentencePiece.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode the provided tokens using the SentencePiece tokenizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> – Tokens to decode</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Text the provided tokens decode into</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="novelai_api.Tokenizer.Tokenizer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tokenizer</span></span><a class="reference internal" href="../_modules/novelai_api/Tokenizer.html#Tokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -130,6 +171,12 @@
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">novelai_api.Tokenizer</a><ul>
+<li><a class="reference internal" href="#novelai_api.Tokenizer.SentencePiece"><code class="docutils literal notranslate"><span class="pre">SentencePiece</span></code></a><ul>
+<li><a class="reference internal" href="#novelai_api.Tokenizer.SentencePiece.__init__"><code class="docutils literal notranslate"><span class="pre">SentencePiece.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Tokenizer.SentencePiece.encode"><code class="docutils literal notranslate"><span class="pre">SentencePiece.encode()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Tokenizer.SentencePiece.decode"><code class="docutils literal notranslate"><span class="pre">SentencePiece.decode()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#novelai_api.Tokenizer.Tokenizer"><code class="docutils literal notranslate"><span class="pre">Tokenizer</span></code></a><ul>
 <li><a class="reference internal" href="#novelai_api.Tokenizer.Tokenizer.get_tokenizer_name"><code class="docutils literal notranslate"><span class="pre">Tokenizer.get_tokenizer_name()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Tokenizer.Tokenizer.decode"><code class="docutils literal notranslate"><span class="pre">Tokenizer.decode()</span></code></a></li>

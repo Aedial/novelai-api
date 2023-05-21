@@ -526,6 +526,7 @@
             <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
         <span class="p">],</span>
+        <span class="s2">&quot;nerdstash_v1&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="p">}</span>
 
     <span class="c1"># this one is pretty much mandatory, else genji throws errors all the time</span>
@@ -734,8 +735,9 @@
             <span class="s2">&quot;use_cache&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_LOGPROBS</span><span class="p">:</span>
-            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span>
+        <span class="c1"># NO_LOGPROBS is used to disable logprobs (=&gt; not in the call)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_LOGPROBS</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">]</span>
 
         <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">get_tokenizer_name</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
@@ -746,7 +748,7 @@
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_GENJI_AMBIGUOUS_TOKENS</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;bias_dinkus_asterism&quot;</span><span class="p">]:</span>
-            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DINKUS_ASTERISM</span><span class="o">.</span><span class="n">get_tokenized_biases</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DINKUS_ASTERISM</span><span class="o">.</span><span class="n">get_tokenized_entries</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">settings</span></div></div>
 </pre></div>
