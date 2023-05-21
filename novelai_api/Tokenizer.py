@@ -1,3 +1,4 @@
+import itertools
 from pathlib import Path
 from typing import List, Union
 
@@ -11,6 +12,48 @@ from novelai_api.tokenizers.simple_tokenizer import SimpleTokenizer
 AnyModel = Union[Model, ImageModel]
 
 tokenizers_path = Path(__file__).parent / "tokenizers"
+
+
+class SentencePiece(sentencepiece.SentencePieceProcessor):
+    """
+    Wrapper around sentencepiece.SentencePieceProcessor that adds the encode and decode methods
+    """
+
+    def __init__(self, model_path: str):
+        super().__init__()
+        self.Load(model_path)
+
+    def encode(self, s: str) -> List[int]:
+        """
+        Encode the provided text using the SentencePiece tokenizer.
+        This workaround is needed because sentencepiece cannot handle <|endoftext|>
+
+        :param s: Text to encode
+
+        :return: List of tokens the provided text encodes into
+        """
+
+        parts = s.split("<|endoftext|>")
+
+        # if there is no <|endoftext|> in the string, just encode it
+        if len(parts) == 1:
+            return self.EncodeAsIds(s)
+
+        tokenized_parts: List[List[int]] = self.EncodeAsIds(parts)
+
+        # join the tokenized parts with the token for <|endoftext|> (3). The first token is <|endoftext|>, so we skip it
+        return list(itertools.chain.from_iterable([3, *part] for part in tokenized_parts))[1:]
+
+    def decode(self, t: List[int]):
+        """
+        Decode the provided tokens using the SentencePiece tokenizer.
+
+        :param t: Tokens to decode
+
+        :return: Text the provided tokens decode into
+        """
+
+        return super().DecodeIds(t)
 
 
 class Tokenizer:
@@ -54,15 +97,11 @@ class Tokenizer:
     # TODO: check differences from NAI tokenizer (from my limited testing, there is None)
     _CLIP_TOKENIZER = SimpleTokenizer()
 
-    _NERDSTASH_TOKENIZER_v1 = sentencepiece.SentencePieceProcessor()
-    _NERDSTASH_TOKENIZER_v1.Load(str(tokenizers_path / "nerdstash_v1.model"))
-    _NERDSTASH_TOKENIZER_v1.encode = _NERDSTASH_TOKENIZER_v1.EncodeAsIds
-    _NERDSTASH_TOKENIZER_v1.decode = _NERDSTASH_TOKENIZER_v1.DecodeIds
+    _NERDSTASH_TOKENIZER_v1_PATH = str(tokenizers_path / "nerdstash_v1.model")
+    _NERDSTASH_TOKENIZER_v1 = SentencePiece(_NERDSTASH_TOKENIZER_v1_PATH)
 
-    _NERDSTASH_TOKENIZER_v2 = sentencepiece.SentencePieceProcessor()
-    _NERDSTASH_TOKENIZER_v2.Load(str(tokenizers_path / "nerdstash_v2.model"))
-    _NERDSTASH_TOKENIZER_v2.encode = _NERDSTASH_TOKENIZER_v2.EncodeAsIds
-    _NERDSTASH_TOKENIZER_v2.decode = _NERDSTASH_TOKENIZER_v2.DecodeIds
+    _NERDSTASH_TOKENIZER_v2_PATH = str(tokenizers_path / "nerdstash_v2.model")
+    _NERDSTASH_TOKENIZER_v2 = SentencePiece(_NERDSTASH_TOKENIZER_v2_PATH)
 
     _tokenizers = {
         "gpt2": _GPT2_TOKENIZER,
