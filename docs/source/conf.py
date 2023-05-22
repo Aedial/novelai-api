@@ -11,6 +11,7 @@ from pathlib import Path
 from types import FunctionType
 from typing import List, Union
 
+import tomlkit as toml
 from sphinx.application import Sphinx
 from sphinx.ext.autodoc import Options
 
@@ -20,7 +21,9 @@ from sphinx.ext.autodoc import Options
 project = "NovelAI API"
 copyright = f"{datetime.datetime.now().year}, Aedial"  # noqa (built-in), pylint: disable=W0622
 author = "Aedial"
-release = "0.11.6"
+
+PYPROJECT_PATH = Path(__file__).parent.parent.parent / "pyproject.toml"
+release = str(toml.loads(PYPROJECT_PATH.read_text("utf-8"))["tool"]["poetry"]["version"])
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath(".."))

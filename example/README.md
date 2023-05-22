@@ -1,5 +1,6 @@
 ### Requirements
 Requires the "NAI_USERNAME" and "NAI_PASSWORD" values provided via environment variables.
+They can be provided through a .env file at the root of the project.
 
 The "NAI_PROXY" environment variable is also supported to inject a proxy address.
 
@@ -13,6 +14,6 @@ python example/<filename>
 
 If you don't have the novelai-api package installed, or you're actively developing on the project :
 ```
-nox -s run -- example/<filename>
+poetry run python example/<filename>
 ```
-This option supports providing environment variables through a .env file
+Remember to run `poetry install` before running the example, if not already done.
