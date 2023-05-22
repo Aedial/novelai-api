@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>API directory &#8212; NovelAI API 0.11.6 documentation</title>
+    <title>API directory &#8212; NovelAI API 0.12.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="../../example/example.boilerplate.html" title="boilerplate"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.12.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">API directory</a></li> 
       </ul>
     </div>  
@@ -66,9 +66,21 @@
 <h1>API directory<a class="headerlink" href="#api-directory" title="Permalink to this heading">¶</a></h1>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<p>Requires the “NAI_USERNAME” and “NAI_PASSWORD” values provided via environment variables.
+They can be provided through a .env file at the root of the project.</p>
+<p>The “NAI_PROXY” environment variable is also supported to inject a proxy address.</p>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<p>For running all the tests under the tests/api folder :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">nai</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">api</span>
+</pre></div>
+</div>
+<p>For running a specific test files (using the <a class="reference external" href="https://docs.pytest.org/en/7.3.x/how-to/usage.html#nodeids">pytest name scheme</a>) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">nai</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">api</span> <span class="o">&lt;</span><span class="n">filename</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">filename</span> <span class="n">n</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Remember to run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> before running the test, if not already done.</p>
 </section>
 <section id="content">
 <h2>Content<a class="headerlink" href="#content" title="Permalink to this heading">¶</a></h2>
@@ -254,7 +266,7 @@
         <li class="right" >
           <a href="../../example/example.boilerplate.html" title="boilerplate"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.11.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.12.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">API directory</a></li> 
       </ul>
     </div>

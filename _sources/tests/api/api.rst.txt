@@ -1,13 +1,8 @@
 API directory
 =============
 
-Requirements
-------------
-
-
-Usage
------
-
+.. include:: ../../../../tests/api/README.md
+   :parser: myst_parser.sphinx_
 
 Content
 -------
