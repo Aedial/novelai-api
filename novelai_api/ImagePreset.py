@@ -2,6 +2,7 @@ import copy
 import enum
 import json
 import math
+import os
 import random
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
@@ -394,7 +395,7 @@ class ImagePreset:
         return per_sample * (n_samples - int(opus_discount))
 
     @classmethod
-    def from_file(cls, path: str) -> "ImagePreset":
+    def from_file(cls, path: Union[str, bytes, os.PathLike, int]) -> "ImagePreset":
         """
         Write the preset to a file
 
@@ -406,7 +407,7 @@ class ImagePreset:
 
         return cls(**data)
 
-    def to_file(self, path: str):
+    def to_file(self, path: Union[str, bytes, os.PathLike, int]):
         """
         Load the preset from a file
 

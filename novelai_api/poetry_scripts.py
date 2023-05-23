@@ -113,6 +113,6 @@ def bump_version():
     _run("git", "tag", "-a", f"v{bumped_version}")
 
     print(
-        f"You can now push the commit and the tag with `git push origin v{bumped_version}`.\n"
+        "You can now push the commit and the tag with `git push --follow-tags`.\n"
         "Ensure you're really ready to push with `git status` and `git log`."
     )

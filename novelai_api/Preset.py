@@ -448,7 +448,7 @@ class Preset(metaclass=_PresetMetaclass):
         return c
 
     @classmethod
-    def from_file(cls, path: Union[str, bytes, os.PathLike[str], os.PathLike[bytes], int]) -> "Preset":
+    def from_file(cls, path: Union[str, bytes, os.PathLike, int]) -> "Preset":
         """
         Instantiate a preset from the given file
 
