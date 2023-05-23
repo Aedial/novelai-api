@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Fresh Coffee",
+  "id": "082cc0a0-f3b9-489f-9cab-ed60e6ac673d",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 25,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 1,
+    "tail_free_sampling": 0.925,
+    "repetition_penalty": 1.9,
+    "repetition_penalty_range": 768,
+    "repetition_penalty_slope": 1,
+    "repetition_penalty_frequency": 0.0025,
+    "repetition_penalty_presence": 0.001,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}

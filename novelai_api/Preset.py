@@ -91,6 +91,8 @@ class Model(StrEnum):
     Euterpe = "euterpe-v2"
     Krake = "krake-v2"
 
+    Clio = "clio-v1"
+
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
 

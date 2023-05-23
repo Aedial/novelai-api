@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Long Press",
+  "id": "38bde058-832a-4f2e-810f-36c784e18c31",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.155,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 25,
+    "top_p": 1,
+    "top_a": 0.3,
+    "typical_p": 0.96,
+    "tail_free_sampling": 0.895,
+    "repetition_penalty": 1.0125,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0.011,
+    "repetition_penalty_presence": 0.005,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}

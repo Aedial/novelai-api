@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Vingt-Un",
+  "id": "41f0f2d6-28af-431e-a6b8-6f9e6182dca7",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.21,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.912,
+    "top_a": 1,
+    "typical_p": 0.912,
+    "tail_free_sampling": 0.921,
+    "repetition_penalty": 1.21,
+    "repetition_penalty_range": 321,
+    "repetition_penalty_slope": 2.1,
+    "repetition_penalty_frequency": 0.00621,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}

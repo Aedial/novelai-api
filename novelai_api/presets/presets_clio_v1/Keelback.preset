@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Keelback",
+  "id": "60ee0af1-fd32-46bf-ab2b-54df256412cb",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.18,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 640,
+    "top_p": 0.125,
+    "top_a": 0.022,
+    "typical_p": 0.9,
+    "tail_free_sampling": 0.956,
+    "repetition_penalty": 1.25,
+    "repetition_penalty_range": 4096,
+    "repetition_penalty_slope": 0.9,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "order": [
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}

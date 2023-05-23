@@ -73,7 +73,7 @@ def error_handler(func_ext: Optional[Callable[[Any, Any], Awaitable[Any]]] = Non
         @functools.wraps(func)
         async def wrap(*args, **kwargs):
             err: Exception = RuntimeError("Error placeholder. Shouldn't happen")
-            for _ in range(attempts):
+            for attempt in range(attempts):
                 try:
                     res = await func(*args, **kwargs)
                     await asyncio.sleep(wait)
@@ -95,6 +95,8 @@ def error_handler(func_ext: Optional[Callable[[Any, Any], Awaitable[Any]]] = Non
 
                 if not retry:
                     break
+
+                print(f"Error: {err}. Try {attempt + 1}/{attempts}")
 
                 # 10s wait between each retry
                 await asyncio.sleep(10)

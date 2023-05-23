@@ -70,6 +70,7 @@ class Tokenizer:
         Model.Genji: "gpt2-genji",
         Model.HypeBot: "gpt2",
         Model.Inline: "gpt2",
+        Model.Clio: "nerdstash_v1",
         ImageModel.Anime_Curated: "clip",
         ImageModel.Anime_Full: "clip",
         ImageModel.Furry: "clip",
