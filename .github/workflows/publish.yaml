@@ -1,0 +1,35 @@
+name: Pypi publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    environment: Pypi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Exit if not on master branch
+        if: endsWith(github.ref, 'master') == false
+        run: exit -1
+
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v1.16
+        with:
+          ignore_dev_requirements: "yes"
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+
+      - id: pypi-size
+        run: stat -c "%s" dist/*.tar.gz | numfmt --to=iec --suffix=B --format="%.2f"
+
+      - name: Create repo size badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: pypi-size
+          LABEL: "package size"
+          ICON: "pypi"
+          STATUS: ${{ steps.date.outputs.data }}
+          COLOR: blue
