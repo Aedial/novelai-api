@@ -14,7 +14,9 @@ from tests.api.boilerplate import api_handle, error_handler  # noqa: F401  # pyl
 sampler_xfail = pytest.mark.xfail(True, raises=NovelAIError, reason="The sampler doesn't currently work")
 
 models = list(ImageModel)
-models.remove(ImageModel.Anime_Inpainting)
+models.remove(ImageModel.Inpainting_Anime_Full)
+models.remove(ImageModel.Inainting_Anime_Curated)
+models.remove(ImageModel.Inpainting_Furry)
 
 samplers = list(ImageSampler)
 model_samplers = list(itertools.product(models, samplers))
