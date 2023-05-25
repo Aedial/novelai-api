@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.13.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.14.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -75,7 +75,9 @@
     <span class="n">Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion&quot;</span>
     <span class="n">Furry</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry&quot;</span>
 
-    <span class="n">Anime_Inpainting</span> <span class="o">=</span> <span class="s2">&quot;anime-diffusion-inpainting&quot;</span></div>
+    <span class="n">Inainting_Anime_Curated</span> <span class="o">=</span> <span class="s2">&quot;safe-diffusion-inpainting&quot;</span>
+    <span class="n">Inpainting_Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-inpainting&quot;</span>
+    <span class="n">Inpainting_Furry</span> <span class="o">=</span> <span class="s2">&quot;furry-diffusion-inpainting&quot;</span></div>
 
 
 <div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span> <span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -149,8 +151,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">NORMAL</span> <span class="o">=</span> <span class="s2">&quot;generate&quot;</span>
-    <span class="n">IMG2IMG</span> <span class="o">=</span> <span class="s2">&quot;img2img&quot;</span></div>
-    <span class="c1"># inpainting should go there</span>
+    <span class="n">IMG2IMG</span> <span class="o">=</span> <span class="s2">&quot;img2img&quot;</span>
+    <span class="n">INPAINTING</span> <span class="o">=</span> <span class="s2">&quot;infill&quot;</span></div>
 
 
 <div class="viewcode-block" id="ImagePreset"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset">[docs]</a><span class="k">class</span> <span class="nc">ImagePreset</span><span class="p">:</span>
@@ -181,6 +183,24 @@
             <span class="s2">&quot;{{unfinished}}, deformed, outline, pattern, simple background&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;low res&quot;</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">}</span>
 
     <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
@@ -210,9 +230,8 @@
         <span class="s2">&quot;controlnet_model&quot;</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span>
         <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="c1"># TODO</span>
-        <span class="c1"># &quot;dynamic_thresholding_mimic_scale&quot;: (int, float),</span>
-        <span class="c1"># &quot;dynamic_thresholding_percentile&quot;: (int, float),</span>
+        <span class="s2">&quot;add_original_image&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># type completion for __setitem__ and __getitem__</span>
@@ -253,10 +272,10 @@
         <span class="n">controlnet_strength</span><span class="p">:</span> <span class="nb">float</span>
         <span class="c1">#: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)</span>
         <span class="n">decrisper</span><span class="p">:</span> <span class="nb">bool</span>
-
-        <span class="c1"># TODO</span>
-        <span class="c1"># dynamic_thresholding_mimic_scale: float</span>
-        <span class="c1"># dynamic_thresholding_percentile: float</span>
+        <span class="c1">#: Prevent seams along the edges of the mask, but may change the image slightly</span>
+        <span class="n">add_original_image</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)</span>
+        <span class="n">mask</span><span class="p">:</span> <span class="nb">str</span>
 
     <span class="n">_DEFAULT</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;legacy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -274,6 +293,7 @@
         <span class="s2">&quot;smea_dyn&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;add_original_image&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
@@ -504,7 +524,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>

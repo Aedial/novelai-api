@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.NovelAIError &#8212; NovelAI API 0.13.1 documentation</title>
+    <title>novelai_api.NovelAIError &#8212; NovelAI API 0.14.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.Keystore.html" title="novelai_api.Keystore"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.NovelAIError</a></li> 
       </ul>
@@ -72,8 +72,14 @@
 <p>Expected raised by the NAI API when a problem occurs</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.NovelAIError.NovelAIError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/novelai_api/NovelAIError.html#NovelAIError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.NovelAIError.NovelAIError.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/novelai_api/NovelAIError.html#NovelAIError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.NovelAIError.NovelAIError.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.NovelAIError.NovelAIError.url">
+<span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#novelai_api.NovelAIError.NovelAIError.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Url that caused the error</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAIError.NovelAIError.status">
@@ -104,6 +110,7 @@
 <li><a class="reference internal" href="#">novelai_api.NovelAIError</a><ul>
 <li><a class="reference internal" href="#novelai_api.NovelAIError.NovelAIError"><code class="docutils literal notranslate"><span class="pre">NovelAIError</span></code></a><ul>
 <li><a class="reference internal" href="#novelai_api.NovelAIError.NovelAIError.__init__"><code class="docutils literal notranslate"><span class="pre">NovelAIError.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.NovelAIError.NovelAIError.url"><code class="docutils literal notranslate"><span class="pre">NovelAIError.url</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.NovelAIError.NovelAIError.status"><code class="docutils literal notranslate"><span class="pre">NovelAIError.status</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.NovelAIError.NovelAIError.message"><code class="docutils literal notranslate"><span class="pre">NovelAIError.message</span></code></a></li>
 </ul>
@@ -159,7 +166,7 @@
         <li class="right" >
           <a href="novelai_api.Keystore.html" title="novelai_api.Keystore"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.NovelAIError</a></li> 
       </ul>

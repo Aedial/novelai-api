@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.13.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.14.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -86,8 +86,18 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Anime_Inpainting">
-<span class="sig-name descname"><span class="pre">Anime_Inpainting</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'anime-diffusion-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Anime_Inpainting" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inainting_Anime_Curated">
+<span class="sig-name descname"><span class="pre">Inainting_Anime_Curated</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'safe-diffusion-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inainting_Anime_Curated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Full">
+<span class="sig-name descname"><span class="pre">Inpainting_Anime_Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Full" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Furry">
+<span class="sig-name descname"><span class="pre">Inpainting_Furry</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'furry-diffusion-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Furry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -300,6 +310,11 @@
 <span class="sig-name descname"><span class="pre">IMG2IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'img2img'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageGenerationType.IMG2IMG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageGenerationType.INPAINTING">
+<span class="sig-name descname"><span class="pre">INPAINTING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'infill'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageGenerationType.INPAINTING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -415,6 +430,18 @@
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.add_original_image">
+<span class="sig-name descname"><span class="pre">add_original_image</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.add_original_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevent seams along the edges of the mask, but may change the image slightly</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.mask">
+<span class="sig-name descname"><span class="pre">mask</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.last_seed">
 <span class="sig-name descname"><span class="pre">last_seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.last_seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle</p>
@@ -422,7 +449,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_toggle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageResolution" title="novelai_api.ImagePreset.ImageResolution"><span class="pre">novelai_api.ImagePreset.ImageResolution</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uc_preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.UCPreset" title="novelai_api.ImagePreset.UCPreset"><span class="pre">novelai_api.ImagePreset.UCPreset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageSampler" title="novelai_api.ImagePreset.ImageSampler"><span class="pre">novelai_api.ImagePreset.ImageSampler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smea_dyn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ControlNetModel" title="novelai_api.ImagePreset.ControlNetModel"><span class="pre">novelai_api.ImagePreset.ControlNetModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_strength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decrisper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_toggle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageResolution" title="novelai_api.ImagePreset.ImageResolution"><span class="pre">novelai_api.ImagePreset.ImageResolution</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uc_preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.UCPreset" title="novelai_api.ImagePreset.UCPreset"><span class="pre">novelai_api.ImagePreset.UCPreset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageSampler" title="novelai_api.ImagePreset.ImageSampler"><span class="pre">novelai_api.ImagePreset.ImageSampler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smea_dyn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ControlNetModel" title="novelai_api.ImagePreset.ControlNetModel"><span class="pre">novelai_api.ImagePreset.ControlNetModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlnet_strength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decrisper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_original_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -506,7 +533,9 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_Curated"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_Curated</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_Full"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_Full</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Furry"><code class="docutils literal notranslate"><span class="pre">ImageModel.Furry</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_Inpainting"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_Inpainting</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inainting_Anime_Curated"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inainting_Anime_Curated</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Full"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Anime_Full</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Furry"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Furry</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ControlNetModel"><code class="docutils literal notranslate"><span class="pre">ControlNetModel</span></code></a><ul>
@@ -557,6 +586,7 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageGenerationType"><code class="docutils literal notranslate"><span class="pre">ImageGenerationType</span></code></a><ul>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageGenerationType.NORMAL"><code class="docutils literal notranslate"><span class="pre">ImageGenerationType.NORMAL</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageGenerationType.IMG2IMG"><code class="docutils literal notranslate"><span class="pre">ImageGenerationType.IMG2IMG</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageGenerationType.INPAINTING"><code class="docutils literal notranslate"><span class="pre">ImageGenerationType.INPAINTING</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset"><code class="docutils literal notranslate"><span class="pre">ImagePreset</span></code></a><ul>
@@ -578,6 +608,8 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.controlnet_model"><code class="docutils literal notranslate"><span class="pre">ImagePreset.controlnet_model</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.controlnet_strength"><code class="docutils literal notranslate"><span class="pre">ImagePreset.controlnet_strength</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.decrisper"><code class="docutils literal notranslate"><span class="pre">ImagePreset.decrisper</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.add_original_image"><code class="docutils literal notranslate"><span class="pre">ImagePreset.add_original_image</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.mask"><code class="docutils literal notranslate"><span class="pre">ImagePreset.mask</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.last_seed"><code class="docutils literal notranslate"><span class="pre">ImagePreset.last_seed</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.__init__"><code class="docutils literal notranslate"><span class="pre">ImagePreset.__init__()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.update"><code class="docutils literal notranslate"><span class="pre">ImagePreset.update()</span></code></a></li>
@@ -640,7 +672,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.13.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.14.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
