@@ -114,5 +114,5 @@ def bump_version():
 
     print(
         "You can now push the commit and the tag with `git push --follow-tags`.\n"
-        "Ensure you're really ready to push with `git status` and `git log`."
+        "Ensure you're ready to push with `git status` and `git log`."
     )

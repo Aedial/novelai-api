@@ -18,7 +18,9 @@ class ImageModel(enum.Enum):
     Anime_Full = "nai-diffusion"
     Furry = "nai-diffusion-furry"
 
-    Anime_Inpainting = "anime-diffusion-inpainting"
+    Inainting_Anime_Curated = "safe-diffusion-inpainting"
+    Inpainting_Anime_Full = "nai-diffusion-inpainting"
+    Inpainting_Furry = "furry-diffusion-inpainting"
 
 
 class ControlNetModel(enum.Enum):
@@ -93,7 +95,7 @@ class ImageGenerationType(enum.Enum):
 
     NORMAL = "generate"
     IMG2IMG = "img2img"
-    # inpainting should go there
+    INPAINTING = "infill"
 
 
 class ImagePreset:
@@ -124,6 +126,24 @@ class ImagePreset:
             "{{unfinished}}, deformed, outline, pattern, simple background",
             UCPreset.Preset_None: "low res",
         },
+        ImageModel.Inainting_Anime_Curated: {
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: "",
+            UCPreset.Preset_Bad_Anatomy: None,
+            UCPreset.Preset_Low_Quality: "",
+            UCPreset.Preset_None: "",
+        },
+        ImageModel.Inpainting_Anime_Full: {
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: "",
+            UCPreset.Preset_Bad_Anatomy: None,
+            UCPreset.Preset_Low_Quality: "",
+            UCPreset.Preset_None: "",
+        },
+        ImageModel.Inpainting_Furry: {
+            UCPreset.Preset_Low_Quality_Bad_Anatomy: None,
+            UCPreset.Preset_Bad_Anatomy: "",
+            UCPreset.Preset_Low_Quality: "",
+            UCPreset.Preset_None: "",
+        },
     }
 
     _CONTROLNET_MODELS = {
@@ -153,9 +173,8 @@ class ImagePreset:
         "controlnet_model": ControlNetModel,
         "controlnet_strength": (int, float),
         "decrisper": bool,
-        # TODO
-        # "dynamic_thresholding_mimic_scale": (int, float),
-        # "dynamic_thresholding_percentile": (int, float),
+        "add_original_image": bool,
+        "mask": str,
     }
 
     # type completion for __setitem__ and __getitem__
@@ -196,10 +215,10 @@ class ImagePreset:
         controlnet_strength: float
         #: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
         decrisper: bool
-
-        # TODO
-        # dynamic_thresholding_mimic_scale: float
-        # dynamic_thresholding_percentile: float
+        #: Prevent seams along the edges of the mask, but may change the image slightly
+        add_original_image: bool
+        #: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)
+        mask: str
 
     _DEFAULT = {
         "legacy": False,
@@ -217,6 +236,7 @@ class ImagePreset:
         "smea_dyn": False,
         "decrisper": False,
         "controlnet_strength": 1.0,
+        "add_original_image": False,
     }
 
     _settings: Dict[str, Any]

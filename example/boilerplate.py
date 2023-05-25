@@ -22,7 +22,7 @@ class API:
     logger: Logger
     api: Optional[NovelAIAPI]
 
-    def __init__(self):
+    def __init__(self, base_address: Optional[str] = None):
         dotenv.load_dotenv()
 
         if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
@@ -35,6 +35,8 @@ class API:
         self.logger.addHandler(StreamHandler())
 
         self.api = NovelAIAPI(logger=self.logger)
+        if base_address is not None:
+            self.api.BASE_ADDRESS = base_address
 
     @property
     def encryption_key(self):
