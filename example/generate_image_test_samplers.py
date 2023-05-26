@@ -24,14 +24,14 @@ async def main():
         api = api_handler.api
 
         preset = ImagePreset()
+        preset.seed = 42
 
         for sampler in ImageSampler:
             preset.sampler = sampler
 
             try:
                 async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
-                    with open(d / f"image_{sampler.value}.png", "wb") as f:
-                        f.write(img)
+                    (d / f"image_{sampler.value}").write_bytes(img)
 
                 print(f"Generated with {sampler.value}")
                 time.sleep(2)

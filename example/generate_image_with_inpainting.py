@@ -26,12 +26,8 @@ async def main():
         mask = base64.b64encode((d / "inpainting_mask.png").read_bytes()).decode()
 
         preset = ImagePreset()
-        preset.noise = 0.1
-        # note that steps = 28, not 50, which mean strength needs to be adjusted accordingly
-        preset.strength = 0.5
         preset.image = image
         preset.mask = mask
-        preset.add_original_image = False
         preset.seed = 42
 
         async for _, img in api.high_level.generate_image(

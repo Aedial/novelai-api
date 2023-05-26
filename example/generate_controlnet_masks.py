@@ -25,14 +25,12 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        with open(d / "image.png", "rb") as f:
-            image = base64.b64encode(f.read()).decode()
+        image = base64.b64encode((d / "image.png").read_bytes()).decode()
 
         for controlnet in ControlNetModel:
             try:
                 _, img = await api.low_level.generate_controlnet_mask(controlnet, image)
-                with open(d / f"image_{controlnet.value}.png", "wb") as f:
-                    f.write(img)
+                (d / f"image_{controlnet.value}.png").write_bytes(img)
 
                 print(f"Generated with {controlnet.value}")
                 time.sleep(2)

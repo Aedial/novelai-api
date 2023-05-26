@@ -26,15 +26,13 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        with open(d / "image.png", "rb") as f:
-            image = base64.b64encode(f.read()).decode()
+        image = base64.b64encode((d / "image.png").read_bytes()).decode()
 
         # disable the type check on scale in _low_level.py to check on float values
         for scale in (2, 4):
             try:
                 _, img = await api.low_level.upscale_image(image, *image_size, scale)
-                with open(f"image_upscaled_{scale}.png", "wb") as f:
-                    f.write(img)
+                (d / f"image_upscaled_{scale}.png").write_bytes(img)
 
                 print(f"Generated upscale {scale}")
                 time.sleep(2)

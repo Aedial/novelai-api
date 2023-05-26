@@ -22,20 +22,19 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        with open(d / "image.png", "rb") as f:
-            image = base64.b64encode(f.read()).decode()
+        image = base64.b64encode((d / "image.png").read_bytes()).decode()
 
         preset = ImagePreset()
         preset.noise = 0.1
         # note that steps = 28, not 50, which mean strength needs to be adjusted accordingly
         preset.strength = 0.5
         preset.image = image
+        preset.seed = 42
 
         async for _, img in api.high_level.generate_image(
             "1girl", ImageModel.Anime_Full, preset, ImageGenerationType.IMG2IMG
         ):
-            with open(d / "image_with_img2img.png", "wb") as f:
-                f.write(img)
+            (d / "image_with_img2img.png").write_bytes(img)
 
 
 if __name__ == "__main__":

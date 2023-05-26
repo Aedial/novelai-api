@@ -23,8 +23,7 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        with open(d / "image.png", "rb") as f:
-            image = base64.b64encode(f.read()).decode()
+        image = base64.b64encode((d / "image.png").read_bytes()).decode()
 
         controlnet = ControlNetModel.Form_Lock
         _, mask = await api.low_level.generate_controlnet_mask(controlnet, image)
@@ -33,11 +32,11 @@ async def main():
         preset.controlnet_model = controlnet
         preset.controlnet_condition = base64.b64encode(mask).decode()
         preset.controlnet_strength = 1.5
+        preset.seed = 42
 
         # NOTE: for some reasons, the images with controlnet are slightly different
         async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
-            with open(d / "image_with_controlnet.png", "wb") as f:
-                f.write(img)
+            (d / "image_with_controlnet.png").write_bytes(img)
 
 
 if __name__ == "__main__":
