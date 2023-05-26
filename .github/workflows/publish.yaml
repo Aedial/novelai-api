@@ -29,3 +29,4 @@ jobs:
           ICON: "pypi"
           STATUS: ${{ steps.date.outputs.data }}
           COLOR: blue
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
