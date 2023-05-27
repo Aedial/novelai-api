@@ -27,6 +27,6 @@ jobs:
           NAME: pypi-size
           LABEL: "package size"
           ICON: "pypi"
-          STATUS: ${{ steps.date.outputs.data }}
+          STATUS: ${{ steps.pypi-size.outputs.data }}
           COLOR: blue
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
