@@ -29,7 +29,8 @@ test_textgen_presets.py
 
 test_textgen_sanity.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: tests.api.test_textgen_sanity
+*Disabled*
+... automodule:: tests.api.test_textgen_sanity
    :members:
 
 
