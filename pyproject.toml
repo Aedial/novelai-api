@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "novelai-api"
-version = "0.14.1"
+version = "0.15.0"
 description = "Python API for the NovelAI REST API"
 license = "MIT"
 authors = ["Aedial <aedial.dev@gmail.com>"]
@@ -29,6 +29,7 @@ ftfy = "^6.1.1"
 regex = "^2022.10.31"
 sentencepiece = "^0.1.98"
 poetry = "^1.4.2"
+pillow = "^9.5.0"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^0.21.1"
