@@ -104,6 +104,7 @@ PREAMBLE = {
     Model.Sigurd: "⁂\n",
     Model.Euterpe: "\n***\n",
     Model.Krake: "<|endoftext|>[ Prologue ]\n",
+    Model.Clio: "[ Author: Various ]\n[ Prologue ]\n",
 }
 
 
