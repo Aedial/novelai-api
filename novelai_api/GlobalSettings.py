@@ -469,7 +469,23 @@ class GlobalSettings:
             [0],
             [1],
         ],
-        "nerdstash_v1": [],
+        "nerdstash_v1": [
+            [3],
+            [49356],
+            [1431],
+            [31715],
+            [34387],
+            [20765],
+            [30702],
+            [10691],
+            [49333],
+            [1266],
+            [19438],
+            [43145],
+            [26523],
+            [41471],
+            [2936],
+        ],
     }
 
     # this one is pretty much mandatory, else genji throws errors all the time
