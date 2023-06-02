@@ -39,6 +39,15 @@ def _run(*arguments, show_command: bool = True, cwd: Optional[Any] = None, silen
     return subprocess.check_call(arguments, text=True, **kwargs)  # nosec B603
 
 
+def _exit_if_return_code(code: int):
+    """
+    Exit if the return code is not 0 (error happened)
+    """
+
+    if code:
+        sys.exit(code)
+
+
 def _pre_step_nai_api():
     """
     Pre-step for running commands that require the NovelAI API
@@ -54,12 +63,12 @@ def _pre_step_nai_api():
 
 # COMMANDS
 def pre_commit():
-    pre_commit_main(["install", "--config", PRE_COMMIT_CONFIG])
-    pre_commit_main(["run", "--all-files", "--config", PRE_COMMIT_CONFIG])
+    _exit_if_return_code(pre_commit_main(["install", "--config", PRE_COMMIT_CONFIG]))
+    _exit_if_return_code(pre_commit_main(["run", "--all-files", "--config", PRE_COMMIT_CONFIG]))
 
 
 def test_mock():
-    pytest.main(["tests/mock/"])
+    _exit_if_return_code(pytest.main(["tests/mock/"]))
 
 
 def test_api():
@@ -71,9 +80,9 @@ def test_api():
     args = parser.parse_args()
 
     if args.targets:
-        pytest.main([f"tests/api/{e}" for e in args.targets])
+        _exit_if_return_code(pytest.main([f"tests/api/{e}" for e in args.targets]))
     else:
-        pytest.main(["tests/api/"])
+        _exit_if_return_code(pytest.main(["tests/api/"]))
 
 
 def build_docs():
