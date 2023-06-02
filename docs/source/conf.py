@@ -69,6 +69,8 @@ hoverxref_role_types = {
     "confval": "modal",  # for custom object
     "mod": "modal",  # for Python Sphinx Domain
     "class": "modal",  # for Python Sphinx Domain
+    "attr": "tooltip",  # for Python Sphinx Domain
+    "meth": "tooltip",  # for Python Sphinx Domain
 }
 
 

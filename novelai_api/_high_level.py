@@ -14,6 +14,17 @@ from novelai_api.utils import compress_user_data, encrypt_user_data, get_access_
 
 
 class HighLevel:
+    """
+    High level API for NovelAI. This class is not meant to be used directly,
+    but rather through :attr:`NovelAIAPI.high_level <novelai_api.NovelAI_API.NovelAIAPI.high_level>`.
+
+    The most relevant methods are:
+
+    * :meth:`login <novelai_api._high_level.HighLevel.login>`
+    * :meth:`generate <novelai_api._high_level.HighLevel.generate>`
+    * :meth:`generate_image <novelai_api._high_level.HighLevel.generate_image>`
+    """
+
     _parent: "NovelAIAPI"  # noqa: F821
 
     def __init__(self, parent: "NovelAIAPI"):  # noqa: F821
@@ -313,7 +324,9 @@ class HighLevel:
         **kwargs,
     ) -> Dict[str, Any]:
         """
-        Generate text. The text is returned at once, when generation is finished.
+        Generate text. The b64-encoded text is returned at once, when generation is finished.
+        To decode the text, the :meth:`novelai_api.utils.b64_to_tokens`
+        and :meth:`novelai_api.Tokenizer.Tokenizer.decode` methods should be used.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI

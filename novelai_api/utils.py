@@ -212,7 +212,7 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 
         meta = item["meta"]
         if meta not in keystore:
-            raise NovelAIError(-1, f"Meta of item #{i} ({meta}) missing from keystore")
+            raise NovelAIError("<UNKNOWN>", -1, f"Meta of item #{i} ({meta}) missing from keystore")
 
         key = keystore[meta]
 
@@ -263,7 +263,7 @@ def encrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
 
                 meta = item["meta"]
                 if meta not in keystore:
-                    raise NovelAIError(-1, f"Meta of item #{i} ({meta}) missing from keystore")
+                    raise NovelAIError("<UNKNOWN>", -1, f"Meta of item #{i} ({meta}) missing from keystore")
 
                 key = keystore[meta]
 
@@ -281,6 +281,10 @@ def link_content_to_story(
     stories: Dict[str, Union[str, int, Dict[str, Any]]],
     story_contents: Union[List[Dict[str, Any]], Dict[str, Any]],
 ):
+    """
+    Link the story content to each story in :ref: stories
+    """
+
     if not isinstance(stories, (list, tuple)):
         stories = [stories]
 
@@ -298,6 +302,10 @@ def link_content_to_story(
 
 
 def unlink_content_from_story(stories: Dict[str, Union[str, int, Dict[str, Any]]]):
+    """
+    Remove the story content from each story in :ref: stories
+    """
+
     if not isinstance(stories, (list, tuple)):
         stories = [stories]
 
@@ -307,20 +315,36 @@ def unlink_content_from_story(stories: Dict[str, Union[str, int, Dict[str, Any]]
 
 
 def get_decrypted_user_data(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Filter out items that have not been decrypted
+    """
+
     return [item for item in items if item.get("decrypted", False)]
 
 
 def tokens_to_b64(tokens: Iterable[int]) -> str:
+    """
+    Encode a list of tokens into a base64 string that can be sent to the API
+    """
+
     return b64encode(b"".join(t.to_bytes(2, "little") for t in tokens)).decode()
 
 
 def b64_to_tokens(b64: str) -> List[int]:
+    """
+    Decode a base64 string returned by the API into a list of tokens
+    """
+
     b = b64decode(b64)
 
     return [int.from_bytes(b[i : i + 2], "little") for i in range(0, len(b), 2)]
 
 
 def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
+    """
+    Transform a list of preset data into a dict of Preset objects indexed by their id
+    """
+
     preset_list = {}
     for preset_data in presets:
         decompress_user_data(preset_data)
@@ -330,6 +354,10 @@ def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
 
 
 def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
+    """
+    Tokenize the string if it is not already tokenized
+    """
+
     if isinstance(o, list):
         return o
 

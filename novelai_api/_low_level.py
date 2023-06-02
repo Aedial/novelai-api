@@ -47,9 +47,23 @@ def print_with_parameters(args: Dict[str, Any]):
 
 # === API === #
 class LowLevel:
+    """
+    Low level API for NovelAI. This class is not meant to be used directly,
+    but rather through :attr:`NovelAIAPI.low_level <novelai_api.NovelAI_API.NovelAIAPI.low_level>`.
+
+    The most relevant methods are:
+
+    * :meth:`login <novelai_api._low_level.LowLevel.login>`
+    * :meth:`generate <novelai_api._low_level.LowLevel.generate>`
+    * :meth:`generate_image <novelai_api._low_level.LowLevel.generate_image>`
+    * :meth:`get_keystore <novelai_api._low_level.LowLevel.get_keystore>`
+    * :meth:`download_objects <novelai_api._low_level.LowLevel.download_objects>`
+    """
+
     _parent: "NovelAIAPI"  # noqa: F821
     _is_async: bool
 
+    #: Enable or disable schema validation for responses. Default is ``True``.
     is_schema_validation_enabled: bool
 
     def __init__(self, parent: "NovelAIAPI"):  # noqa: F821

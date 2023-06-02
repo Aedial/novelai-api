@@ -13,23 +13,48 @@ from novelai_api._low_level import LowLevel
 
 class NovelAIAPI:
     # Constants
+
+    #: The base address for the API
     BASE_ADDRESS: str = "https://api.novelai.net"
     LIB_ROOT: str = dirname(abspath(__file__))
 
     # Variables
+
+    #: The logger for the API
     logger: Logger
+    #: The client session for the API (None if synchronous)
     session: Optional[ClientSession]
 
+    #: The timeout for a request (in seconds)
     timeout: ClientTimeout
+    #: The headers for a request
     headers: CIMultiDict
+    #: The cookies for a request
     cookies: SimpleCookie
+    #: The proxy for a request (None if no proxy)
     proxy: Optional[StrOrURL] = None
+    #: The proxy authentication for a request (None if no proxy)
     proxy_auth: Optional[BasicAuth] = None
 
+    # API parts
+
+    #: The low-level API (thin wrapper)
     low_level: LowLevel
+    #: The high-level API (abstraction on top of low-level)
     high_level: HighLevel
 
     def __init__(self, session: Optional[ClientSession] = None, logger: Optional[Logger] = None):
+        """
+        Create a new NovelAIAPI object, which can be used to interact with the API.
+        Use the low_level and high_level attributes for this purpose
+
+        Use attach_session and detach_session to switch between synchronous and asynchronous requests
+        by attaching a ClientSession
+
+        :param session: The ClientSession to use for requests (None for synchronous)
+        :param logger: The logger to use for the API (None for creating an empty default logger)
+        """
+
         # variable passing
         if session is not None and not isinstance(session, ClientSession):
             raise ValueError(f"Expected None or type 'ClientSession' for session, but got type '{type(session)}'")

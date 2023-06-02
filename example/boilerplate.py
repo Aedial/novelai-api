@@ -12,7 +12,23 @@ from novelai_api.utils import get_encryption_key
 
 class API:
     """
-    Boilerplate for the redundant parts
+    Boilerplate for the redundant parts.
+    Using the object as a context manager will automatically login using the environment variables
+    ``NAI_USERNAME`` and ``NAI_PASSWORD``.
+
+    Usage:
+
+    .. code-block:: python
+
+        async with API() as api:
+            api = api.api
+            encryption_key = api.encryption_key
+            logger = api.logger
+            ...  # Do stuff
+
+
+    A custom base address can be passed to the constructor to replace the default
+    (:attr:`BASE_ADDRESS <novelai_api.NovelAI_API.NovelAIAPI.BASE_ADDRESS>`)
     """
 
     _username: str
