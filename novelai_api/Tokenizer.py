@@ -1,6 +1,7 @@
 import itertools
+import re
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
 import sentencepiece
 import tokenizers
@@ -19,41 +20,99 @@ class SentencePiece(sentencepiece.SentencePieceProcessor):
     Wrapper around sentencepiece.SentencePieceProcessor that adds the encode and decode methods
     """
 
+    trans_table_ids: Dict[int, str]
+    trans_table_str: Dict[str, int]
+    trans_regex_str: re.Pattern
+
     def __init__(self, model_path: str):
         super().__init__()
         self.Load(model_path)
 
+        self.trans_table_ids = {
+            self.unk_id(): "<|unk|>",
+            self.pad_id(): "<|pad|>",
+            self.bos_id(): "<|startoftext|>",
+            self.eos_id(): "<|endoftext|>",
+        }
+
+        self.trans_table_str = {
+            "<|unk|>": self.unk_id(),
+            "<|pad|>": self.pad_id(),
+            "<|startoftext|>": self.bos_id(),
+            "<|endoftext|>": self.eos_id(),
+        }
+
+        trans_regex_keys = "|".join(re.escape(e) for e in self.trans_table_str)
+        self.trans_regex_str = re.compile(trans_regex_keys)
+
     def encode(self, s: str) -> List[int]:
         """
         Encode the provided text using the SentencePiece tokenizer.
-        This workaround is needed because sentencepiece cannot handle `<|endoftext|>`
+        This workaround is needed because sentencepiece cannot handle some tokens
 
         :param s: Text to encode
 
         :return: List of tokens the provided text encodes into
         """
 
-        parts = s.split("<|endoftext|>")
+        trans_table = self.trans_table_str
 
-        # if there is no <|endoftext|> in the string, just encode it
-        if len(parts) == 1:
+        # find the indexes of the string that need to be replaced
+        indexes = list(self.trans_regex_str.finditer(s))
+
+        # fast path, no translation needed
+        if not indexes:
             return self.EncodeAsIds(s)
 
-        tokenized_parts: List[List[int]] = self.EncodeAsIds(parts)
+        # split the tokens into parts, using the indexes as separators and decode them
+        parts = [
+            s[0 : indexes[0].start()],
+            *[s[i.end() + 1 : j.start()] for i, j in zip(indexes, indexes[1:])],
+            s[indexes[-1].end() + 1 :],
+        ]
+        encoded_parts: List[List[int]] = [self.EncodeAsIds(part) for part in parts]
 
-        # join the tokenized parts with the token for <|endoftext|> (3). The first token is <|endoftext|>, so we skip it
-        return list(itertools.chain.from_iterable([3, *part] for part in tokenized_parts))[1:]
+        # translate the junctions
+        junctions = [trans_table[i.group(0)] for i in indexes]
+
+        # join the parts with the translated tokens
+        return [
+            *encoded_parts[0],
+            *itertools.chain.from_iterable((j, *p) for j, p in zip(junctions, encoded_parts[1:])),
+        ]
 
     def decode(self, t: List[int]):
         """
         Decode the provided tokens using the SentencePiece tokenizer.
+        This workaround is needed because sentencepiece cannot handle some tokens
 
         :param t: Tokens to decode
 
         :return: Text the provided tokens decode into
         """
 
-        return super().DecodeIds(t)
+        trans_table = self.trans_table_ids
+
+        # find the indexes of the string that need to be replaced
+        indexes = [i for i, token in enumerate(t) if token in trans_table]
+
+        # fast path, no translation needed
+        if not indexes:
+            return self.DecodeIds(t)
+
+        # split the tokens into parts, using the indexes as separators and decode them
+        parts = [
+            t[0 : indexes[0]],
+            *[t[i + 1 : j] for i, j in zip(indexes, indexes[1:])],
+            t[indexes[-1] + 1 :],
+        ]
+        decoded_parts = [self.DecodeIds(part) for part in parts]
+
+        # translate the junctions
+        junctions = [trans_table[t[i]] for i in indexes]
+
+        # join the parts with the translated tokens
+        return "".join((decoded_parts[0], *itertools.chain.from_iterable(zip(junctions, decoded_parts[1:]))))
 
 
 class Tokenizer:
