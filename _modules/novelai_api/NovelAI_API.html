@@ -70,23 +70,48 @@
 
 <div class="viewcode-block" id="NovelAIAPI"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI">[docs]</a><span class="k">class</span> <span class="nc">NovelAIAPI</span><span class="p">:</span>
     <span class="c1"># Constants</span>
+
+    <span class="c1">#: The base address for the API</span>
     <span class="n">BASE_ADDRESS</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://api.novelai.net&quot;</span>
     <span class="n">LIB_ROOT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
 
     <span class="c1"># Variables</span>
+
+    <span class="c1">#: The logger for the API</span>
     <span class="n">logger</span><span class="p">:</span> <span class="n">Logger</span>
+    <span class="c1">#: The client session for the API (None if synchronous)</span>
     <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span>
 
+    <span class="c1">#: The timeout for a request (in seconds)</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="n">ClientTimeout</span>
+    <span class="c1">#: The headers for a request</span>
     <span class="n">headers</span><span class="p">:</span> <span class="n">CIMultiDict</span>
+    <span class="c1">#: The cookies for a request</span>
     <span class="n">cookies</span><span class="p">:</span> <span class="n">SimpleCookie</span>
+    <span class="c1">#: The proxy for a request (None if no proxy)</span>
     <span class="n">proxy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">StrOrURL</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#: The proxy authentication for a request (None if no proxy)</span>
     <span class="n">proxy_auth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BasicAuth</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="c1"># API parts</span>
+
+    <span class="c1">#: The low-level API (thin wrapper)</span>
     <span class="n">low_level</span><span class="p">:</span> <span class="n">LowLevel</span>
+    <span class="c1">#: The high-level API (abstraction on top of low-level)</span>
     <span class="n">high_level</span><span class="p">:</span> <span class="n">HighLevel</span>
 
 <div class="viewcode-block" id="NovelAIAPI.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new NovelAIAPI object, which can be used to interact with the API.</span>
+<span class="sd">        Use the low_level and high_level attributes for this purpose</span>
+
+<span class="sd">        Use attach_session and detach_session to switch between synchronous and asynchronous requests</span>
+<span class="sd">        by attaching a ClientSession</span>
+
+<span class="sd">        :param session: The ClientSession to use for requests (None for synchronous)</span>
+<span class="sd">        :param logger: The logger to use for the API (None for creating an empty default logger)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># variable passing</span>
         <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">ClientSession</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected None or type &#39;ClientSession&#39; for session, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">session</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>

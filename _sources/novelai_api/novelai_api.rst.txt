@@ -4,6 +4,8 @@ novelai-api package
 .. toctree::
    :maxdepth: 2
 
+   novelai_api.low_level
+   novelai_api.high_level
    novelai_api.BanList
    novelai_api.BiasGroup
    novelai_api.GlobalSettings

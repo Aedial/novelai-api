@@ -72,7 +72,8 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.BASE_ADDRESS">
 <span class="sig-name descname"><span class="pre">BASE_ADDRESS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://api.novelai.net'</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.BASE_ADDRESS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The base address for the API</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.LIB_ROOT">
@@ -82,47 +83,67 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">aiohttp.client.ClientSession</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">logging.Logger</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/NovelAI_API.html#NovelAIAPI.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a new NovelAIAPI object, which can be used to interact with the API.
+Use the low_level and high_level attributes for this purpose</p>
+<p>Use attach_session and detach_session to switch between synchronous and asynchronous requests
+by attaching a ClientSession</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> – The ClientSession to use for requests (None for synchronous)</p></li>
+<li><p><strong>logger</strong> – The logger to use for the API (None for creating an empty default logger)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.logger">
 <span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">logging.Logger</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.logger" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The logger for the API</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.session">
 <span class="sig-name descname"><span class="pre">session</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">aiohttp.client.ClientSession</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.session" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The client session for the API (None if synchronous)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.headers">
 <span class="sig-name descname"><span class="pre">headers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">multidict._multidict.CIMultiDict</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.headers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The headers for a request</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.cookies">
 <span class="sig-name descname"><span class="pre">cookies</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">http.cookies.SimpleCookie</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.cookies" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The cookies for a request</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.proxy">
 <span class="sig-name descname"><span class="pre">proxy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">yarl.URL</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.proxy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The proxy for a request (None if no proxy)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.proxy_auth">
 <span class="sig-name descname"><span class="pre">proxy_auth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">aiohttp.helpers.BasicAuth</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.proxy_auth" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The proxy authentication for a request (None if no proxy)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.low_level">
-<span class="sig-name descname"><span class="pre">low_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">novelai_api._low_level.LowLevel</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.low_level" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">low_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.low_level.html#novelai_api._low_level.LowLevel" title="novelai_api._low_level.LowLevel"><span class="pre">novelai_api._low_level.LowLevel</span></a></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.low_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>The low-level API (thin wrapper)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.high_level">
-<span class="sig-name descname"><span class="pre">high_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">novelai_api._high_level.HighLevel</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.high_level" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">high_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.high_level.html#novelai_api._high_level.HighLevel" title="novelai_api._high_level.HighLevel"><span class="pre">novelai_api._high_level.HighLevel</span></a></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.high_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>The high-level API (abstraction on top of low-level)</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.attach_session">
@@ -139,7 +160,7 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="novelai_api.NovelAI_API.NovelAIAPI.timeout">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#novelai_api.NovelAI_API.NovelAIAPI.timeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Timeout for a request (in seconds)</p>
+<dd><p>The timeout for a request (in seconds)</p>
 </dd></dl>
 
 </dd></dl>

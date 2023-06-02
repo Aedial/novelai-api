@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>novelai_api._high_level &#8212; NovelAI API 0.16.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/hoverxref.js"></script>
+    <script src="../../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for novelai_api._high_level</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncIterable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">novelai_api.BanList</span> <span class="kn">import</span> <span class="n">BanList</span>
+<span class="kn">from</span> <span class="nn">novelai_api.BiasGroup</span> <span class="kn">import</span> <span class="n">BiasGroup</span>
+<span class="kn">from</span> <span class="nn">novelai_api.GlobalSettings</span> <span class="kn">import</span> <span class="n">GlobalSettings</span>
+<span class="kn">from</span> <span class="nn">novelai_api.ImagePreset</span> <span class="kn">import</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">ImagePreset</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Keystore</span> <span class="kn">import</span> <span class="n">Keystore</span>
+<span class="kn">from</span> <span class="nn">novelai_api.NovelAIError</span> <span class="kn">import</span> <span class="n">NovelAIError</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
+<span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">assert_type</span>
+<span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">compress_user_data</span><span class="p">,</span> <span class="n">encrypt_user_data</span><span class="p">,</span> <span class="n">get_access_key</span>
+
+
+<div class="viewcode-block" id="HighLevel"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel">[docs]</a><span class="k">class</span> <span class="nc">HighLevel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    High level API for NovelAI. This class is not meant to be used directly,</span>
+<span class="sd">    but rather through :attr:`NovelAIAPI.high_level &lt;novelai_api.NovelAI_API.NovelAIAPI.high_level&gt;`.</span>
+
+<span class="sd">    The most relevant methods are:</span>
+
+<span class="sd">    * :meth:`login &lt;novelai_api._high_level.HighLevel.login&gt;`</span>
+<span class="sd">    * :meth:`generate &lt;novelai_api._high_level.HighLevel.generate&gt;`</span>
+<span class="sd">    * :meth:`generate_image &lt;novelai_api._high_level.HighLevel.generate_image&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_parent</span><span class="p">:</span> <span class="s2">&quot;NovelAIAPI&quot;</span>  <span class="c1"># noqa: F821</span>
+
+<div class="viewcode-block" id="HighLevel.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="s2">&quot;NovelAIAPI&quot;</span><span class="p">):</span>  <span class="c1"># noqa: F821</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span></div>
+
+<div class="viewcode-block" id="HighLevel.register"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.register">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">register</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">recapcha</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">send_mail</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">giftkey</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a new account</span>
+
+<span class="sd">        :param recapcha: Recapcha of the NovelAI website</span>
+<span class="sd">        :param email: Email of the account (username)</span>
+<span class="sd">        :param password: Password of the account</span>
+<span class="sd">        :param send_mail: Send the mail (hashed and used for recovery)</span>
+<span class="sd">        :param giftkey: Giftkey</span>
+
+<span class="sd">        :return: True if success</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
+
+        <span class="n">hashed_email</span> <span class="o">=</span> <span class="n">sha256</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="k">if</span> <span class="n">send_mail</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">get_access_key</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">recapcha</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">hashed_email</span><span class="p">,</span> <span class="n">giftkey</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.login"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log in to the account</span>
+
+<span class="sd">        :param email: Email of the account (username)</span>
+<span class="sd">        :param password: Password of the account</span>
+
+<span class="sd">        :return: User&#39;s access token</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">access_key</span> <span class="o">=</span> <span class="n">get_access_key</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">rsp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">rsp</span><span class="p">[</span><span class="s1">&#39;accessToken&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">rsp</span><span class="p">[</span><span class="s2">&quot;accessToken&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.login_from_token"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login_from_token">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login_from_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log in with the access key, instead of email and password</span>
+
+<span class="sd">        :param access_key: Access key of the account (pre-computed via email and password)</span>
+
+<span class="sd">        :return: User&#39;s access token</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rsp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">rsp</span><span class="p">[</span><span class="s1">&#39;accessToken&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">rsp</span><span class="p">[</span><span class="s2">&quot;accessToken&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.get_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.get_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Keystore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the keystore and decrypt it in a readable manner.</span>
+
+<span class="sd">        The keystore is the mapping of meta -&gt; encryption key of each object.</span>
+<span class="sd">        If this function throws errors repeatedly at you,</span>
+<span class="sd">        check your internet connection or the integrity of your keystore.</span>
+<span class="sd">        Losing your keystore, or overwriting it means losing all content on the account.</span>
+
+<span class="sd">        :param key: Account&#39;s encryption key</span>
+
+<span class="sd">        :return: Keystore object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">keystore</span> <span class="o">=</span> <span class="n">Keystore</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">get_keystore</span><span class="p">())</span>
+        <span class="n">keystore</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">keystore</span></div>
+
+<div class="viewcode-block" id="HighLevel.set_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.set_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encrypt and upload the keystore.</span>
+
+<span class="sd">        The keystore is the mapping of meta -&gt; encryption key of each object.</span>
+<span class="sd">        If this function throws errors repeatedly at you,</span>
+<span class="sd">        check your internet connection or the integrity of your keystore.</span>
+<span class="sd">        Losing your keystore, or overwriting it means losing all content on the account.</span>
+
+<span class="sd">        :param keystore: Keystore object to upload</span>
+<span class="sd">        :param key: Account&#39;s encryption key</span>
+
+<span class="sd">        :return: raw data of the serialized Keystore object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">keystore</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">set_keystore</span><span class="p">(</span><span class="n">keystore</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.download_user_stories"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_stories">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_user_stories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download all the objects of type &#39;stories&#39; stored on the account</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">stories</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">download_objects</span><span class="p">(</span><span class="s2">&quot;stories&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stories</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.download_user_story_contents"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_story_contents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_user_story_contents</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download all the objects of type &#39;storycontent&#39; stored on the account</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">story_contents</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">download_objects</span><span class="p">(</span><span class="s2">&quot;storycontent&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">story_contents</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.download_user_presets"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_presets">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_user_presets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download all the objects of type &#39;presets&#39; stored on the account</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">presets</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">download_objects</span><span class="p">(</span><span class="s2">&quot;presets&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">presets</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.download_user_modules"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_modules">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_user_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download all the objects of type &#39;aimodules&#39; stored on the account</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">modules</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">download_objects</span><span class="p">(</span><span class="s2">&quot;aimodules&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">modules</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.download_user_shelves"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_shelves">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_user_shelves</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download all the objects of type &#39;shelf&#39; stored on the account</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">modules</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">download_objects</span><span class="p">(</span><span class="s2">&quot;shelf&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">modules</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HighLevel.upload_user_content"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.upload_user_content">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_user_content</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">encrypt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">keystore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Keystore</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upload user content</span>
+
+<span class="sd">        :param data: Object to upload</span>
+<span class="sd">        :param encrypt: Re-encrypt/re-compress the data, if True</span>
+<span class="sd">        :param keystore: Keystore to encrypt the data, if encrypt is True</span>
+
+<span class="sd">        :return: True if the upload succeeded, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">object_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+        <span class="n">object_meta</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span>
+        <span class="n">object_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">encrypt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;stories&quot;</span><span class="p">,</span> <span class="s2">&quot;storycontent&quot;</span><span class="p">,</span> <span class="s2">&quot;aimodules&quot;</span><span class="p">,</span> <span class="s2">&quot;shelf&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">keystore</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;keystore&#39; is not set, cannot encrypt data&quot;</span><span class="p">)</span>
+
+                <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;presets&quot;</span><span class="p">,):</span>
+                <span class="n">compress_user_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># clean data introduced by decrypt_user_data</span>
+        <span class="c1"># this step should have been done in encrypt_user_data, but the user could have not called it</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="s2">&quot;compressed&quot;</span><span class="p">,</span> <span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">object_data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> left in object &#39;</span><span class="si">{</span><span class="n">object_type</span><span class="si">}</span><span class="s2">&#39; of id &#39;</span><span class="si">{</span><span class="n">object_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">del</span> <span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">upload_object</span><span class="p">(</span><span class="n">object_type</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">object_meta</span><span class="p">,</span> <span class="n">object_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.upload_user_contents"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.upload_user_contents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_user_contents</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">datas</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">encrypt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">keystore</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Keystore</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NovelAIError</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upload multiple user contents. If the content has been decrypted with decrypt_user_data,</span>
+<span class="sd">        it should be re-encrypted with encrypt_user_data, even if the decryption failed</span>
+
+<span class="sd">        :param datas: Objects to upload</span>
+<span class="sd">        :param encrypt: Re-encrypt/re-compress the data, if True</span>
+<span class="sd">        :param keystore: Keystore to encrypt the data, if encrypt is True</span>
+
+<span class="sd">        :return: A list of (id, error) of all the objects that failed to be uploaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">status</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_user_content</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encrypt</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">NovelAIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">status</span></div>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_generate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
+        <span class="n">preset</span><span class="p">:</span> <span class="n">Preset</span><span class="p">,</span>
+        <span class="n">global_settings</span><span class="p">:</span> <span class="n">GlobalSettings</span><span class="p">,</span>
+        <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate text with streaming support</span>
+
+<span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
+<span class="sd">        :param model: Model to use for the AI</span>
+<span class="sd">        :param preset: Preset to use for the generation settings</span>
+<span class="sd">        :param global_settings: Global settings (used for generation)</span>
+<span class="sd">        :param bad_words: Tokens to ban for this generation</span>
+<span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
+<span class="sd">        :param prefix: Module to use for this generation</span>
+<span class="sd">        :param stream: Use data streaming for the response</span>
+<span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
+
+<span class="sd">        :return: Content that has been generated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">preset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Uninitialized preset&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preset</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">model</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preset &#39;</span><span class="si">{</span><span class="n">preset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; (model </span><span class="si">{</span><span class="n">preset</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">) is not compatible with model </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">preset_params</span> <span class="o">=</span> <span class="n">preset</span><span class="o">.</span><span class="n">to_settings</span><span class="p">()</span>
+        <span class="n">global_params</span> <span class="o">=</span> <span class="n">global_settings</span><span class="o">.</span><span class="n">to_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preset_params</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_params</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># adjust repetition penalty value for Sigurd and Euterpe</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">Sigurd</span><span class="p">,</span> <span class="n">Model</span><span class="o">.</span><span class="n">Euterpe</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;repetition_penalty&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">rep_pen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;repetition_penalty&quot;</span><span class="p">]</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;repetition_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.525</span> <span class="o">*</span> <span class="p">(</span><span class="n">rep_pen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;prefix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;vanilla&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">prefix</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">,</span> <span class="n">bad_words</span><span class="p">,</span> <span class="n">BanList</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">,</span> <span class="n">biases</span><span class="p">,</span> <span class="n">BiasGroup</span><span class="p">)):</span>
+            <span class="n">k</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="n">v</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BanList</span><span class="p">,</span> <span class="n">BiasGroup</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">c</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">Type</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">]]</span>
+
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39;, but got &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+                    <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">get_tokenized_entries</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">i</span>
+
+<div class="viewcode-block" id="HighLevel.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
+        <span class="n">preset</span><span class="p">:</span> <span class="n">Preset</span><span class="p">,</span>
+        <span class="n">global_settings</span><span class="p">:</span> <span class="n">GlobalSettings</span><span class="p">,</span>
+        <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate text. The b64-encoded text is returned at once, when generation is finished.</span>
+<span class="sd">        To decode the text, the :meth:`novelai_api.utils.b64_to_tokens`</span>
+<span class="sd">        and :meth:`novelai_api.Tokenizer.Tokenizer.decode` methods should be used.</span>
+
+<span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
+<span class="sd">        :param model: Model to use for the AI</span>
+<span class="sd">        :param preset: Preset to use for the generation settings</span>
+<span class="sd">        :param global_settings: Global settings (used for generation)</span>
+<span class="sd">        :param bad_words: Tokens to ban for this generation</span>
+<span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
+<span class="sd">        :param prefix: Module to use for this generation</span>
+<span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
+
+<span class="sd">        :return: Content that has been generated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">,</span>
+            <span class="n">preset</span><span class="p">,</span>
+            <span class="n">global_settings</span><span class="p">,</span>
+            <span class="n">bad_words</span><span class="p">,</span>
+            <span class="n">biases</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="HighLevel.generate_stream"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate_stream">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_stream</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
+        <span class="n">preset</span><span class="p">:</span> <span class="n">Preset</span><span class="p">,</span>
+        <span class="n">global_settings</span><span class="p">:</span> <span class="n">GlobalSettings</span><span class="p">,</span>
+        <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate text. The text is returned one token at a time, as it is generated.</span>
+
+<span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
+<span class="sd">        :param model: Model to use for the AI</span>
+<span class="sd">        :param preset: Preset to use for the generation settings</span>
+<span class="sd">        :param global_settings: Global settings (used for generation)</span>
+<span class="sd">        :param bad_words: Tokens to ban for this generation</span>
+<span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
+<span class="sd">        :param prefix: Module to use for this generation</span>
+<span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
+
+<span class="sd">        :return: Content that has been generated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">,</span>
+            <span class="n">preset</span><span class="p">,</span>
+            <span class="n">global_settings</span><span class="p">,</span>
+            <span class="n">bad_words</span><span class="p">,</span>
+            <span class="n">biases</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.generate_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span>
+        <span class="n">preset</span><span class="p">:</span> <span class="n">ImagePreset</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="n">ImageGenerationType</span> <span class="o">=</span> <span class="n">ImageGenerationType</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate one or multiple image(s)</span>
+
+<span class="sd">        :param prompt: Prompt to give to the AI (raw text describing the wanted image)</span>
+<span class="sd">        :param model: Model to use for the AI</span>
+<span class="sd">        :param preset: Preset to use for the generation settings</span>
+<span class="sd">        :param action: Type of image generation to use</span>
+<span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
+
+<span class="sd">        :return: Pair(s) (name, image) that have been generated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">preset</span><span class="o">.</span><span class="n">to_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># TODO: allow to disable the removal of nsfw ? How to tackle this cleanly</span>
+        <span class="n">uc</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;negative_prompt&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;nsfw&quot;</span> <span class="ow">in</span> <span class="n">prompt</span> <span class="ow">and</span> <span class="n">uc</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;nsfw,&quot;</span><span class="p">):</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;negative_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;nsfw,&quot;</span><span class="p">)</span> <span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">quality_toggle</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">quality_toggle</span><span class="p">:</span>
+            <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;masterpiece, best quality, </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate_image</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">e</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

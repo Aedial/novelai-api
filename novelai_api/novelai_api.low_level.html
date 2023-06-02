@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>novelai_api.low_level &#8212; NovelAI API 0.16.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/micromodal.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/hoverxref.js"></script>
+    <script src="../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="novelai_api.high_level" href="novelai_api.high_level.html" />
+    <link rel="prev" title="novelai-api package" href="novelai_api.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.high_level.html" title="novelai_api.high_level"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.html" title="novelai-api package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-novelai_api._low_level">
+<span id="novelai-api-low-level"></span><h1>novelai_api.low_level<a class="headerlink" href="#module-novelai_api._low_level" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="novelai_api._low_level.print_with_parameters">
+<span class="sig-name descname"><span class="pre">print_with_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#print_with_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.print_with_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the provided parameters in a nice way</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LowLevel</span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Low level API for NovelAI. This class is not meant to be used directly,
+but rather through <a class="hxr-hoverxref hxr-tooltip reference internal" href="novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.low_level" title="novelai_api.NovelAI_API.NovelAIAPI.low_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">NovelAIAPI.low_level</span></code></a>.</p>
+<p>The most relevant methods are:</p>
+<ul class="simple">
+<li><p><a class="hxr-hoverxref hxr-tooltip reference internal" href="#novelai_api._low_level.LowLevel.login" title="novelai_api._low_level.LowLevel.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">login</span></code></a></p></li>
+<li><p><a class="hxr-hoverxref hxr-tooltip reference internal" href="#novelai_api._low_level.LowLevel.generate" title="novelai_api._low_level.LowLevel.generate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate</span></code></a></p></li>
+<li><p><a class="hxr-hoverxref hxr-tooltip reference internal" href="#novelai_api._low_level.LowLevel.generate_image" title="novelai_api._low_level.LowLevel.generate_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_image</span></code></a></p></li>
+<li><p><a class="hxr-hoverxref hxr-tooltip reference internal" href="#novelai_api._low_level.LowLevel.get_keystore" title="novelai_api._low_level.LowLevel.get_keystore"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_keystore</span></code></a></p></li>
+<li><p><a class="hxr-hoverxref hxr-tooltip reference internal" href="#novelai_api._low_level.LowLevel.download_objects" title="novelai_api._low_level.LowLevel.download_objects"><code class="xref py py-meth docutils literal notranslate"><span class="pre">download_objects</span></code></a></p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI" title="novelai_api.NovelAI_API.NovelAIAPI"><span class="pre">NovelAIAPI</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.is_schema_validation_enabled">
+<span class="sig-name descname"><span class="pre">is_schema_validation_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#novelai_api._low_level.LowLevel.is_schema_validation_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable schema validation for responses. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.request">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send request with support for data streaming</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> – Method of the request (get, post, delete)</p></li>
+<li><p><strong>endpoint</strong> – Endpoint of the request</p></li>
+<li><p><strong>data</strong> – Data to pass to the method if needed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.is_reachable">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_reachable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.is_reachable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.is_reachable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the NovelAI API is reachable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if reachable, False if not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.register">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recapcha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">giftkey</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recapcha</strong> – Recapcha of the NovelAI website</p></li>
+<li><p><strong>access_key</strong> – Access key of the account</p></li>
+<li><p><strong>email</strong> – Hashed email (used for recovery)</p></li>
+<li><p><strong>giftkey</strong> – Giftkey</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if success</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.login">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log in to the account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>access_key</strong> – Access key of the account</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response of the request</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.change_access_key">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">change_access_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.change_access_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.change_access_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the access key of the given account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_key</strong> – Current key of the account</p></li>
+<li><p><strong>new_key</strong> – New key of the account</p></li>
+<li><p><strong>new_email</strong> – New email, if it changed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.send_email_verification">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_email_verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.send_email_verification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.send_email_verification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the email for account verification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> – Address to send the email to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.verify_email">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">verify_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verification_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.verify_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.verify_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the token sent for email verification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verification_token</strong> – Token sent to the email address</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_information">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_information</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get extensive information about the account</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.request_account_recovery">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">request_account_recovery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.request_account_recovery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.request_account_recovery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a recovery token to the provided email address, if the account has been lost
+<strong>WARNING</strong>: the content will not be readable with a different encryption key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> – Address to send the email to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.recover_account">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">recover_account</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recovery_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.recover_account"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.recover_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recover the lost account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recovery_token</strong> – Token sent to the given email address</p></li>
+<li><p><strong>new_key</strong> – New access key for the account</p></li>
+<li><p><strong>delete_content</strong> – Delete all content that was on the account</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.delete_account">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_account</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.delete_account"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.delete_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the account</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_data">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get various data about the account</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_priority">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_priority</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_priority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the priority information of the account</p>
+<p>The priority system is a legacy system and isn’t really important</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.SubscriptionTier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SubscriptionTier</span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.SubscriptionTier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.SubscriptionTier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>Index of the subscription tiers</p>
+<p>PAPER tier is the free trial</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.SubscriptionTier.PAPER">
+<span class="sig-name descname"><span class="pre">PAPER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#novelai_api._low_level.LowLevel.SubscriptionTier.PAPER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.SubscriptionTier.TABLET">
+<span class="sig-name descname"><span class="pre">TABLET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#novelai_api._low_level.LowLevel.SubscriptionTier.TABLET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.SubscriptionTier.SCROLL">
+<span class="sig-name descname"><span class="pre">SCROLL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#novelai_api._low_level.LowLevel.SubscriptionTier.SCROLL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.SubscriptionTier.OPUS">
+<span class="sig-name descname"><span class="pre">OPUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#novelai_api._low_level.LowLevel.SubscriptionTier.OPUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_subscription">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_subscription</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get various information about the account’s subscription</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_keystore">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_keystore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_keystore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the keystore</p>
+<p>The keystore is the storage for the encryption keys of any content on the account.
+Losing it is equal to losing all your encrypted content</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.set_keystore">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_keystore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keystore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.set_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.set_keystore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the keystore</p>
+<p>The keystore is the storage for the encryption keys of any content on the account.
+Losing it (or overwriting it with wrong data) is equal to losing all your encrypted content</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.download_objects">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">download_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.download_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.download_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download all the objects of a given type from the account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>object_type</strong> – Type of the objects to download</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.upload_objects">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.upload_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.upload_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload multiple objects of the given type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object_type</strong> – Type of the objects to upload</p></li>
+<li><p><strong>meta</strong> – Meta of the objects to upload (meta links to encryption key in keystore)</p></li>
+<li><p><strong>data</strong> – Serialized data of the content to upload</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.download_object">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">download_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.download_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.download_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download the selected object of a given type from the account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object_type</strong> – Type of the object to download</p></li>
+<li><p><strong>object_id</strong> – Id of the selected object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.upload_object">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.upload_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.upload_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload an object of then given type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object_type</strong> – Type of the object to upload</p></li>
+<li><p><strong>meta</strong> – Meta of the object to upload (meta links to encryption key in keystore)</p></li>
+<li><p><strong>data</strong> – Serialized data of the content to upload</p></li>
+<li><p><strong>object_id</strong> – Id of the selected object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.delete_object">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.delete_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.delete_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download the selected object of a given type from the account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object_type</strong> – Type of the object to delete</p></li>
+<li><p><strong>object_id</strong> – Id of the selected object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_settings">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the account settings. The format is arbitrary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.set_settings">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.set_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.set_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the account settings. The format is arbitrary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.bind_subscription">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payment_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.bind_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.bind_subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind payment information to the account to renew subscription monthly</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.change_subscription">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">change_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_plan</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.change_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.change_subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the subscription tier. Payment information should still be bound to the account</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Preset.html#novelai_api.Preset.Model" title="novelai_api.Preset.Model"><span class="pre">novelai_api.Preset.Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate text with streaming support</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> – Input to be sent the AI</p></li>
+<li><p><strong>model</strong> – Model of the AI</p></li>
+<li><p><strong>params</strong> – Generation parameters</p></li>
+<li><p><strong>stream</strong> – Use data streaming for the response</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated output</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.classify">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.classify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not implemented</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.train_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.train_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.train_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a module for text gen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Dataset of the module, in one single string</p></li>
+<li><p><strong>rate</strong> – Learning rate of the training</p></li>
+<li><p><strong>steps</strong> – Number of steps to train the module for</p></li>
+<li><p><strong>name</strong> – Name of the module</p></li>
+<li><p><strong>desc</strong> – Description of the module</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status of the module being trained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_modules">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the modules currently in training or that finished training</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a module currently in training or that finished training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.delete_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.delete_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.delete_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a module currently in training or that finished training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Module that got deleted</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_voice">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_voice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_voice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_voice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the Text To Speech of the given text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Text to synthesize into voice (text will be cut to 1000 characters backend-side)</p></li>
+<li><p><strong>seed</strong> – Voice to use</p></li>
+<li><p><strong>voice</strong> – Index of the voice to use</p></li>
+<li><p><strong>opus</strong> – True for WebM format, False for mp3 format</p></li>
+<li><p><strong>version</strong> – Version of the TTS (“v1” or “v2”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>TTS audio data of the text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.suggest_tags">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">suggest_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.suggest_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.suggest_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suggest tags with a certain confidence, considering how much the tag is used in the dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> – Tag to suggest others of</p></li>
+<li><p><strong>model</strong> – Image model to get the tags from</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of similar tags with a confidence level</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_image">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType" title="novelai_api.ImagePreset.ImageGenerationType"><span class="pre">novelai_api.ImagePreset.ImageGenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate one or multiple image(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> – Prompt for the image</p></li>
+<li><p><strong>model</strong> – Model to generate the image</p></li>
+<li><p><strong>action</strong> – Type of image generation to use</p></li>
+<li><p><strong>parameters</strong> – Parameters for the images</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(name, data) pairs for the raw PNG image(s)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_prompt">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Preset.html#novelai_api.Preset.Model" title="novelai_api.Preset.Model"><span class="pre">novelai_api.Preset.Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_prompt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a prompt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Model to use for the prompt</p></li>
+<li><p><strong>prompt</strong> – Prompt to base the generation on</p></li>
+<li><p><strong>temp</strong> – Temperature for the generation</p></li>
+<li><p><strong>length</strong> – Length of the returned prompt</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated prompt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_controlnet_mask">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_controlnet_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel" title="novelai_api.ImagePreset.ControlNetModel"><span class="pre">novelai_api.ImagePreset.ControlNetModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_controlnet_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_controlnet_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ControlNet’s mask for the given image. Used for ImageSampler.controlnet_condition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – ControlNet model to use</p></li>
+<li><p><strong>image</strong> – b64 encoded PNG image to get the mask of</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pair (name, data) for the raw PNG image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.upscale_image">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upscale_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.upscale_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.upscale_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> – b64 encoded PNG image to upscale</p></li>
+<li><p><strong>width</strong> – Width of the starting image</p></li>
+<li><p><strong>height</strong> – Height of the starting image</p></li>
+<li><p><strong>scale</strong> – Upscaling factor (final width = starting width * scale, final height = starting height * scale)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pair (name, data) for the raw PNG image</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">novelai_api.low_level</a><ul>
+<li><a class="reference internal" href="#novelai_api._low_level.print_with_parameters"><code class="docutils literal notranslate"><span class="pre">print_with_parameters()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel"><code class="docutils literal notranslate"><span class="pre">LowLevel</span></code></a><ul>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.__init__"><code class="docutils literal notranslate"><span class="pre">LowLevel.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.is_schema_validation_enabled"><code class="docutils literal notranslate"><span class="pre">LowLevel.is_schema_validation_enabled</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.request"><code class="docutils literal notranslate"><span class="pre">LowLevel.request()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.is_reachable"><code class="docutils literal notranslate"><span class="pre">LowLevel.is_reachable()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.register"><code class="docutils literal notranslate"><span class="pre">LowLevel.register()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.login"><code class="docutils literal notranslate"><span class="pre">LowLevel.login()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.change_access_key"><code class="docutils literal notranslate"><span class="pre">LowLevel.change_access_key()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.send_email_verification"><code class="docutils literal notranslate"><span class="pre">LowLevel.send_email_verification()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.verify_email"><code class="docutils literal notranslate"><span class="pre">LowLevel.verify_email()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_information"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_information()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.request_account_recovery"><code class="docutils literal notranslate"><span class="pre">LowLevel.request_account_recovery()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.recover_account"><code class="docutils literal notranslate"><span class="pre">LowLevel.recover_account()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.delete_account"><code class="docutils literal notranslate"><span class="pre">LowLevel.delete_account()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_data"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_data()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_priority"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_priority()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.SubscriptionTier"><code class="docutils literal notranslate"><span class="pre">LowLevel.SubscriptionTier</span></code></a><ul>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.SubscriptionTier.PAPER"><code class="docutils literal notranslate"><span class="pre">LowLevel.SubscriptionTier.PAPER</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.SubscriptionTier.TABLET"><code class="docutils literal notranslate"><span class="pre">LowLevel.SubscriptionTier.TABLET</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.SubscriptionTier.SCROLL"><code class="docutils literal notranslate"><span class="pre">LowLevel.SubscriptionTier.SCROLL</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.SubscriptionTier.OPUS"><code class="docutils literal notranslate"><span class="pre">LowLevel.SubscriptionTier.OPUS</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_subscription"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_subscription()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_keystore"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_keystore()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.set_keystore"><code class="docutils literal notranslate"><span class="pre">LowLevel.set_keystore()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.download_objects"><code class="docutils literal notranslate"><span class="pre">LowLevel.download_objects()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.upload_objects"><code class="docutils literal notranslate"><span class="pre">LowLevel.upload_objects()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.download_object"><code class="docutils literal notranslate"><span class="pre">LowLevel.download_object()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.upload_object"><code class="docutils literal notranslate"><span class="pre">LowLevel.upload_object()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.delete_object"><code class="docutils literal notranslate"><span class="pre">LowLevel.delete_object()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_settings"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_settings()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.set_settings"><code class="docutils literal notranslate"><span class="pre">LowLevel.set_settings()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.bind_subscription"><code class="docutils literal notranslate"><span class="pre">LowLevel.bind_subscription()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.change_subscription"><code class="docutils literal notranslate"><span class="pre">LowLevel.change_subscription()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.classify"><code class="docutils literal notranslate"><span class="pre">LowLevel.classify()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.train_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.train_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_modules"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_modules()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.delete_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.delete_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_voice"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_voice()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.suggest_tags"><code class="docutils literal notranslate"><span class="pre">LowLevel.suggest_tags()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_image()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_prompt"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_prompt()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_controlnet_mask"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_controlnet_mask()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.upscale_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.upscale_image()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="novelai_api.html"
+                          title="previous chapter">novelai-api package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="novelai_api.high_level.html"
+                          title="next chapter">novelai_api.high_level</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/novelai_api/novelai_api.low_level.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.high_level.html" title="novelai_api.high_level"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="novelai_api.html" title="novelai-api package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

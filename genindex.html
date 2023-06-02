@@ -94,11 +94,15 @@
 </li>
         <li><a href="novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.__init__">(GlobalSettings method)</a>
 </li>
+        <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.__init__">(HighLevel method)</a>
+</li>
         <li><a href="novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.__init__">(Idstore method)</a>
 </li>
         <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.__init__">(ImagePreset method)</a>
 </li>
         <li><a href="novelai_api/novelai_api.Keystore.html#novelai_api.Keystore.Keystore.__init__">(Keystore method)</a>
+</li>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.__init__">(LowLevel method)</a>
 </li>
         <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.__init__">(NovelAIAPI method)</a>
 </li>
@@ -179,15 +183,17 @@
 </li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.BASE_ADDRESS">BASE_ADDRESS (NovelAIAPI attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.bias">bias (BiasGroup attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.bias_dinkus_asterism">bias_dinkus_asterism (GlobalSettings attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.biases">biases (NovelAIStory attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup">BiasGroup (class in novelai_api.BiasGroup)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.bind_subscription">bind_subscription() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.bos_token_id">bos_token_id (Preset attribute)</a>
 </li>
@@ -203,7 +209,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.calculate_cost">calculate_cost() (ImagePreset method)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_access_key">change_access_key() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_subscription">change_subscription() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.choose">choose() (NovelAIStory method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.classify">classify() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Clio">Clio (Model attribute)</a>
 </li>
@@ -215,10 +227,10 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.controlnet_condition">controlnet_condition (ImagePreset attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.controlnet_model">controlnet_model (ImagePreset attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.controlnet_model">controlnet_model (ImagePreset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.controlnet_strength">controlnet_strength (ImagePreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">ControlNetModel (class in novelai_api.ImagePreset)</a>
@@ -265,8 +277,6 @@
 </li>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.decrypt_data">decrypt_data() (in module novelai_api.utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.decrypt_user_data">decrypt_user_data() (in module novelai_api.utils)</a>
 </li>
       <li><a href="example/example.boilerplate.html#example.boilerplate.JSONEncoder.default">default() (JSONEncoder method)</a>, <a href="tests/api/api.boilerplate.html#tests.api.boilerplate.JSONEncoder.default">[1]</a>
@@ -277,9 +287,31 @@
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.delete">delete() (NovelAIStory method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_account">delete_account() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_module">delete_module() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_object">delete_object() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.detach_session">detach_session() (NovelAIAPI method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.diversity_penalty">diversity_penalty (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_object">download_object() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_objects">download_objects() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_modules">download_user_modules() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_presets">download_user_presets() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_shelves">download_user_shelves() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_stories">download_user_stories() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.download_user_story_contents">download_user_story_contents() (HighLevel method)</a>
 </li>
       <li><a href="example/example.boilerplate.html#example.boilerplate.dumps">dumps() (in module example.boilerplate)</a>
 
@@ -479,11 +511,31 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.generate">generate() (NovelAIStory method)</a>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate">generate() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate">(LowLevel method)</a>
 </li>
+        <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.generate">(NovelAIStory method)</a>
+</li>
+      </ul></li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_controlnet_mask">generate_controlnet_mask() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate_image">generate_image() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_image">(LowLevel method)</a>
+</li>
+      </ul></li>
       <li><a href="novelai_api/novelai_api.BiasGroup.html#novelai_api.BiasGroup.BiasGroup.generate_once">generate_once (BiasGroup attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_prompt">generate_prompt() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.generate_stream">generate_stream() (HighLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.generate_until_sentence">generate_until_sentence (GlobalSettings attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_voice">generate_voice() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Genji">Genji (Model attribute)</a>
 </li>
@@ -491,13 +543,29 @@
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.get_current_tree">get_current_tree() (NovelAIStory method)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_data">get_data() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.get_decrypted_user_data">get_decrypted_user_data() (in module novelai_api.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.get_encryption_key">get_encryption_key() (in module novelai_api.utils)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_information">get_information() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.get_keystore">get_keystore() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_keystore">(LowLevel method)</a>
+</li>
+      </ul></li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.get_max_n_samples">get_max_n_samples() (ImagePreset method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_priority">get_priority() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_settings">get_settings() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_subscription">get_subscription() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.BanList.html#novelai_api.BanList.BanList.get_tokenized_entries">get_tokenized_entries() (BanList method)</a>
 
@@ -506,6 +574,10 @@
 </li>
       </ul></li>
       <li><a href="novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.get_tokenizer_name">get_tokenizer_name() (Tokenizer class method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_module">get_trained_module() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_modules">get_trained_modules() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.global_settings">global_settings (NovelAIStory attribute)</a>
 
@@ -523,9 +595,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.headers">headers (NovelAIAPI attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.high_level">high_level (NovelAIAPI attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.high_level">high_level (NovelAIAPI attribute)</a>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel">HighLevel (class in novelai_api._high_level)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.HypeBot">HypeBot (Model attribute)</a>
 </li>
@@ -549,10 +623,10 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution">ImageResolution (class in novelai_api.ImagePreset)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageSampler">ImageSampler (class in novelai_api.ImagePreset)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType.IMG2IMG">IMG2IMG (ImageGenerationType attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inainting_Anime_Curated">Inainting_Anime_Curated (ImageModel attribute)</a>
@@ -564,6 +638,10 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Full">Inpainting_Anime_Full (ImageModel attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Furry">Inpainting_Furry (ImageModel attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.is_reachable">is_reachable() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.is_schema_validation_enabled">is_schema_validation_enabled (LowLevel attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -641,12 +719,12 @@
 </li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.LIB_ROOT">LIB_ROOT (NovelAIAPI attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.link_content_to_story">link_content_to_story() (in module novelai_api.utils)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load">load() (NovelAIStoryStorage method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load_from_remote">load_from_remote() (NovelAIStoryStorage method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.loads">loads() (NovelAIStoryStorage method)</a>
@@ -657,7 +735,19 @@
         <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.logger">(NovelAIAPI attribute)</a>
 </li>
       </ul></li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login">login() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.login">(LowLevel method)</a>
+</li>
+      </ul></li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login_from_token">login_from_token() (HighLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.low_level">low_level (NovelAIAPI attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel">LowLevel (class in novelai_api._low_level)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier">LowLevel.SubscriptionTier (class in novelai_api._low_level)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -720,6 +810,10 @@
         <li><a href="example/example.html#module-example.suggest_tags">example.suggest_tags</a>
 </li>
         <li><a href="example/example.html#module-example.upscale_image">example.upscale_image</a>
+</li>
+        <li><a href="novelai_api/novelai_api.high_level.html#module-novelai_api._high_level">novelai_api._high_level</a>
+</li>
+        <li><a href="novelai_api/novelai_api.low_level.html#module-novelai_api._low_level">novelai_api._low_level</a>
 </li>
         <li><a href="novelai_api/novelai_api.BanList.html#module-novelai_api.BanList">novelai_api.BanList</a>
 </li>
@@ -785,6 +879,20 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Normal_Square">Normal_Square (ImageResolution attribute)</a>
 </li>
       <li>
+    novelai_api._high_level
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.high_level.html#module-novelai_api._high_level">module</a>
+</li>
+      </ul></li>
+      <li>
+    novelai_api._low_level
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#module-novelai_api._low_level">module</a>
+</li>
+      </ul></li>
+      <li>
     novelai_api.BanList
 
       <ul>
@@ -812,6 +920,8 @@
         <li><a href="novelai_api/novelai_api.Idstore.html#module-novelai_api.Idstore">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     novelai_api.ImagePreset
 
@@ -819,8 +929,6 @@
         <li><a href="novelai_api/novelai_api.ImagePreset.html#module-novelai_api.ImagePreset">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     novelai_api.Keystore
 
@@ -893,10 +1001,12 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order">Order (class in novelai_api.Preset)</a>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier.OPUS">OPUS (LowLevel.SubscriptionTier attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order">Order (class in novelai_api.Preset)</a>
+</li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.order">order (Preset attribute)</a>
 </li>
   </ul></td>
@@ -908,6 +1018,8 @@
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.pad_token_id">pad_token_id (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel.Palette_Swap">Palette_Swap (ControlNetModel attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier.PAPER">PAPER (LowLevel.SubscriptionTier attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageSampler.plms">plms (ImageSampler attribute)</a>
 </li>
@@ -935,6 +1047,8 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.PresetView">PresetView (class in novelai_api.Preset)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.print_with_parameters">print_with_parameters() (in module novelai_api._low_level)</a>
+</li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.proxy">proxy (NovelAIAPI attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.proxy_auth">proxy_auth (NovelAIAPI attribute)</a>
@@ -953,10 +1067,18 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.recover_account">recover_account() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.redo">redo() (NovelAIStory method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.register">register() (Idstore method)</a>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.register">register() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.Idstore.html#novelai_api.Idstore.Idstore.register">(Idstore method)</a>
 </li>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.register">(LowLevel method)</a>
+</li>
+      </ul></li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty">repetition_penalty (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_frequency">repetition_penalty_frequency (Preset attribute)</a>
@@ -970,6 +1092,10 @@
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_slope">repetition_penalty_slope (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_whitelist">repetition_penalty_whitelist (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request">request() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request_account_recovery">request_account_recovery() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.resolution">resolution (ImagePreset attribute)</a>
 </li>
@@ -989,9 +1115,13 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel.Scrible">Scrible (ControlNetModel attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier.SCROLL">SCROLL (LowLevel.SubscriptionTier attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.seed">seed (ImagePreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.select">select() (NovelAIStoryStorage method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.send_email_verification">send_email_verification() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.SentencePiece">SentencePiece (class in novelai_api.Tokenizer)</a>
 </li>
@@ -999,14 +1129,22 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.set">set() (Preset method)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.set_keystore">set_keystore() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_keystore">(LowLevel method)</a>
+</li>
+      </ul></li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_settings">set_settings() (LowLevel method)</a>
+</li>
       <li><a href="tests/api/api.html#tests.api.test_decrypt_encrypt_integrity_check.shelves_integrity">shelves_integrity() (in module tests.api.test_decrypt_encrypt_integrity_check)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Sigurd">Sigurd (Model attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Small_Landscape">Small_Landscape (ImageResolution attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Small_Portrait">Small_Portrait (ImageResolution attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Small_Square">Small_Square (ImageResolution attribute)</a>
@@ -1033,12 +1171,16 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.StrEnum">StrEnum (class in novelai_api.Preset)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.suggest_tags">suggest_tags() (LowLevel method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier.TABLET">TABLET (LowLevel.SubscriptionTier attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.tail_free_sampling">tail_free_sampling (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Temperature">Temperature (Order attribute)</a>
@@ -1124,6 +1266,8 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.top_p">top_p (Preset attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.train_module">train_module() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.SentencePiece.trans_regex_str">trans_regex_str (SentencePiece attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.SentencePiece.trans_table_ids">trans_table_ids (SentencePiece attribute)</a>
@@ -1150,8 +1294,6 @@
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.undo">undo() (NovelAIStory method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.unlink_content_from_story">unlink_content_from_story() (in module novelai_api.utils)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.unload">unload() (NovelAIStoryStorage method)</a>
@@ -1162,6 +1304,18 @@
         <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.update">(Preset method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_object">upload_object() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_objects">upload_objects() (LowLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.upload_user_content">upload_user_content() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.upload_user_contents">upload_user_contents() (HighLevel method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upscale_image">upscale_image() (LowLevel method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.NovelAIError.html#novelai_api.NovelAIError.NovelAIError.url">url (NovelAIError attribute)</a>
 </li>
   </ul></td>
@@ -1171,6 +1325,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.SchemaValidator.html#novelai_api.SchemaValidator.SchemaValidator.validate">validate() (SchemaValidator class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.verify_email">verify_email() (LowLevel method)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -69,7 +69,23 @@
 
 <div class="viewcode-block" id="API"><a class="viewcode-back" href="../../example/example.boilerplate.html#example.boilerplate.API">[docs]</a><span class="k">class</span> <span class="nc">API</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Boilerplate for the redundant parts</span>
+<span class="sd">    Boilerplate for the redundant parts.</span>
+<span class="sd">    Using the object as a context manager will automatically login using the environment variables</span>
+<span class="sd">    ``NAI_USERNAME`` and ``NAI_PASSWORD``.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        async with API() as api:</span>
+<span class="sd">            api = api.api</span>
+<span class="sd">            encryption_key = api.encryption_key</span>
+<span class="sd">            logger = api.logger</span>
+<span class="sd">            ...  # Do stuff</span>
+
+
+<span class="sd">    A custom base address can be passed to the constructor to replace the default</span>
+<span class="sd">    (:attr:`BASE_ADDRESS &lt;novelai_api.NovelAI_API.NovelAIAPI.BASE_ADDRESS&gt;`)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_username</span><span class="p">:</span> <span class="nb">str</span>
