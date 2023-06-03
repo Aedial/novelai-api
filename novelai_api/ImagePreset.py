@@ -126,25 +126,12 @@ class ImagePreset:
             "{{unfinished}}, deformed, outline, pattern, simple background",
             UCPreset.Preset_None: "low res",
         },
-        ImageModel.Inainting_Anime_Curated: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy: "",
-            UCPreset.Preset_Bad_Anatomy: None,
-            UCPreset.Preset_Low_Quality: "",
-            UCPreset.Preset_None: "",
-        },
-        ImageModel.Inpainting_Anime_Full: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy: "",
-            UCPreset.Preset_Bad_Anatomy: None,
-            UCPreset.Preset_Low_Quality: "",
-            UCPreset.Preset_None: "",
-        },
-        ImageModel.Inpainting_Furry: {
-            UCPreset.Preset_Low_Quality_Bad_Anatomy: None,
-            UCPreset.Preset_Bad_Anatomy: "",
-            UCPreset.Preset_Low_Quality: "",
-            UCPreset.Preset_None: "",
-        },
     }
+
+    # inpainting presets are the same as the normal ones
+    _UC_Presets[ImageModel.Inainting_Anime_Curated] = _UC_Presets[ImageModel.Anime_Curated]
+    _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
+    _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
