@@ -132,11 +132,9 @@ class _PresetMetaclass(type):
 
 class Preset(metaclass=_PresetMetaclass):
     # TODO
-    # no_repeat_ngram_size          number
-    # encoder_no_repeat_ngram_size	number
-    # num_return_sequences          number
-    # get_hidden_states             boolean
+    #: Similar to logprobs, but seems to return something different. Only return one token worth of data
     # next_word                     boolean
+    #: ???
     # output_nonzero_probs          boolean
 
     _TYPE_MAPPING = {
@@ -163,6 +161,10 @@ class Preset(metaclass=_PresetMetaclass):
         "bos_token_id": int,
         "eos_token_id": int,
         "max_time": int,
+        "no_repeat_ngram_size": int,
+        "encoder_no_repeat_ngram_size": int,
+        "num_return_sequences": int,
+        "get_hidden_states": bool,
     }
 
     DEFAULTS = {
@@ -221,9 +223,9 @@ class Preset(metaclass=_PresetMetaclass):
         repetition_penalty_presence: float
         #: List of tokens that are excluded from the repetition penalty (useful for colors and the likes)
         repetition_penalty_whitelist: list
-        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
+        #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
         length_penalty: float
-        #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
+        #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
         diversity_penalty: float
         #: list of Order to set the sampling order
         order: List[Union[Order, int]]
@@ -235,6 +237,14 @@ class Preset(metaclass=_PresetMetaclass):
         eos_token_id: int
         #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         max_time: int
+        #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
+        no_repeat_ngram_size: int
+        #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
+        encoder_no_repeat_ngram_size: int
+        #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
+        num_return_sequences: int
+        #: PretrainedConfig.output_hidden_states
+        get_hidden_states: bool
 
     _officials: Dict[str, Dict[str, "Preset"]]
     _officials_values: Dict[str, List["Preset"]]
