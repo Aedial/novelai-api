@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.16.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.16.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -183,25 +183,12 @@
             <span class="s2">&quot;{{unfinished}}, deformed, outline, pattern, simple background&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;low res&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Bad_Anatomy</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
     <span class="p">}</span>
+
+    <span class="c1"># inpainting presets are the same as the normal ones</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">]</span>
 
     <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Palette_Swap</span><span class="p">:</span> <span class="s2">&quot;hed&quot;</span><span class="p">,</span>
@@ -524,7 +511,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>

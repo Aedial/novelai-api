@@ -9,8 +9,7 @@
 
 TODO
 ====
-.. include:: ../../TODO.md
-   :parser: myst_parser.sphinx_
+> `Trello <https://trello.com/b/EHCPaRQL/novelai-api>`_
 
 Reference
 =========
