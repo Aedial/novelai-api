@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._low_level &#8212; NovelAI API 0.16.2 documentation</title>
+    <title>novelai_api._low_level &#8212; NovelAI API 0.16.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>
@@ -649,6 +649,8 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/clientsettings&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
+    <span class="c1"># TODO: add submission endpoints</span>
+
 <div class="viewcode-block" id="LowLevel.bind_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.bind_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">bind_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_processor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Bind payment information to the account to renew subscription monthly</span>
@@ -673,7 +675,9 @@
 
 <div class="viewcode-block" id="LowLevel.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate text with streaming support</span>
+<span class="sd">        Generate text with streaming support. As the model accepts a complete prompt,</span>
+<span class="sd">        the context building must be done before calling this function.</span>
+<span class="sd">        Any content going beyond the tokens limit will be truncated, starting from the top.</span>
 
 <span class="sd">        :param prompt: Input to be sent the AI</span>
 <span class="sd">        :param model: Model of the AI</span>
@@ -692,14 +696,115 @@
             <span class="n">prompt</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
 
         <span class="n">prompt</span> <span class="o">=</span> <span class="n">tokens_to_b64</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">}</span>
 
         <span class="n">endpoint</span> <span class="o">=</span> <span class="s2">&quot;/ai/generate-stream&quot;</span> <span class="k">if</span> <span class="n">stream</span> <span class="k">else</span> <span class="s2">&quot;/ai/generate&quot;</span>
 
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
 
             <span class="k">yield</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="LowLevel.generate_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate one or multiple image(s)</span>
+
+<span class="sd">        :param prompt: Prompt for the image</span>
+<span class="sd">        :param model: Model to generate the image</span>
+<span class="sd">        :param action: Type of image generation to use</span>
+<span class="sd">        :param parameters: Parameters for the images</span>
+
+<span class="sd">        :return: (name, data) pairs for the raw PNG image(s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">ImageModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/generate-image&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">yield</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="LowLevel.generate_prompt"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_prompt">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a prompt</span>
+
+<span class="sd">        :param model: Model to use for the prompt</span>
+<span class="sd">        :param prompt: Prompt to base the generation on</span>
+<span class="sd">        :param temp: Temperature for the generation</span>
+<span class="sd">        :param length: Length of the returned prompt</span>
+
+<span class="sd">        :return: Generated prompt</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
+            <span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="n">temp</span><span class="p">,</span>
+            <span class="s2">&quot;tokens_to_generate&quot;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/generate-prompt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="LowLevel.generate_controlnet_mask"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_controlnet_mask">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_controlnet_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the ControlNet&#39;s mask for the given image. Used for ImageSampler.controlnet_condition</span>
+
+<span class="sd">        :param model: ControlNet model to use</span>
+<span class="sd">        :param image: b64 encoded PNG image to get the mask of</span>
+
+<span class="sd">        :return: A pair (name, data) for the raw PNG image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">}}</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/annotate-image&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="LowLevel.upscale_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upscale_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upscale_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.</span>
+
+<span class="sd">        :param image: b64 encoded PNG image to upscale</span>
+<span class="sd">        :param width: Width of the starting image</span>
+<span class="sd">        :param height: Height of the starting image</span>
+<span class="sd">        :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)</span>
+
+<span class="sd">        :return: A pair (name, data) for the raw PNG image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="n">scale</span><span class="p">}</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/upscale&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
 
 <div class="viewcode-block" id="LowLevel.classify"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.classify">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -707,6 +812,67 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Function is not implemented yet&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LowLevel.suggest_tags"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.suggest_tags">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">suggest_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Suggest tags with a certain confidence, considering how much the tag is used in the dataset</span>
+
+<span class="sd">        :param tag: Tag to suggest others of</span>
+<span class="sd">        :param model: Image model to get the tags from</span>
+
+<span class="sd">        :return: List of similar tags with a confidence level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">ImageModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">tag</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/ai/generate-image/suggest-tags?</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="LowLevel.generate_voice"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_voice">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">voice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate the Text To Speech of the given text</span>
+
+<span class="sd">        :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)</span>
+<span class="sd">        :param seed: Voice to use (TTS v2 only)</span>
+<span class="sd">        :param voice: Index of the voice to use (TTS v1 only)</span>
+<span class="sd">        :param opus: True for WebM format, False for mp3 format</span>
+<span class="sd">        :param version: Version of the TTS (&quot;v1&quot; or &quot;v2&quot;)</span>
+
+<span class="sd">        :return: TTS audio data of the text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">opus</span><span class="o">=</span><span class="n">opus</span><span class="p">)</span>
+
+        <span class="c1"># urlencode keeps capitalization on bool =_=</span>
+        <span class="n">opus</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="n">opus</span> <span class="k">else</span> <span class="s2">&quot;false&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
+                <span class="s2">&quot;voice&quot;</span><span class="p">:</span> <span class="n">voice</span><span class="p">,</span>
+                <span class="s2">&quot;opus&quot;</span><span class="p">:</span> <span class="n">opus</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/ai/generate-voice?</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
 
 <div class="viewcode-block" id="LowLevel.train_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.train_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">train_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -787,165 +953,15 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate_voice"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_voice">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">voice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the Text To Speech of the given text</span>
+<div class="viewcode-block" id="LowLevel.buy_steps"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.buy_steps">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">buy_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">)</span>
 
-<span class="sd">        :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)</span>
-<span class="sd">        :param seed: Voice to use</span>
-<span class="sd">        :param voice: Index of the voice to use</span>
-<span class="sd">        :param opus: True for WebM format, False for mp3 format</span>
-<span class="sd">        :param version: Version of the TTS (&quot;v1&quot; or &quot;v2&quot;)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">amount</span><span class="p">}</span>
 
-<span class="sd">        :return: TTS audio data of the text</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">opus</span><span class="o">=</span><span class="n">opus</span><span class="p">)</span>
-
-        <span class="c1"># urlencode keeps capitalization on bool =_=</span>
-        <span class="n">opus</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="n">opus</span> <span class="k">else</span> <span class="s2">&quot;false&quot;</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
-                <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
-                <span class="s2">&quot;voice&quot;</span><span class="p">:</span> <span class="n">voice</span><span class="p">,</span>
-                <span class="s2">&quot;opus&quot;</span><span class="p">:</span> <span class="n">opus</span><span class="p">,</span>
-                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/ai/generate-voice?</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/module/buy-training-steps&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">content</span></div>
-
-<div class="viewcode-block" id="LowLevel.suggest_tags"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.suggest_tags">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">suggest_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Suggest tags with a certain confidence, considering how much the tag is used in the dataset</span>
-
-<span class="sd">        :param tag: Tag to suggest others of</span>
-<span class="sd">        :param model: Image model to get the tags from</span>
-
-<span class="sd">        :return: List of similar tags with a confidence level</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="n">ImageModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-
-        <span class="n">query</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">tag</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/ai/generate-image/suggest-tags?</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">content</span></div>
-
-<div class="viewcode-block" id="LowLevel.generate_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_image</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate one or multiple image(s)</span>
-
-<span class="sd">        :param prompt: Prompt for the image</span>
-<span class="sd">        :param model: Model to generate the image</span>
-<span class="sd">        :param action: Type of image generation to use</span>
-<span class="sd">        :param parameters: Parameters for the images</span>
-
-<span class="sd">        :return: (name, data) pairs for the raw PNG image(s)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="n">ImageModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
-
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
-            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/generate-image&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-
-            <span class="k">yield</span> <span class="n">content</span></div>
-
-<div class="viewcode-block" id="LowLevel.generate_prompt"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_prompt">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a prompt</span>
-
-<span class="sd">        :param model: Model to use for the prompt</span>
-<span class="sd">        :param prompt: Prompt to base the generation on</span>
-<span class="sd">        :param temp: Temperature for the generation</span>
-<span class="sd">        :param length: Length of the returned prompt</span>
-
-<span class="sd">        :return: Generated prompt</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
-
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
-            <span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="n">temp</span><span class="p">,</span>
-            <span class="s2">&quot;tokens_to_generate&quot;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/generate-prompt&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">content</span></div>
-
-<div class="viewcode-block" id="LowLevel.generate_controlnet_mask"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_controlnet_mask">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_controlnet_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the ControlNet&#39;s mask for the given image. Used for ImageSampler.controlnet_condition</span>
-
-<span class="sd">        :param model: ControlNet model to use</span>
-<span class="sd">        :param image: b64 encoded PNG image to get the mask of</span>
-
-<span class="sd">        :return: A pair (name, data) for the raw PNG image</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
-
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">}}</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/annotate-image&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">content</span></div>
-
-<div class="viewcode-block" id="LowLevel.upscale_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upscale_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upscale_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.</span>
-
-<span class="sd">        :param image: b64 encoded PNG image to upscale</span>
-<span class="sd">        :param width: Width of the starting image</span>
-<span class="sd">        :param height: Height of the starting image</span>
-<span class="sd">        :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)</span>
-
-<span class="sd">        :return: A pair (name, data) for the raw PNG image</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
-        <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
-
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="n">scale</span><span class="p">}</span>
-
-        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/upscale&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+            <span class="c1"># TODO: verify response ?</span>
 
             <span class="k">return</span> <span class="n">content</span></div></div>
 </pre></div>
@@ -979,7 +995,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>

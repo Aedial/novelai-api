@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.16.2 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.16.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -252,12 +252,12 @@
         <span class="n">object_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">encrypt</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;stories&quot;</span><span class="p">,</span> <span class="s2">&quot;storycontent&quot;</span><span class="p">,</span> <span class="s2">&quot;aimodules&quot;</span><span class="p">,</span> <span class="s2">&quot;shelf&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;stories&quot;</span><span class="p">,</span> <span class="s2">&quot;storycontent&quot;</span><span class="p">,</span> <span class="s2">&quot;aimodules&quot;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">keystore</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;keystore&#39; is not set, cannot encrypt data&quot;</span><span class="p">)</span>
 
                 <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">keystore</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;presets&quot;</span><span class="p">,):</span>
+            <span class="k">elif</span> <span class="n">object_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;presets&quot;</span><span class="p">):</span>
                 <span class="n">compress_user_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># clean data introduced by decrypt_user_data</span>
@@ -312,7 +312,7 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate text with streaming support</span>
+<span class="sd">        Generate text with streaming support.</span>
 
 <span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
 <span class="sd">        :param model: Model to use for the AI</span>
@@ -385,6 +385,10 @@
 <span class="sd">        To decode the text, the :meth:`novelai_api.utils.b64_to_tokens`</span>
 <span class="sd">        and :meth:`novelai_api.Tokenizer.Tokenizer.decode` methods should be used.</span>
 
+<span class="sd">        As the model accepts a complete prompt, the context building must be done before calling this function.</span>
+<span class="sd">        Any content going beyond the tokens limit will be truncated, starting from the top.</span>
+
+
 <span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
 <span class="sd">        :param model: Model to use for the AI</span>
 <span class="sd">        :param preset: Preset to use for the generation settings</span>
@@ -423,6 +427,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate text. The text is returned one token at a time, as it is generated.</span>
+
+<span class="sd">        As the model accepts a complete prompt, the context building must be done before calling this function.</span>
+<span class="sd">        Any content going beyond the tokens limit will be truncated, starting from the top.</span>
+
 
 <span class="sd">        :param prompt: Context to give to the AI (raw text or list of tokens)</span>
 <span class="sd">        :param model: Model to use for the AI</span>
@@ -514,7 +522,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>

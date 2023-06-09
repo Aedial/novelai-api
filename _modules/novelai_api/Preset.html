@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.Preset &#8212; NovelAI API 0.16.2 documentation</title>
+    <title>novelai_api.Preset &#8212; NovelAI API 0.16.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
@@ -157,8 +157,12 @@
     <span class="n">Inline</span> <span class="o">=</span> <span class="s2">&quot;infillmodel&quot;</span></div>
 
 
+<span class="c1">#: Prompt sent to the model when the context is empty</span>
 <span class="n">PREAMBLE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Model.Calliope: &quot;⁂\n&quot;,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Sigurd</span><span class="p">:</span> <span class="s2">&quot;⁂</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Genji</span><span class="p">:</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">198</span><span class="p">],</span>  <span class="c1"># &quot;]\n\n&quot; - impossible combination, so it is pre-tokenized</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Snek</span><span class="p">:</span> <span class="s2">&quot;&lt;|endoftext|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Euterpe</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">***</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Krake</span><span class="p">:</span> <span class="s2">&quot;&lt;|endoftext|&gt;[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Clio</span><span class="p">:</span> <span class="s2">&quot;[ Author: Various ]</span><span class="se">\n</span><span class="s2">[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -642,7 +646,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>

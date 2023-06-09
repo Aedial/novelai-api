@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.low_level &#8212; NovelAI API 0.16.2 documentation</title>
+    <title>novelai_api.low_level &#8212; NovelAI API 0.16.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>
@@ -391,7 +391,9 @@ Losing it (or overwriting it with wrong data) is equal to losing all your encryp
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Preset.html#novelai_api.Preset.Model" title="novelai_api.Preset.Model"><span class="pre">novelai_api.Preset.Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate text with streaming support</p>
+<dd><p>Generate text with streaming support. As the model accepts a complete prompt,
+the context building must be done before calling this function.
+Any content going beyond the tokens limit will be truncated, starting from the top.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -403,100 +405,6 @@ Losing it (or overwriting it with wrong data) is equal to losing all your encryp
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Generated output</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.classify">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.classify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.classify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Not implemented</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.train_module">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.train_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.train_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train a module for text gen</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – Dataset of the module, in one single string</p></li>
-<li><p><strong>rate</strong> – Learning rate of the training</p></li>
-<li><p><strong>steps</strong> – Number of steps to train the module for</p></li>
-<li><p><strong>name</strong> – Name of the module</p></li>
-<li><p><strong>desc</strong> – Description of the module</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Status of the module being trained</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_modules">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the modules currently in training or that finished training</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_module">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a module currently in training or that finished training</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.delete_module">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.delete_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.delete_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a module currently in training or that finished training</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Module that got deleted</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_voice">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_voice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_voice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_voice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the Text To Speech of the given text</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – Text to synthesize into voice (text will be cut to 1000 characters backend-side)</p></li>
-<li><p><strong>seed</strong> – Voice to use</p></li>
-<li><p><strong>voice</strong> – Index of the voice to use</p></li>
-<li><p><strong>opus</strong> – True for WebM format, False for mp3 format</p></li>
-<li><p><strong>version</strong> – Version of the TTS (“v1” or “v2”)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>TTS audio data of the text</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.suggest_tags">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">suggest_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.suggest_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.suggest_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Suggest tags with a certain confidence, considering how much the tag is used in the dataset</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tag</strong> – Tag to suggest others of</p></li>
-<li><p><strong>model</strong> – Image model to get the tags from</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of similar tags with a confidence level</p>
 </dd>
 </dl>
 </dd></dl>
@@ -575,6 +483,105 @@ Losing it (or overwriting it with wrong data) is equal to losing all your encryp
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.classify">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.classify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not implemented</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.suggest_tags">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">suggest_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.suggest_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.suggest_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suggest tags with a certain confidence, considering how much the tag is used in the dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> – Tag to suggest others of</p></li>
+<li><p><strong>model</strong> – Image model to get the tags from</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of similar tags with a confidence level</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.generate_voice">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_voice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.generate_voice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.generate_voice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the Text To Speech of the given text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Text to synthesize into voice (text will be cut to 1000 characters backend-side)</p></li>
+<li><p><strong>seed</strong> – Voice to use (TTS v2 only)</p></li>
+<li><p><strong>voice</strong> – Index of the voice to use (TTS v1 only)</p></li>
+<li><p><strong>opus</strong> – True for WebM format, False for mp3 format</p></li>
+<li><p><strong>version</strong> – Version of the TTS (“v1” or “v2”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>TTS audio data of the text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.train_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.train_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.train_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a module for text gen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Dataset of the module, in one single string</p></li>
+<li><p><strong>rate</strong> – Learning rate of the training</p></li>
+<li><p><strong>steps</strong> – Number of steps to train the module for</p></li>
+<li><p><strong>name</strong> – Name of the module</p></li>
+<li><p><strong>desc</strong> – Description of the module</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status of the module being trained</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_modules">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the modules currently in training or that finished training</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.get_trained_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trained_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.get_trained_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.get_trained_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a module currently in training or that finished training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.delete_module">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.delete_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.delete_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a module currently in training or that finished training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module_id</strong> – Id of the selected module</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Module that got deleted</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.buy_steps">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buy_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.buy_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.buy_steps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -627,17 +634,18 @@ Losing it (or overwriting it with wrong data) is equal to losing all your encryp
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.bind_subscription"><code class="docutils literal notranslate"><span class="pre">LowLevel.bind_subscription()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.change_subscription"><code class="docutils literal notranslate"><span class="pre">LowLevel.change_subscription()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.classify"><code class="docutils literal notranslate"><span class="pre">LowLevel.classify()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.train_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.train_module()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_modules"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_modules()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_module()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.delete_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.delete_module()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_voice"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_voice()</span></code></a></li>
-<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.suggest_tags"><code class="docutils literal notranslate"><span class="pre">LowLevel.suggest_tags()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_image()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_prompt"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_prompt()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_controlnet_mask"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_controlnet_mask()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.upscale_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.upscale_image()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.classify"><code class="docutils literal notranslate"><span class="pre">LowLevel.classify()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.suggest_tags"><code class="docutils literal notranslate"><span class="pre">LowLevel.suggest_tags()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_voice"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_voice()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.train_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.train_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_modules"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_modules()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.get_trained_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.get_trained_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.delete_module"><code class="docutils literal notranslate"><span class="pre">LowLevel.delete_module()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.buy_steps"><code class="docutils literal notranslate"><span class="pre">LowLevel.buy_steps()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -691,7 +699,7 @@ Losing it (or overwriting it with wrong data) is equal to losing all your encryp
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>
