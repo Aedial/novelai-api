@@ -1,0 +1,49 @@
+{
+  "presetVersion": 3,
+  "name": "Edgewise",
+  "id": "6a2a2c0b-83c7-43df-850f-25c67d64da44",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 3,
+    "temperature": 1.09,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.969,
+    "top_a": 0.069,
+    "typical_p": 0.99,
+    "tail_free_sampling": 0.969,
+    "repetition_penalty": 1.09,
+    "repetition_penalty_range": 8192,
+    "repetition_penalty_slope": 0.069,
+    "repetition_penalty_frequency": 0.006,
+    "repetition_penalty_presence": 0.009,
+    "order": [
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}
