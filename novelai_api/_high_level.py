@@ -195,12 +195,12 @@ class HighLevel:
         object_data = data["data"]
 
         if encrypt:
-            if object_type in ("stories", "storycontent", "aimodules", "shelf"):
+            if object_type in ("stories", "storycontent", "aimodules"):
                 if keystore is None:
                     raise ValueError("'keystore' is not set, cannot encrypt data")
 
                 encrypt_user_data(data, keystore)
-            elif object_type in ("presets",):
+            elif object_type in ("shelf", "presets"):
                 compress_user_data(data)
 
         # clean data introduced by decrypt_user_data
@@ -255,7 +255,7 @@ class HighLevel:
         **kwargs,
     ):
         """
-        Generate text with streaming support
+        Generate text with streaming support.
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
@@ -328,6 +328,10 @@ class HighLevel:
         To decode the text, the :meth:`novelai_api.utils.b64_to_tokens`
         and :meth:`novelai_api.Tokenizer.Tokenizer.decode` methods should be used.
 
+        As the model accepts a complete prompt, the context building must be done before calling this function.
+        Any content going beyond the tokens limit will be truncated, starting from the top.
+
+
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI
         :param preset: Preset to use for the generation settings
@@ -366,6 +370,10 @@ class HighLevel:
     ) -> AsyncIterable[Dict[str, Any]]:
         """
         Generate text. The text is returned one token at a time, as it is generated.
+
+        As the model accepts a complete prompt, the context building must be done before calling this function.
+        Any content going beyond the tokens limit will be truncated, starting from the top.
+
 
         :param prompt: Context to give to the AI (raw text or list of tokens)
         :param model: Model to use for the AI

@@ -100,8 +100,12 @@ class Model(StrEnum):
     Inline = "infillmodel"
 
 
+#: Prompt sent to the model when the context is empty
 PREAMBLE = {
+    # Model.Calliope: "⁂\n",
     Model.Sigurd: "⁂\n",
+    Model.Genji: [60, 198, 198],  # "]\n\n" - impossible combination, so it is pre-tokenized
+    Model.Snek: "<|endoftext|>\n",
     Model.Euterpe: "\n***\n",
     Model.Krake: "<|endoftext|>[ Prologue ]\n",
     Model.Clio: "[ Author: Various ]\n[ Prologue ]\n",

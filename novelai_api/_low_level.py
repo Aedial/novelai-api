@@ -592,6 +592,8 @@ class LowLevel:
         async for rsp, content in self.request("put", "/user/clientsettings", value):
             return self._treat_response_bool(rsp, content, 200)
 
+    # TODO: add submission endpoints
+
     async def bind_subscription(self, payment_processor: str, subscription_id: str) -> bool:
         """
         Bind payment information to the account to renew subscription monthly
@@ -616,7 +618,9 @@ class LowLevel:
 
     async def generate(self, prompt: Union[List[int], str], model: Model, params: Dict[str, Any], stream: bool = False):
         """
-        Generate text with streaming support
+        Generate text with streaming support. As the model accepts a complete prompt,
+        the context building must be done before calling this function.
+        Any content going beyond the tokens limit will be truncated, starting from the top.
 
         :param prompt: Input to be sent the AI
         :param model: Model of the AI
@@ -635,14 +639,115 @@ class LowLevel:
             prompt = Tokenizer.encode(model, prompt)
 
         prompt = tokens_to_b64(prompt)
-        args = {"input": prompt, "model": model.value, "parameters": params}
+        data = {"input": prompt, "model": model.value, "parameters": params}
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
-        async for rsp, content in self.request("post", endpoint, args):
+        async for rsp, content in self.request("post", endpoint, data):
             self._treat_response_object(rsp, content, 201)
 
             yield content
+
+    async def generate_image(
+        self, prompt: str, model: ImageModel, action: ImageGenerationType, parameters: Dict[str, Any]
+    ) -> AsyncIterator[Tuple[str, bytes]]:
+        """
+        Generate one or multiple image(s)
+
+        :param prompt: Prompt for the image
+        :param model: Model to generate the image
+        :param action: Type of image generation to use
+        :param parameters: Parameters for the images
+
+        :return: (name, data) pairs for the raw PNG image(s)
+        """
+
+        assert_type(str, prompt=prompt)
+        assert_type(ImageModel, model=model)
+        assert_type(dict, parameters=parameters)
+
+        data = {
+            "input": prompt,
+            "model": model.value,
+            "action": action.value,
+            "parameters": parameters,
+        }
+
+        async for rsp, content in self.request("post", "/ai/generate-image", data):
+            self._treat_response_object(rsp, content, 200)
+
+            yield content
+
+    async def generate_prompt(self, model: Model, prompt: str, temp: float, length: int) -> Dict[str, Any]:
+        """
+        Generate a prompt
+
+        :param model: Model to use for the prompt
+        :param prompt: Prompt to base the generation on
+        :param temp: Temperature for the generation
+        :param length: Length of the returned prompt
+
+        :return: Generated prompt
+        """
+
+        assert_type(Model, model=model)
+        assert_type(str, prompt=prompt)
+        assert_type(float, temp=temp)
+        assert_type(int, length=length)
+
+        data = {
+            "model": model.value,
+            "prompt": prompt,
+            "temp": temp,
+            "tokens_to_generate": length,
+        }
+
+        async for rsp, content in self.request("post", "/ai/generate-prompt", data):
+            self._treat_response_object(rsp, content, 201)
+
+            return content
+
+    async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> Tuple[str, bytes]:
+        """
+        Get the ControlNet's mask for the given image. Used for ImageSampler.controlnet_condition
+
+        :param model: ControlNet model to use
+        :param image: b64 encoded PNG image to get the mask of
+
+        :return: A pair (name, data) for the raw PNG image
+        """
+
+        assert_type(ControlNetModel, model=model)
+        assert_type(str, image=image)
+
+        data = {"model": model.value, "parameters": {"image": image}}
+
+        async for rsp, content in self.request("post", "/ai/annotate-image", data):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
+
+    async def upscale_image(self, image: str, width: int, height: int, scale: int) -> Tuple[str, bytes]:
+        """
+        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.
+
+        :param image: b64 encoded PNG image to upscale
+        :param width: Width of the starting image
+        :param height: Height of the starting image
+        :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)
+
+        :return: A pair (name, data) for the raw PNG image
+        """
+
+        assert_type(str, image=image)
+        assert_type(int, width=width, height=height, scale=scale)
+
+        data = {"image": image, "width": width, "height": height, "scale": scale}
+
+        async for rsp, content in self.request("post", "/ai/upscale", data):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
 
     async def classify(self) -> NoReturn:
         """
@@ -650,6 +755,67 @@ class LowLevel:
         """
 
         raise NotImplementedError("Function is not implemented yet")
+
+    async def suggest_tags(self, tag: str, model: ImageModel) -> Dict[str, Any]:
+        """
+        Suggest tags with a certain confidence, considering how much the tag is used in the dataset
+
+        :param tag: Tag to suggest others of
+        :param model: Image model to get the tags from
+
+        :return: List of similar tags with a confidence level
+        """
+
+        assert_type(str, tag=tag)
+        assert_type(ImageModel, model=model)
+
+        query = urlencode(
+            {
+                "model": model.value,
+                "prompt": tag,
+            },
+            quote_via=quote,
+        )
+
+        async for rsp, content in self.request("get", f"/ai/generate-image/suggest-tags?{query}"):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
+
+    async def generate_voice(self, text: str, seed: str, voice: int, opus: bool, version: str) -> Dict[str, Any]:
+        """
+        Generate the Text To Speech of the given text
+
+        :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)
+        :param seed: Voice to use (TTS v2 only)
+        :param voice: Index of the voice to use (TTS v1 only)
+        :param opus: True for WebM format, False for mp3 format
+        :param version: Version of the TTS ("v1" or "v2")
+
+        :return: TTS audio data of the text
+        """
+
+        assert_type(str, text=text, seed=seed, version=version)
+        assert_type(int, voice=voice)
+        assert_type(bool, opus=opus)
+
+        # urlencode keeps capitalization on bool =_=
+        opus = "true" if opus else "false"
+        query = urlencode(
+            {
+                "text": text,
+                "seed": seed,
+                "voice": voice,
+                "opus": opus,
+                "version": version,
+            },
+            quote_via=quote,
+        )
+
+        async for rsp, content in self.request("get", f"/ai/generate-voice?{query}"):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
 
     async def train_module(self, data: str, rate: int, steps: int, name: str, desc: str) -> Dict[str, Any]:
         """
@@ -730,164 +896,14 @@ class LowLevel:
 
             return content
 
-    async def generate_voice(self, text: str, seed: str, voice: int, opus: bool, version: str) -> Dict[str, Any]:
-        """
-        Generate the Text To Speech of the given text
+    async def buy_steps(self, amount: int):
+        assert_type(int, amount=amount)
 
-        :param text: Text to synthesize into voice (text will be cut to 1000 characters backend-side)
-        :param seed: Voice to use
-        :param voice: Index of the voice to use
-        :param opus: True for WebM format, False for mp3 format
-        :param version: Version of the TTS ("v1" or "v2")
+        data = {"amount": amount}
 
-        :return: TTS audio data of the text
-        """
-
-        assert_type(str, text=text, seed=seed, version=version)
-        assert_type(int, voice=voice)
-        assert_type(bool, opus=opus)
-
-        # urlencode keeps capitalization on bool =_=
-        opus = "true" if opus else "false"
-        query = urlencode(
-            {
-                "text": text,
-                "seed": seed,
-                "voice": voice,
-                "opus": opus,
-                "version": version,
-            },
-            quote_via=quote,
-        )
-
-        async for rsp, content in self.request("get", f"/ai/generate-voice?{query}"):
+        async for rsp, content in self.request("delete", "/ai/module/buy-training-steps", data):
             self._treat_response_object(rsp, content, 200)
 
-            return content
-
-    async def suggest_tags(self, tag: str, model: ImageModel) -> Dict[str, Any]:
-        """
-        Suggest tags with a certain confidence, considering how much the tag is used in the dataset
-
-        :param tag: Tag to suggest others of
-        :param model: Image model to get the tags from
-
-        :return: List of similar tags with a confidence level
-        """
-
-        assert_type(str, tag=tag)
-        assert_type(ImageModel, model=model)
-
-        query = urlencode(
-            {
-                "model": model.value,
-                "prompt": tag,
-            },
-            quote_via=quote,
-        )
-
-        async for rsp, content in self.request("get", f"/ai/generate-image/suggest-tags?{query}"):
-            self._treat_response_object(rsp, content, 200)
-
-            return content
-
-    async def generate_image(
-        self, prompt: str, model: ImageModel, action: ImageGenerationType, parameters: Dict[str, Any]
-    ) -> AsyncIterator[Tuple[str, bytes]]:
-        """
-        Generate one or multiple image(s)
-
-        :param prompt: Prompt for the image
-        :param model: Model to generate the image
-        :param action: Type of image generation to use
-        :param parameters: Parameters for the images
-
-        :return: (name, data) pairs for the raw PNG image(s)
-        """
-
-        assert_type(str, prompt=prompt)
-        assert_type(ImageModel, model=model)
-        assert_type(dict, parameters=parameters)
-
-        args = {
-            "input": prompt,
-            "model": model.value,
-            "action": action.value,
-            "parameters": parameters,
-        }
-
-        async for rsp, content in self.request("post", "/ai/generate-image", args):
-            self._treat_response_object(rsp, content, 200)
-
-            yield content
-
-    async def generate_prompt(self, model: Model, prompt: str, temp: float, length: int) -> Dict[str, Any]:
-        """
-        Generate a prompt
-
-        :param model: Model to use for the prompt
-        :param prompt: Prompt to base the generation on
-        :param temp: Temperature for the generation
-        :param length: Length of the returned prompt
-
-        :return: Generated prompt
-        """
-
-        assert_type(Model, model=model)
-        assert_type(str, prompt=prompt)
-        assert_type(float, temp=temp)
-        assert_type(int, length=length)
-
-        args = {
-            "model": model.value,
-            "prompt": prompt,
-            "temp": temp,
-            "tokens_to_generate": length,
-        }
-
-        async for rsp, content in self.request("post", "/ai/generate-prompt", args):
-            self._treat_response_object(rsp, content, 201)
-
-            return content
-
-    async def generate_controlnet_mask(self, model: ControlNetModel, image: str) -> Tuple[str, bytes]:
-        """
-        Get the ControlNet's mask for the given image. Used for ImageSampler.controlnet_condition
-
-        :param model: ControlNet model to use
-        :param image: b64 encoded PNG image to get the mask of
-
-        :return: A pair (name, data) for the raw PNG image
-        """
-
-        assert_type(ControlNetModel, model=model)
-        assert_type(str, image=image)
-
-        args = {"model": model.value, "parameters": {"image": image}}
-
-        async for rsp, content in self.request("post", "/ai/annotate-image", args):
-            self._treat_response_object(rsp, content, 200)
-
-            return content
-
-    async def upscale_image(self, image: str, width: int, height: int, scale: int) -> Tuple[str, bytes]:
-        """
-        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.
-
-        :param image: b64 encoded PNG image to upscale
-        :param width: Width of the starting image
-        :param height: Height of the starting image
-        :param scale: Upscaling factor (final width = starting width * scale, final height = starting height * scale)
-
-        :return: A pair (name, data) for the raw PNG image
-        """
-
-        assert_type(str, image=image)
-        assert_type(int, width=width, height=height, scale=scale)
-
-        args = {"image": image, "width": width, "height": height, "scale": scale}
-
-        async for rsp, content in self.request("post", "/ai/upscale", args):
-            self._treat_response_object(rsp, content, 200)
+            # TODO: verify response ?
 
             return content

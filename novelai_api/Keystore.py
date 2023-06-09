@@ -92,6 +92,7 @@ class Keystore:
 
         keystore = self.data.copy()
 
+        # keystore is empty, create a new one
         if "keystore" in keystore and keystore["keystore"] is None:  # keystore is null when empty
             self._nonce = random(SecretBox.NONCE_SIZE)
             self._version = 2
@@ -110,6 +111,7 @@ class Keystore:
 
             return
 
+        # keystore is not empty, decrypt it
         keystore = loads(b64decode(self.data["keystore"]).decode())
         SchemaValidator.validate("schema_keystore_encrypted", keystore)
 
