@@ -30,9 +30,9 @@ class ControlNetModel(enum.Enum):
 
     Palette_Swap = "hed"
     Form_Lock = "midas"
-    Scrible = "fake_scribble"
+    Scribbler = "fake_scribble"
     Building_Control = "mlsd"
-    Lanscaper = "uniformer"
+    Landscaper = "uniformer"
 
 
 class ImageResolution(enum.Enum):
@@ -136,9 +136,9 @@ class ImagePreset:
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
         ControlNetModel.Form_Lock: "depth",
-        ControlNetModel.Scrible: "scribble",
+        ControlNetModel.Scribbler: "scribble",
         ControlNetModel.Building_Control: "mlsd",
-        ControlNetModel.Lanscaper: "seg",
+        ControlNetModel.Landscaper: "seg",
     }
 
     _TYPE_MAPPING = {
