@@ -538,7 +538,7 @@ class LowLevel:
             self._treat_response_object(rsp, content, 200)
 
             if self.is_schema_validation_enabled:
-                SchemaValidator.validate("schema_userData", content)
+                SchemaValidator.validate("schema_UserData", content)
 
             return content
 
