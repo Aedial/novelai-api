@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.GlobalSettings &#8212; NovelAI API 0.16.3 documentation</title>
+    <title>novelai_api.GlobalSettings &#8212; NovelAI API 0.17.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.GlobalSettings</a></li> 
       </ul>
@@ -664,6 +664,86 @@
         <span class="p">[</span><span class="mi">34650</span><span class="p">],</span>
     <span class="p">]</span>
 
+    <span class="c1"># whitelist</span>
+    <span class="n">_REP_PEN_WHITELIST</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;gpt2&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;gpt2-genji&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;pile&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;nerdstash_v1&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ve&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;s&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;t&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;n&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ll&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;re&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; the&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; a&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; an&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; and&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; or&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; not&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; no&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; is&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; was&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; were&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; did&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; does&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; isn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; wasn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; weren&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; didn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; doesn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; him&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; her&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; his&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; hers&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; their&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; its&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; could&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; couldn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; should&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; shouldn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; would&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; wouldn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; have&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; haven&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; had&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; hadn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; has&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; hasn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; can&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; cannot&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; are&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; aren&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; will&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; won&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;6&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;7&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;8&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;9&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;.&quot;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;,&quot;&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;====&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; &quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+
     <span class="n">_DINKUS_ASTERISM</span> <span class="o">=</span> <span class="n">BiasGroup</span><span class="p">(</span><span class="o">-</span><span class="mf">0.12</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;***&quot;</span><span class="p">,</span> <span class="s2">&quot;⁂&quot;</span><span class="p">)</span>
 
     <span class="n">_DEFAULT_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
@@ -672,6 +752,7 @@
         <span class="s2">&quot;ban_brackets&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;bias_dinkus_asterism&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;ban_ambiguous_genji_tokens&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;rep_pen_whitelist&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># type completion for __setitem__ and __getitem__</span>
@@ -686,6 +767,8 @@
         <span class="n">bias_dinkus_asterism</span><span class="p">:</span> <span class="nb">bool</span>
         <span class="c1">#: Apply the GENJI_AMBIGUOUS_TOKENS if model is Genji</span>
         <span class="n">ban_ambiguous_genji_tokens</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: Apply the REP_PEN_WHITELIST (repetition penalty whitelist)</span>
+        <span class="n">rep_pen_whitelist</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="c1">#: Value to set num_logprobs at to disable logprobs</span>
     <span class="n">NO_LOGPROBS</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -746,6 +829,7 @@
             <span class="s2">&quot;num_logprobs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;num_logprobs&quot;</span><span class="p">],</span>
             <span class="s2">&quot;bad_words_ids&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;return_full_text&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;use_string&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;use_cache&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -765,6 +849,11 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;bias_dinkus_asterism&quot;</span><span class="p">]:</span>
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DINKUS_ASTERISM</span><span class="o">.</span><span class="n">get_tokenized_entries</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="s2">&quot;rep_pen_whitelist&quot;</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">Tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tok</span><span class="p">)</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_REP_PEN_WHITELIST</span><span class="p">[</span><span class="n">tokenizer_name</span><span class="p">]</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">settings</span></div></div>
 </pre></div>
@@ -798,7 +887,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.16.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.GlobalSettings</a></li> 
       </ul>
