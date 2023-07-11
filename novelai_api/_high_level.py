@@ -280,6 +280,10 @@ class HighLevel:
 
         params = {}
 
+        # merge rep pen whitelist if both are set
+        if "repetition_penalty_whitelist" in preset_params and "repetition_penalty_whitelist" in global_params:
+            preset_params["repetition_penalty_whitelist"] += global_params.pop("repetition_penalty_whitelist")
+
         params.update(preset_params)
         params.update(global_params)
         params.update(kwargs)
