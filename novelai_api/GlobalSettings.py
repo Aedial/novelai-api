@@ -616,6 +616,7 @@ class GlobalSettings:
             "'",
             '"',
             ",",
+            ".",
             ":",
             "\n",
             "ve",
