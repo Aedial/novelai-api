@@ -485,6 +485,25 @@ class GlobalSettings:
             [26523],
             [41471],
             [2936],
+            [85, 85],
+        ],
+        "nerdstash_v2": [
+            [3],
+            [49356],
+            [1431],
+            [31715],
+            [34387],
+            [20765],
+            [30702],
+            [10691],
+            [49333],
+            [1266],
+            [19438],
+            [43145],
+            [26523],
+            [41471],
+            [2936],
+            [85, 85],
         ],
     }
 
@@ -686,9 +705,98 @@ class GlobalSettings:
             "====",
             " ",
         ],
+        "nerdstash_v2": [
+            "'",
+            '"',
+            ",",
+            ".",
+            ":",
+            "\n",
+            "ve",
+            "s",
+            "t",
+            "n",
+            "d",
+            "ll",
+            "re",
+            "m",
+            "-",
+            "*",
+            ")",
+            " the",
+            " a",
+            " an",
+            " and",
+            " or",
+            " not",
+            " no",
+            " is",
+            " was",
+            " were",
+            " did",
+            " does",
+            " isn",
+            " wasn",
+            " weren",
+            " didn",
+            " doesn",
+            " him",
+            " her",
+            " his",
+            " hers",
+            " their",
+            " its",
+            " could",
+            " couldn",
+            " should",
+            " shouldn",
+            " would",
+            " wouldn",
+            " have",
+            " haven",
+            " had",
+            " hadn",
+            " has",
+            " hasn",
+            " can",
+            " cannot",
+            " are",
+            " aren",
+            " will",
+            " won",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            '."',
+            ',"',
+            "====",
+            " ",
+            "'t've",
+            "'s",
+            "'t",
+            "'ve",
+            "'n",
+            "'ll",
+            "'d",
+            "'re",
+            "'m",
+        ],
     }
 
-    _DINKUS_ASTERISM = BiasGroup(-0.12).add("***", "⁂")
+    _DINKUS_ASTERISM = {
+        "gpt2": BiasGroup(-0.12).add("***", "⁂"),
+        "gpt2-genji": None,
+        "pile": BiasGroup(-0.12).add("***"),
+        "nerdstash_v1": BiasGroup(-0.08).add("***", "⁂"),
+        "nerdstash_v2": BiasGroup(-0.08).add("***", "⁂"),
+    }
 
     _DEFAULT_SETTINGS = {
         "generate_until_sentence": False,
@@ -792,7 +900,13 @@ class GlobalSettings:
             settings["bad_words_ids"].extend(self._GENJI_AMBIGUOUS_TOKENS)
 
         if self._settings["bias_dinkus_asterism"]:
-            settings["logit_bias_exp"].extend(self._DINKUS_ASTERISM.get_tokenized_entries(model))
+            assert (
+                tokenizer_name in self._DINKUS_ASTERISM
+            ), f"Tokenizer {tokenizer_name} not supported with bias_dinkus_asterism"
+
+            bias = self._DINKUS_ASTERISM[tokenizer_name]
+            if bias is not None:
+                settings["logit_bias_exp"].extend(bias.get_tokenized_entries(model))
 
         if self._settings["rep_pen_whitelist"]:
             settings["repetition_penalty_whitelist"].extend(

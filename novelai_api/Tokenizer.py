@@ -130,6 +130,7 @@ class Tokenizer:
         Model.HypeBot: "gpt2",
         Model.Inline: "gpt2",
         Model.Clio: "nerdstash_v1",
+        Model.Kayra: "nerdstash_v2",
         ImageModel.Anime_Curated: "clip",
         ImageModel.Anime_Full: "clip",
         ImageModel.Furry: "clip",

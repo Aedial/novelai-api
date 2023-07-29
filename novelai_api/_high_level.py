@@ -276,13 +276,21 @@ class HighLevel:
             raise ValueError(f"Preset '{preset.name}' (model {preset.model}) is not compatible with model {model}")
 
         preset_params = preset.to_settings()
+
+        # special case for repetition penalty whitelist, as it belongs to global settings but is stored in preset files
+        repetition_penalty_default_whitelist = global_settings.rep_pen_whitelist
+        if preset_params.pop("repetition_penalty_default_whitelist", False):
+            global_settings.rep_pen_whitelist = True
+
         global_params = global_settings.to_settings(model)
+        global_settings.rep_pen_whitelist = repetition_penalty_default_whitelist
 
-        params = {}
-
-        # merge rep pen whitelist if both are set
-        if "repetition_penalty_whitelist" in preset_params and "repetition_penalty_whitelist" in global_params:
-            preset_params["repetition_penalty_whitelist"] += global_params.pop("repetition_penalty_whitelist")
+        params = {
+            "repetition_penalty_whitelist": [
+                *global_params.pop("repetition_penalty_whitelist", []),
+                *preset_params.pop("repetition_penalty_whitelist", []),
+            ]
+        }
 
         params.update(preset_params)
         params.update(global_params)

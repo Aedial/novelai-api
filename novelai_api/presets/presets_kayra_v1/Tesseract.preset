@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Tesseract",
+  "id": "8d482dd6-d26e-4346-9c25-8ae7a75c232c",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 0.895,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 13,
+    "top_p": 0.925,
+    "top_a": 0,
+    "typical_p": 0.9,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 2,
+    "repetition_penalty_range": 4048,
+    "repetition_penalty_slope": 3.2,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1.85,
+    "cfg_uc": "",
+    "phrase_rep_pen": "aggressive",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Carefree",
+  "id": "ddb65a71-b4c6-45fb-937c-56e41a1947de",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 1.35,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 12,
+    "top_p": 0.85,
+    "top_a": 0.1,
+    "typical_p": 1,
+    "tail_free_sampling": 0.915,
+    "repetition_penalty": 2.8,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0.02,
+    "repetition_penalty_frequency": 0.02,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "aggressive",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

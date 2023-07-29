@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Writer's Daemon",
+  "id": "3d173a7b-7a5a-406b-a5fd-f048bb165c5b",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 1.5,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 70,
+    "top_p": 0.95,
+    "top_a": 1,
+    "typical_p": 0.95,
+    "tail_free_sampling": 0.95,
+    "repetition_penalty": 1.6,
+    "repetition_penalty_range": 2016,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": false,
+    "cfg_scale": 1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "very_aggressive",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

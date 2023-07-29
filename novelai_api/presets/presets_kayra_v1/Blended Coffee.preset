@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Blended Coffee",
+  "id": "626c9800-c74b-40aa-bbb4-aa6c99faa49a",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 1,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 25,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 1,
+    "tail_free_sampling": 0.925,
+    "repetition_penalty": 1.6,
+    "repetition_penalty_range": 0,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0.001,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1.55,
+    "cfg_uc": "",
+    "phrase_rep_pen": "medium",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Pilotfish",
+  "id": "b61f48f5-fe70-45be-9163-575628e4a3b7",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 1.31,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 25,
+    "top_p": 0.97,
+    "top_a": 0.18,
+    "typical_p": 0.98,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 1.55,
+    "repetition_penalty_range": 8192,
+    "repetition_penalty_slope": 1.8,
+    "repetition_penalty_frequency": 0.00075,
+    "repetition_penalty_presence": 0.00085,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1.35,
+    "cfg_uc": "",
+    "phrase_rep_pen": "aggressive",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

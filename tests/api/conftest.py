@@ -4,6 +4,7 @@ from typing import List
 import pytest
 
 
+# write the summary of xfailed tests at the end of the test session
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_terminal_summary(terminalreporter):
     yield
@@ -20,6 +21,19 @@ def pytest_terminal_summary(terminalreporter):
 
             rep.longrepr.toterminal(terminalreporter._tw)
             terminalreporter.line("")
+
+
+# write the arguments of the test after the test name
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_protocol(item, nextitem):  # pylint: disable=unused-argument
+    yield
+
+    terminalreporter = item.config.pluginmanager.get_plugin("terminalreporter")
+    if terminalreporter is not None and hasattr(item, "callspec"):
+        callspec = item.callspec
+        if callspec:
+            params = {f"{name}={value}" for name, value in callspec.params.items()}
+            terminalreporter.write(f"\nArguments: {', '.join(params)}")
 
 
 # cannot put in boilerplate because pytest is a mess

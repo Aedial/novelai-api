@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Stelenes",
+  "id": "7dad434e-706f-4af8-8011-3284c8a83540",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 2.5,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 1,
+    "typical_p": 0.966,
+    "tail_free_sampling": 0.933,
+    "repetition_penalty": 1,
+    "repetition_penalty_range": 2048,
+    "repetition_penalty_slope": 0,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "aggressive",
+    "order": [
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "cfg",
+        "enabled": false
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

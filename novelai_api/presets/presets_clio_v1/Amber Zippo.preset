@@ -1,0 +1,57 @@
+{
+  "presetVersion": 3,
+  "name": "Amber Zippo",
+  "id": "16109d75-843b-4464-b6ad-ce9befad003b",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 4,
+    "temperature": 1.1125,
+    "max_length": 40,
+    "min_length": 1,
+    "top_k": 13,
+    "top_p": 0.925,
+    "top_a": 0.335,
+    "typical_p": 0.88,
+    "tail_free_sampling": 0.925,
+    "repetition_penalty": 2,
+    "repetition_penalty_range": 5024,
+    "repetition_penalty_slope": 0.8,
+    "repetition_penalty_frequency": 0.0045,
+    "repetition_penalty_presence": 0.005,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1.825,
+    "cfg_uc": "",
+    "phrase_rep_pen": "aggressive",
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "tfs",
+        "enabled": true
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "clio-v1"
+}

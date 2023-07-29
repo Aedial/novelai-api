@@ -15,6 +15,7 @@ class Order(IntEnum):
     TFS = 3
     Top_A = 4
     Typical_P = 5
+    CFG = 6
 
 
 NAME_TO_ORDER = {
@@ -24,6 +25,7 @@ NAME_TO_ORDER = {
     "tfs": Order.TFS,
     "top_a": Order.Top_A,
     "typical_p": Order.Typical_P,
+    "cfg": Order.CFG,
 }
 
 ORDER_TO_NAME = {
@@ -33,6 +35,7 @@ ORDER_TO_NAME = {
     Order.TFS: "tfs",
     Order.Top_A: "top_a",
     Order.Typical_P: "typical_p",
+    Order.CFG: "cfg",
 }
 
 
@@ -92,12 +95,22 @@ class Model(StrEnum):
     Krake = "krake-v2"
 
     Clio = "clio-v1"
+    Kayra = "kayra-v1"
 
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
 
     HypeBot = "hypebot"
     Inline = "infillmodel"
+
+
+class PhraseRepPen(StrEnum):
+    Off = "off"
+    VeryLight = "very_light"
+    Light = "light"
+    Medium = "medium"
+    Aggressive = "aggressive"
+    VeryAggressive = "very_aggressive"
 
 
 #: Prompt sent to the model when the context is empty
@@ -109,6 +122,7 @@ PREAMBLE = {
     Model.Euterpe: "\n***\n",
     Model.Krake: "<|endoftext|>[ Prologue ]\n",
     Model.Clio: "[ Author: Various ]\n[ Prologue ]\n",
+    Model.Kayra: "",  # no preamble, it uses the "special_openings" module instead
 }
 
 
@@ -158,9 +172,13 @@ class Preset(metaclass=_PresetMetaclass):
         "repetition_penalty_frequency": (int, float),
         "repetition_penalty_presence": (int, float),
         "repetition_penalty_whitelist": list,
+        "repetition_penalty_default_whitelist": bool,
+        "phrase_rep_pen": (str, PhraseRepPen),
         "length_penalty": (int, float),
         "diversity_penalty": (int, float),
         "order": list,
+        "cfg_scale": (int, float),
+        "cfg_uc": str,
         "pad_token_id": int,
         "bos_token_id": int,
         "eos_token_id": int,
@@ -187,9 +205,11 @@ class Preset(metaclass=_PresetMetaclass):
         "repetition_penalty_frequency": 0.0,
         "repetition_penalty_presence": 0.0,
         "repetition_penalty_whitelist": [],
+        "repetition_penalty_default_whitelist": False,
         "length_penalty": 1.0,
         "diversity_penalty": 0.0,
         "order": list(Order),
+        "phrase_rep_pen": PhraseRepPen.Off,
     }
 
     # type completion for __setitem__ and __getitem__
@@ -227,12 +247,21 @@ class Preset(metaclass=_PresetMetaclass):
         repetition_penalty_presence: float
         #: List of tokens that are excluded from the repetition penalty (useful for colors and the likes)
         repetition_penalty_whitelist: list
+        #: Whether to use the default whitelist. Used for presets compatibility, as this setting is saved in presets
+        repetition_penalty_default_whitelist: bool
+        #: https://docs.novelai.net/text/phrasereppen.html
+        phrase_rep_pen: Union[str, PhraseRepPen]
         #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
         length_penalty: float
         #: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig
         diversity_penalty: float
         #: list of Order to set the sampling order
         order: List[Union[Order, int]]
+        #: https://docs.novelai.net/text/cfg.html
+        cfg_scale: float
+        #: https://docs.novelai.net/text/cfg.html
+        cfg_uc: str
+
         #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         pad_token_id: int
         #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
@@ -324,7 +353,7 @@ class Preset(metaclass=_PresetMetaclass):
 
     def __repr__(self) -> str:
         model = self.model.value if self.model is not None else "<?>"
-        enabled_keys = ", ".join(f"{k} = {v}" for k, v in zip(self._enabled, NAME_TO_ORDER.keys()))
+        enabled_keys = ", ".join(f"{k} = {v}" for v, k in zip(self._enabled, NAME_TO_ORDER.keys()))
 
         return f"Preset: '{self.name} ({model}, {enabled_keys})'"
 
@@ -370,6 +399,14 @@ class Preset(metaclass=_PresetMetaclass):
                     settings.pop(ORDER_TO_NAME[o], None)
 
             settings["order"] = [e.value for e in settings["order"]]
+
+        # sanitize Phrase Repetition Penalty
+        if settings.get("phrase_rep_pen", None) is not None:
+            prp = settings.pop("phrase_rep_pen")
+            if not isinstance(prp, PhraseRepPen):
+                prp = PhraseRepPen(prp)
+
+            settings["phrase_rep_pen"] = prp.value
 
         # seems that 0 doesn't disable it, but does weird things
         if settings.get("repetition_penalty_range", None) == 0:

@@ -24,9 +24,10 @@ async def main():
         api = api_handler.api
         logger = api_handler.logger
 
-        model = Model.Sigurd
+        # model = Model.Sigurd
         # model = Model.Euterpe
         # model = Model.Krake
+        model = Model.Clio
 
         # NOTE: plain text prompt
         prompt = PREAMBLE[model]
@@ -51,6 +52,7 @@ async def main():
         global_settings = GlobalSettings(num_logprobs=GlobalSettings.NO_LOGPROBS)
         # NOTE: change arguments after instantiation
         global_settings.bias_dinkus_asterism = True
+        global_settings.rep_pen_whitelist = True
 
         # NOTE: no ban list
         bad_words: Optional[BanList] = None
