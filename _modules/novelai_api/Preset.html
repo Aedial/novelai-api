@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.Preset &#8212; NovelAI API 0.17.0 documentation</title>
+    <title>novelai_api.Preset &#8212; NovelAI API 0.18.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
@@ -71,7 +71,8 @@
     <span class="n">Top_P</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">TFS</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">Top_A</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">Typical_P</span> <span class="o">=</span> <span class="mi">5</span></div>
+    <span class="n">Typical_P</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">CFG</span> <span class="o">=</span> <span class="mi">6</span></div>
 
 
 <span class="n">NAME_TO_ORDER</span> <span class="o">=</span> <span class="p">{</span>
@@ -81,6 +82,7 @@
     <span class="s2">&quot;tfs&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">TFS</span><span class="p">,</span>
     <span class="s2">&quot;top_a&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Top_A</span><span class="p">,</span>
     <span class="s2">&quot;typical_p&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Typical_P</span><span class="p">,</span>
+    <span class="s2">&quot;cfg&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">CFG</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">ORDER_TO_NAME</span> <span class="o">=</span> <span class="p">{</span>
@@ -90,6 +92,7 @@
     <span class="n">Order</span><span class="o">.</span><span class="n">TFS</span><span class="p">:</span> <span class="s2">&quot;tfs&quot;</span><span class="p">,</span>
     <span class="n">Order</span><span class="o">.</span><span class="n">Top_A</span><span class="p">:</span> <span class="s2">&quot;top_a&quot;</span><span class="p">,</span>
     <span class="n">Order</span><span class="o">.</span><span class="n">Typical_P</span><span class="p">:</span> <span class="s2">&quot;typical_p&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">CFG</span><span class="p">:</span> <span class="s2">&quot;cfg&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -149,12 +152,22 @@
     <span class="n">Krake</span> <span class="o">=</span> <span class="s2">&quot;krake-v2&quot;</span>
 
     <span class="n">Clio</span> <span class="o">=</span> <span class="s2">&quot;clio-v1&quot;</span>
+    <span class="n">Kayra</span> <span class="o">=</span> <span class="s2">&quot;kayra-v1&quot;</span>
 
     <span class="n">Genji</span> <span class="o">=</span> <span class="s2">&quot;genji-jp-6b-v2&quot;</span>
     <span class="n">Snek</span> <span class="o">=</span> <span class="s2">&quot;genji-python-6b&quot;</span>
 
     <span class="n">HypeBot</span> <span class="o">=</span> <span class="s2">&quot;hypebot&quot;</span>
     <span class="n">Inline</span> <span class="o">=</span> <span class="s2">&quot;infillmodel&quot;</span></div>
+
+
+<div class="viewcode-block" id="PhraseRepPen"><a class="viewcode-back" href="../../novelai_api/novelai_api.Preset.html#novelai_api.Preset.PhraseRepPen">[docs]</a><span class="k">class</span> <span class="nc">PhraseRepPen</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+    <span class="n">Off</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
+    <span class="n">VeryLight</span> <span class="o">=</span> <span class="s2">&quot;very_light&quot;</span>
+    <span class="n">Light</span> <span class="o">=</span> <span class="s2">&quot;light&quot;</span>
+    <span class="n">Medium</span> <span class="o">=</span> <span class="s2">&quot;medium&quot;</span>
+    <span class="n">Aggressive</span> <span class="o">=</span> <span class="s2">&quot;aggressive&quot;</span>
+    <span class="n">VeryAggressive</span> <span class="o">=</span> <span class="s2">&quot;very_aggressive&quot;</span></div>
 
 
 <span class="c1">#: Prompt sent to the model when the context is empty</span>
@@ -166,6 +179,7 @@
     <span class="n">Model</span><span class="o">.</span><span class="n">Euterpe</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">***</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Krake</span><span class="p">:</span> <span class="s2">&quot;&lt;|endoftext|&gt;[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Clio</span><span class="p">:</span> <span class="s2">&quot;[ Author: Various ]</span><span class="se">\n</span><span class="s2">[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Kayra</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># no preamble, it uses the &quot;special_openings&quot; module instead</span>
 <span class="p">}</span>
 
 
@@ -215,9 +229,13 @@
         <span class="s2">&quot;repetition_penalty_frequency&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;repetition_penalty_presence&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;repetition_penalty_default_whitelist&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;phrase_rep_pen&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">PhraseRepPen</span><span class="p">),</span>
         <span class="s2">&quot;length_penalty&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;diversity_penalty&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;cfg_scale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;cfg_uc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="s2">&quot;pad_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;bos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;eos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -244,9 +262,11 @@
         <span class="s2">&quot;repetition_penalty_frequency&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s2">&quot;repetition_penalty_presence&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;repetition_penalty_default_whitelist&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;length_penalty&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="s2">&quot;diversity_penalty&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">Order</span><span class="p">),</span>
+        <span class="s2">&quot;phrase_rep_pen&quot;</span><span class="p">:</span> <span class="n">PhraseRepPen</span><span class="o">.</span><span class="n">Off</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># type completion for __setitem__ and __getitem__</span>
@@ -284,12 +304,21 @@
         <span class="n">repetition_penalty_presence</span><span class="p">:</span> <span class="nb">float</span>
         <span class="c1">#: List of tokens that are excluded from the repetition penalty (useful for colors and the likes)</span>
         <span class="n">repetition_penalty_whitelist</span><span class="p">:</span> <span class="nb">list</span>
+        <span class="c1">#: Whether to use the default whitelist. Used for presets compatibility, as this setting is saved in presets</span>
+        <span class="n">repetition_penalty_default_whitelist</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="c1">#: https://docs.novelai.net/text/phrasereppen.html</span>
+        <span class="n">phrase_rep_pen</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PhraseRepPen</span><span class="p">]</span>
         <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig</span>
         <span class="n">length_penalty</span><span class="p">:</span> <span class="nb">float</span>
         <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig</span>
         <span class="n">diversity_penalty</span><span class="p">:</span> <span class="nb">float</span>
         <span class="c1">#: list of Order to set the sampling order</span>
         <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+        <span class="c1">#: https://docs.novelai.net/text/cfg.html</span>
+        <span class="n">cfg_scale</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/text/cfg.html</span>
+        <span class="n">cfg_uc</span><span class="p">:</span> <span class="nb">str</span>
+
         <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
         <span class="n">pad_token_id</span><span class="p">:</span> <span class="nb">int</span>
         <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
@@ -381,7 +410,7 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&lt;?&gt;&quot;</span>
-        <span class="n">enabled_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">,</span> <span class="n">NAME_TO_ORDER</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">enabled_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">,</span> <span class="n">NAME_TO_ORDER</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Preset: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">enabled_keys</span><span class="si">}</span><span class="s2">)&#39;&quot;</span>
 
@@ -427,6 +456,14 @@
                     <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ORDER_TO_NAME</span><span class="p">[</span><span class="n">o</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]]</span>
+
+        <span class="c1"># sanitize Phrase Repetition Penalty</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;phrase_rep_pen&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prp</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;phrase_rep_pen&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prp</span><span class="p">,</span> <span class="n">PhraseRepPen</span><span class="p">):</span>
+                <span class="n">prp</span> <span class="o">=</span> <span class="n">PhraseRepPen</span><span class="p">(</span><span class="n">prp</span><span class="p">)</span>
+
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;phrase_rep_pen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prp</span><span class="o">.</span><span class="n">value</span>
 
         <span class="c1"># seems that 0 doesn&#39;t disable it, but does weird things</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_range&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -646,7 +683,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>

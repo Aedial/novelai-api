@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.Preset &#8212; NovelAI API 0.17.0 documentation</title>
+    <title>novelai_api.Preset &#8212; NovelAI API 0.18.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.NovelAI_API.html" title="novelai_api.NovelAI_API"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
@@ -98,6 +98,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.Preset.Order.Typical_P">
 <span class="sig-name descname"><span class="pre">Typical_P</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#novelai_api.Preset.Order.Typical_P" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Order.CFG">
+<span class="sig-name descname"><span class="pre">CFG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#novelai_api.Preset.Order.CFG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -163,6 +168,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Model.Kayra">
+<span class="sig-name descname"><span class="pre">Kayra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kayra-v1'</span></em><a class="headerlink" href="#novelai_api.Preset.Model.Kayra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.Preset.Model.Genji">
 <span class="sig-name descname"><span class="pre">Genji</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'genji-jp-6b-v2'</span></em><a class="headerlink" href="#novelai_api.Preset.Model.Genji" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -184,14 +194,51 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.Preset.Model.enum_member_values">
-<span class="sig-name descname"><span class="pre">enum_member_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'6B':</span> <span class="pre">Model.Sigurd,</span> <span class="pre">'clio':</span> <span class="pre">Model.Clio,</span> <span class="pre">'euterpe':</span> <span class="pre">Model.Euterpe,</span> <span class="pre">'genji-jp-6b':</span> <span class="pre">Model.Genji,</span> <span class="pre">'genji-python-6b':</span> <span class="pre">Model.Snek,</span> <span class="pre">'hypebot':</span> <span class="pre">Model.HypeBot,</span> <span class="pre">'infillmodel':</span> <span class="pre">Model.Inline,</span> <span class="pre">'krake':</span> <span class="pre">Model.Krake}</span></em><a class="headerlink" href="#novelai_api.Preset.Model.enum_member_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">enum_member_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'6B':</span> <span class="pre">Model.Sigurd,</span> <span class="pre">'clio':</span> <span class="pre">Model.Clio,</span> <span class="pre">'euterpe':</span> <span class="pre">Model.Euterpe,</span> <span class="pre">'genji-jp-6b':</span> <span class="pre">Model.Genji,</span> <span class="pre">'genji-python-6b':</span> <span class="pre">Model.Snek,</span> <span class="pre">'hypebot':</span> <span class="pre">Model.HypeBot,</span> <span class="pre">'infillmodel':</span> <span class="pre">Model.Inline,</span> <span class="pre">'kayra':</span> <span class="pre">Model.Kayra,</span> <span class="pre">'krake':</span> <span class="pre">Model.Krake}</span></em><a class="headerlink" href="#novelai_api.Preset.Model.enum_member_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PhraseRepPen</span></span><a class="reference internal" href="../_modules/novelai_api/Preset.html#PhraseRepPen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.Preset.StrEnum" title="novelai_api.Preset.StrEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">novelai_api.Preset.StrEnum</span></code></a></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.Off">
+<span class="sig-name descname"><span class="pre">Off</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'off'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.Off" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.VeryLight">
+<span class="sig-name descname"><span class="pre">VeryLight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'very_light'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.VeryLight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.Light">
+<span class="sig-name descname"><span class="pre">Light</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'light'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.Light" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.Medium">
+<span class="sig-name descname"><span class="pre">Medium</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'medium'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.Medium" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.Aggressive">
+<span class="sig-name descname"><span class="pre">Aggressive</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aggressive'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.Aggressive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.PhraseRepPen.VeryAggressive">
+<span class="sig-name descname"><span class="pre">VeryAggressive</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'very_aggressive'</span></em><a class="headerlink" href="#novelai_api.Preset.PhraseRepPen.VeryAggressive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="novelai_api.Preset.PREAMBLE">
-<span class="sig-name descname"><span class="pre">PREAMBLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{Model.Sigurd:</span> <span class="pre">'⁂\n',</span> <span class="pre">Model.Clio:</span> <span class="pre">'[</span> <span class="pre">Author:</span> <span class="pre">Various</span> <span class="pre">]\n[</span> <span class="pre">Prologue</span> <span class="pre">]\n',</span> <span class="pre">Model.Euterpe:</span> <span class="pre">'\n***\n',</span> <span class="pre">Model.Genji:</span> <span class="pre">[60,</span> <span class="pre">198,</span> <span class="pre">198],</span> <span class="pre">Model.Snek:</span> <span class="pre">'&lt;|endoftext|&gt;\n',</span> <span class="pre">Model.Krake:</span> <span class="pre">'&lt;|endoftext|&gt;[</span> <span class="pre">Prologue</span> <span class="pre">]\n'}</span></em><a class="headerlink" href="#novelai_api.Preset.PREAMBLE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">PREAMBLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{Model.Sigurd:</span> <span class="pre">'⁂\n',</span> <span class="pre">Model.Clio:</span> <span class="pre">'[</span> <span class="pre">Author:</span> <span class="pre">Various</span> <span class="pre">]\n[</span> <span class="pre">Prologue</span> <span class="pre">]\n',</span> <span class="pre">Model.Euterpe:</span> <span class="pre">'\n***\n',</span> <span class="pre">Model.Genji:</span> <span class="pre">[60,</span> <span class="pre">198,</span> <span class="pre">198],</span> <span class="pre">Model.Snek:</span> <span class="pre">'&lt;|endoftext|&gt;\n',</span> <span class="pre">Model.Kayra:</span> <span class="pre">'',</span> <span class="pre">Model.Krake:</span> <span class="pre">'&lt;|endoftext|&gt;[</span> <span class="pre">Prologue</span> <span class="pre">]\n'}</span></em><a class="headerlink" href="#novelai_api.Preset.PREAMBLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prompt sent to the model when the context is empty</p>
 </dd></dl>
 
@@ -217,7 +264,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.Preset.Preset.DEFAULTS">
-<span class="sig-name descname"><span class="pre">DEFAULTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diversity_penalty':</span> <span class="pre">0.0,</span> <span class="pre">'length_penalty':</span> <span class="pre">1.0,</span> <span class="pre">'max_length':</span> <span class="pre">40,</span> <span class="pre">'min_length':</span> <span class="pre">1,</span> <span class="pre">'order':</span> <span class="pre">[&lt;Order.Temperature:</span> <span class="pre">0&gt;,</span> <span class="pre">&lt;Order.Top_K:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;Order.Top_P:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;Order.TFS:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;Order.Top_A:</span> <span class="pre">4&gt;,</span> <span class="pre">&lt;Order.Typical_P:</span> <span class="pre">5&gt;],</span> <span class="pre">'repetition_penalty':</span> <span class="pre">1.0,</span> <span class="pre">'repetition_penalty_frequency':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_presence':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_range':</span> <span class="pre">0,</span> <span class="pre">'repetition_penalty_slope':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_whitelist':</span> <span class="pre">[],</span> <span class="pre">'stop_sequences':</span> <span class="pre">[],</span> <span class="pre">'tail_free_sampling':</span> <span class="pre">1.0,</span> <span class="pre">'temperature':</span> <span class="pre">1.0,</span> <span class="pre">'top_a':</span> <span class="pre">1.0,</span> <span class="pre">'top_k':</span> <span class="pre">0,</span> <span class="pre">'top_p':</span> <span class="pre">0.0,</span> <span class="pre">'typical_p':</span> <span class="pre">0.0}</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.DEFAULTS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">DEFAULTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diversity_penalty':</span> <span class="pre">0.0,</span> <span class="pre">'length_penalty':</span> <span class="pre">1.0,</span> <span class="pre">'max_length':</span> <span class="pre">40,</span> <span class="pre">'min_length':</span> <span class="pre">1,</span> <span class="pre">'order':</span> <span class="pre">[&lt;Order.Temperature:</span> <span class="pre">0&gt;,</span> <span class="pre">&lt;Order.Top_K:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;Order.Top_P:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;Order.TFS:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;Order.Top_A:</span> <span class="pre">4&gt;,</span> <span class="pre">&lt;Order.Typical_P:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;Order.CFG:</span> <span class="pre">6&gt;],</span> <span class="pre">'phrase_rep_pen':</span> <span class="pre">PhraseRepPen.Off,</span> <span class="pre">'repetition_penalty':</span> <span class="pre">1.0,</span> <span class="pre">'repetition_penalty_default_whitelist':</span> <span class="pre">False,</span> <span class="pre">'repetition_penalty_frequency':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_presence':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_range':</span> <span class="pre">0,</span> <span class="pre">'repetition_penalty_slope':</span> <span class="pre">0.0,</span> <span class="pre">'repetition_penalty_whitelist':</span> <span class="pre">[],</span> <span class="pre">'stop_sequences':</span> <span class="pre">[],</span> <span class="pre">'tail_free_sampling':</span> <span class="pre">1.0,</span> <span class="pre">'temperature':</span> <span class="pre">1.0,</span> <span class="pre">'top_a':</span> <span class="pre">1.0,</span> <span class="pre">'top_k':</span> <span class="pre">0,</span> <span class="pre">'top_p':</span> <span class="pre">0.0,</span> <span class="pre">'typical_p':</span> <span class="pre">0.0}</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.DEFAULTS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -311,6 +358,18 @@
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.repetition_penalty_default_whitelist">
+<span class="sig-name descname"><span class="pre">repetition_penalty_default_whitelist</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.repetition_penalty_default_whitelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to use the default whitelist. Used for presets compatibility, as this setting is saved in presets</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.phrase_rep_pen">
+<span class="sig-name descname"><span class="pre">phrase_rep_pen</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.Preset.PhraseRepPen" title="novelai_api.Preset.PhraseRepPen"><span class="pre">novelai_api.Preset.PhraseRepPen</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#novelai_api.Preset.Preset.phrase_rep_pen" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.novelai.net/text/phrasereppen.html">https://docs.novelai.net/text/phrasereppen.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.Preset.Preset.length_penalty">
 <span class="sig-name descname"><span class="pre">length_penalty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.length_penalty" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig">https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig</a></p>
@@ -326,6 +385,18 @@
 <dt class="sig sig-object py" id="novelai_api.Preset.Preset.order">
 <span class="sig-name descname"><span class="pre">order</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.Preset.Order" title="novelai_api.Preset.Order"><span class="pre">novelai_api.Preset.Order</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#novelai_api.Preset.Preset.order" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Order to set the sampling order</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.cfg_scale">
+<span class="sig-name descname"><span class="pre">cfg_scale</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.cfg_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.novelai.net/text/cfg.html">https://docs.novelai.net/text/cfg.html</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.cfg_uc">
+<span class="sig-name descname"><span class="pre">cfg_uc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#novelai_api.Preset.Preset.cfg_uc" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.novelai.net/text/cfg.html">https://docs.novelai.net/text/cfg.html</a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -516,6 +587,7 @@ Works like dict.update()</p>
 <li><a class="reference internal" href="#novelai_api.Preset.Order.TFS"><code class="docutils literal notranslate"><span class="pre">Order.TFS</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Order.Top_A"><code class="docutils literal notranslate"><span class="pre">Order.Top_A</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Order.Typical_P"><code class="docutils literal notranslate"><span class="pre">Order.Typical_P</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Order.CFG"><code class="docutils literal notranslate"><span class="pre">Order.CFG</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.Preset.enum_contains"><code class="docutils literal notranslate"><span class="pre">enum_contains()</span></code></a></li>
@@ -526,11 +598,21 @@ Works like dict.update()</p>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Euterpe"><code class="docutils literal notranslate"><span class="pre">Model.Euterpe</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Krake"><code class="docutils literal notranslate"><span class="pre">Model.Krake</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Clio"><code class="docutils literal notranslate"><span class="pre">Model.Clio</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Model.Kayra"><code class="docutils literal notranslate"><span class="pre">Model.Kayra</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Genji"><code class="docutils literal notranslate"><span class="pre">Model.Genji</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Snek"><code class="docutils literal notranslate"><span class="pre">Model.Snek</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.HypeBot"><code class="docutils literal notranslate"><span class="pre">Model.HypeBot</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.Inline"><code class="docutils literal notranslate"><span class="pre">Model.Inline</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Model.enum_member_values"><code class="docutils literal notranslate"><span class="pre">Model.enum_member_values</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen</span></code></a><ul>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.Off"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.Off</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.VeryLight"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.VeryLight</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.Light"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.Light</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.Medium"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.Medium</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.Aggressive"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.Aggressive</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.PhraseRepPen.VeryAggressive"><code class="docutils literal notranslate"><span class="pre">PhraseRepPen.VeryAggressive</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.Preset.PREAMBLE"><code class="docutils literal notranslate"><span class="pre">PREAMBLE</span></code></a></li>
@@ -556,9 +638,13 @@ Works like dict.update()</p>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.repetition_penalty_frequency"><code class="docutils literal notranslate"><span class="pre">Preset.repetition_penalty_frequency</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.repetition_penalty_presence"><code class="docutils literal notranslate"><span class="pre">Preset.repetition_penalty_presence</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.repetition_penalty_whitelist"><code class="docutils literal notranslate"><span class="pre">Preset.repetition_penalty_whitelist</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.repetition_penalty_default_whitelist"><code class="docutils literal notranslate"><span class="pre">Preset.repetition_penalty_default_whitelist</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.phrase_rep_pen"><code class="docutils literal notranslate"><span class="pre">Preset.phrase_rep_pen</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.length_penalty"><code class="docutils literal notranslate"><span class="pre">Preset.length_penalty</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.diversity_penalty"><code class="docutils literal notranslate"><span class="pre">Preset.diversity_penalty</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.order"><code class="docutils literal notranslate"><span class="pre">Preset.order</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.cfg_scale"><code class="docutils literal notranslate"><span class="pre">Preset.cfg_scale</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.cfg_uc"><code class="docutils literal notranslate"><span class="pre">Preset.cfg_uc</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.pad_token_id"><code class="docutils literal notranslate"><span class="pre">Preset.pad_token_id</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.bos_token_id"><code class="docutils literal notranslate"><span class="pre">Preset.bos_token_id</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.eos_token_id"><code class="docutils literal notranslate"><span class="pre">Preset.eos_token_id</span></code></a></li>
@@ -633,7 +719,7 @@ Works like dict.update()</p>
         <li class="right" >
           <a href="novelai_api.NovelAI_API.html" title="novelai_api.NovelAI_API"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.17.0 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.18.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -333,13 +333,21 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preset &#39;</span><span class="si">{</span><span class="n">preset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; (model </span><span class="si">{</span><span class="n">preset</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">) is not compatible with model </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">preset_params</span> <span class="o">=</span> <span class="n">preset</span><span class="o">.</span><span class="n">to_settings</span><span class="p">()</span>
+
+        <span class="c1"># special case for repetition penalty whitelist, as it belongs to global settings but is stored in preset files</span>
+        <span class="n">repetition_penalty_default_whitelist</span> <span class="o">=</span> <span class="n">global_settings</span><span class="o">.</span><span class="n">rep_pen_whitelist</span>
+        <span class="k">if</span> <span class="n">preset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_default_whitelist&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">global_settings</span><span class="o">.</span><span class="n">rep_pen_whitelist</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="n">global_params</span> <span class="o">=</span> <span class="n">global_settings</span><span class="o">.</span><span class="n">to_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">global_settings</span><span class="o">.</span><span class="n">rep_pen_whitelist</span> <span class="o">=</span> <span class="n">repetition_penalty_default_whitelist</span>
 
-        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># merge rep pen whitelist if both are set</span>
-        <span class="k">if</span> <span class="s2">&quot;repetition_penalty_whitelist&quot;</span> <span class="ow">in</span> <span class="n">preset_params</span> <span class="ow">and</span> <span class="s2">&quot;repetition_penalty_whitelist&quot;</span> <span class="ow">in</span> <span class="n">global_params</span><span class="p">:</span>
-            <span class="n">preset_params</span><span class="p">[</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">global_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="o">*</span><span class="n">global_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="n">preset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
 
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preset_params</span><span class="p">)</span>
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_params</span><span class="p">)</span>
@@ -526,7 +534,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.17.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
