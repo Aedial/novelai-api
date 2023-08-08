@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.18.0 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.18.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -130,7 +130,16 @@
 
         <span class="k">return</span> <span class="n">rsp</span><span class="p">[</span><span class="s2">&quot;accessToken&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="HighLevel.login_from_token"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login_from_token">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login_from_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="HighLevel.login_with_token"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login_with_token">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log in with the access token, instead of email and password</span>
+
+<span class="sd">        :param access_token: Access token of the account (persistent token or gotten from login)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="HighLevel.login_from_key"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.login_from_key">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login_from_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Log in with the access key, instead of email and password</span>
 
@@ -534,7 +543,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.18.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
