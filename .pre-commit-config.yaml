@@ -48,13 +48,14 @@ repos:
             "-r"                        # scan
         ]
 
--   repo: local
-    hooks:
-    -   id: pylint
-        name: pylint
-        entry: pylint
-        language: system
-        types: [python]
-        args: [
-            "-j 0"                      # parallel execution
-        ]
+# Somehow, pylint is not working (Astroid error on import from python libraries)
+#-   repo: local
+#    hooks:
+#    -   id: pylint
+#        name: pylint
+#        entry: pylint
+#        language: system
+#        types: [python]
+#        args: [
+#            "-j 0"                      # parallel execution
+#        ]
