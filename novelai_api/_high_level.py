@@ -73,7 +73,16 @@ class HighLevel:
 
         return rsp["accessToken"]
 
-    async def login_from_token(self, access_key: str):
+    async def login_with_token(self, access_token: str):
+        """
+        Log in with the access token, instead of email and password
+
+        :param access_token: Access token of the account (persistent token or gotten from login)
+        """
+
+        self._parent.headers["Authorization"] = f"Bearer {access_token}"
+
+    async def login_from_key(self, access_key: str):
         """
         Log in with the access key, instead of email and password
 
