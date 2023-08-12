@@ -16,6 +16,8 @@ class Order(IntEnum):
     Top_A = 4
     Typical_P = 5
     CFG = 6
+    Top_G = 7
+    Mirostat = 8
 
 
 NAME_TO_ORDER = {
@@ -26,6 +28,8 @@ NAME_TO_ORDER = {
     "top_a": Order.Top_A,
     "typical_p": Order.Typical_P,
     "cfg": Order.CFG,
+    "top_g": Order.Top_G,
+    "mirostat": Order.Mirostat,
 }
 
 ORDER_TO_NAME = {
@@ -36,6 +40,8 @@ ORDER_TO_NAME = {
     Order.Top_A: "top_a",
     Order.Typical_P: "typical_p",
     Order.CFG: "cfg",
+    Order.Top_G: "top_g",
+    Order.Mirostat: "mirostat",
 }
 
 
@@ -179,6 +185,9 @@ class Preset(metaclass=_PresetMetaclass):
         "order": list,
         "cfg_scale": (int, float),
         "cfg_uc": str,
+        "top_g": int,
+        "mirostat_lr": (int, float),
+        "mirostat_tau": (int, float),
         "pad_token_id": int,
         "bos_token_id": int,
         "eos_token_id": int,
@@ -261,6 +270,12 @@ class Preset(metaclass=_PresetMetaclass):
         cfg_scale: float
         #: https://docs.novelai.net/text/cfg.html
         cfg_uc: str
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
+        top_g: int
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
+        mirostat_lr: float
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
+        mirostat_tau: float
 
         #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         pad_token_id: int
@@ -283,8 +298,6 @@ class Preset(metaclass=_PresetMetaclass):
     _officials_values: Dict[str, List["Preset"]]
     _defaults: Dict[str, str]
 
-    _enabled: List[bool]
-
     _settings: Dict[str, Any]
 
     #: Name of the preset
@@ -295,8 +308,6 @@ class Preset(metaclass=_PresetMetaclass):
     def __init__(self, name: str, model: Model, settings: Optional[Dict[str, Any]] = None):
         object.__setattr__(self, "name", name)
         object.__setattr__(self, "model", model)
-
-        object.__setattr__(self, "_enabled", [True] * len(Order))
 
         object.__setattr__(self, "_settings", {})
         self.update(settings)
@@ -353,33 +364,9 @@ class Preset(metaclass=_PresetMetaclass):
 
     def __repr__(self) -> str:
         model = self.model.value if self.model is not None else "<?>"
-        enabled_keys = ", ".join(f"{k} = {v}" for v, k in zip(self._enabled, NAME_TO_ORDER.keys()))
+        enabled_keys = ", ".join(f"{ORDER_TO_NAME[o]} = {o in self._settings['order']}" for o in Order)
 
         return f"Preset: '{self.name} ({model}, {enabled_keys})'"
-
-    def enable(self, **kwargs) -> "Preset":
-        """
-        Enable/disable the processing of sampling values (True to enable, False to disable).
-
-        The allowed keys are :
-            * tfs
-            * temperature
-            * top_p
-            * top_k
-            * top_a
-            * typical_p
-        """
-
-        for o in Order:
-            name = ORDER_TO_NAME[o]
-            enabled = kwargs.pop(name, None)
-            if enabled is not None:
-                self._enabled[o.value] = enabled
-
-        if len(kwargs):
-            raise ValueError(f"Invalid order name: {', '.join(kwargs)}")
-
-        return self
 
     def to_settings(self) -> Dict[str, Any]:
         """
@@ -393,12 +380,22 @@ class Preset(metaclass=_PresetMetaclass):
 
         # remove disabled sampling options
         if "order" in settings:
-            for i, o in enumerate(Order):
-                if not self._enabled[i]:
-                    settings["order"].remove(o)
-                    settings.pop(ORDER_TO_NAME[o], None)
+            order = [Order(e) if isinstance(e, int) else e for e in settings["order"]]
 
-            settings["order"] = [e.value for e in settings["order"]]
+            for o in Order:
+                if o not in order:
+                    name = ORDER_TO_NAME[o]
+
+                    # special handling for samplers with multiple keys
+                    if name == "mirostat":
+                        keys = ["mirostat_tau", "mirostat_lr"]
+                    else:
+                        keys = [name]
+
+                    for key in keys:
+                        settings.pop(key, None)
+
+            settings["order"] = [e.value for e in order]
 
         # sanitize Phrase Repetition Penalty
         if settings.get("phrase_rep_pen", None) is not None:
@@ -493,9 +490,6 @@ class Preset(metaclass=_PresetMetaclass):
         settings.pop("logit_bias_groups", None)  # get rid of unsupported option
 
         c = cls(name, model, settings)
-
-        enabled = {o["id"]: o["enabled"] for o in order}
-        c.enable(**enabled)
 
         return c
 
