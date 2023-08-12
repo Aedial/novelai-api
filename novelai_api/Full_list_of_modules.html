@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>&lt;no title&gt; &#8212; NovelAI API 0.19.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-punk.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-noir.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/micromodal.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/hoverxref.js"></script>
+    <script src="../_static/js/tooltipster.bundle.min.js"></script>
+    <script src="../_static/js/micromodal.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.19.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>Calliope, Snek, and Genji have no module support. Modules without an attributed model are not supposed to work.
+“special_openings” is a module spcifically trained to replace the previously used preamble. It is used at the beginning of the story, under certain conditions.</p>
+<br/>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>API id</p></th>
+<th class="head"><p>Model</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>No module</p></td>
+<td><p>vanilla</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Special: Text Adventure</p></td>
+<td><p>theme_textadventure</p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>General: Instruct (Experimental)</p></td>
+<td><p>special_instruct</p></td>
+<td><p>Clio, Kayra</p></td>
+</tr>
+<tr class="row-even"><td><p>General: Prose Augmenter</p></td>
+<td><p>special_proseaugmenter</p></td>
+<td><p>Clio, Kayra</p></td>
+</tr>
+<tr class="row-odd"><td><p>-</p></td>
+<td><p>special_openings</p></td>
+<td><p>Clio, Kayra</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>General: Cross-Genre</p></td>
+<td><p>general_crossgenre</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Special: Text Adventure</p></td>
+<td><p>theme_textadventure</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Style: Algernon Blackwood</p></td>
+<td><p>style_algernonblackwood</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Style: Arthur Conan Doyle</p></td>
+<td><p>style_arthurconandoyle</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Style: Edgar Allan Poe</p></td>
+<td><p>style_edgarallanpoe</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Style: H.P. Lovecraft</p></td>
+<td><p>style_hplovecraft</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Style: Sheridan Le Fanu</p></td>
+<td><p>style_shridanlefanu</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Style: Jane Austen</p></td>
+<td><p>style_janeausten</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Style: Jules Verne</p></td>
+<td><p>style_julesverne</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Style: William Shakespeare</p></td>
+<td><p>style_williamshakespeare</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: 19th Century Romance</p></td>
+<td><p>theme_19thcenturyromance</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Action Archeology</p></td>
+<td><p>theme_actionarcheology</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Artificial Intelligence</p></td>
+<td><p>theme_ai</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Ancient China</p></td>
+<td><p>theme_ancientchina</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Ancient Greece</p></td>
+<td><p>theme_ancientgreek</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Ancient India</p></td>
+<td><p>theme_india</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Animal Fiction</p></td>
+<td><p>theme_animalfiction</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Anthropomorphic Animals</p></td>
+<td><p>theme_anthropomorphicanimals</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Children’s Fiction</p></td>
+<td><p>theme_childrens</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Christmas</p></td>
+<td><p>theme_christmas</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Comedic Fantasy</p></td>
+<td><p>theme_comedicfantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Contemporary</p></td>
+<td><p>theme_contemporary</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Cyberpunk</p></td>
+<td><p>theme_cyberpunk</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Dark Fantasy</p></td>
+<td><p>theme_darkfantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Dragons</p></td>
+<td><p>theme_dragons</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Egypt</p></td>
+<td><p>theme_egypt</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Feudal Japan</p></td>
+<td><p>theme_feudaljapan</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Gaming</p></td>
+<td><p>theme_gaming</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: General Fantasy</p></td>
+<td><p>theme_generalfantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Golden Age Scifi</p></td>
+<td><p>theme_goldenagescifi</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Hard SF</p></td>
+<td><p>theme_hardsf</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: History</p></td>
+<td><p>theme_history</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Horror</p></td>
+<td><p>theme_horror</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Hunter Gatherer</p></td>
+<td><p>theme_huntergatherer</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: LitRPG</p></td>
+<td><p>theme_litrpg</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Magic Academy</p></td>
+<td><p>theme_magicacademy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Magic Library</p></td>
+<td><p>theme_libraries</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Light Novels</p></td>
+<td><p>theme_lightnovels</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Mars Colonization</p></td>
+<td><p>theme_mars</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Medieval</p></td>
+<td><p>theme_medieval</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Military SciFi</p></td>
+<td><p>theme_militaryscifi</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Music</p></td>
+<td><p>theme_music</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Mystery</p></td>
+<td><p>theme_mystery</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Nature</p></td>
+<td><p>theme_nature</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Naval Age of Discovery</p></td>
+<td><p>theme_naval</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Noir</p></td>
+<td><p>theme_noir</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Philosophy</p></td>
+<td><p>theme_philosophy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Pirates</p></td>
+<td><p>theme_pirates</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Poetic Fantasy</p></td>
+<td><p>theme_poeticfantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Post-Apocalyptic</p></td>
+<td><p>theme_postapocalyptic</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Rats</p></td>
+<td><p>theme_rats</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Roman Empire</p></td>
+<td><p>theme_romanempire</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Science Fantasy</p></td>
+<td><p>theme_sciencefantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Space Opera</p></td>
+<td><p>theme_spaceopera</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Superheroes</p></td>
+<td><p>theme_superheroes</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Steampunk</p></td>
+<td><p>theme_airships</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Travel</p></td>
+<td><p>theme_travel</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Urban Fantasy</p></td>
+<td><p>theme_urbanfantasy</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Valentines</p></td>
+<td><p>theme_valentines</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Vikings</p></td>
+<td><p>theme_vikings</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theme: Weird West</p></td>
+<td><p>theme_weirdwest</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>Theme: Western Romance</p></td>
+<td><p>theme_westernromance</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inspiration: Crab, Snail, and Monkey</p></td>
+<td><p>inspiration_crabsnailandmonkey</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Inspiration: Mercantile Wolfgirl Romance</p></td>
+<td><p>inspiration_mercantilewolfgirlromance</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inspiration: Nervegear</p></td>
+<td><p>inspiration_nervegear</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Inspiration: Romance of the Three Kingdoms</p></td>
+<td><p>theme_romanceofthreekingdoms</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inspiration: Throne Wars</p></td>
+<td><p>inspiration_thronewars</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+<tr class="row-even"><td><p>Inspiration: Witch at Level Cap</p></td>
+<td><p>inspiration_witchatlevelcap</p></td>
+<td><p>Sigurd, Euterpe, Krake</p></td>
+</tr>
+</tbody>
+</table>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/novelai_api/Full_list_of_modules.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.19.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

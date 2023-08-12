@@ -5,3 +5,10 @@ novelai\_api.high\_level
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. _list-of-modules:
+
+List of modules
+---------------
+.. include:: Full_list_of_modules.md
+   :parser: myst_parser.sphinx_
