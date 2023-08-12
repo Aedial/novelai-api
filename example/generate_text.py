@@ -84,6 +84,7 @@ async def main():
         # NOTE: no module
         module = None
         # NOTE: Official module - CrossGenre module (module names can be found in the network tab)
+        #       A full list can be found [here](docs/source/novelai_api/Full_list_of_modules.md)
         # module = "general_crossgenre"
         # NOTE: Custom module (Sage's Mass Effect v2) - ids can be retrieved from download_user_modules() or a scenario
         # module = "6B-v4:c6021aaa523e2dcb8588848b5fd4e2516dd4bb7107268aaa6050b5430c3a4b47:"

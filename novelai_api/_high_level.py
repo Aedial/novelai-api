@@ -272,7 +272,7 @@ class HighLevel:
         :param global_settings: Global settings (used for generation)
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
-        :param prefix: Module to use for this generation
+        :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
         :param stream: Use data streaming for the response
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
@@ -359,7 +359,7 @@ class HighLevel:
         :param global_settings: Global settings (used for generation)
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
-        :param prefix: Module to use for this generation
+        :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
@@ -402,7 +402,7 @@ class HighLevel:
         :param global_settings: Global settings (used for generation)
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
-        :param prefix: Module to use for this generation
+        :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
