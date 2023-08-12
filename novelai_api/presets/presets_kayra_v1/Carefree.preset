@@ -1,14 +1,14 @@
 {
   "presetVersion": 3,
   "name": "Carefree",
-  "id": "ddb65a71-b4c6-45fb-937c-56e41a1947de",
+  "id": "b5b5f0c5-710d-4085-a365-44515f8589b6",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 4,
+    "textGenerationSettingsVersion": 5,
     "temperature": 1.35,
     "max_length": 40,
     "min_length": 1,
-    "top_k": 12,
+    "top_k": 15,
     "top_p": 0.85,
     "top_a": 0.1,
     "typical_p": 1,
@@ -22,6 +22,9 @@
     "cfg_scale": 1,
     "cfg_uc": "",
     "phrase_rep_pen": "aggressive",
+    "top_g": 0,
+    "mirostat_tau": 0,
+    "mirostat_lr": 1,
     "order": [
       {
         "id": "cfg",
@@ -49,6 +52,14 @@
       },
       {
         "id": "typical_p",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
+        "enabled": false
+      },
+      {
+        "id": "mirostat",
         "enabled": false
       }
     ]

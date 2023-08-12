@@ -1,16 +1,16 @@
 {
   "presetVersion": 3,
   "name": "Writer's Daemon",
-  "id": "3d173a7b-7a5a-406b-a5fd-f048bb165c5b",
+  "id": "c766b615-9853-4ee7-b6dc-0ecc379fc5db",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 4,
+    "textGenerationSettingsVersion": 5,
     "temperature": 1.5,
     "max_length": 40,
     "min_length": 1,
     "top_k": 70,
     "top_p": 0.95,
-    "top_a": 1,
+    "top_a": 0.02,
     "typical_p": 0.95,
     "tail_free_sampling": 0.95,
     "repetition_penalty": 1.6,
@@ -18,18 +18,25 @@
     "repetition_penalty_slope": 0,
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
-    "repetition_penalty_default_whitelist": false,
+    "repetition_penalty_default_whitelist": true,
     "cfg_scale": 1,
     "cfg_uc": "",
     "phrase_rep_pen": "very_aggressive",
+    "top_g": 0,
+    "mirostat_tau": 5,
+    "mirostat_lr": 0.2,
     "order": [
       {
         "id": "cfg",
+        "enabled": false
+      },
+      {
+        "id": "mirostat",
         "enabled": true
       },
       {
         "id": "top_k",
-        "enabled": true
+        "enabled": false
       },
       {
         "id": "temperature",
@@ -49,6 +56,10 @@
       },
       {
         "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "top_g",
         "enabled": false
       }
     ]

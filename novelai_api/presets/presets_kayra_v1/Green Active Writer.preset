@@ -1,27 +1,30 @@
 {
   "presetVersion": 3,
   "name": "Green Active Writer",
-  "id": "8ecc6b7a-a081-4ad8-811c-a826141fa1ff",
+  "id": "c07c743f-e92e-4e30-9903-0f0909df176c",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 4,
-    "temperature": 1.25,
+    "textGenerationSettingsVersion": 5,
+    "temperature": 1.5,
     "max_length": 40,
     "min_length": 1,
     "top_k": 70,
     "top_p": 0.925,
     "top_a": 0.335,
-    "typical_p": 0.9,
-    "tail_free_sampling": 0.925,
-    "repetition_penalty": 2,
+    "typical_p": 0.95,
+    "tail_free_sampling": 0.95,
+    "repetition_penalty": 1,
     "repetition_penalty_range": 1632,
     "repetition_penalty_slope": 0,
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "repetition_penalty_default_whitelist": true,
-    "cfg_scale": 1.825,
+    "cfg_scale": 1.4,
     "cfg_uc": "",
-    "phrase_rep_pen": "aggressive",
+    "phrase_rep_pen": "very_aggressive",
+    "top_g": 0,
+    "mirostat_tau": 5.5,
+    "mirostat_lr": 0.2,
     "order": [
       {
         "id": "cfg",
@@ -29,10 +32,14 @@
       },
       {
         "id": "top_k",
-        "enabled": true
+        "enabled": false
       },
       {
         "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "mirostat",
         "enabled": true
       },
       {
@@ -49,6 +56,10 @@
       },
       {
         "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
         "enabled": false
       }
     ]
