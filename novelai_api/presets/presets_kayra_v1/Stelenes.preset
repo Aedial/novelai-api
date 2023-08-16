@@ -1,27 +1,30 @@
 {
   "presetVersion": 3,
   "name": "Stelenes",
-  "id": "7dad434e-706f-4af8-8011-3284c8a83540",
+  "id": "3556df5b-401e-453a-8a51-4a41537cd0c9",
   "remoteId": "",
   "parameters": {
-    "textGenerationSettingsVersion": 4,
+    "textGenerationSettingsVersion": 5,
     "temperature": 2.5,
     "max_length": 40,
     "min_length": 1,
     "top_k": 0,
     "top_p": 1,
     "top_a": 1,
-    "typical_p": 0.966,
-    "tail_free_sampling": 0.933,
+    "typical_p": 0.969,
+    "tail_free_sampling": 0.941,
     "repetition_penalty": 1,
-    "repetition_penalty_range": 2048,
+    "repetition_penalty_range": 1024,
     "repetition_penalty_slope": 0,
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
     "repetition_penalty_default_whitelist": true,
     "cfg_scale": 1,
     "cfg_uc": "",
-    "phrase_rep_pen": "aggressive",
+    "phrase_rep_pen": "medium",
+    "top_g": 0,
+    "mirostat_tau": 0,
+    "mirostat_lr": 1,
     "order": [
       {
         "id": "top_k",
@@ -49,6 +52,14 @@
       },
       {
         "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
+        "enabled": false
+      },
+      {
+        "id": "mirostat",
         "enabled": false
       }
     ]

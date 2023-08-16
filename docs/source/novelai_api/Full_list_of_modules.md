@@ -1,5 +1,5 @@
 Calliope, Snek, and Genji have no module support.
-"special_openings" is a module spcifically trained to replace the previously used preamble. It is used at the beginning of the story, under certain conditions.
+"special_openings" is a module specifically trained to replace the previously used preamble. It is used at the beginning of the story, under certain conditions.
 
 <br/>
 

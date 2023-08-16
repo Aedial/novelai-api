@@ -1,23 +1,23 @@
 {
   "presetVersion": 3,
   "name": "Asper",
-  "id": "fa6824e5-9313-4b29-bde8-cc59a35831de",
+  "id": "46d559d7-8f0f-4e3f-9dbf-578d0b8de9e4",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 5,
-    "temperature": 1.35,
+    "temperature": 1.16,
     "max_length": 40,
     "min_length": 1,
-    "top_k": 225,
-    "top_p": 0.99,
-    "top_a": 0.12,
-    "typical_p": 0.975,
-    "tail_free_sampling": 0.984,
-    "repetition_penalty": 1.7,
-    "repetition_penalty_range": 3200,
-    "repetition_penalty_slope": 0,
+    "top_k": 175,
+    "top_p": 0.998,
+    "top_a": 0.004,
+    "typical_p": 0.96,
+    "tail_free_sampling": 0.994,
+    "repetition_penalty": 1.68,
+    "repetition_penalty_range": 2240,
+    "repetition_penalty_slope": 1.5,
     "repetition_penalty_frequency": 0,
-    "repetition_penalty_presence": 0.02,
+    "repetition_penalty_presence": 0.005,
     "repetition_penalty_default_whitelist": true,
     "cfg_scale": 1,
     "cfg_uc": "",
@@ -47,11 +47,11 @@
         "enabled": true
       },
       {
-        "id": "top_g",
-        "enabled": true
+        "id": "top_a",
+        "enabled": false
       },
       {
-        "id": "top_a",
+        "id": "top_g",
         "enabled": false
       },
       {

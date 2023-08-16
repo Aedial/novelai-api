@@ -1,45 +1,37 @@
 {
   "presetVersion": 3,
-  "name": "Writer's Daemon",
-  "id": "48fe62ed-a75d-4600-9eeb-8b75103769bc",
+  "name": "Cosmic Cube",
+  "id": "7a428c5f-a054-4663-8edd-e24c50cafeea",
   "remoteId": "",
   "parameters": {
     "textGenerationSettingsVersion": 5,
-    "temperature": 1.5,
+    "temperature": 0.9,
     "max_length": 40,
     "min_length": 1,
-    "top_k": 70,
-    "top_p": 0.95,
-    "top_a": 0.02,
-    "typical_p": 0.95,
-    "tail_free_sampling": 0.95,
-    "repetition_penalty": 1.625,
-    "repetition_penalty_range": 2016,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 0,
+    "typical_p": 0.924,
+    "tail_free_sampling": 0.92,
+    "repetition_penalty": 3,
+    "repetition_penalty_range": 4000,
     "repetition_penalty_slope": 0,
     "repetition_penalty_frequency": 0,
     "repetition_penalty_presence": 0,
-    "repetition_penalty_default_whitelist": true,
-    "cfg_scale": 1,
+    "repetition_penalty_default_whitelist": false,
+    "cfg_scale": 1.48,
     "cfg_uc": "",
-    "phrase_rep_pen": "very_aggressive",
+    "phrase_rep_pen": "off",
     "top_g": 0,
-    "mirostat_tau": 5,
-    "mirostat_lr": 0.25,
+    "mirostat_tau": 4.95,
+    "mirostat_lr": 0.22,
     "order": [
-      {
-        "id": "cfg",
-        "enabled": false
-      },
       {
         "id": "mirostat",
         "enabled": true
       },
       {
-        "id": "top_k",
-        "enabled": false
-      },
-      {
-        "id": "temperature",
+        "id": "cfg",
         "enabled": true
       },
       {
@@ -47,19 +39,27 @@
         "enabled": true
       },
       {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
         "id": "tfs",
         "enabled": true
       },
       {
-        "id": "top_p",
-        "enabled": true
+        "id": "top_k",
+        "enabled": false
       },
       {
         "id": "top_a",
-        "enabled": true
+        "enabled": false
       },
       {
         "id": "top_g",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
         "enabled": false
       }
     ]
