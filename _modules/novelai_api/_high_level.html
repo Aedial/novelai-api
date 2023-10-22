@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.19.0 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.20.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.19.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.20.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -67,6 +67,7 @@
 <span class="kn">from</span> <span class="nn">novelai_api.NovelAIError</span> <span class="kn">import</span> <span class="n">NovelAIError</span>
 <span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
 <span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">assert_type</span>
+<span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
 <span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">compress_user_data</span><span class="p">,</span> <span class="n">encrypt_user_data</span><span class="p">,</span> <span class="n">get_access_key</span>
 
 
@@ -317,6 +318,7 @@
         <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
@@ -330,6 +332,7 @@
 <span class="sd">        :param bad_words: Tokens to ban for this generation</span>
 <span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
 <span class="sd">        :param prefix: Module to use for this generation (see :ref:`list of modules &lt;list-of-modules&gt;`)</span>
+<span class="sd">        :param stop_sequences: List of strings or tokens to stop the generation at</span>
 <span class="sd">        :param stream: Use data streaming for the response</span>
 <span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
 
@@ -367,8 +370,10 @@
             <span class="n">rep_pen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;repetition_penalty&quot;</span><span class="p">]</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">&quot;repetition_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.525</span> <span class="o">*</span> <span class="p">(</span><span class="n">rep_pen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
+        <span class="c1"># module</span>
         <span class="n">params</span><span class="p">[</span><span class="s2">&quot;prefix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;vanilla&quot;</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">prefix</span>
 
+        <span class="c1"># bans and biases</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;bad_words_ids&quot;</span><span class="p">,</span> <span class="n">bad_words</span><span class="p">,</span> <span class="n">BanList</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;logit_bias_exp&quot;</span><span class="p">,</span> <span class="n">biases</span><span class="p">,</span> <span class="n">BiasGroup</span><span class="p">)):</span>
             <span class="n">k</span><span class="p">:</span> <span class="nb">str</span>
             <span class="n">v</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BanList</span><span class="p">,</span> <span class="n">BiasGroup</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -387,6 +392,21 @@
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
                 <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
+        <span class="c1"># stop sequences</span>
+        <span class="k">if</span> <span class="n">stop_sequences</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stop_sequences</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;list&#39; for &#39;stop_sequences&#39;, but got &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">stop_sequences</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stop_sequences</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">stop_sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Expected type &#39;str&#39; or &#39;list&#39; for item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of &#39;stop_sequences&#39;, &quot;</span> <span class="sa">f</span><span class="s2">&quot;but got &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;stop_sequences&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stop_sequences</span>
+
         <span class="k">async</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">i</span>
 
@@ -399,6 +419,7 @@
         <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -417,6 +438,7 @@
 <span class="sd">        :param bad_words: Tokens to ban for this generation</span>
 <span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
 <span class="sd">        :param prefix: Module to use for this generation (see :ref:`list of modules &lt;list-of-modules&gt;`)</span>
+<span class="sd">        :param stop_sequences: List of strings or tokens to stop the generation at</span>
 <span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
 
 <span class="sd">        :return: Content that has been generated</span>
@@ -430,6 +452,7 @@
             <span class="n">bad_words</span><span class="p">,</span>
             <span class="n">biases</span><span class="p">,</span>
             <span class="n">prefix</span><span class="p">,</span>
+            <span class="n">stop_sequences</span><span class="p">,</span>
             <span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">):</span>
@@ -444,6 +467,7 @@
         <span class="n">bad_words</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BanList</span><span class="p">],</span> <span class="n">BanList</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">biases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">BiasGroup</span><span class="p">],</span> <span class="n">BiasGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -460,6 +484,7 @@
 <span class="sd">        :param bad_words: Tokens to ban for this generation</span>
 <span class="sd">        :param biases: Tokens to bias (up or down) for this generation</span>
 <span class="sd">        :param prefix: Module to use for this generation (see :ref:`list of modules &lt;list-of-modules&gt;`)</span>
+<span class="sd">        :param stop_sequences: List of strings or tokens to stop the generation at</span>
 <span class="sd">        :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters</span>
 
 <span class="sd">        :return: Content that has been generated</span>
@@ -473,6 +498,7 @@
             <span class="n">bad_words</span><span class="p">,</span>
             <span class="n">biases</span><span class="p">,</span>
             <span class="n">prefix</span><span class="p">,</span>
+            <span class="n">stop_sequences</span><span class="p">,</span>
             <span class="kc">True</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">):</span>
@@ -543,7 +569,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.19.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.20.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
