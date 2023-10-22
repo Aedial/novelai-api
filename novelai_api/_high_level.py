@@ -10,6 +10,7 @@ from novelai_api.Keystore import Keystore
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
 from novelai_api.python_utils import assert_type
+from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import compress_user_data, encrypt_user_data, get_access_key
 
 
@@ -260,6 +261,7 @@ class HighLevel:
         bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
         biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
         prefix: Optional[str] = None,
+        stop_sequences: Optional[Union[List[int], str]] = None,
         stream: bool = False,
         **kwargs,
     ):
@@ -273,6 +275,7 @@ class HighLevel:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
+        :param stop_sequences: List of strings or tokens to stop the generation at
         :param stream: Use data streaming for the response
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
@@ -310,8 +313,10 @@ class HighLevel:
             rep_pen = params["repetition_penalty"]
             params["repetition_penalty"] = (0.525 * (rep_pen - 1) / 7) + 1
 
+        # module
         params["prefix"] = "vanilla" if prefix is None else prefix
 
+        # bans and biases
         for k, v, c in (("bad_words_ids", bad_words, BanList), ("logit_bias_exp", biases, BiasGroup)):
             k: str
             v: Union[Iterable[BanList], Iterable[BiasGroup], BanList, BiasGroup, None]
@@ -330,6 +335,21 @@ class HighLevel:
             if k in params and not params[k]:
                 del params[k]
 
+        # stop sequences
+        if stop_sequences is not None:
+            if not isinstance(stop_sequences, list):
+                raise ValueError(f"Expected type 'list' for 'stop_sequences', but got '{type(stop_sequences)}'")
+
+            for i, obj in enumerate(stop_sequences):
+                if isinstance(obj, str):
+                    stop_sequences[i] = Tokenizer.encode(model, obj)
+                elif not isinstance(obj, list):
+                    raise ValueError(
+                        f"Expected type 'str' or 'list' for item #{i} of 'stop_sequences', " f"but got '{type(obj)}'"
+                    )
+
+            params["stop_sequences"] = stop_sequences
+
         async for i in self._parent.low_level.generate(prompt, model, params, stream):
             yield i
 
@@ -342,6 +362,7 @@ class HighLevel:
         bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
         biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
         prefix: Optional[str] = None,
+        stop_sequences: Optional[Union[List[int], str]] = None,
         **kwargs,
     ) -> Dict[str, Any]:
         """
@@ -360,6 +381,7 @@ class HighLevel:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
+        :param stop_sequences: List of strings or tokens to stop the generation at
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
@@ -373,6 +395,7 @@ class HighLevel:
             bad_words,
             biases,
             prefix,
+            stop_sequences,
             False,
             **kwargs,
         ):
@@ -387,6 +410,7 @@ class HighLevel:
         bad_words: Optional[Union[Iterable[BanList], BanList]] = None,
         biases: Optional[Union[Iterable[BiasGroup], BiasGroup]] = None,
         prefix: Optional[str] = None,
+        stop_sequences: Optional[Union[List[int], str]] = None,
         **kwargs,
     ) -> AsyncIterable[Dict[str, Any]]:
         """
@@ -403,6 +427,7 @@ class HighLevel:
         :param bad_words: Tokens to ban for this generation
         :param biases: Tokens to bias (up or down) for this generation
         :param prefix: Module to use for this generation (see :ref:`list of modules <list-of-modules>`)
+        :param stop_sequences: List of strings or tokens to stop the generation at
         :param kwargs: Additional parameters to pass to the requests. Can also be used to overwrite existing parameters
 
         :return: Content that has been generated
@@ -416,6 +441,7 @@ class HighLevel:
             bad_words,
             biases,
             prefix,
+            stop_sequences,
             True,
             **kwargs,
         ):

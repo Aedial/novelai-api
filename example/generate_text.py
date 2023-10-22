@@ -90,8 +90,24 @@ async def main():
         # module = "6B-v4:c6021aaa523e2dcb8588848b5fd4e2516dd4bb7107268aaa6050b5430c3a4b47:"
         #          "b764a71f139d0d829ed0f3077f026db43fdb25bc6b45ac508e85dd4c405a2fae"
 
+        # NOTE: no stop sequence
+        stop_sequence = None
+        # NOTE: stop sequence as strings
+        # stop_sequence = ["The End", "THE END", "\n"]
+        # NOTE: stop sequence as tokens
+        # stop_sequence = Tokenizer.encode(model, ["The End", "THE END", "\n"])
+
         # NOTE: normal generation
-        gen = await api.high_level.generate(prompt, model, preset, global_settings, bad_words, bias_groups, module)
+        gen = await api.high_level.generate(
+            prompt,
+            model,
+            preset,
+            global_settings,
+            bad_words=bad_words,
+            biases=bias_groups,
+            prefix=module,
+            stop_sequences=stop_sequence,
+        )
         # NOTE: b64-encoded list of tokens ids
         logger.info(gen["output"])
         # NOTE: list of token ids
@@ -101,7 +117,14 @@ async def main():
 
         # NOTE: streamed generation
         async for token in api.high_level.generate_stream(
-            prompt, model, preset, global_settings, bad_words, bias_groups, module
+            prompt,
+            model,
+            preset,
+            global_settings,
+            bad_words=bad_words,
+            biases=bias_groups,
+            prefix=module,
+            stop_sequences=stop_sequence,
         ):
             logger.info(
                 "%s  %s  '%s'",

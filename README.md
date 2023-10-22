@@ -88,3 +88,8 @@ To build the docs, run
 poetry run nai-build-docs
 ```
 The docs will be locally viewable at docs/build/html/index.html
+
+
+# Help/Feedback
+If you need help or have any feedback, feel free to open an issue or contact me on Discord (aedial / Aedial#6197).
+For a Direct Message, state the reason in the first message, to distinguish it from spam.

@@ -3,6 +3,7 @@ import enum
 import io
 import json
 import operator
+import os
 import zipfile
 from typing import Any, AsyncIterator, Dict, List, NoReturn, Optional, Tuple, Union
 from urllib.parse import quote, urlencode
@@ -17,6 +18,9 @@ from novelai_api.python_utils import NoneType, assert_len, assert_type
 from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import tokens_to_b64
+
+PRINT_WITH_PARAMETERS = os.environ.get("NAI_PRINT", None)
+
 
 # === INTERNALS === #
 SSE_FIELDS = ["event", "data", "id", "retry"]
@@ -642,6 +646,9 @@ class LowLevel:
         data = {"input": prompt, "model": model.value, "parameters": params}
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
+
+        if PRINT_WITH_PARAMETERS:
+            print_with_parameters(data)
 
         async for rsp, content in self.request("post", endpoint, data):
             self._treat_response_object(rsp, content, 201)
