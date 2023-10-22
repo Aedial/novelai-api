@@ -44,6 +44,9 @@ async def test_samplers(
     # Furry doesn't have UCPreset.Preset_Low_Quality_Bad_Anatomy
     if model is ImageModel.Furry:
         preset.uc_preset = UCPreset.Preset_Low_Quality
+    # Anime v2 uses different presets than v1
+    if model is ImageModel.Anime_v2:
+        preset.uc_preset = UCPreset.Preset_v2_Heavy
 
     async for _, _ in api.high_level.generate_image("1girl", model, preset):
         pass

@@ -22,6 +22,8 @@ class ImageModel(enum.Enum):
     Inpainting_Anime_Full = "nai-diffusion-inpainting"
     Inpainting_Furry = "furry-diffusion-inpainting"
 
+    Anime_v2 = "nai-diffusion-2"
+
 
 class ControlNetModel(enum.Enum):
     """
@@ -40,6 +42,10 @@ class ImageResolution(enum.Enum):
     Image resolution for ImagePreset.resolution
     """
 
+    Wallpaper_Portrait = (1088, 1920)
+    Wallpaper_Landscape = (1920, 1088)
+
+    # v1
     Small_Portrait = (384, 640)
     Small_Landscape = (640, 384)
     Small_Square = (512, 512)
@@ -51,6 +57,19 @@ class ImageResolution(enum.Enum):
     Large_Portrait = (512, 1024)
     Large_Landscape = (1024, 512)
     Large_Square = (1024, 1024)
+
+    # v2
+    Small_Portrait_v2 = (512, 768)
+    Small_Landscape_v2 = (768, 512)
+    Small_Square_v2 = (640, 640)
+
+    Normal_Portrait_v2 = (832, 1216)
+    Normal_Landscape_v2 = (1216, 832)
+    Normal_Square_v2 = (1024, 1024)
+
+    Large_Portrait_v2 = (1024, 1536)
+    Large_Landscape_v2 = (1536, 1024)
+    Large_Square_v2 = (1472, 1472)
 
 
 class ImageSampler(enum.Enum):
@@ -87,6 +106,10 @@ class UCPreset(enum.Enum):
     Preset_Bad_Anatomy = 2
     Preset_None = 3
 
+    Preset_v2_Heavy = 4
+    Preset_v2_Light = 5
+    Preset_v2_None = 6
+
 
 class ImageGenerationType(enum.Enum):
     """
@@ -100,6 +123,7 @@ class ImageGenerationType(enum.Enum):
 
 class ImagePreset:
     _UC_Presets = {
+        # v1
         ImageModel.Anime_Curated: {
             UCPreset.Preset_Low_Quality_Bad_Anatomy: "nsfw, lowres, bad anatomy, bad hands, text, error, "
             "missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, "
@@ -125,6 +149,15 @@ class ImagePreset:
             UCPreset.Preset_Bad_Anatomy: "{worst quality}, low quality, distracting watermark, [nightmare fuel], "
             "{{unfinished}}, deformed, outline, pattern, simple background",
             UCPreset.Preset_None: "low res",
+        },
+        # v2
+        ImageModel.Anime_v2: {
+            UCPreset.Preset_v2_Heavy: "nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, "
+            "worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, "
+            "scan artifacts",
+            UCPreset.Preset_v2_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, "
+            "very displeasing",
+            UCPreset.Preset_v2_None: "lowres",
         },
     }
 
@@ -184,6 +217,8 @@ class ImagePreset:
         strength: float
         #: https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
         scale: float
+        #: TODO
+        uncond_scale: float
         #: https://docs.novelai.net/image/stepsguidance.html
         steps: int
         #: https://docs.novelai.net/image/undesiredcontent.html
@@ -218,6 +253,7 @@ class ImagePreset:
         "sampler": ImageSampler.k_euler_ancestral,
         "steps": 28,
         "scale": 11,
+        "uncond_scale": 1.0,
         "uc": "",
         "smea": False,
         "smea_dyn": False,
@@ -326,9 +362,9 @@ class ImagePreset:
         if uc_preset is None:
             default_uc = ""
         else:
-            default_uc = self._UC_Presets[model][uc_preset]
+            default_uc = self._UC_Presets[model].get(uc_preset, None)
             if default_uc is None:
-                raise ValueError(f"Preset '{uc_preset.name}' is not valid for model '{model.value}'")
+                raise ValueError(f"UC preset '{uc_preset.name}' is not valid for model '{model.value}'")
 
         uc: str = settings.pop("uc")
         combined_uc = f"{default_uc}, {uc}" if uc else default_uc
@@ -378,11 +414,12 @@ class ImagePreset:
 
         return 1
 
-    def calculate_cost(self, is_opus: bool):
+    def calculate_cost(self, is_opus: bool, version: int = 1):
         """
         Calculate the cost (in Anlas) of generating with the current configuration
 
         :param is_opus: Is the subscription tier Opus ? Account for free generations if so
+        :param version: Version of the model to use (1 or 2)
         """
         steps: int = self._settings["steps"]
         n_samples: int = self._settings["n_samples"]
@@ -393,7 +430,9 @@ class ImagePreset:
 
         w, h = resolution
 
-        opus_discount = is_opus & steps <= 28 and w * h <= 640 * 640
+        opus_discount = is_opus & steps <= 28 and (
+            (w * h <= 640 * 640 and version == 1) or (w * h <= 1024 * 1024 and version == 2)
+        )
 
         r = w * h / 1024 / 1024
         per_step = (15.266497014243718 * math.exp(r * 0.6326248927474729) - 15.225164493059737) / 28
