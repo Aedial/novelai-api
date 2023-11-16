@@ -17,6 +17,7 @@ models = list(ImageModel)
 models.remove(ImageModel.Inpainting_Anime_Full)
 models.remove(ImageModel.Inainting_Anime_Curated)
 models.remove(ImageModel.Inpainting_Furry)
+models.remove(ImageModel.Inpainting_Anime_v3)
 
 samplers = list(ImageSampler)
 model_samplers = list(itertools.product(models, samplers))
@@ -45,8 +46,8 @@ async def test_samplers(
     if model is ImageModel.Furry:
         preset.uc_preset = UCPreset.Preset_Low_Quality
     # Anime v2 uses different presets than v1
-    if model is ImageModel.Anime_v2:
-        preset.uc_preset = UCPreset.Preset_v2_Heavy
+    elif model in (ImageModel.Anime_v2, ImageModel.Anime_v3):
+        preset.uc_preset = UCPreset.Preset_Heavy
 
     async for _, _ in api.high_level.generate_image("1girl", model, preset):
         pass

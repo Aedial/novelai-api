@@ -24,6 +24,9 @@ class ImageModel(enum.Enum):
 
     Anime_v2 = "nai-diffusion-2"
 
+    Anime_v3 = "nai-diffusion-3"
+    Inpainting_Anime_v3 = "nai-diffusion-3-inpainting"
+
 
 class ControlNetModel(enum.Enum):
     """
@@ -71,6 +74,19 @@ class ImageResolution(enum.Enum):
     Large_Landscape_v2 = (1536, 1024)
     Large_Square_v2 = (1472, 1472)
 
+    # v3
+    Small_Portrait_v3 = (512, 768)
+    Small_Landscape_v3 = (768, 512)
+    Small_Square_v3 = (640, 640)
+
+    Normal_Portrait_v3 = (832, 1216)
+    Normal_Landscape_v3 = (1216, 832)
+    Normal_Square_v3 = (1024, 1024)
+
+    Large_Portrait_v3 = (1024, 1536)
+    Large_Landscape_v3 = (1536, 1024)
+    Large_Square_v3 = (1472, 1472)
+
 
 class ImageSampler(enum.Enum):
     """
@@ -106,9 +122,8 @@ class UCPreset(enum.Enum):
     Preset_Bad_Anatomy = 2
     Preset_None = 3
 
-    Preset_v2_Heavy = 4
-    Preset_v2_Light = 5
-    Preset_v2_None = 6
+    Preset_Heavy = 4
+    Preset_Light = 5
 
 
 class ImageGenerationType(enum.Enum):
@@ -152,12 +167,12 @@ class ImagePreset:
         },
         # v2
         ImageModel.Anime_v2: {
-            UCPreset.Preset_v2_Heavy: "nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, "
+            UCPreset.Preset_Heavy: "nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, "
             "worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, "
             "scan artifacts",
-            UCPreset.Preset_v2_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, "
+            UCPreset.Preset_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, "
             "very displeasing",
-            UCPreset.Preset_v2_None: "lowres",
+            UCPreset.Preset_None: "lowres",
         },
     }
 
@@ -165,6 +180,8 @@ class ImagePreset:
     _UC_Presets[ImageModel.Inainting_Anime_Curated] = _UC_Presets[ImageModel.Anime_Curated]
     _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
     _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
+    _UC_Presets[ImageModel.Anime_v3] = _UC_Presets[ImageModel.Anime_v2]
+    _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v2]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
@@ -241,6 +258,10 @@ class ImagePreset:
         add_original_image: bool
         #: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)
         mask: str
+        #: https://docs.novelai.net/image/stepsguidance.html#prompt-guidance-rescale
+        cfg_rescale: float
+        #: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)
+        noise_schedule: str
 
     _DEFAULT = {
         "legacy": False,
@@ -260,6 +281,8 @@ class ImagePreset:
         "decrisper": False,
         "controlnet_strength": 1.0,
         "add_original_image": False,
+        "cfg_rescale": 0.0,
+        "noise_schedule": "native",
     }
 
     _settings: Dict[str, Any]
