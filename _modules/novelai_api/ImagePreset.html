@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.20.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.21.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.20.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -79,7 +79,10 @@
     <span class="n">Inpainting_Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-inpainting&quot;</span>
     <span class="n">Inpainting_Furry</span> <span class="o">=</span> <span class="s2">&quot;furry-diffusion-inpainting&quot;</span>
 
-    <span class="n">Anime_v2</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-2&quot;</span></div>
+    <span class="n">Anime_v2</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-2&quot;</span>
+
+    <span class="n">Anime_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-3&quot;</span>
+    <span class="n">Inpainting_Anime_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-3-inpainting&quot;</span></div>
 
 
 <div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span> <span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -126,7 +129,20 @@
 
     <span class="n">Large_Portrait_v2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1536</span><span class="p">)</span>
     <span class="n">Large_Landscape_v2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1536</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
-    <span class="n">Large_Square_v2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1472</span><span class="p">,</span> <span class="mi">1472</span><span class="p">)</span></div>
+    <span class="n">Large_Square_v2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1472</span><span class="p">,</span> <span class="mi">1472</span><span class="p">)</span>
+
+    <span class="c1"># v3</span>
+    <span class="n">Small_Portrait_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">768</span><span class="p">)</span>
+    <span class="n">Small_Landscape_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">768</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+    <span class="n">Small_Square_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
+
+    <span class="n">Normal_Portrait_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">1216</span><span class="p">)</span>
+    <span class="n">Normal_Landscape_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1216</span><span class="p">,</span> <span class="mi">832</span><span class="p">)</span>
+    <span class="n">Normal_Square_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+
+    <span class="n">Large_Portrait_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1536</span><span class="p">)</span>
+    <span class="n">Large_Landscape_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1536</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+    <span class="n">Large_Square_v3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1472</span><span class="p">,</span> <span class="mi">1472</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ImageSampler"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageSampler">[docs]</a><span class="k">class</span> <span class="nc">ImageSampler</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -163,9 +179,8 @@
     <span class="n">Preset_Bad_Anatomy</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">Preset_None</span> <span class="o">=</span> <span class="mi">3</span>
 
-    <span class="n">Preset_v2_Heavy</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">Preset_v2_Light</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">Preset_v2_None</span> <span class="o">=</span> <span class="mi">6</span></div>
+    <span class="n">Preset_Heavy</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">Preset_Light</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="ImageGenerationType"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType">[docs]</a><span class="k">class</span> <span class="nc">ImageGenerationType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -209,12 +224,12 @@
         <span class="p">},</span>
         <span class="c1"># v2</span>
         <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_v2_Heavy</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, &quot;</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, &quot;</span>
             <span class="s2">&quot;worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, &quot;</span>
             <span class="s2">&quot;scan artifacts&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_v2_Light</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, &quot;</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, &quot;</span>
             <span class="s2">&quot;very displeasing&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_v2_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
 
@@ -222,6 +237,8 @@
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">]</span>
 
     <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Palette_Swap</span><span class="p">:</span> <span class="s2">&quot;hed&quot;</span><span class="p">,</span>
@@ -298,6 +315,10 @@
         <span class="n">add_original_image</span><span class="p">:</span> <span class="nb">bool</span>
         <span class="c1">#: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)</span>
         <span class="n">mask</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="c1">#: https://docs.novelai.net/image/stepsguidance.html#prompt-guidance-rescale</span>
+        <span class="n">cfg_rescale</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)</span>
+        <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span>
 
     <span class="n">_DEFAULT</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;legacy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -317,6 +338,8 @@
         <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="s2">&quot;add_original_image&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;cfg_rescale&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;noise_schedule&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
@@ -550,7 +573,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.20.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
