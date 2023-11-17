@@ -27,6 +27,7 @@ repos:
     rev: 23.3.0
     hooks:
     -   id: black
+        exclude: novelai_api/ImagePreset_CostTables.py
         args: [
             "--safe"  # don't change AST
         ]

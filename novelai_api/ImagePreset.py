@@ -6,6 +6,7 @@ import os
 import random
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
+from novelai_api.ImagePreset_CostTables import DDIM_COSTS, NAI_COSTS, SMEA_COSTS, SMEA_DYN_COSTS
 from novelai_api.python_utils import NoneType, expand_kwargs
 
 
@@ -170,8 +171,15 @@ class ImagePreset:
             UCPreset.Preset_Heavy: "nsfw, lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, "
             "worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, "
             "scan artifacts",
-            UCPreset.Preset_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, "
-            "very displeasing",
+            UCPreset.Preset_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing",
+            UCPreset.Preset_None: "lowres",
+        },
+        # v3
+        ImageModel.Anime_v3: {
+            UCPreset.Preset_Heavy: "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, "
+            "bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, "
+            "artistic error, username, scan, [abstract]",
+            UCPreset.Preset_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing",
             UCPreset.Preset_None: "lowres",
         },
     }
@@ -180,8 +188,7 @@ class ImagePreset:
     _UC_Presets[ImageModel.Inainting_Anime_Curated] = _UC_Presets[ImageModel.Anime_Curated]
     _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
     _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
-    _UC_Presets[ImageModel.Anime_v3] = _UC_Presets[ImageModel.Anime_v2]
-    _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v2]
+    _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v3]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
@@ -435,32 +442,76 @@ class ImagePreset:
         if w * h <= 1024 * 1536:
             return 2
 
-        return 1
+        if w * h <= 1024 * 3072:
+            return 1
 
-    def calculate_cost(self, is_opus: bool, version: int = 1):
+        return 0
+
+    def calculate_cost(
+        self, is_opus: bool, version: int = 1, generation_type: ImageGenerationType = ImageGenerationType.NORMAL
+    ):
         """
         Calculate the cost (in Anlas) of generating with the current configuration
 
         :param is_opus: Is the subscription tier Opus ? Account for free generations if so
-        :param version: Version of the model to use (1 or 2)
+        :param version: Version of the model to use (1, 2, 3)
+        :param generation_type: Type of generation to do (img2img, txt2img, etc.)
         """
+
         steps: int = self._settings["steps"]
-        n_samples: int = self._settings["n_samples"]
+        n_samples: int = max(1, self._settings["n_samples"])
+        smea = self._settings["smea"]
+        smea_dyn = self._settings["smea_dyn"]
+        sampler: ImageSampler = self._settings["sampler"]
+
+        uncond_scale: float = self._settings.get("uncond_scale", 1.0)
+        strength: float = self._settings.get("strength", 1.0) if generation_type == ImageGenerationType.IMG2IMG else 1.0
         resolution: Union[ImageResolution, Tuple[int, int]] = self._settings["resolution"]
 
         if isinstance(resolution, ImageResolution):
             resolution: Tuple[int, int] = resolution.value
 
         w, h = resolution
+        r = w * h
+        if r < 65536:
+            r = 65536
 
-        opus_discount = is_opus & steps <= 28 and (
-            (w * h <= 640 * 640 and version == 1) or (w * h <= 1024 * 1024 and version == 2)
-        )
+        if version == 3:
+            smea_factor = 1.0 if not smea else 1.2 if not smea_dyn else 1.4
+            per_sample = math.ceil(2951823174884865e-21 * r + 5.753298233447344e-7 * r * steps) * smea_factor
+        else:
+            if r <= 1024 * 1024 and sampler in (
+                ImageSampler.plms,
+                ImageSampler.ddim,
+                ImageSampler.k_euler,
+                ImageSampler.k_euler_ancestral,
+                ImageSampler.k_lms,
+            ):
+                per_sample = (
+                    (15.266497014243718 * math.exp(r / 1024 / 1024 * 0.6326248927474729) - 15.225164493059737)
+                    * steps
+                    / 28
+                )
+            else:
+                index = math.ceil(w / 64) * math.ceil(h / 64) - 1
 
-        r = w * h / 1024 / 1024
-        per_step = (15.266497014243718 * math.exp(r * 0.6326248927474729) - 15.225164493059737) / 28
-        per_sample = max(math.ceil(per_step * steps), 2)
+                if sampler is ImageSampler.nai_smea_dyn or (smea and smea_dyn):
+                    per_step, fixed = SMEA_DYN_COSTS[index]
+                elif sampler is ImageSampler.nai_smea or smea:
+                    per_step, fixed = SMEA_COSTS[index]
+                elif sampler is ImageSampler.ddim:
+                    per_step, fixed = DDIM_COSTS[index]
+                else:
+                    per_step, fixed = NAI_COSTS[index]
 
+                per_sample = per_step * steps + fixed
+
+        per_sample = max(math.ceil(per_sample * strength), 2)
+
+        if version != 1 and uncond_scale != 1.0:
+            per_sample = math.ceil(per_sample * uncond_scale)
+
+        opus_discount = is_opus and steps <= 28 and (r <= 640 * 640 if version == 1 else r <= 1024 * 1024)
         return per_sample * (n_samples - int(opus_discount))
 
     @classmethod
