@@ -477,7 +477,19 @@ class HighLevel:
 
         quality_toggle = settings["qualityToggle"]
         if quality_toggle:
-            prompt = f"masterpiece, best quality, {prompt}"
+            if model in (
+                ImageModel.Anime_Full,
+                ImageModel.Anime_Curated,
+                ImageModel.Furry,
+                ImageModel.Inpainting_Anime_Full,
+                ImageModel.Inainting_Anime_Curated,
+                ImageModel.Inpainting_Furry,
+            ):
+                prompt = f"masterpiece, best quality, {prompt}"
+            elif model is ImageModel.Anime_v2:
+                prompt = f"very aesthetic, best quality, absurdres, {prompt}"
+            elif model in (ImageModel.Anime_v3, ImageModel.Inpainting_Anime_v3):
+                prompt = f"{prompt}, best quality, amazing quality, very aesthetic, absurdres"
 
         async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
             yield e

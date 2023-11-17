@@ -1,7 +1,7 @@
 import json
 from base64 import b64decode, b64encode, urlsafe_b64encode
 from hashlib import blake2b
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, AsyncGenerator, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Union
 from zlib import MAX_WBITS, Z_BEST_COMPRESSION
 from zlib import compressobj as deflate_obj
 from zlib import decompress as inflate
@@ -365,6 +365,14 @@ def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
         raise ValueError(f"Expected type 'str' for 'o', got type '{type(o)}'")
 
     return Tokenizer.encode(model, o)
+
+
+async def gather_asyncgenerator(agen: Union[AsyncGenerator[Any, None], AsyncIterable[Any]]) -> List[Any]:
+    """
+    Gather all the items of an async generator into a list
+    """
+
+    return [item async for item in agen]
 
 
 # TODO: story tree builder
