@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.21.1 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.21.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -534,7 +534,19 @@
 
         <span class="n">quality_toggle</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">quality_toggle</span><span class="p">:</span>
-            <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;masterpiece, best quality, </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">,</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">,</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">,</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">,</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">,</span>
+                <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;masterpiece, best quality, </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">model</span> <span class="ow">is</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">:</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;very aesthetic, best quality, absurdres, </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">):</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, best quality, amazing quality, very aesthetic, absurdres&quot;</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate_image</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">e</span></div></div>
@@ -569,7 +581,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.21.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
