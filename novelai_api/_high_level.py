@@ -298,10 +298,12 @@ class HighLevel:
         global_settings.rep_pen_whitelist = repetition_penalty_default_whitelist
 
         params = {
-            "repetition_penalty_whitelist": [
-                *global_params.pop("repetition_penalty_whitelist", []),
-                *preset_params.pop("repetition_penalty_whitelist", []),
-            ]
+            "repetition_penalty_whitelist": list(set(
+                item for sublist in [
+                    global_params.pop("repetition_penalty_whitelist", []),
+                    preset_params.pop("repetition_penalty_whitelist", []),
+                ] for inner_list in sublist for item in inner_list
+            ))
         }
 
         params.update(preset_params)
