@@ -355,10 +355,12 @@
         <span class="n">global_settings</span><span class="o">.</span><span class="n">rep_pen_whitelist</span> <span class="o">=</span> <span class="n">repetition_penalty_default_whitelist</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="o">*</span><span class="n">global_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
-                <span class="o">*</span><span class="n">preset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
-            <span class="p">]</span>
+            <span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
+                <span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="n">global_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                    <span class="n">preset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;repetition_penalty_whitelist&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="p">]</span> <span class="k">for</span> <span class="n">inner_list</span> <span class="ow">in</span> <span class="n">sublist</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">inner_list</span>
+            <span class="p">))</span>
         <span class="p">}</span>
 
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preset_params</span><span class="p">)</span>
