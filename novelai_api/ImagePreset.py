@@ -199,6 +199,7 @@ class ImagePreset:
     }
 
     _TYPE_MAPPING = {
+        "legacy": bool,
         "quality_toggle": bool,
         "resolution": (ImageResolution, tuple),
         "uc_preset": (UCPreset, NoneType),
@@ -208,6 +209,7 @@ class ImagePreset:
         "noise": (int, float),
         "strength": (int, float),
         "scale": (int, float),
+        "uncond_scale": (int, float),
         "steps": int,
         "uc": str,
         "smea": bool,
@@ -219,6 +221,8 @@ class ImagePreset:
         "decrisper": bool,
         "add_original_image": bool,
         "mask": str,
+        "cfg_rescale": float,
+        "noise_schedule": str,
     }
 
     # type completion for __setitem__ and __getitem__
