@@ -41,6 +41,7 @@ async def test_samplers(
     logger.info(f"Testing model {model} with sampler {sampler}")
 
     preset = ImagePreset(sampler=sampler)
+    preset.copy()
 
     # Furry doesn't have UCPreset.Preset_Low_Quality_Bad_Anatomy
     if model is ImageModel.Furry:
