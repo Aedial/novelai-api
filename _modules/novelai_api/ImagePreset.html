@@ -256,6 +256,7 @@
     <span class="p">}</span>
 
     <span class="n">_TYPE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;legacy&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="s2">&quot;quality_toggle&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
         <span class="s2">&quot;uc_preset&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">UCPreset</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">),</span>
@@ -265,6 +266,7 @@
         <span class="s2">&quot;noise&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;uncond_scale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;uc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="s2">&quot;smea&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -276,6 +278,8 @@
         <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="s2">&quot;add_original_image&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">&quot;cfg_rescale&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;noise_schedule&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># type completion for __setitem__ and __getitem__</span>
