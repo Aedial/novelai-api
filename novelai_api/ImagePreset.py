@@ -4,7 +4,9 @@ import json
 import math
 import os
 import random
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+import sys
+import typing
+from typing import Any, Dict, Optional, Tuple, Union
 
 from novelai_api.ImagePreset_CostTables import DDIM_COSTS, NAI_COSTS, SMEA_COSTS, SMEA_DYN_COSTS
 from novelai_api.python_utils import NoneType, expand_kwargs
@@ -100,6 +102,7 @@ class ImageSampler(enum.Enum):
     k_heun = "k_heun"
     plms = "plms"  # doesn't work
     ddim = "ddim"
+    ddim_v3 = "ddim_v3"  # for v3
 
     nai_smea = "nai_smea"  # doesn't work
     nai_smea_dyn = "nai_smea_dyn"
@@ -200,79 +203,56 @@ class ImagePreset:
 
     _TYPE_MAPPING = {
         "legacy": bool,
-        "quality_toggle": bool,
-        "resolution": (ImageResolution, tuple),
-        "uc_preset": (UCPreset, NoneType),
-        "n_samples": int,
-        "seed": int,
-        "sampler": ImageSampler,
-        "noise": (int, float),
-        "strength": (int, float),
-        "scale": (int, float),
-        "uncond_scale": (int, float),
-        "steps": int,
-        "uc": str,
-        "smea": bool,
-        "smea_dyn": bool,
-        "image": str,
-        "controlnet_condition": str,
-        "controlnet_model": ControlNetModel,
-        "controlnet_strength": (int, float),
-        "decrisper": bool,
-        "add_original_image": bool,
-        "mask": str,
-        "cfg_rescale": float,
-        "noise_schedule": str,
+        # rest is populated in at the bottom of the file
     }
 
     # type completion for __setitem__ and __getitem__
-    if TYPE_CHECKING:
-        #: https://docs.novelai.net/image/qualitytags.html
-        quality_toggle: bool
-        #: Resolution of the image to generate as ImageResolution or a (width, height) tuple
-        resolution: Union[ImageResolution, Tuple[int, int]]
-        #: Default UC to prepend to the UC
-        uc_preset: Union[UCPreset, None]
-        #: Number of images to return
-        n_samples: int
-        #: Random seed to use for the image. The ith image has seed + i for seed
-        seed: int
-        #: https://docs.novelai.net/image/sampling.html
-        sampler: ImageSampler
-        #: https://docs.novelai.net/image/strengthnoise.html
-        noise: float
-        #: https://docs.novelai.net/image/strengthnoise.html
-        strength: float
-        #: https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
-        scale: float
-        #: TODO
-        uncond_scale: float
-        #: https://docs.novelai.net/image/stepsguidance.html
-        steps: int
-        #: https://docs.novelai.net/image/undesiredcontent.html
-        uc: str
-        #: Enable SMEA for any sampler (makes Large+ generations manageable)
-        smea: bool
-        #: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
-        smea_dyn: bool
-        #: b64-encoded png image for img2img
-        image: str
-        #: Controlnet mask gotten by the generate_controlnet_mask method
-        controlnet_condition: str
-        #: Model to use for the controlnet
-        controlnet_model: ControlNetModel
-        #: Influence of the chosen controlnet on the image
-        controlnet_strength: float
-        #: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
-        decrisper: bool
-        #: Prevent seams along the edges of the mask, but may change the image slightly
-        add_original_image: bool
-        #: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)
-        mask: str
-        #: https://docs.novelai.net/image/stepsguidance.html#prompt-guidance-rescale
-        cfg_rescale: float
-        #: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)
-        noise_schedule: str
+    #: https://docs.novelai.net/image/qualitytags.html
+    quality_toggle: bool
+    #: Resolution of the image to generate as ImageResolution or a (width, height) tuple
+    resolution: Union[ImageResolution, Tuple[int, int]]
+    #: Default UC to prepend to the UC
+    uc_preset: Union[UCPreset, None]
+    #: Number of images to return
+    n_samples: int
+    #: Random seed to use for the image. The ith image has seed + i for seed
+    seed: int
+    #: https://docs.novelai.net/image/sampling.html
+    sampler: ImageSampler
+    #: https://docs.novelai.net/image/strengthnoise.html
+    noise: float
+    #: https://docs.novelai.net/image/strengthnoise.html
+    strength: float
+    #: https://docs.novelai.net/image/stepsguidance.html (scale is called Prompt Guidance)
+    scale: float
+    #: TODO
+    uncond_scale: float
+    #: https://docs.novelai.net/image/stepsguidance.html
+    steps: int
+    #: https://docs.novelai.net/image/undesiredcontent.html
+    uc: str
+    #: Enable SMEA for any sampler (makes Large+ generations manageable)
+    smea: bool
+    #: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
+    smea_dyn: bool
+    #: b64-encoded png image for img2img
+    image: str
+    #: Controlnet mask gotten by the generate_controlnet_mask method
+    controlnet_condition: str
+    #: Model to use for the controlnet
+    controlnet_model: ControlNetModel
+    #: Influence of the chosen controlnet on the image
+    controlnet_strength: float
+    #: Reduce the deepfrying effects of high scale (https://twitter.com/Birchlabs/status/1582165379832348672)
+    decrisper: bool
+    #: Prevent seams along the edges of the mask, but may change the image slightly
+    add_original_image: bool
+    #: Mask for inpainting (b64-encoded black and white png image, white is the inpainting area)
+    mask: str
+    #: https://docs.novelai.net/image/stepsguidance.html#prompt-guidance-rescale
+    cfg_rescale: float
+    #: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)
+    noise_schedule: str
 
     _DEFAULT = {
         "legacy": False,
@@ -405,6 +385,9 @@ class ImagePreset:
         settings["negative_prompt"] = combined_uc
 
         sampler: ImageSampler = settings.pop("sampler")
+        if sampler is ImageSampler.ddim and model in (ImageModel.Anime_v3,):
+            sampler = ImageSampler.ddim_v3
+
         settings["sampler"] = sampler.value
 
         settings["sm"] = settings.pop("smea", False)
@@ -540,3 +523,73 @@ class ImagePreset:
 
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self._settings))
+
+
+def _get_typing_origin(t: type) -> type:
+    """
+    Get the typing origin of a type
+
+    :param t: Type to get the origin of
+    """
+
+    if sys.version_info < (3, 8):  # 3.7
+        origin = getattr(t, "__origin__", None)
+        assert origin is not None  # should never happen for 3.7
+
+        return origin
+
+    return typing.get_origin(t)
+
+
+def _get_typing_args(t: type) -> Tuple[type, ...]:
+    """
+    Get the typing arguments of a type
+
+    :param t: Type to get the arguments of
+    """
+
+    if sys.version_info < (3, 8):  # 3.7
+        args = getattr(t, "__args__", None)
+        assert args is not None  # should never happen for 3.7
+
+        return args
+
+    return typing.get_args(t)
+
+
+def _get_recursive_type(t: type, depth: int = 1) -> Union[type, Tuple[type, ...]]:
+    if t is None:
+        return NoneType
+
+    if t.__module__ == "typing":
+        if _get_typing_origin(t) is Union:
+            if depth == 0:
+                raise ValueError("Union types are not supported past depth 1")
+
+            return tuple(_get_recursive_type(x, depth - 1) for x in _get_typing_args(t))
+
+        return _get_typing_origin(t)
+
+    return t
+
+
+def _create_type_mapping():
+    """
+    Create the type mapping for the ImagePreset class
+    """
+
+    non_mapping_keys = ["last_seed"]
+
+    for type_key, type_value in ImagePreset.__annotations__.items():
+        if not type_key.startswith("_") and type_key != type_key.upper() and type_key not in non_mapping_keys:
+            if type_value is float:
+                type_value = (int, float)
+            else:
+                type_value = _get_recursive_type(type_value)
+
+            ImagePreset._TYPE_MAPPING[type_key] = type_value  # noqa
+
+    assert all(type_key in ImagePreset._TYPE_MAPPING for type_key in ImagePreset._DEFAULT)  # noqa
+
+
+_create_type_mapping()
