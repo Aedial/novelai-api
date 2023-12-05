@@ -37,6 +37,10 @@ async def test_samplers(
     api = api_handle.api
     model, sampler = model_sampler
 
+    # ddim_v3 only work with Anime v3
+    if model not in (ImageModel.Anime_v3,) and sampler is ImageSampler.ddim_v3:
+        return
+
     logger = api_handle.logger
     logger.info(f"Testing model {model} with sampler {sampler}")
 
