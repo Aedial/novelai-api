@@ -19,7 +19,7 @@ from novelai_api.SchemaValidator import SchemaValidator
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import tokens_to_b64
 
-PRINT_WITH_PARAMETERS = os.environ.get("NAI_PRINT", None)
+PRINT_WITH_PARAMETERS = os.environ.get("NAI_PRINT", False)
 
 
 # === INTERNALS === #

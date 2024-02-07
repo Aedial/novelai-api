@@ -304,6 +304,8 @@ class Preset(metaclass=_PresetMetaclass):
     name: str
     #: Model the preset is for
     model: Model
+    #: Enable state of sampling options
+    sampling_options: List[bool]
 
     def __init__(self, name: str, model: Model, settings: Optional[Dict[str, Any]] = None):
         object.__setattr__(self, "name", name)
@@ -311,6 +313,24 @@ class Preset(metaclass=_PresetMetaclass):
 
         object.__setattr__(self, "_settings", {})
         self.update(settings)
+        self.set_sampling_options_state([True] * len(self._settings["order"]))
+
+    def set_sampling_options_state(self, sampling_options_state: List[bool]):
+        """
+        Set the state (enabled/disabled) of the sampling options. Set it after setting the order setting.
+        It should come in the same order as the order setting.
+        """
+
+        if "order" not in self._settings:
+            raise ValueError("The order setting must be set before setting the sampling options state")
+
+        if len(sampling_options_state) != len(self._settings["order"]):
+            raise ValueError(
+                "The length of the sampling options state list must be equal to the length "
+                "of the sampling options list"
+            )
+
+        object.__setattr__(self, "sampling_options", sampling_options_state)
 
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:
@@ -364,7 +384,8 @@ class Preset(metaclass=_PresetMetaclass):
 
     def __repr__(self) -> str:
         model = self.model.value if self.model is not None else "<?>"
-        enabled_keys = ", ".join(f"{ORDER_TO_NAME[o]} = {o in self._settings['order']}" for o in Order)
+        enabled_order = [o for o, enabled in zip(self._settings["order"], self.sampling_options) if enabled]
+        enabled_keys = ", ".join(f"{ORDER_TO_NAME[o]} = {o in enabled_order}" for o in Order)
 
         return f"Preset: '{self.name} ({model}, {enabled_keys})'"
 
@@ -380,7 +401,11 @@ class Preset(metaclass=_PresetMetaclass):
 
         # remove disabled sampling options
         if "order" in settings:
-            order = [Order(e) if isinstance(e, int) else e for e in settings["order"]]
+            order = [
+                (Order(o) if isinstance(o, int) else o)
+                for o, enabled in zip(settings["order"], self.sampling_options)
+                if enabled
+            ]
 
             for o in Order:
                 if o not in order:
@@ -416,8 +441,8 @@ class Preset(metaclass=_PresetMetaclass):
         return settings
 
     def __str__(self):
-        settings = {k: self._settings.get(k, v) for k, v in self.DEFAULTS.items()}
-        is_default = {k: " (default)" if v == self.DEFAULTS[k] else "" for k, v in settings.items()}
+        settings = self.to_settings()  # use the sanitized settings
+        is_default = {k: " (default)" if v == self.DEFAULTS.get(k, None) else "" for k, v in settings.items()}
 
         values = "\n".join(f"    {k} = {v}{is_default[k]}" for k, v in settings.items())
 
@@ -475,7 +500,6 @@ class Preset(metaclass=_PresetMetaclass):
 
         name = data["name"] if "name" in data else "<?>"
 
-        # FIXME: collapse model version
         model_name = data["model"] if "model" in data else ""
         model = collapse_model(Model, model_name)
 
@@ -490,6 +514,7 @@ class Preset(metaclass=_PresetMetaclass):
         settings.pop("logit_bias_groups", None)  # get rid of unsupported option
 
         c = cls(name, model, settings)
+        c.set_sampling_options_state([o["enabled"] for o in order])
 
         return c
 
