@@ -2,6 +2,7 @@
 Tests pertaining to the Preset class
 """
 
+import asyncio
 from typing import Tuple
 
 import pytest
@@ -10,7 +11,7 @@ from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.Preset import Model, Preset
 from novelai_api.Tokenizer import Tokenizer
 from novelai_api.utils import b64_to_tokens
-from tests.api.boilerplate import api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
+from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
 prompt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."  # noqa: E501  # pylint: disable=C0301
 models = list(Model)
@@ -56,3 +57,21 @@ async def preset_from_official(model: Model):
     """
 
     Preset.from_official(model)
+
+
+async def main():
+    for model in models:
+        model: Model
+
+        await preset_from_default(model)
+        await preset_from_official(model)
+
+    async with API() as handle:
+        for model_preset in models_presets:
+            model_preset: Tuple[Model, Preset]
+
+            await test_presets(handle, model_preset)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
