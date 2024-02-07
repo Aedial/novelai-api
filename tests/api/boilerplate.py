@@ -3,6 +3,7 @@ import functools
 import json
 from logging import Logger, StreamHandler
 from os import environ as env
+from pathlib import Path
 from typing import Any, Awaitable, Callable, NoReturn, Optional
 
 import pytest
@@ -22,6 +23,14 @@ class API:
     api: NovelAIAPI
 
     def __init__(self, sync: bool = False):
+        dotenv = Path(".env")
+        if dotenv.exists():
+            with dotenv.open("r") as f:
+                for line in f:
+                    if "=" in line:
+                        key, value = line.strip().split("=", 1)
+                        env[key] = value.strip()
+
         if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
             raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
 

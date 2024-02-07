@@ -1,9 +1,9 @@
 import json
 from logging import Logger, StreamHandler
 from os import environ as env
+from pathlib import Path
 from typing import Any, Optional
 
-import dotenv
 from aiohttp import ClientSession
 
 from novelai_api import NovelAIAPI
@@ -39,7 +39,13 @@ class API:
     api: Optional[NovelAIAPI]
 
     def __init__(self, base_address: Optional[str] = None):
-        dotenv.load_dotenv()
+        dotenv = Path(".env")
+        if dotenv.exists():
+            with dotenv.open("r") as f:
+                for line in f:
+                    if "=" in line:
+                        key, value = line.strip().split("=", 1)
+                        env[key] = value.strip()
 
         if "NAI_USERNAME" not in env or "NAI_PASSWORD" not in env:
             raise RuntimeError("Please ensure that NAI_USERNAME and NAI_PASSWORD are set in your environment")
