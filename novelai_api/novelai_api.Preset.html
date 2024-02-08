@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.Preset &#8212; NovelAI API 0.22.0 documentation</title>
+    <title>novelai_api.Preset &#8212; NovelAI API 0.23.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.NovelAI_API.html" title="novelai_api.NovelAI_API"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.22.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
@@ -487,10 +487,23 @@
 <dd><p>Model the preset is for</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.sampling_options">
+<span class="sig-name descname"><span class="pre">sampling_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#novelai_api.Preset.Preset.sampling_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable state of sampling options</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.Preset.Preset.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.Preset.Model" title="novelai_api.Preset.Model"><span class="pre">novelai_api.Preset.Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/Preset.html#Preset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Preset.Preset.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.Preset.Preset.set_sampling_options_state">
+<span class="sig-name descname"><span class="pre">set_sampling_options_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampling_options_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/Preset.html#Preset.set_sampling_options_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.Preset.Preset.set_sampling_options_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the state (enabled/disabled) of the sampling options. Set it after setting the order setting.
+It should come in the same order as the order setting.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.Preset.Preset.to_settings">
@@ -671,7 +684,9 @@ Works like dict.update()</p>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.get_hidden_states"><code class="docutils literal notranslate"><span class="pre">Preset.get_hidden_states</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.name"><code class="docutils literal notranslate"><span class="pre">Preset.name</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.model"><code class="docutils literal notranslate"><span class="pre">Preset.model</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.sampling_options"><code class="docutils literal notranslate"><span class="pre">Preset.sampling_options</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.__init__"><code class="docutils literal notranslate"><span class="pre">Preset.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.Preset.Preset.set_sampling_options_state"><code class="docutils literal notranslate"><span class="pre">Preset.set_sampling_options_state()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.to_settings"><code class="docutils literal notranslate"><span class="pre">Preset.to_settings()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.to_file"><code class="docutils literal notranslate"><span class="pre">Preset.to_file()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.Preset.Preset.copy"><code class="docutils literal notranslate"><span class="pre">Preset.copy()</span></code></a></li>
@@ -734,13 +749,13 @@ Works like dict.update()</p>
         <li class="right" >
           <a href="novelai_api.NovelAI_API.html" title="novelai_api.NovelAI_API"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.22.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, Aedial.
+        &#169; Copyright 2024, Aedial.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>

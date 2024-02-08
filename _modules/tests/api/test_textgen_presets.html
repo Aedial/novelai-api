@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tests.api.test_textgen_presets &#8212; NovelAI API 0.22.0 documentation</title>
+    <title>tests.api.test_textgen_presets &#8212; NovelAI API 0.23.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.22.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tests.api.test_textgen_presets</a></li> 
       </ul>
@@ -59,6 +59,7 @@
 <span class="sd">Tests pertaining to the Preset class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pytest</span>
@@ -67,7 +68,7 @@
 <span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
 <span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
 <span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">b64_to_tokens</span>
-<span class="kn">from</span> <span class="nn">tests.api.boilerplate</span> <span class="kn">import</span> <span class="n">api_handle</span><span class="p">,</span> <span class="n">error_handler</span>  <span class="c1"># noqa: F401  # pylint: disable=W0611</span>
+<span class="kn">from</span> <span class="nn">tests.api.boilerplate</span> <span class="kn">import</span> <span class="n">API</span><span class="p">,</span> <span class="n">api_handle</span><span class="p">,</span> <span class="n">error_handler</span>  <span class="c1"># noqa: F401  # pylint: disable=W0611</span>
 
 <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula.&quot;</span>  <span class="c1"># noqa: E501  # pylint: disable=C0301</span>
 <span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
@@ -113,6 +114,24 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Preset</span><span class="o">.</span><span class="n">from_official</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
+
+        <span class="k">await</span> <span class="n">preset_from_default</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">preset_from_official</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">with</span> <span class="n">API</span><span class="p">()</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">model_preset</span> <span class="ow">in</span> <span class="n">models_presets</span><span class="p">:</span>
+            <span class="n">model_preset</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span><span class="p">]</span>
+
+            <span class="k">await</span> <span class="n">test_presets</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">model_preset</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -144,13 +163,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.22.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tests.api.test_textgen_presets</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, Aedial.
+        &#169; Copyright 2024, Aedial.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
