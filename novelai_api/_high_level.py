@@ -489,7 +489,7 @@ class HighLevel:
                 ImageModel.Anime_Curated,
                 ImageModel.Furry,
                 ImageModel.Inpainting_Anime_Full,
-                ImageModel.Inainting_Anime_Curated,
+                ImageModel.Inpainting_Anime_Curated,
                 ImageModel.Inpainting_Furry,
             ):
                 prompt = f"masterpiece, best quality, {prompt}"

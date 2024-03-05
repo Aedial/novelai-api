@@ -6,6 +6,7 @@ import os
 import random
 import sys
 import typing
+from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
 from novelai_api.ImagePreset_CostTables import DDIM_COSTS, NAI_COSTS, SMEA_COSTS, SMEA_DYN_COSTS
@@ -21,7 +22,7 @@ class ImageModel(enum.Enum):
     Anime_Full = "nai-diffusion"
     Furry = "nai-diffusion-furry"
 
-    Inainting_Anime_Curated = "safe-diffusion-inpainting"
+    Inpainting_Anime_Curated = "safe-diffusion-inpainting"
     Inpainting_Anime_Full = "nai-diffusion-inpainting"
     Inpainting_Furry = "furry-diffusion-inpainting"
 
@@ -188,7 +189,7 @@ class ImagePreset:
     }
 
     # inpainting presets are the same as the normal ones
-    _UC_Presets[ImageModel.Inainting_Anime_Curated] = _UC_Presets[ImageModel.Anime_Curated]
+    _UC_Presets[ImageModel.Inpainting_Anime_Curated] = _UC_Presets[ImageModel.Anime_Curated]
     _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
     _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
     _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v3]
@@ -209,6 +210,8 @@ class ImagePreset:
     # type completion for __setitem__ and __getitem__
     #: https://docs.novelai.net/image/qualitytags.html
     quality_toggle: bool
+    #: Automatically uses SMEA when image is above 1 megapixel
+    auto_smea: bool
     #: Resolution of the image to generate as ImageResolution or a (width, height) tuple
     resolution: Union[ImageResolution, Tuple[int, int]]
     #: Default UC to prepend to the UC
@@ -253,44 +256,116 @@ class ImagePreset:
     cfg_rescale: float
     #: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)
     noise_schedule: str
+    #: b64-encoded png image for Vibe Transfer
+    reference_image: str
+    #: https://docs.novelai.net/.image/vibetransfer.html#information-extracted
+    reference_information_extracted: float
+    #: https://docs.novelai.net/.image/vibetransfer.html#reference-strength
+    reference_strength: float
 
-    _DEFAULT = {
-        "legacy": False,
-        "quality_toggle": True,
-        "resolution": ImageResolution.Normal_Portrait,
-        "uc_preset": UCPreset.Preset_Low_Quality_Bad_Anatomy,
-        "n_samples": 1,
-        "seed": 0,
-        # TODO: set ImageSampler.k_dpmpp_2m as default ?
-        "sampler": ImageSampler.k_euler_ancestral,
-        "steps": 28,
-        "scale": 11,
-        "uncond_scale": 1.0,
-        "uc": "",
-        "smea": False,
-        "smea_dyn": False,
-        "decrisper": False,
-        "controlnet_strength": 1.0,
-        "add_original_image": False,
-        "cfg_rescale": 0.0,
-        "noise_schedule": "native",
-    }
+    #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
+    legacy_v3_extend: bool
 
     _settings: Dict[str, Any]
 
     #: Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle
     last_seed: int
 
+    @classmethod
+    def from_file(cls, path: Union[str, bytes, os.PathLike, int]) -> "ImagePreset":
+        """
+        Write the preset to a file
+
+        :param path: Path to the file to read the preset from
+        """
+
+        with open(path, encoding="utf-8") as f:
+            data = json.loads(f.read())
+
+        return cls(**data)
+
+    def to_file(self, path: Union[str, bytes, os.PathLike, int]):
+        """
+        Load the preset from a file
+
+        :param path: Path to the file to write the preset to
+        """
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(self._settings))
+
     @expand_kwargs(_TYPE_MAPPING.keys(), _TYPE_MAPPING.values())
     def __init__(self, **kwargs):
-        object.__setattr__(self, "_settings", self._DEFAULT.copy())
+        """
+        Create an empty ImagePreset. Use the "from_*_config" functions to create a
+        """
+
+        object.__setattr__(self, "_settings", {})
         self.update(kwargs)
 
         object.__setattr__(self, "last_seed", 0)
 
+    @classmethod
+    def from_v1_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v1 config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v1" / "default.preset")
+
+    @classmethod
+    def from_v2_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v2 config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v2" / "default.preset")
+
+    @classmethod
+    def from_v3_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v3 config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v3" / "default.preset")
+
+    @classmethod
+    def from_default_config(cls, model: ImageModel) -> "ImagePreset":
+        """
+        Create a new ImagePreset with the default settings inferring the version from the model
+
+        :param model: Model to use
+        """
+
+        if model in (
+            ImageModel.Anime_Curated,
+            ImageModel.Anime_Full,
+            ImageModel.Furry,
+            ImageModel.Inpainting_Anime_Curated,
+            ImageModel.Inpainting_Anime_Full,
+            ImageModel.Inpainting_Furry,
+        ):
+            return cls.from_v1_config()
+        elif model in (ImageModel.Anime_v2,):
+            return cls.from_v2_config()
+        elif model in (ImageModel.Anime_v3, ImageModel.Inpainting_Anime_v3):
+            return cls.from_v3_config()
+
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:
             raise ValueError(f"'{key}' is not a valid setting")
+
+        # try to cast into enum if possible
+        types = self._TYPE_MAPPING[key]
+        if not isinstance(types, tuple):
+            types = (types,)
+
+        enum_types = [t for t in types if t.__class__ is enum.EnumMeta]
+        if enum_types and isinstance(value, str):
+            for enum_type in enum_types:
+                if value in enum_type.__members__:  # noqa
+                    value = enum_type[value]  # noqa
+                    break
 
         if not isinstance(value, self._TYPE_MAPPING[key]):  # noqa (pycharm PY-36317)
             raise ValueError(f"Expected type '{self._TYPE_MAPPING[key]}' for {key}, but got type '{type(value)}'")
@@ -501,29 +576,6 @@ class ImagePreset:
         opus_discount = is_opus and steps <= 28 and (r <= 640 * 640 if version == 1 else r <= 1024 * 1024)
         return per_sample * (n_samples - int(opus_discount))
 
-    @classmethod
-    def from_file(cls, path: Union[str, bytes, os.PathLike, int]) -> "ImagePreset":
-        """
-        Write the preset to a file
-
-        :param path: Path to the file to read the preset from
-        """
-
-        with open(path, encoding="utf-8") as f:
-            data = json.loads(f.read())
-
-        return cls(**data)
-
-    def to_file(self, path: Union[str, bytes, os.PathLike, int]):
-        """
-        Load the preset from a file
-
-        :param path: Path to the file to write the preset to
-        """
-
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(json.dumps(self._settings))
-
 
 def _get_typing_origin(t: type) -> type:
     """
@@ -588,8 +640,6 @@ def _create_type_mapping():
                 type_value = _get_recursive_type(type_value)
 
             ImagePreset._TYPE_MAPPING[type_key] = type_value  # noqa
-
-    assert all(type_key in ImagePreset._TYPE_MAPPING for type_key in ImagePreset._DEFAULT)  # noqa
 
 
 _create_type_mapping()

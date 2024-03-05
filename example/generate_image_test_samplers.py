@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 from example.boilerplate import API
-from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageSampler
+from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageResolution, ImageSampler, UCPreset
 from novelai_api.NovelAIError import NovelAIError
 
 
@@ -23,14 +23,28 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        preset = ImagePreset()
-        preset.seed = 42
+        model = ImageModel.Anime_v3
 
-        for sampler in ImageSampler:
+        preset = ImagePreset.from_default_config(model)
+        preset.resolution = ImageResolution.Normal_Portrait_v3
+        preset.seed = 1796796669
+        preset.scale = 5
+        preset.uc_preset = UCPreset.Preset_None
+        preset.uc = "{{{worst quality, low quality, bad fingers}}},"
+
+        preset.quality_toggle = False
+
+        prompt = (
+            "1girl, smile to viewer, sunny day, frilly white dress, lens flare, sunrays, "
+            "{{detailed fingers, bold outline}}, best quality, amazing quality, very aesthetic, absurdres"
+        )
+        samplers = [ImageSampler.ddim]
+
+        for sampler in samplers:
             preset.sampler = sampler
 
             try:
-                async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
+                async for _, img in api.high_level.generate_image(prompt, model, preset):
                     (d / f"image_{sampler.value}").write_bytes(img)
 
                 print(f"Generated with {sampler.value}")

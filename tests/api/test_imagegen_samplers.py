@@ -2,6 +2,7 @@
 Test which samplers currently work
 """
 
+import asyncio
 import itertools
 from typing import Tuple
 
@@ -9,13 +10,13 @@ import pytest
 
 from novelai_api import NovelAIError
 from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageSampler, UCPreset
-from tests.api.boilerplate import api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
+from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
 sampler_xfail = pytest.mark.xfail(True, raises=NovelAIError, reason="The sampler doesn't currently work")
 
 models = list(ImageModel)
 models.remove(ImageModel.Inpainting_Anime_Full)
-models.remove(ImageModel.Inainting_Anime_Curated)
+models.remove(ImageModel.Inpainting_Anime_Curated)
 models.remove(ImageModel.Inpainting_Furry)
 models.remove(ImageModel.Inpainting_Anime_v3)
 
@@ -32,7 +33,7 @@ model_samplers = list(itertools.product(models, samplers))
 )
 @error_handler
 async def test_samplers(
-    api_handle, model_sampler: Tuple[ImageModel, ImagePreset]  # noqa: F811  # pylint: disable=W0621
+    api_handle, model_sampler: Tuple[ImageModel, ImageSampler]  # noqa: F811  # pylint: disable=W0621
 ):
     api = api_handle.api
     model, sampler = model_sampler
@@ -44,7 +45,8 @@ async def test_samplers(
     logger = api_handle.logger
     logger.info(f"Testing model {model} with sampler {sampler}")
 
-    preset = ImagePreset(sampler=sampler)
+    preset = ImagePreset.from_default_config(model)
+    preset["sampler"] = sampler
     preset.copy()
 
     # Furry doesn't have UCPreset.Preset_Low_Quality_Bad_Anatomy
@@ -56,3 +58,12 @@ async def test_samplers(
 
     async for _, _ in api.high_level.generate_image("1girl", model, preset):
         pass
+
+
+if __name__ == "__main__":
+
+    async def main():
+        async with API() as api:
+            await test_samplers(api, (ImageModel.Anime_v3, ImageSampler.ddim_v3))
+
+    asyncio.run(main())

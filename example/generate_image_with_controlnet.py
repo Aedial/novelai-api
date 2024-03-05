@@ -28,14 +28,16 @@ async def main():
         controlnet = ControlNetModel.Form_Lock
         _, mask = await api.low_level.generate_controlnet_mask(controlnet, image)
 
-        preset = ImagePreset()
+        model = ImageModel.Anime_Full
+
+        preset = ImagePreset.from_default_config(model)
         preset.controlnet_model = controlnet
         preset.controlnet_condition = base64.b64encode(mask).decode()
         preset.controlnet_strength = 1.5
         preset.seed = 42
 
         # NOTE: for some reasons, the images with controlnet are slightly different
-        async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
+        async for _, img in api.high_level.generate_image("1girl", model, preset):
             (d / "image_with_controlnet.png").write_bytes(img)
 
 

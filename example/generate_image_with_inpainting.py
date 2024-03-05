@@ -25,14 +25,14 @@ async def main():
         image = base64.b64encode((d / "image.png").read_bytes()).decode()
         mask = base64.b64encode((d / "inpainting_mask.png").read_bytes()).decode()
 
-        preset = ImagePreset()
+        model = ImageModel.Inpainting_Anime_Full
+
+        preset = ImagePreset.from_default_config(model)
         preset.image = image
         preset.mask = mask
         preset.seed = 42
 
-        async for _, img in api.high_level.generate_image(
-            "1girl", ImageModel.Inpainting_Anime_Full, preset, ImageGenerationType.INPAINTING
-        ):
+        async for _, img in api.high_level.generate_image("1girl", model, preset, ImageGenerationType.INPAINTING):
             (d / "image_with_inpainting.png").write_bytes(img)
 
 

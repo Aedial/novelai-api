@@ -21,13 +21,14 @@ async def main():
     async with API() as api_handler:
         api = api_handler.api
 
-        preset = ImagePreset()
+        model = ImageModel.Anime_Full
+        preset = ImagePreset.from_default_config(model)
         preset.seed = 42
 
         # multiple images
         # preset.n_samples = 4
         i = 0
-        async for _, img in api.high_level.generate_image("1girl", ImageModel.Anime_Full, preset):
+        async for _, img in api.high_level.generate_image("1girl", model, preset):
             (d / f"image_1_{i}.png").write_bytes(img)
 
             i += 1
