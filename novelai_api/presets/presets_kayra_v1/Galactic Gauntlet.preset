@@ -1,0 +1,64 @@
+{
+  "presetVersion": 3,
+  "name": "Galactic Gauntlet",
+  "id": "14658010-78cf-43d6-88bd-7033a263014a",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 5,
+    "temperature": 0.95,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 0.2,
+    "typical_p": 0.98,
+    "tail_free_sampling": 0.975,
+    "repetition_penalty": 3.75,
+    "repetition_penalty_range": 4096,
+    "repetition_penalty_slope": 0.65,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": false,
+    "cfg_scale": 1.35,
+    "cfg_uc": "",
+    "phrase_rep_pen": "off",
+    "top_g": 0,
+    "mirostat_tau": 4.25,
+    "mirostat_lr": 0.0875,
+    "order": [
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "mirostat",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}

@@ -1,0 +1,68 @@
+{
+  "presetVersion": 3,
+  "name": "PilotFish II",
+  "id": "bfafa937-baba-4356-ba15-7c2df752aa50",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 5,
+    "temperature": 1.15,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.97,
+    "top_a": 0.2,
+    "typical_p": 1,
+    "tail_free_sampling": 1,
+    "repetition_penalty": 1.875,
+    "repetition_penalty_range": 4096,
+    "repetition_penalty_slope": 0.855,
+    "repetition_penalty_frequency": 0.015,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": false,
+    "cfg_scale": 1.1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "medium",
+    "top_g": 0,
+    "mirostat_tau": 4.2,
+    "mirostat_lr": 0.07,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "mirostat",
+        "enabled": true
+      },
+      {
+        "id": "cfg",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "kayra-v1"
+}
