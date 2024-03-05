@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; NovelAI API 0.23.1 documentation</title>
+    <title>Index &#8212; NovelAI API 0.24.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.24.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>  
@@ -171,6 +171,8 @@
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.argon_hash">argon_hash() (in module novelai_api.utils)</a>
 </li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.attach_session">attach_session() (NovelAIAPI method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.auto_smea">auto_smea (ImagePreset attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -510,17 +512,25 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.from_default">from_default() (Preset class method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_default_config">from_default_config() (ImagePreset class method)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_file">from_file() (ImagePreset class method)</a>
 
       <ul>
         <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.from_file">(Preset class method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.from_official">from_official() (Preset class method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.from_preset_data">from_preset_data() (Preset class method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v1_config">from_v1_config() (ImagePreset class method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v2_config">from_v2_config() (ImagePreset class method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v3_config">from_v3_config() (ImagePreset class method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Furry">Furry (ImageModel attribute)</a>
 </li>
@@ -652,11 +662,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType.IMG2IMG">IMG2IMG (ImageGenerationType attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inainting_Anime_Curated">Inainting_Anime_Curated (ImageModel attribute)</a>
-</li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Inline">Inline (Model attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType.INPAINTING">INPAINTING (ImageGenerationType attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Curated">Inpainting_Anime_Curated (ImageModel attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Full">Inpainting_Anime_Full (ImageModel attribute)</a>
 </li>
@@ -753,6 +763,8 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Large_Square_v3">Large_Square_v3 (ImageResolution attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.last_seed">last_seed (ImagePreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.legacy_v3_extend">legacy_v3_extend (ImagePreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.length_penalty">length_penalty (Preset attribute)</a>
 </li>
@@ -1152,6 +1164,12 @@
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.redo">redo() (NovelAIStory method)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.reference_image">reference_image (ImagePreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.reference_information_extracted">reference_information_extracted (ImagePreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.reference_strength">reference_strength (ImagePreset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.register">register() (HighLevel method)</a>
 
       <ul>
@@ -1162,12 +1180,12 @@
       </ul></li>
       <li><a href="novelai_api/novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings.rep_pen_whitelist">rep_pen_whitelist (GlobalSettings attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty">repetition_penalty (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_default_whitelist">repetition_penalty_default_whitelist (Preset attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_frequency">repetition_penalty_frequency (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.repetition_penalty_presence">repetition_penalty_presence (Preset attribute)</a>
@@ -1487,7 +1505,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.24.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>

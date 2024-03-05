@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.23.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.24.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.24.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -63,6 +63,7 @@
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">novelai_api.ImagePreset_CostTables</span> <span class="kn">import</span> <span class="n">DDIM_COSTS</span><span class="p">,</span> <span class="n">NAI_COSTS</span><span class="p">,</span> <span class="n">SMEA_COSTS</span><span class="p">,</span> <span class="n">SMEA_DYN_COSTS</span>
@@ -78,7 +79,7 @@
     <span class="n">Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion&quot;</span>
     <span class="n">Furry</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry&quot;</span>
 
-    <span class="n">Inainting_Anime_Curated</span> <span class="o">=</span> <span class="s2">&quot;safe-diffusion-inpainting&quot;</span>
+    <span class="n">Inpainting_Anime_Curated</span> <span class="o">=</span> <span class="s2">&quot;safe-diffusion-inpainting&quot;</span>
     <span class="n">Inpainting_Anime_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-inpainting&quot;</span>
     <span class="n">Inpainting_Furry</span> <span class="o">=</span> <span class="s2">&quot;furry-diffusion-inpainting&quot;</span>
 
@@ -245,7 +246,7 @@
     <span class="p">}</span>
 
     <span class="c1"># inpainting presets are the same as the normal ones</span>
-    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inainting_Anime_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">]</span>
@@ -266,6 +267,8 @@
     <span class="c1"># type completion for __setitem__ and __getitem__</span>
     <span class="c1">#: https://docs.novelai.net/image/qualitytags.html</span>
     <span class="n">quality_toggle</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1">#: Automatically uses SMEA when image is above 1 megapixel</span>
+    <span class="n">auto_smea</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: Resolution of the image to generate as ImageResolution or a (width, height) tuple</span>
     <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImageResolution</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
     <span class="c1">#: Default UC to prepend to the UC</span>
@@ -310,44 +313,116 @@
     <span class="n">cfg_rescale</span><span class="p">:</span> <span class="nb">float</span>
     <span class="c1">#: ??? (TODO: use an enum ? - valid values: native, karras, exponential, polyexponential)</span>
     <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="c1">#: b64-encoded png image for Vibe Transfer</span>
+    <span class="n">reference_image</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="c1">#: https://docs.novelai.net/.image/vibetransfer.html#information-extracted</span>
+    <span class="n">reference_information_extracted</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="c1">#: https://docs.novelai.net/.image/vibetransfer.html#reference-strength</span>
+    <span class="n">reference_strength</span><span class="p">:</span> <span class="nb">float</span>
 
-    <span class="n">_DEFAULT</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;legacy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;quality_toggle&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">ImageResolution</span><span class="o">.</span><span class="n">Normal_Portrait</span><span class="p">,</span>
-        <span class="s2">&quot;uc_preset&quot;</span><span class="p">:</span> <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Low_Quality_Bad_Anatomy</span><span class="p">,</span>
-        <span class="s2">&quot;n_samples&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="c1"># TODO: set ImageSampler.k_dpmpp_2m as default ?</span>
-        <span class="s2">&quot;sampler&quot;</span><span class="p">:</span> <span class="n">ImageSampler</span><span class="o">.</span><span class="n">k_euler_ancestral</span><span class="p">,</span>
-        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
-        <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
-        <span class="s2">&quot;uncond_scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;uc&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;smea&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;smea_dyn&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;decrisper&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;controlnet_strength&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;add_original_image&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;cfg_rescale&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;noise_schedule&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="c1">#: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)</span>
+    <span class="n">legacy_v3_extend</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="n">_settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 
     <span class="c1">#: Seed provided when generating an image with seed 0 (default). Seed is also in metadata, but might be a hassle</span>
     <span class="n">last_seed</span><span class="p">:</span> <span class="nb">int</span>
 
+<div class="viewcode-block" id="ImagePreset.from_file"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the preset to a file</span>
+
+<span class="sd">        :param path: Path to the file to read the preset from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.to_file"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.to_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load the preset from a file</span>
+
+<span class="sd">        :param path: Path to the file to write the preset to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="ImagePreset.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.__init__">[docs]</a>    <span class="nd">@expand_kwargs</span><span class="p">(</span><span class="n">_TYPE_MAPPING</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">_TYPE_MAPPING</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an empty ImagePreset. Use the &quot;from_*_config&quot; functions to create a</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;last_seed&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="ImagePreset.from_v1_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v1_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_v1_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings from the v1 config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v1&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.from_v2_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v2_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_v2_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings from the v2 config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v2&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.from_v3_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v3_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_v3_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings from the v3 config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v3&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.from_default_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_default_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings inferring the version from the model</span>
+
+<span class="sd">        :param model: Model to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v1_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">,):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v2_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_config</span><span class="p">()</span></div>
+
     <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a valid setting&quot;</span><span class="p">)</span>
+
+        <span class="c1"># try to cast into enum if possible</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="n">types</span><span class="p">,)</span>
+
+        <span class="n">enum_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">enum_types</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">enum_type</span> <span class="ow">in</span> <span class="n">enum_types</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">enum_type</span><span class="o">.</span><span class="n">__members__</span><span class="p">:</span>  <span class="c1"># noqa</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">enum_type</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>  <span class="c1"># noqa</span>
+                    <span class="k">break</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>  <span class="c1"># noqa (pycharm PY-36317)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">, but got type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -556,30 +631,7 @@
             <span class="n">per_sample</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">per_sample</span> <span class="o">*</span> <span class="n">uncond_scale</span><span class="p">)</span>
 
         <span class="n">opus_discount</span> <span class="o">=</span> <span class="n">is_opus</span> <span class="ow">and</span> <span class="n">steps</span> <span class="o">&lt;=</span> <span class="mi">28</span> <span class="ow">and</span> <span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="mi">640</span> <span class="o">*</span> <span class="mi">640</span> <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">per_sample</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">opus_discount</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="ImagePreset.from_file"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_file">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the preset to a file</span>
-
-<span class="sd">        :param path: Path to the file to read the preset from</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ImagePreset.to_file"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.to_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Load the preset from a file</span>
-
-<span class="sd">        :param path: Path to the file to write the preset to</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">per_sample</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">opus_discount</span><span class="p">))</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_get_typing_origin</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
@@ -646,8 +698,6 @@
 
             <span class="n">ImagePreset</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">[</span><span class="n">type_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_value</span>  <span class="c1"># noqa</span>
 
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">type_key</span> <span class="ow">in</span> <span class="n">ImagePreset</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span> <span class="k">for</span> <span class="n">type_key</span> <span class="ow">in</span> <span class="n">ImagePreset</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="p">)</span>  <span class="c1"># noqa</span>
-
 
 <span class="n">_create_type_mapping</span><span class="p">()</span>
 </pre></div>
@@ -681,7 +731,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.23.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.24.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
