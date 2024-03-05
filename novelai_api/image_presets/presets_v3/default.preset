@@ -1,0 +1,27 @@
+{
+    "resolution": "Normal_Portrait_v3",
+    "scale": 5,
+    "sampler": "k_euler",
+    "steps": 28,
+    "n_samples": 1,
+    "strength": 0.7,
+    "noise": 0,
+    "uc_preset": "Preset_Low_Quality_Bad_Anatomy",
+    "quality_toggle": true,
+    "auto_smea": true,
+    "smea": false,
+    "smea_dyn": false,
+    "decrisper": false,
+    "controlnet_strength": 1,
+    "legacy": false,
+    "add_original_image": true,
+    "uncond_scale": 1,
+    "cfg_rescale": 0,
+    "noise_schedule": "native",
+    "legacy_v3_extend": false,
+    "reference_information_extracted": 1,
+    "reference_strength": 0.6,
+
+    "seed": 0,
+    "uc": ""
+}
