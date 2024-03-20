@@ -8,17 +8,14 @@
     "noise": 0,
     "uc_preset": "Preset_Low_Quality_Bad_Anatomy",
     "quality_toggle": true,
-    "auto_smea": true,
     "smea": false,
     "smea_dyn": false,
     "decrisper": false,
     "controlnet_strength": 1,
     "legacy": false,
     "add_original_image": true,
-    "uncond_scale": 1,
-    "cfg_rescale": 0,
-    "noise_schedule": "native",
     "legacy_v3_extend": false,
+    "params_version": 1,
 
     "seed": 0,
     "uc": ""

@@ -21,6 +21,8 @@ from novelai_api.utils import tokens_to_b64
 
 PRINT_WITH_PARAMETERS = os.environ.get("NAI_PRINT", False)
 
+IMAGE_API_ADDRESS = "https://image.novelai.net"
+
 
 # === INTERNALS === #
 SSE_FIELDS = ["event", "data", "id", "retry"]
@@ -38,15 +40,15 @@ def print_with_parameters(args: Dict[str, Any]):
     if "parameters" in a:
         a["parameters"] = {k: str(v) for k, v in a["parameters"].items()}
 
-    for k in ["image", "mask", "controlnet_condition"]:
-        if k in a["parameters"]:
-            a["parameters"][k] = (
-                f"{a['parameters'][k][:10]}...{a['parameters'][k][-10:]}"
-                if 30 < len(a["parameters"][k])
-                else a["parameters"][k]
-            )
+        for k in ["image", "mask", "controlnet_condition"]:
+            if k in a["parameters"]:
+                a["parameters"][k] = (
+                    f"{a['parameters'][k][:10]}...{a['parameters'][k][-10:]}"
+                    if 30 < len(a["parameters"][k])
+                    else a["parameters"][k]
+                )
 
-    print(json.dumps(a, indent=4))
+    print(json.dumps(a, indent=4, sort_keys=True))
 
 
 # === API === #
@@ -181,7 +183,7 @@ class LowLevel:
         elif content_type in ("audio/mpeg", "audio/webm"):
             yield await rsp.read()
 
-        elif content_type == "application/x-zip-compressed":
+        elif content_type in ("application/x-zip-compressed", "binary/octet-stream"):
             z = zipfile.ZipFile(io.BytesIO(await rsp.read()))
             for name in z.namelist():
                 yield name, z.read(name)
@@ -195,16 +197,29 @@ class LowLevel:
             url: str = rsp.url if isinstance(rsp.url, str) else rsp.url.human_repr()
             raise NovelAIError(url, -1, f"Unsupported type: {rsp.content_type}")
 
-    async def request(self, method: str, endpoint: str, data: Optional[Union[Dict[str, Any], str]] = None):
+    async def request(
+        self,
+        method: str,
+        endpoint: str,
+        data: Optional[Union[Dict[str, Any], str]] = None,
+        custom_base_address: Union[str, None] = None,
+    ):
         """
         Send request with support for data streaming
 
         :param method: Method of the request (get, post, delete)
         :param endpoint: Endpoint of the request
         :param data: Data to pass to the method if needed
+        :param custom_base_address: Custom address to use for the request
         """
 
-        url = f"{self._parent.BASE_ADDRESS}{endpoint}"
+        if PRINT_WITH_PARAMETERS:
+            print_with_parameters(data)
+
+        if custom_base_address is None:
+            custom_base_address = self._parent.BASE_ADDRESS
+
+        url = f"{custom_base_address}{endpoint}"
 
         is_sync = self._parent.session is None
         session = ClientSession() if is_sync else self._parent.session
@@ -647,9 +662,6 @@ class LowLevel:
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
-        if PRINT_WITH_PARAMETERS:
-            print_with_parameters(data)
-
         async for rsp, content in self.request("post", endpoint, data):
             self._treat_response_object(rsp, content, 201)
 
@@ -680,7 +692,7 @@ class LowLevel:
             "parameters": parameters,
         }
 
-        async for rsp, content in self.request("post", "/ai/generate-image", data):
+        async for rsp, content in self.request("post", "/ai/generate-image", data, IMAGE_API_ADDRESS):
             self._treat_response_object(rsp, content, 200)
 
             yield content
@@ -784,7 +796,7 @@ class LowLevel:
             quote_via=quote,
         )
 
-        async for rsp, content in self.request("get", f"/ai/generate-image/suggest-tags?{query}"):
+        async for rsp, content in self.request("get", f"/ai/generate-image/suggest-tags?{query}", IMAGE_API_ADDRESS):
             self._treat_response_object(rsp, content, 200)
 
             return content

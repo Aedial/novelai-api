@@ -14,6 +14,7 @@ from novelai_api._low_level import LowLevel
 class NovelAIAPI:
     # Constants
 
+    # TODO: might want to make the base endpoint configurable
     #: The base address for the API
     BASE_ADDRESS: str = "https://api.novelai.net"
     LIB_ROOT: str = dirname(abspath(__file__))

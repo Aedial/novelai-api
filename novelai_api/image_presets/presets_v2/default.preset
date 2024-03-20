@@ -19,6 +19,7 @@
     "cfg_rescale": 0,
     "noise_schedule": "native",
     "legacy_v3_extend": false,
+    "params_version": 1,
 
     "seed": 0,
     "uc": ""

@@ -265,6 +265,8 @@ class ImagePreset:
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
     legacy_v3_extend: bool
+    #: ???
+    params_version: int
 
     _settings: Dict[str, Any]
 

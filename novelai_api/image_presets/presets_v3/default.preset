@@ -21,6 +21,7 @@
     "legacy_v3_extend": false,
     "reference_information_extracted": 1,
     "reference_strength": 0.6,
+    "params_version": 1,
 
     "seed": 0,
     "uc": ""
