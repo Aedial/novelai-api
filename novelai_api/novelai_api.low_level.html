@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.low_level &#8212; NovelAI API 0.24.1 documentation</title>
+    <title>novelai_api.low_level &#8212; NovelAI API 0.25.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.24.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.25.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>
@@ -98,7 +98,7 @@ but rather through <a class="hxr-hoverxref hxr-tooltip reference internal" href=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.request">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.request" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_base_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send request with support for data streaming</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -106,6 +106,7 @@ but rather through <a class="hxr-hoverxref hxr-tooltip reference internal" href=
 <li><p><strong>method</strong> – Method of the request (get, post, delete)</p></li>
 <li><p><strong>endpoint</strong> – Endpoint of the request</p></li>
 <li><p><strong>data</strong> – Data to pass to the method if needed</p></li>
+<li><p><strong>custom_base_address</strong> – Custom address to use for the request</p></li>
 </ul>
 </dd>
 </dl>
@@ -699,7 +700,7 @@ Any content going beyond the tokens limit will be truncated, starting from the t
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.24.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.25.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>
