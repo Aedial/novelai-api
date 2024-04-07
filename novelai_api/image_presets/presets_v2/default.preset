@@ -6,7 +6,7 @@
     "n_samples": 1,
     "strength": 0.7,
     "noise": 0,
-    "uc_preset": "Preset_Low_Quality_Bad_Anatomy",
+    "uc_preset": "Preset_Heavy",
     "quality_toggle": true,
     "auto_smea": true,
     "smea": false,

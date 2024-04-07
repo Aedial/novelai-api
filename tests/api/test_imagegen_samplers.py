@@ -39,7 +39,7 @@ async def test_samplers(
     model, sampler = model_sampler
 
     # ddim_v3 only work with Anime v3
-    if model not in (ImageModel.Anime_v3,) and sampler is ImageSampler.ddim_v3:
+    if sampler is ImageSampler.ddim_v3 and model not in (ImageModel.Anime_v3,):
         return
 
     logger = api_handle.logger
@@ -52,9 +52,6 @@ async def test_samplers(
     # Furry doesn't have UCPreset.Preset_Low_Quality_Bad_Anatomy
     if model is ImageModel.Furry:
         preset.uc_preset = UCPreset.Preset_Low_Quality
-    # Anime v2 uses different presets than v1
-    elif model in (ImageModel.Anime_v2, ImageModel.Anime_v3):
-        preset.uc_preset = UCPreset.Preset_Heavy
 
     async for _, _ in api.high_level.generate_image("1girl", model, preset):
         pass

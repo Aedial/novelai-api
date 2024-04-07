@@ -7,7 +7,7 @@ import random
 import sys
 import typing
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from novelai_api.ImagePreset_CostTables import DDIM_COSTS, NAI_COSTS, SMEA_COSTS, SMEA_DYN_COSTS
 from novelai_api.python_utils import NoneType, expand_kwargs
@@ -262,6 +262,12 @@ class ImagePreset:
     reference_information_extracted: float
     #: https://docs.novelai.net/.image/vibetransfer.html#reference-strength
     reference_strength: float
+    #: reference_image for multi-vibe transfer
+    reference_image_multiple: List[str]
+    #: reference_information_extracted for multi-vibe transfer
+    reference_information_extracted_multiple: List[float]
+    #: reference_strength for multi-vibe transfer
+    reference_strength_multiple: List[float]
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
     legacy_v3_extend: bool
