@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.25.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.26.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.25.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -64,7 +64,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">novelai_api.ImagePreset_CostTables</span> <span class="kn">import</span> <span class="n">DDIM_COSTS</span><span class="p">,</span> <span class="n">NAI_COSTS</span><span class="p">,</span> <span class="n">SMEA_COSTS</span><span class="p">,</span> <span class="n">SMEA_DYN_COSTS</span>
 <span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">expand_kwargs</span>
@@ -319,6 +319,12 @@
     <span class="n">reference_information_extracted</span><span class="p">:</span> <span class="nb">float</span>
     <span class="c1">#: https://docs.novelai.net/.image/vibetransfer.html#reference-strength</span>
     <span class="n">reference_strength</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="c1">#: reference_image for multi-vibe transfer</span>
+    <span class="n">reference_image_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="c1">#: reference_information_extracted for multi-vibe transfer</span>
+    <span class="n">reference_information_extracted_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="c1">#: reference_strength for multi-vibe transfer</span>
+    <span class="n">reference_strength_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
     <span class="c1">#: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)</span>
     <span class="n">legacy_v3_extend</span><span class="p">:</span> <span class="nb">bool</span>
@@ -733,7 +739,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.25.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
