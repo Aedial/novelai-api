@@ -1,0 +1,26 @@
+{
+    "resolution": "Normal_Portrait_v3",
+    "scale": 6.2,
+    "sampler": "k_euler_ancestral",
+    "steps": 28,
+    "n_samples": 1,
+    "strength": 0.7,
+    "noise": 0,
+    "uc_preset": "Preset_Heavy",
+    "quality_toggle": true,
+    "auto_smea": true,
+    "smea": false,
+    "smea_dyn": false,
+    "decrisper": false,
+    "controlnet_strength": 1,
+    "legacy": false,
+    "add_original_image": true,
+    "uncond_scale": 1,
+    "cfg_rescale": 0,
+    "noise_schedule": "native",
+    "legacy_v3_extend": false,
+    "params_version": 1,
+
+    "seed": 0,
+    "uc": ""
+}

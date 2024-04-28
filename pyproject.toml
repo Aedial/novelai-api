@@ -27,7 +27,7 @@ jsonschema = "^4.21.1"
 tokenizers = "^0.15.1"
 ftfy = "^6.1.3"
 regex = "^2023.12.25"
-sentencepiece = "^0.1.98"
+sentencepiece = "^0.2.0"
 poetry = "^1.7.1"
 # msgpack = "^1.0.5"
 

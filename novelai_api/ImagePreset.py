@@ -30,6 +30,8 @@ class ImageModel(enum.Enum):
 
     Anime_v3 = "nai-diffusion-3"
     Inpainting_Anime_v3 = "nai-diffusion-3-inpainting"
+    Furry_v3 = "nai-diffusion-furry-3"
+    Inpainting_Furry_v3 = "nai-diffusion-furry-3-inpainting"
 
 
 class ControlNetModel(enum.Enum):
@@ -186,6 +188,16 @@ class ImagePreset:
             UCPreset.Preset_Light: "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing",
             UCPreset.Preset_None: "lowres",
         },
+        ImageModel.Furry_v3: {
+            UCPreset.Preset_Heavy: "nsfw, {{worst quality}}, [displeasing], {unusual pupils}, guide lines, "
+            "{{unfinished}}, {bad}, url, artist name, {{tall image}}, mosaic, {sketch page}, comic panel, "
+            "impact (font), [dated], {logo}, ych, {what}, {where is your god now}, {distorted text}, repeated text, "
+            "{floating head}, {1994}, {widescreen}, absolutely everyone, sequence, {compression artifacts}, "
+            "hard translated, {cropped}, {commissioner name}, unknown text, high contrast",
+            UCPreset.Preset_Light: "{worst quality}, guide lines, unfinished, bad, url, tall image, widescreen, "
+            "compression artifacts, unknown text",
+            UCPreset.Preset_None: "lowres",
+        },
     }
 
     # inpainting presets are the same as the normal ones
@@ -338,6 +350,14 @@ class ImagePreset:
         return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v3" / "default.preset")
 
     @classmethod
+    def from_v3_furry_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v3 furry config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v3" / "default_furry.preset")
+
+    @classmethod
     def from_default_config(cls, model: ImageModel) -> "ImagePreset":
         """
         Create a new ImagePreset with the default settings inferring the version from the model
@@ -358,6 +378,8 @@ class ImagePreset:
             return cls.from_v2_config()
         elif model in (ImageModel.Anime_v3, ImageModel.Inpainting_Anime_v3):
             return cls.from_v3_config()
+        elif model in (ImageModel.Furry_v3, ImageModel.Inpainting_Furry_v3):
+            return cls.from_v3_furry_config()
 
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:

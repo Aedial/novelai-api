@@ -19,6 +19,7 @@ models.remove(ImageModel.Inpainting_Anime_Full)
 models.remove(ImageModel.Inpainting_Anime_Curated)
 models.remove(ImageModel.Inpainting_Furry)
 models.remove(ImageModel.Inpainting_Anime_v3)
+models.remove(ImageModel.Inpainting_Furry_v3)
 
 samplers = list(ImageSampler)
 model_samplers = list(itertools.product(models, samplers))

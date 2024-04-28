@@ -495,7 +495,12 @@ class HighLevel:
                 prompt = f"masterpiece, best quality, {prompt}"
             elif model is ImageModel.Anime_v2:
                 prompt = f"very aesthetic, best quality, absurdres, {prompt}"
-            elif model in (ImageModel.Anime_v3, ImageModel.Inpainting_Anime_v3):
+            elif model in (
+                ImageModel.Anime_v3,
+                ImageModel.Inpainting_Anime_v3,
+                ImageModel.Furry_v3,
+                ImageModel.Inpainting_Furry_v3,
+            ):
                 prompt = f"{prompt}, best quality, amazing quality, very aesthetic, absurdres"
 
         async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
