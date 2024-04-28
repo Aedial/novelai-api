@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.26.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.27.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.27.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -113,6 +113,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v3">
 <span class="sig-name descname"><span class="pre">Inpainting_Anime_v3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-3-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Furry_v3">
+<span class="sig-name descname"><span class="pre">Furry_v3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-furry-3'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Furry_v3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Furry_v3">
+<span class="sig-name descname"><span class="pre">Inpainting_Furry_v3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-furry-3-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Furry_v3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -696,6 +706,12 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.from_v3_furry_config">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_v3_furry_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.from_v3_furry_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.from_v3_furry_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new ImagePreset with the default settings from the v3 furry config</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.from_default_config">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_default_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImagePreset" title="novelai_api.ImagePreset.ImagePreset"><span class="pre">novelai_api.ImagePreset.ImagePreset</span></a></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.from_default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.from_default_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new ImagePreset with the default settings inferring the version from the model</p>
@@ -775,6 +791,8 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_v2"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_v2</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_v3"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_v3</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v3"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Anime_v3</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Furry_v3"><code class="docutils literal notranslate"><span class="pre">ImageModel.Furry_v3</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Furry_v3"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Furry_v3</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ControlNetModel"><code class="docutils literal notranslate"><span class="pre">ControlNetModel</span></code></a><ul>
@@ -891,6 +909,7 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v1_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v1_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v2_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v2_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v3_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v3_config()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v3_furry_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v3_furry_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_default_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_default_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.update"><code class="docutils literal notranslate"><span class="pre">ImagePreset.update()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.copy"><code class="docutils literal notranslate"><span class="pre">ImagePreset.copy()</span></code></a></li>
@@ -950,7 +969,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.27.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>

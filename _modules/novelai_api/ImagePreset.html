@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.26.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.27.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.27.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -86,7 +86,9 @@
     <span class="n">Anime_v2</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-2&quot;</span>
 
     <span class="n">Anime_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-3&quot;</span>
-    <span class="n">Inpainting_Anime_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-3-inpainting&quot;</span></div>
+    <span class="n">Inpainting_Anime_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-3-inpainting&quot;</span>
+    <span class="n">Furry_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry-3&quot;</span>
+    <span class="n">Inpainting_Furry_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry-3-inpainting&quot;</span></div>
 
 
 <div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span> <span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -243,6 +245,16 @@
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry_v3</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;nsfw, {{worst quality}}, [displeasing], {unusual pupils}, guide lines, &quot;</span>
+            <span class="s2">&quot;{{unfinished}}, </span><span class="si">{bad}</span><span class="s2">, url, artist name, {{tall image}}, mosaic, {sketch page}, comic panel, &quot;</span>
+            <span class="s2">&quot;impact (font), [dated], </span><span class="si">{logo}</span><span class="s2">, ych, </span><span class="si">{what}</span><span class="s2">, {where is your god now}, {distorted text}, repeated text, &quot;</span>
+            <span class="s2">&quot;{floating head}, </span><span class="si">{1994}</span><span class="s2">, </span><span class="si">{widescreen}</span><span class="s2">, absolutely everyone, sequence, {compression artifacts}, &quot;</span>
+            <span class="s2">&quot;hard translated, </span><span class="si">{cropped}</span><span class="s2">, {commissioner name}, unknown text, high contrast&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;{worst quality}, guide lines, unfinished, bad, url, tall image, widescreen, &quot;</span>
+            <span class="s2">&quot;compression artifacts, unknown text&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">}</span>
 
     <span class="c1"># inpainting presets are the same as the normal ones</span>
@@ -394,6 +406,14 @@
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v3&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="ImagePreset.from_v3_furry_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v3_furry_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_v3_furry_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings from the v3 furry config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v3&quot;</span> <span class="o">/</span> <span class="s2">&quot;default_furry.preset&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ImagePreset.from_default_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_default_config">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -414,7 +434,9 @@
         <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">,):</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v2_config</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_config</span><span class="p">()</span></div>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry_v3</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry_v3</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_furry_config</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
@@ -739,7 +761,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.26.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.27.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
