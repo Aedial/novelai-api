@@ -1,0 +1,1061 @@
+{
+    "sections": {
+        "61534066042244": {
+            "type": 1,
+            "text": "The tale of little red riding hood and the big bad wolf is well-known to all of us, and yet we still feel drawn to the tale every time we hear it. This time, we will try to look at it through a different perspective. Let us explore what it would have been like for Red to go through this adventure herself.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 3
+                    },
+                    {
+                        "data": 3,
+                        "length": 5,
+                        "position": 3
+                    },
+                    {
+                        "data": 2,
+                        "length": 298,
+                        "position": 8
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "364975341674821": {
+            "type": 1,
+            "text": "Red had been told time and time again to stay on the path that led through the woods and to her grandmother's house. She had always been a good and obedient child, and she listened to her mother's words of warning. However, this time was different. Her grandmother was ill, and she desperately wanted to visit her to cheer her up. She could not bring herself to break her mother's rule and disobey her. So, she decided to take a different route that would take her to her grandmother's house through the forest.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 511
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "2033407179554220": {
+            "type": 1,
+            "text": "As Red walked through the woods, she couldn't help but notice how beautiful and peaceful it was. The trees were tall and majestic, and the flowers were blooming all around her. The sun was shining brightly, and the birds were singing happily in the trees. Everything seemed to be just right, and for a moment, she felt like she was in a dream.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 343
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "2202047736084640": {
+            "type": 1,
+            "text": "Suddenly, a large wolf emerged from the bushes. It was huge, and it was clearly not afraid of her. It was clearly hungry, too, as it started to approach her, snarling and baring its sharp fangs at her.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 201
+                    }
+                ],
+                "2": []
+            },
+            "source": null
+        },
+        "104146705032095": {
+            "type": 1,
+            "text": "\"Where are you going, little girl?\" the wolf snarls. \"Don't you know these woods are dangerous?\"",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 1,
+                        "length": 52
+                    },
+                    {
+                        "data": 2,
+                        "length": 44,
+                        "position": 52
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "2210291063657434": {
+            "type": 1,
+            "text": "\"I'm on my way to visit my grandmother.\" She said bravely.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 58
+                    }
+                ],
+                "2": []
+            },
+            "source": null
+        },
+        "189477280278788": {
+            "type": 1,
+            "text": "\"Well, aren't you a big girl then.\" The wolf growled.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 53
+                    }
+                ],
+                "2": []
+            },
+            "source": null
+        },
+        "1518792220390065": {
+            "type": 1,
+            "text": "He moved closer to her, and she could feel the hot, stale breath on her face. The smell made her gag, and she could feel the hair on the back of her neck stand up.",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 163
+                    }
+                ],
+                "2": []
+            },
+            "source": null
+        },
+        "1273286728380488": {
+            "type": 1,
+            "text": "\"You had better be careful....\" the wolf says with a growl \"there are many dangers in these woods.\"",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 1,
+                        "length": 99
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "2010968653138158": {
+            "type": 1,
+            "text": "Red knew that she should be scared. The wolf was obviously trying to intimidate her, and he looked like he could tear her to pieces if he wanted to. ",
+            "meta": {
+                "1": [
+                    {
+                        "position": 0,
+                        "data": 2,
+                        "length": 149
+                    }
+                ],
+                "2": []
+            },
+            "source": 0
+        },
+        "1350951575571658": {
+            "type": 1,
+            "text": "",
+            "meta": {
+                "1": [],
+                "2": []
+            },
+            "source": null
+        }
+    },
+    "order": [
+        61534066042244,
+        364975341674821,
+        2033407179554220,
+        2202047736084640,
+        104146705032095,
+        2210291063657434,
+        189477280278788,
+        1518792220390065,
+        1273286728380488,
+        2010968653138158,
+        1350951575571658
+    ],
+    "history": {
+        "root": 1245072701012188,
+        "current": 283989240632467,
+        "nodes": {
+            "1245072701012188": {
+                "id": 1245072701012188,
+                "parent": null,
+                "children": [
+                    331274183067582
+                ],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:28.453",
+                "genPosition": null
+            },
+            "151074872347289": {
+                "id": 151074872347289,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:36.185",
+                "genPosition": null
+            },
+            "599733648371125": {
+                "id": 599733648371125,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:39.04",
+                "genPosition": null
+            },
+            "512461609367416": {
+                "id": 512461609367416,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:39.731",
+                "genPosition": null
+            },
+            "1663535541978862": {
+                "id": 1663535541978862,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:40.141",
+                "genPosition": null
+            },
+            "2101380560898308": {
+                "id": 2101380560898308,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:43.385",
+                "genPosition": null
+            },
+            "1349152983025336": {
+                "id": 1349152983025336,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:47.026",
+                "genPosition": null
+            },
+            "730116482071491": {
+                "id": 730116482071491,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:53.497",
+                "genPosition": null
+            },
+            "78938177176740": {
+                "id": 78938177176740,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:54.541",
+                "genPosition": null
+            },
+            "457867095779139": {
+                "id": 457867095779139,
+                "parent": 1245072701012188,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:41:55.505",
+                "genPosition": null
+            },
+            "331274183067582": {
+                "id": 331274183067582,
+                "parent": 1245072701012188,
+                "children": [
+                    2092579477941613
+                ],
+                "route": null,
+                "changes": {
+                    "1093231931858137": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "Generate a third-person story of little red riding hood and the big bad wolf. Be descriptive in how she feels and what she sees. ",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 10,
+                                        "length": 129
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": 10
+                        },
+                        "after": 0
+                    }
+                },
+                "date": "2024-05-11T17:41:59.428",
+                "genPosition": null
+            },
+            "836500610918495": {
+                "id": 836500610918495,
+                "parent": 331274183067582,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:43:26.524",
+                "genPosition": null
+            },
+            "2092579477941613": {
+                "id": 2092579477941613,
+                "parent": 331274183067582,
+                "children": [
+                    370366783028508
+                ],
+                "route": null,
+                "changes": {
+                    "61534066042244": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "The story of little red riding hood and the big bad wolf is well-known to all of us, and yet we still feel drawn to the tale every time we hear it. This time, we will try to look at it through a different perspective.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 217
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 1093231931858137
+                    }
+                },
+                "date": "2024-05-11T17:43:26.524",
+                "genPosition": {
+                    "sectionId": 1093231931858137,
+                    "offset": 130
+                }
+            },
+            "370366783028508": {
+                "id": 370366783028508,
+                "parent": 2092579477941613,
+                "children": [
+                    1804706176307076
+                ],
+                "route": null,
+                "changes": {
+                    "61534066042244": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 217,
+                                    "insert": " Let us explore what it would have been like for Red to go through this adventure herself.",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": 90
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    },
+                    "364975341674821": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "Red had been told time and time again to stay on the path that led through the woods and to her grandmother's house.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 116
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 61534066042244
+                    }
+                },
+                "date": "2024-05-11T17:43:39.839",
+                "genPosition": {
+                    "sectionId": 61534066042244,
+                    "offset": 218
+                }
+            },
+            "1804706176307076": {
+                "id": 1804706176307076,
+                "parent": 370366783028508,
+                "children": [
+                    1909898888198310
+                ],
+                "route": null,
+                "changes": {
+                    "364975341674821": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 116,
+                                    "insert": " She had always been a good and obedient child, and she listened to her mother's words of warning. However, this time was different. Her grandmother was ill, and she desperately wanted to visit her to cheer her up.",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": 214
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    }
+                },
+                "date": "2024-05-11T17:43:48.787",
+                "genPosition": {
+                    "sectionId": 364975341674821,
+                    "offset": 117
+                }
+            },
+            "1909898888198310": {
+                "id": 1909898888198310,
+                "parent": 1804706176307076,
+                "children": [
+                    2061885048601414
+                ],
+                "route": null,
+                "changes": {
+                    "364975341674821": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 330,
+                                    "insert": " She could not bring herself to break her mother's rule and disobey her. So, she decided to take a different route that would take her to her grandmother's house through the forest.",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": 181
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    },
+                    "2033407179554220": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "As Red walked through the woods, she couldn't help but notice how beautiful and peaceful it was.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 96
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 364975341674821
+                    }
+                },
+                "date": "2024-05-11T17:43:53.46",
+                "genPosition": {
+                    "sectionId": 364975341674821,
+                    "offset": 331
+                }
+            },
+            "2061885048601414": {
+                "id": 2061885048601414,
+                "parent": 1909898888198310,
+                "children": [
+                    1908912995784577
+                ],
+                "route": null,
+                "changes": {
+                    "2033407179554220": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 96,
+                                    "insert": " The trees were tall and majestic, and the flowers were blooming all around her. The sun was shining brightly, and the birds were singing happily in the trees. Everything seemed to be just right, and for a moment, she felt like she was in a dream.",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": 247
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    }
+                },
+                "date": "2024-05-11T17:44:00.266",
+                "genPosition": {
+                    "sectionId": 2033407179554220,
+                    "offset": 97
+                }
+            },
+            "1908912995784577": {
+                "id": 1908912995784577,
+                "parent": 2061885048601414,
+                "children": [
+                    837520140158396
+                ],
+                "route": null,
+                "changes": {
+                    "2033407179554220": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [],
+                            "metas": {},
+                            "source": 0
+                        }
+                    },
+                    "2202047736084640": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "Suddenly, a large wolf emerged from the bushes. It was huge, and it was clearly not afraid of her. It was clearly hungry, too, as it started to approach her, snarling and baring its sharp fangs at her.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 201
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 2033407179554220
+                    }
+                },
+                "date": "2024-05-11T17:44:04.892",
+                "genPosition": {
+                    "sectionId": 2033407179554220,
+                    "offset": 344
+                }
+            },
+            "1588369875966647": {
+                "id": 1588369875966647,
+                "parent": 1908912995784577,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:48:58.995",
+                "genPosition": null
+            },
+            "837520140158396": {
+                "id": 837520140158396,
+                "parent": 1908912995784577,
+                "children": [
+                    1717487912682969
+                ],
+                "route": null,
+                "changes": {
+                    "104146705032095": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "\"Where are you going, little girl?\" the wolf snarls.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 1,
+                                        "length": 52
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 2202047736084640
+                    }
+                },
+                "date": "2024-05-11T17:48:58.995",
+                "genPosition": null
+            },
+            "1717487912682969": {
+                "id": 1717487912682969,
+                "parent": 837520140158396,
+                "children": [
+                    934149917734748
+                ],
+                "route": null,
+                "changes": {
+                    "104146705032095": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 52,
+                                    "insert": " \"Don't you know these woods are dangerous?\"",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 1,
+                                        "position": 52,
+                                        "data": 2,
+                                        "length": 44
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    },
+                    "2210291063657434": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "\"I'm on my way to visit my grandmother.\" She said bravely.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 58
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 104146705032095
+                    },
+                    "189477280278788": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "\"Well, aren't you a big girl then.\" The wolf growled.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 53
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 2210291063657434
+                    }
+                },
+                "date": "2024-05-11T17:49:21.789",
+                "genPosition": {
+                    "sectionId": 104146705032095,
+                    "offset": 53
+                }
+            },
+            "458292840830203": {
+                "id": 458292840830203,
+                "parent": 1717487912682969,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:49:40.839",
+                "genPosition": null
+            },
+            "934149917734748": {
+                "id": 934149917734748,
+                "parent": 1717487912682969,
+                "children": [
+                    101362220708035
+                ],
+                "route": null,
+                "changes": {
+                    "1518792220390065": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "He moved closer to her, and she could feel the hot, stale breath on her face. The smell made her gag, and she could feel the hair on the back of her neck stand up.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 163
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 189477280278788
+                    }
+                },
+                "date": "2024-05-11T17:49:40.839",
+                "genPosition": {
+                    "sectionId": 189477280278788,
+                    "offset": 54
+                }
+            },
+            "1573425234146699": {
+                "id": 1573425234146699,
+                "parent": 934149917734748,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:49:50.738",
+                "genPosition": null
+            },
+            "101362220708035": {
+                "id": 101362220708035,
+                "parent": 934149917734748,
+                "children": [
+                    1549016991305765
+                ],
+                "route": null,
+                "changes": {
+                    "1273286728380488": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "\"You had better be careful....\" the wolf says with a sneer \"there are many dangers in these woods.\"",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 1,
+                                        "length": 99
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 1518792220390065
+                    }
+                },
+                "date": "2024-05-11T17:49:50.738",
+                "genPosition": null
+            },
+            "636007779095345": {
+                "id": 636007779095345,
+                "parent": 101362220708035,
+                "children": [],
+                "route": null,
+                "changes": {},
+                "date": "2024-05-11T17:50:36.142",
+                "genPosition": null
+            },
+            "1549016991305765": {
+                "id": 1549016991305765,
+                "parent": 101362220708035,
+                "children": [
+                    1296032566933314
+                ],
+                "route": null,
+                "changes": {
+                    "2010968653138158": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "Red knew that she should be scared. The wolf was obviously trying to intimidate her, and he looked like he could tear her to pieces if he wanted to. But instead, she felt an odd sense of calm.",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 192
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 1273286728380488
+                    }
+                },
+                "date": "2024-05-11T17:50:36.142",
+                "genPosition": {
+                    "sectionId": 1273286728380488,
+                    "offset": 100
+                }
+            },
+            "1296032566933314": {
+                "id": 1296032566933314,
+                "parent": 1549016991305765,
+                "children": [
+                    2168590935354571
+                ],
+                "route": null,
+                "changes": {
+                    "2010968653138158": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 192,
+                                    "insert": " Something inside of her told her that the wolf wouldn't hurt her, and that she didn't need to be afraid.",
+                                    "delete": ""
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": 105
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    },
+                    "135750952564839": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "The wolf then lunged at her. Red jumped back and avoided the attack, but the wolf was much faster and stronger than her, and he quickly pounced on top of",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 153
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 2010968653138158
+                    }
+                },
+                "date": "2024-05-11T17:50:45.059",
+                "genPosition": {
+                    "sectionId": 2010968653138158,
+                    "offset": 193
+                }
+            },
+            "2168590935354571": {
+                "id": 2168590935354571,
+                "parent": 1296032566933314,
+                "children": [
+                    856346666154849
+                ],
+                "route": null,
+                "changes": {
+                    "135750952564839": {
+                        "type": 2,
+                        "previous": {
+                            "type": 1,
+                            "text": "The wolf then lunged at her. Red jumped back and avoided the attack, but the wolf was much faster and stronger than her, and he quickly pounced on top of",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 2,
+                                        "length": 153
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 1350951575571658
+                    },
+                    "2010968653138158": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [],
+                            "metas": {},
+                            "source": 0
+                        }
+                    },
+                    "1350951575571658": {
+                        "type": 0,
+                        "section": {
+                            "type": 1,
+                            "text": "",
+                            "meta": {
+                                "1": [],
+                                "2": []
+                            },
+                            "source": null
+                        },
+                        "after": 2010968653138158
+                    }
+                },
+                "date": "2024-05-11T17:50:53.673",
+                "genPosition": null
+            },
+            "856346666154849": {
+                "id": 856346666154849,
+                "parent": 2168590935354571,
+                "children": [
+                    283989240632467
+                ],
+                "route": null,
+                "changes": {
+                    "1093231931858137": {
+                        "type": 2,
+                        "previous": {
+                            "type": 1,
+                            "text": "Generate a third-person story of little red riding hood and the big bad wolf. Be descriptive in how she feels and what she sees. ",
+                            "meta": {
+                                "1": [
+                                    {
+                                        "position": 0,
+                                        "data": 10,
+                                        "length": 129
+                                    }
+                                ],
+                                "2": []
+                            },
+                            "source": 10
+                        },
+                        "after": 0
+                    }
+                },
+                "date": "2024-05-11T17:52:47.996",
+                "genPosition": null
+            },
+            "283989240632467": {
+                "id": 283989240632467,
+                "parent": 856346666154849,
+                "children": [],
+                "route": null,
+                "changes": {
+                    "61534066042244": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 4,
+                                    "insert": "tale",
+                                    "delete": "story"
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": -304
+                                    },
+                                    {
+                                        "index": 1,
+                                        "position": 3,
+                                        "data": 3,
+                                        "length": 5
+                                    },
+                                    {
+                                        "index": 2,
+                                        "position": 8,
+                                        "data": 2,
+                                        "length": 298
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    },
+                    "1273286728380488": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 53,
+                                    "insert": "growl",
+                                    "delete": "sneer"
+                                }
+                            ],
+                            "metas": {},
+                            "source": 0
+                        }
+                    },
+                    "2010968653138158": {
+                        "type": 1,
+                        "diff": {
+                            "parts": [
+                                {
+                                    "from": 149,
+                                    "insert": "",
+                                    "delete": "But instead, she felt an odd sense of calm. Something inside of her told her that the wolf wouldn't hurt her, and that she didn't need to be afraid."
+                                }
+                            ],
+                            "metas": {
+                                "1": [
+                                    {
+                                        "index": 0,
+                                        "position": 0,
+                                        "data": 0,
+                                        "length": -148
+                                    }
+                                ]
+                            },
+                            "source": 0
+                        }
+                    }
+                },
+                "date": "2024-05-11T20:46:26.925",
+                "genPosition": null
+            }
+        }
+    },
+    "dirtySections": {},
+    "step": 16
+}
