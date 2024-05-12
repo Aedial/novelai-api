@@ -10,6 +10,8 @@ import pytest
 from aiohttp import ClientConnectionError, ClientPayloadError, ClientSession
 
 from novelai_api import NovelAIAPI, NovelAIError
+from novelai_api.msgpackr.novelai import NovelAiUnpacker
+from novelai_api.msgpackr.unpacker import MsgPackrUnpack
 from novelai_api.utils import get_encryption_key
 
 
@@ -21,6 +23,8 @@ class API:
 
     logger: Logger
     api: NovelAIAPI
+    msgpackr: MsgPackrUnpack
+    novelaiunpacker: NovelAiUnpacker
 
     def __init__(self, sync: bool = False):
         dotenv = Path(".env")
@@ -43,6 +47,8 @@ class API:
 
         proxy = env["NAI_PROXY"] if "NAI_PROXY" in env else None
 
+        self.novelaiunpacker = NovelAiUnpacker()
+        self.msgpackr = MsgPackrUnpack()
         self.api = NovelAIAPI(logger=self.logger)
         self.api.proxy = proxy
 
