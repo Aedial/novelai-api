@@ -7,14 +7,20 @@ from zlib import compressobj as deflate_obj
 from zlib import decompress as inflate
 
 import argon2
+from msgpackr import Unpacker
 from nacl.exceptions import CryptoError
 from nacl.secret import SecretBox
 
 from novelai_api.Keystore import Keystore
+from novelai_api.Msgpackr_Extensions import Ext20, Ext30, Ext31, Ext40, Ext41, Ext42
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model, Preset
 from novelai_api.python_utils import assert_type
 from novelai_api.Tokenizer import Tokenizer
+
+unpacker = Unpacker()
+unpacker.register_extensions(Ext20, Ext30, Ext31, Ext40, Ext41, Ext42)
+unpacker_state = unpacker.export_state()
 
 
 # API utils
@@ -185,13 +191,16 @@ def compress_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]]):
             del item["decrypted"]
 
 
-def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore):
+def decrypt_user_data(
+    items: Union[List[Dict[str, Any]], Dict[str, Any]], keystore: Keystore, uncompress_document: bool = False
+):
     """
     Decrypt the data of each item in :ref: items
     If an item has already been decrypted, it won't be decrypted a second time
 
     :param items: Item or list of items to decrypt
     :param keystore: Keystore retrieved with the get_keystore method
+    :param uncompress_document: If True, the document will be decompressed
     """
 
     # 1 item
@@ -224,6 +233,11 @@ def decrypt_user_data(items: Union[List[Dict[str, Any]], Dict[str, Any]], keysto
                 item["nonce"] = nonce
                 item["decrypted"] = True
                 item["compressed"] = is_compressed
+
+                if uncompress_document and "document" in data:
+                    unpacker.restore_state(unpacker_state)
+                    data["document"] = unpacker.unpack(b64decode(data["document"]))
+
                 continue
 
             except json.JSONDecodeError:

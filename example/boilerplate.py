@@ -1,10 +1,12 @@
 import json
+from datetime import datetime
 from logging import Logger, StreamHandler
 from os import environ as env
 from pathlib import Path
 from typing import Any, Optional
 
 from aiohttp import ClientSession
+from msgpackr.constants import UNDEFINED
 
 from novelai_api import NovelAIAPI
 from novelai_api.utils import get_encryption_key
@@ -85,6 +87,10 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
         if isinstance(o, bytes):
             return o.hex()
+        if o is UNDEFINED:
+            return "<UNDEFINED>"
+        if isinstance(o, datetime):
+            return o.isoformat()
 
         return super().default(o)
 
