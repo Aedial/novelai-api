@@ -234,9 +234,10 @@ def decrypt_user_data(
                 item["decrypted"] = True
                 item["compressed"] = is_compressed
 
-                if uncompress_document and "document" in data:
+                document = data.get("document")
+                if uncompress_document and isinstance(document, str):
                     unpacker.restore_state(unpacker_state)
-                    data["document"] = unpacker.unpack(b64decode(data["document"]))
+                    data["document"] = unpacker.unpack(b64decode(document))
 
                 continue
 
