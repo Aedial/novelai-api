@@ -11,6 +11,7 @@ from urllib.parse import quote, urlencode
 from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
 
+from novelai_api.DirectorToolsPreset import DirectorToolsPreset, RequestType
 from novelai_api.ImagePreset import ControlNetModel, ImageGenerationType, ImageModel
 from novelai_api.NovelAIError import NovelAIError
 from novelai_api.Preset import Model
@@ -764,6 +765,26 @@ class LowLevel:
         data = {"image": image, "width": width, "height": height, "scale": scale}
 
         async for rsp, content in self.request("post", "/ai/upscale", data):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
+
+    async def augment_image(self, request_type: RequestType, preset: DirectorToolsPreset) -> Tuple[str, bytes]:
+        """
+        Augment the given image with the given preset
+
+        :param request_type: Type of request to use
+        :param preset: Preset to use for the augmentation
+
+        :return: A pair (name, data) for the raw PNG image
+        """
+
+        assert_type(RequestType, request_type=request_type)
+        assert_type(DirectorToolsPreset, preset=preset)
+
+        data = preset.to_settings(request_type)
+
+        async for rsp, content in self.request("post", "/ai/augment-image", data, IMAGE_API_ADDRESS):
             self._treat_response_object(rsp, content, 200)
 
             return content

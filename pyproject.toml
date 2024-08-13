@@ -30,6 +30,7 @@ regex = "^2023.12.25"
 sentencepiece = "^0.2.0"
 poetry = "^1.7.1"
 msgpackr-python = "^0.1.2"
+pillow = "^10.4.0"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^0.21.1"
@@ -47,9 +48,6 @@ linkify-it-py = "^2.0.0"
 sphinx-copybutton = "^0.5.2"
 sphinx-last-updated-by-git = "^0.3.4"
 sphinx-hoverxref = "^1.3.0"
-
-[tool.flake8]
-# TODO: add flake when supports come (https://github.com/PyCQA/flake8/issues/234)
 
 [tool.bandit]
 exclude_dirs = ["tests/api/test_decrypt_encrypt_integrity_check.py"]

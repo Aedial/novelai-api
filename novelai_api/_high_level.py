@@ -4,6 +4,7 @@ from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Ty
 
 from novelai_api.BanList import BanList
 from novelai_api.BiasGroup import BiasGroup
+from novelai_api.DirectorToolsPreset import DirectorToolsPreset, RequestType
 from novelai_api.GlobalSettings import GlobalSettings
 from novelai_api.ImagePreset import ImageGenerationType, ImageModel, ImagePreset
 from novelai_api.Keystore import Keystore
@@ -505,3 +506,91 @@ class HighLevel:
 
         async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
             yield e
+
+    async def remove_background(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Remove the background of an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.BG_REMOVAL, preset)
+
+    async def line_art(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Generate a line art of an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.LINE_ART, preset)
+
+    async def sketch(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Generate a sketch of an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.SKETCH, preset)
+
+    async def colorize(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Colorize a sketch of an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+            * prompt: Prompt for the image
+            * defry: Strength of the colorization
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.COLORIZE, preset)
+
+    async def emotion(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Generate an emotion of an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+            * prompt: Prompt for the image
+            * emotion: Emotion for the image
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.EMOTION, preset)
+
+    async def declutter(self, preset: DirectorToolsPreset) -> bytes:
+        """
+        Declutter an image
+
+        :param preset: Preset to use for the generation settings. It should contain:
+            * height: Height of the image
+            * width: Width of the image
+            * image: Image encoded in base64
+
+        :return: Processed image
+        """
+
+        return await self._parent.low_level.augment_image(RequestType.DECLUTTER, preset)
