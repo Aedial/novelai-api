@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._low_level &#8212; NovelAI API 0.28.1 documentation</title>
+    <title>novelai_api._low_level &#8212; NovelAI API 0.29.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>
@@ -68,6 +68,7 @@
 <span class="kn">from</span> <span class="nn">aiohttp</span> <span class="kn">import</span> <span class="n">ClientSession</span>
 <span class="kn">from</span> <span class="nn">aiohttp.client_reqrep</span> <span class="kn">import</span> <span class="n">ClientResponse</span>
 
+<span class="kn">from</span> <span class="nn">novelai_api.DirectorToolsPreset</span> <span class="kn">import</span> <span class="n">DirectorToolsPreset</span><span class="p">,</span> <span class="n">RequestType</span>
 <span class="kn">from</span> <span class="nn">novelai_api.ImagePreset</span> <span class="kn">import</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">ImageModel</span>
 <span class="kn">from</span> <span class="nn">novelai_api.NovelAIError</span> <span class="kn">import</span> <span class="n">NovelAIError</span>
 <span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span>
@@ -825,6 +826,26 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
+<div class="viewcode-block" id="LowLevel.augment_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.augment_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">augment_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">:</span> <span class="n">RequestType</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Augment the given image with the given preset</span>
+
+<span class="sd">        :param request_type: Type of request to use</span>
+<span class="sd">        :param preset: Preset to use for the augmentation</span>
+
+<span class="sd">        :return: A pair (name, data) for the raw PNG image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">RequestType</span><span class="p">,</span> <span class="n">request_type</span><span class="o">=</span><span class="n">request_type</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">DirectorToolsPreset</span><span class="p">,</span> <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">preset</span><span class="o">.</span><span class="n">to_settings</span><span class="p">(</span><span class="n">request_type</span><span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/augment-image&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">IMAGE_API_ADDRESS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
+
 <div class="viewcode-block" id="LowLevel.classify"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.classify">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Not implemented</span>
@@ -1014,7 +1035,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>

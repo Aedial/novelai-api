@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.28.1 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.29.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -61,6 +61,7 @@
 
 <span class="kn">from</span> <span class="nn">novelai_api.BanList</span> <span class="kn">import</span> <span class="n">BanList</span>
 <span class="kn">from</span> <span class="nn">novelai_api.BiasGroup</span> <span class="kn">import</span> <span class="n">BiasGroup</span>
+<span class="kn">from</span> <span class="nn">novelai_api.DirectorToolsPreset</span> <span class="kn">import</span> <span class="n">DirectorToolsPreset</span><span class="p">,</span> <span class="n">RequestType</span>
 <span class="kn">from</span> <span class="nn">novelai_api.GlobalSettings</span> <span class="kn">import</span> <span class="n">GlobalSettings</span>
 <span class="kn">from</span> <span class="nn">novelai_api.ImagePreset</span> <span class="kn">import</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">ImagePreset</span>
 <span class="kn">from</span> <span class="nn">novelai_api.Keystore</span> <span class="kn">import</span> <span class="n">Keystore</span>
@@ -561,7 +562,95 @@
                 <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, best quality, amazing quality, very aesthetic, absurdres&quot;</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate_image</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">e</span></div></div>
+            <span class="k">yield</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="HighLevel.remove_background"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.remove_background">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_background</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove the background of an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">BG_REMOVAL</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.line_art"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.line_art">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">line_art</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a line art of an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">LINE_ART</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.sketch"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.sketch">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sketch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a sketch of an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">SKETCH</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.colorize"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.colorize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">colorize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Colorize a sketch of an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+<span class="sd">            * prompt: Prompt for the image</span>
+<span class="sd">            * defry: Strength of the colorization</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">COLORIZE</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.emotion"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.emotion">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">emotion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate an emotion of an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+<span class="sd">            * prompt: Prompt for the image</span>
+<span class="sd">            * emotion: Emotion for the image</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">EMOTION</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HighLevel.declutter"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.declutter">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">declutter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Declutter an image</span>
+
+<span class="sd">        :param preset: Preset to use for the generation settings. It should contain:</span>
+<span class="sd">            * height: Height of the image</span>
+<span class="sd">            * width: Width of the image</span>
+<span class="sd">            * image: Image encoded in base64</span>
+
+<span class="sd">        :return: Processed image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">augment_image</span><span class="p">(</span><span class="n">RequestType</span><span class="o">.</span><span class="n">DECLUTTER</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -593,7 +682,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>

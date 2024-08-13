@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.high_level &#8212; NovelAI API 0.28.1 documentation</title>
+    <title>novelai_api.high_level &#8212; NovelAI API 0.29.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.low_level.html" title="novelai_api.low_level"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.high_level</a></li> 
       </ul>
@@ -320,6 +320,112 @@ Any content going beyond the tokens limit will be truncated, starting from the t
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Pair(s) (name, image) that have been generated</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.remove_background">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.remove_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.remove_background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the background of an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.line_art">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">line_art</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.line_art"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.line_art" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a line art of an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.sketch">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sketch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.sketch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.sketch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a sketch of an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.colorize">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.colorize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.colorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize a sketch of an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64
+* prompt: Prompt for the image
+* defry: Strength of the colorization</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.emotion">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">emotion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.emotion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.emotion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an emotion of an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64
+* prompt: Prompt for the image
+* emotion: Emotion for the image</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._high_level.HighLevel.declutter">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">declutter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_high_level.html#HighLevel.declutter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._high_level.HighLevel.declutter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declutter an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preset</strong> – Preset to use for the generation settings. It should contain:
+* height: Height of the image
+* width: Width of the image
+* image: Image encoded in base64</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,6 +775,12 @@ Any content going beyond the tokens limit will be truncated, starting from the t
 <li><a class="reference internal" href="#novelai_api._high_level.HighLevel.generate"><code class="docutils literal notranslate"><span class="pre">HighLevel.generate()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._high_level.HighLevel.generate_stream"><code class="docutils literal notranslate"><span class="pre">HighLevel.generate_stream()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._high_level.HighLevel.generate_image"><code class="docutils literal notranslate"><span class="pre">HighLevel.generate_image()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.remove_background"><code class="docutils literal notranslate"><span class="pre">HighLevel.remove_background()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.line_art"><code class="docutils literal notranslate"><span class="pre">HighLevel.line_art()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.sketch"><code class="docutils literal notranslate"><span class="pre">HighLevel.sketch()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.colorize"><code class="docutils literal notranslate"><span class="pre">HighLevel.colorize()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.emotion"><code class="docutils literal notranslate"><span class="pre">HighLevel.emotion()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._high_level.HighLevel.declutter"><code class="docutils literal notranslate"><span class="pre">HighLevel.declutter()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#list-of-modules">List of modules</a></li>
@@ -723,7 +835,7 @@ Any content going beyond the tokens limit will be truncated, starting from the t
         <li class="right" >
           <a href="novelai_api.low_level.html" title="novelai_api.low_level"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.28.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.high_level</a></li> 
       </ul>
