@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.29.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.30.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -168,12 +168,13 @@
     <span class="n">nai_smea_dyn</span> <span class="o">=</span> <span class="s2">&quot;nai_smea_dyn&quot;</span>
 
     <span class="n">k_dpmpp_2m</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_2m&quot;</span>
+    <span class="n">k_dpmpp_2m_sde</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_2m_sde&quot;</span>
     <span class="n">k_dpmpp_2s_ancestral</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_2s_ancestral&quot;</span>
     <span class="n">k_dpmpp_sde</span> <span class="o">=</span> <span class="s2">&quot;k_dpmpp_sde&quot;</span>
     <span class="n">k_dpm_2</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_2&quot;</span>
     <span class="n">k_dpm_2_ancestral</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_2_ancestral&quot;</span>
-    <span class="n">k_dpm_adaptive</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_adaptive&quot;</span>
-    <span class="n">k_dpm_fast</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_fast&quot;</span></div>
+    <span class="n">k_dpm_adaptive</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_adaptive&quot;</span>  <span class="c1"># doesn&#39;t work</span>
+    <span class="n">k_dpm_fast</span> <span class="o">=</span> <span class="s2">&quot;k_dpm_fast&quot;</span>  <span class="c1"># doesn&#39;t work</span></div>
 
 
 <div class="viewcode-block" id="UCPreset"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset">[docs]</a><span class="k">class</span> <span class="nc">UCPreset</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -337,6 +338,8 @@
     <span class="n">reference_information_extracted_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="c1">#: reference_strength for multi-vibe transfer</span>
     <span class="n">reference_strength_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="c1">#:</span>
+    <span class="n">variety_plus</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="c1">#: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)</span>
     <span class="n">legacy_v3_extend</span><span class="p">:</span> <span class="nb">bool</span>
@@ -560,6 +563,7 @@
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;controlnet_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONTROLNET_MODELS</span><span class="p">[</span><span class="n">controlnet_model</span><span class="p">]</span>
 
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;dynamic_thresholding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;decrisper&quot;</span><span class="p">)</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;skip_cfg_above_sigma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">19</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;variety_plus&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1"># special arguments kept for metadata purposes (no effect on result)</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;quality_toggle&quot;</span><span class="p">)</span>
@@ -761,7 +765,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>

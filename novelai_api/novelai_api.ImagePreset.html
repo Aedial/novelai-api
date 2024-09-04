@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.29.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.30.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -367,6 +367,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageSampler.k_dpmpp_2m_sde">
+<span class="sig-name descname"><span class="pre">k_dpmpp_2m_sde</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'k_dpmpp_2m_sde'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_2m_sde" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageSampler.k_dpmpp_2s_ancestral">
 <span class="sig-name descname"><span class="pre">k_dpmpp_2s_ancestral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'k_dpmpp_2s_ancestral'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_2s_ancestral" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -642,6 +647,11 @@
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.variety_plus">
+<span class="sig-name descname"><span class="pre">variety_plus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.variety_plus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.legacy_v3_extend">
 <span class="sig-name descname"><span class="pre">legacy_v3_extend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.legacy_v3_extend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)</p>
@@ -846,6 +856,7 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.nai_smea"><code class="docutils literal notranslate"><span class="pre">ImageSampler.nai_smea</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.nai_smea_dyn"><code class="docutils literal notranslate"><span class="pre">ImageSampler.nai_smea_dyn</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_2m"><code class="docutils literal notranslate"><span class="pre">ImageSampler.k_dpmpp_2m</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_2m_sde"><code class="docutils literal notranslate"><span class="pre">ImageSampler.k_dpmpp_2m_sde</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_2s_ancestral"><code class="docutils literal notranslate"><span class="pre">ImageSampler.k_dpmpp_2s_ancestral</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.k_dpmpp_sde"><code class="docutils literal notranslate"><span class="pre">ImageSampler.k_dpmpp_sde</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageSampler.k_dpm_2"><code class="docutils literal notranslate"><span class="pre">ImageSampler.k_dpm_2</span></code></a></li>
@@ -900,6 +911,7 @@
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.reference_image_multiple"><code class="docutils literal notranslate"><span class="pre">ImagePreset.reference_image_multiple</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.reference_information_extracted_multiple"><code class="docutils literal notranslate"><span class="pre">ImagePreset.reference_information_extracted_multiple</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.reference_strength_multiple"><code class="docutils literal notranslate"><span class="pre">ImagePreset.reference_strength_multiple</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.variety_plus"><code class="docutils literal notranslate"><span class="pre">ImagePreset.variety_plus</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.legacy_v3_extend"><code class="docutils literal notranslate"><span class="pre">ImagePreset.legacy_v3_extend</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.params_version"><code class="docutils literal notranslate"><span class="pre">ImagePreset.params_version</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.last_seed"><code class="docutils literal notranslate"><span class="pre">ImagePreset.last_seed</span></code></a></li>
@@ -969,7 +981,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.29.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
