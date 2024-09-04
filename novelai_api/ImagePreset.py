@@ -111,12 +111,13 @@ class ImageSampler(enum.Enum):
     nai_smea_dyn = "nai_smea_dyn"
 
     k_dpmpp_2m = "k_dpmpp_2m"
+    k_dpmpp_2m_sde = "k_dpmpp_2m_sde"
     k_dpmpp_2s_ancestral = "k_dpmpp_2s_ancestral"
     k_dpmpp_sde = "k_dpmpp_sde"
     k_dpm_2 = "k_dpm_2"
     k_dpm_2_ancestral = "k_dpm_2_ancestral"
-    k_dpm_adaptive = "k_dpm_adaptive"
-    k_dpm_fast = "k_dpm_fast"
+    k_dpm_adaptive = "k_dpm_adaptive"  # doesn't work
+    k_dpm_fast = "k_dpm_fast"  # doesn't work
 
 
 class UCPreset(enum.Enum):
@@ -280,6 +281,8 @@ class ImagePreset:
     reference_information_extracted_multiple: List[float]
     #: reference_strength for multi-vibe transfer
     reference_strength_multiple: List[float]
+    #:
+    variety_plus: bool
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
     legacy_v3_extend: bool
@@ -503,6 +506,7 @@ class ImagePreset:
             settings["controlnet_model"] = self._CONTROLNET_MODELS[controlnet_model]
 
         settings["dynamic_thresholding"] = settings.pop("decrisper")
+        settings["skip_cfg_above_sigma"] = 19 if settings.pop("variety_plus", False) else None
 
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")

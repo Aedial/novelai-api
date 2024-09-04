@@ -8,7 +8,7 @@ from aiohttp.typedefs import StrOrURL
 from multidict import CIMultiDict
 
 from novelai_api._high_level import HighLevel
-from novelai_api._low_level import LowLevel
+from novelai_api._low_level import GENERAL_API_ADDRESS, LowLevel
 
 
 class NovelAIAPI:
@@ -16,7 +16,7 @@ class NovelAIAPI:
 
     # TODO: might want to make the base endpoint configurable
     #: The base address for the API
-    BASE_ADDRESS: str = "https://api.novelai.net"
+    BASE_ADDRESS: str = GENERAL_API_ADDRESS
     LIB_ROOT: str = dirname(abspath(__file__))
 
     # Variables

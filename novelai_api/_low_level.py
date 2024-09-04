@@ -22,7 +22,9 @@ from novelai_api.utils import tokens_to_b64
 
 PRINT_WITH_PARAMETERS = os.environ.get("NAI_PRINT", False)
 
+GENERAL_API_ADDRESS = "https://api.novelai.net"
 IMAGE_API_ADDRESS = "https://image.novelai.net"
+TEXT_API_ADDRESS = "https://text.novelai.net"
 
 
 # === INTERNALS === #
@@ -119,7 +121,7 @@ class LowLevel:
         modified = False
 
         partial_data: str = ""
-        async for chunk in rsp.content.iter_any():
+        async for chunk in rsp.content.iter_any():  # type: bytes
             for line in f"{partial_data}{chunk.decode('utf-8')}".splitlines(True):
                 if line in ("", "\n"):
                     # empty line = dispatch event if modified
@@ -663,8 +665,16 @@ class LowLevel:
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
-        async for rsp, content in self.request("post", endpoint, data):
-            self._treat_response_object(rsp, content, 201)
+        # TODO: change that when they finally move the older models to the new API... sigh
+        if model is Model.Kayra:
+            base_address = TEXT_API_ADDRESS
+            status = 200
+        else:
+            base_address = GENERAL_API_ADDRESS
+            status = 201
+
+        async for rsp, content in self.request("post", endpoint, data, base_address):
+            self._treat_response_object(rsp, content, status)
 
             yield content
 

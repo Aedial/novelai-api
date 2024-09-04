@@ -12,7 +12,7 @@ from novelai_api import NovelAIError
 from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageSampler, UCPreset
 from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
-sampler_xfail = pytest.mark.xfail(True, raises=NovelAIError, reason="The sampler doesn't currently work")
+sampler_xfail = pytest.mark.xfail(strict=False, raises=NovelAIError, reason="The sampler might not work")
 
 models = list(ImageModel)
 models.remove(ImageModel.Inpainting_Anime_Full)
@@ -28,7 +28,9 @@ model_samplers = list(itertools.product(models, samplers))
 @pytest.mark.parametrize(
     "model_sampler",
     [
-        pytest.param(e, marks=sampler_xfail) if e[1] in (ImageSampler.nai_smea, ImageSampler.plms) else e
+        pytest.param(e, marks=sampler_xfail)
+        if e[1] in (ImageSampler.nai_smea, ImageSampler.plms, ImageSampler.k_dpm_adaptive)
+        else e
         for e in model_samplers
     ],
 )

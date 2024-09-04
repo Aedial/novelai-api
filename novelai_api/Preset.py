@@ -313,7 +313,9 @@ class Preset(metaclass=_PresetMetaclass):
 
         object.__setattr__(self, "_settings", {})
         self.update(settings)
-        self.set_sampling_options_state([True] * len(self._settings["order"]))
+
+        if "order" in self._settings:
+            self.set_sampling_options_state([True] * len(self._settings["order"]))
 
     def set_sampling_options_state(self, sampling_options_state: List[bool]):
         """
