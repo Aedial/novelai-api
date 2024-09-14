@@ -29,12 +29,14 @@ python -m novelai_api get_access_key <username> <password>
 
 ### Get access token
 Login to the API and get the access token. This token is valid 30 days and is required to use most of the API.
+Take care to properly escape the arguments if they contain special characters.
 ```bash
 python -m novelai_api get_access_token <username> <password>
 ```
 
 ### Sanity check
 Run a sanity check on your user content. It will print what content couldn't be decrypted.
+Take care to properly escape the arguments if they contain special characters.
 ```bash
 python -m novelai_api sanity_check <username> <password>
 ```

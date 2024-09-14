@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/Aedial/novelai-api"
 keywords = ["python", "NovelAI", "NAI", "API"]
 classifiers = [
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",

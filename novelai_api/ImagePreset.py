@@ -489,7 +489,7 @@ class ImagePreset:
                 raise ValueError(f"UC preset '{uc_preset.name}' is not valid for model '{model.value}'")
 
         uc: str = settings.pop("uc")
-        combined_uc = f"{default_uc}, {uc}" if uc else default_uc
+        combined_uc = f"{default_uc}, {uc}" if default_uc and uc else default_uc if default_uc else uc
         settings["negative_prompt"] = combined_uc
 
         sampler: ImageSampler = settings.pop("sampler")
@@ -510,7 +510,9 @@ class ImagePreset:
 
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")
-        settings["ucPreset"] = uc_preset.value
+
+        if uc_preset is not None:
+            settings["ucPreset"] = uc_preset.value
 
         return settings
 
