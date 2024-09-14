@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.30.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.30.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -546,7 +546,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UC preset &#39;</span><span class="si">{</span><span class="n">uc_preset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not valid for model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
         <span class="n">uc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;uc&quot;</span><span class="p">)</span>
-        <span class="n">combined_uc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_uc</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">uc</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">uc</span> <span class="k">else</span> <span class="n">default_uc</span>
+        <span class="n">combined_uc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_uc</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">uc</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">default_uc</span> <span class="ow">and</span> <span class="n">uc</span> <span class="k">else</span> <span class="n">default_uc</span> <span class="k">if</span> <span class="n">default_uc</span> <span class="k">else</span> <span class="n">uc</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;negative_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">combined_uc</span>
 
         <span class="n">sampler</span><span class="p">:</span> <span class="n">ImageSampler</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;sampler&quot;</span><span class="p">)</span>
@@ -567,7 +567,9 @@
 
         <span class="c1"># special arguments kept for metadata purposes (no effect on result)</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;quality_toggle&quot;</span><span class="p">)</span>
-        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;ucPreset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uc_preset</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">uc_preset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;ucPreset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uc_preset</span><span class="o">.</span><span class="n">value</span>
 
         <span class="k">return</span> <span class="n">settings</span></div>
 
@@ -765,7 +767,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
