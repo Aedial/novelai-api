@@ -1,0 +1,80 @@
+{
+  "presetVersion": 3,
+  "name": "Dragonfruit",
+  "id": "71efb276-aba7-4091-ba82-8c4cf14e2c25",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 7,
+    "temperature": 1.37,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 1,
+    "top_a": 0.1,
+    "typical_p": 0.875,
+    "tail_free_sampling": 0.87,
+    "repetition_penalty": 3.25,
+    "repetition_penalty_range": 6000,
+    "repetition_penalty_slope": 3.25,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0,
+    "repetition_penalty_default_whitelist": false,
+    "cfg_scale": 1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "off",
+    "top_g": 0,
+    "mirostat_tau": 4,
+    "mirostat_lr": 0.2,
+    "math1_temp": 0.9,
+    "math1_quad": 0.07,
+    "math1_quad_entropy_scale": -0.05,
+    "min_p": 0.035,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": true
+      },
+      {
+        "id": "typical_p",
+        "enabled": true
+      },
+      {
+        "id": "math1",
+        "enabled": true
+      },
+      {
+        "id": "min_p",
+        "enabled": true
+      },
+      {
+        "id": "mirostat",
+        "enabled": true
+      },
+      {
+        "id": "top_a",
+        "enabled": true
+      },
+      {
+        "id": "cfg",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "llama-3-erato-v1"
+}

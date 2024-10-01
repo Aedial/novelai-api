@@ -18,6 +18,8 @@ class Order(IntEnum):
     CFG = 6
     Top_G = 7
     Mirostat = 8
+    Unified = 9
+    Min_p = 10
 
 
 NAME_TO_ORDER = {
@@ -30,6 +32,8 @@ NAME_TO_ORDER = {
     "cfg": Order.CFG,
     "top_g": Order.Top_G,
     "mirostat": Order.Mirostat,
+    "math1": Order.Unified,
+    "min_p": Order.Min_p,
 }
 
 ORDER_TO_NAME = {
@@ -42,6 +46,8 @@ ORDER_TO_NAME = {
     Order.CFG: "cfg",
     Order.Top_G: "top_g",
     Order.Mirostat: "mirostat",
+    Order.Unified: "math1",
+    Order.Min_p: "min_p",
 }
 
 
@@ -102,6 +108,7 @@ class Model(StrEnum):
 
     Clio = "clio-v1"
     Kayra = "kayra-v1"
+    Erato = "llama-3-erato-v1"
 
     Genji = "genji-jp-6b-v2"
     Snek = "genji-python-6b"
@@ -129,6 +136,7 @@ PREAMBLE = {
     Model.Krake: "<|endoftext|>[ Prologue ]\n",
     Model.Clio: "[ Author: Various ]\n[ Prologue ]\n",
     Model.Kayra: "",  # no preamble, it uses the "special_openings" module instead
+    Model.Erato: "<|endoftext|>",  # <|reserved_special_token_81|> if context isn't full
 }
 
 
@@ -188,6 +196,10 @@ class Preset(metaclass=_PresetMetaclass):
         "top_g": int,
         "mirostat_lr": (int, float),
         "mirostat_tau": (int, float),
+        "math1_quad": (int, float),
+        "math1_quad_entropy_scale": (int, float),
+        "math1_temp": (int, float),
+        "min_p": (int, float),
         "pad_token_id": int,
         "bos_token_id": int,
         "eos_token_id": int,
@@ -207,6 +219,10 @@ class Preset(metaclass=_PresetMetaclass):
         "top_a": 1.0,
         "top_p": 0.0,
         "typical_p": 0.0,
+        "math1_quad": 0.0,
+        "math1_quad_entropy_scale": 0.0,
+        "math1_temp": 1.0,
+        "min_p": 0.0,
         "tail_free_sampling": 1.0,
         "repetition_penalty": 1.0,
         "repetition_penalty_range": 0,
@@ -268,14 +284,22 @@ class Preset(metaclass=_PresetMetaclass):
         order: List[Union[Order, int]]
         #: https://docs.novelai.net/text/cfg.html
         cfg_scale: float
-        #: https://docs.novelai.net/text/cfg.html
-        cfg_uc: str
-        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
-        top_g: int
+        #: [DEPRECATED] https://docs.novelai.net/text/cfg.html
+        # cfg_uc: str
+        #: [DEPRECATED] https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
+        # top_g: int
         #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
         mirostat_lr: float
         #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
         mirostat_tau: float
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified quad)
+        math1_quad: float
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified conf)
+        math1_quad_entropy_scale: float
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified linear)
+        math1_temp: float
+        #: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options
+        min_p: float
 
         #: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig
         pad_token_id: int
@@ -414,8 +438,10 @@ class Preset(metaclass=_PresetMetaclass):
                     name = ORDER_TO_NAME[o]
 
                     # special handling for samplers with multiple keys
-                    if name == "mirostat":
+                    if order is Order.Mirostat:
                         keys = ["mirostat_tau", "mirostat_lr"]
+                    elif order is Order.Unified:
+                        keys = ["math1_quad", "math1_quad_entropy_scale", "math1_temp"]
                     else:
                         keys = [name]
 

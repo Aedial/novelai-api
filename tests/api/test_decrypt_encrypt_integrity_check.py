@@ -12,17 +12,28 @@ from novelai_api.utils import compress_user_data, decompress_user_data, decrypt_
 from tests.api.boilerplate import API, api_handle, api_handle_sync, error_handler  # noqa: F401  # pylint: disable=W0611
 
 
-def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]) -> bool:
-    fail_flags = "".join(("O" if item_in == item_out else "X") for item_in, item_out in zip(items_in, items_out))
-    if "X" in fail_flags:
-        print(f"{fail_flags.count('X')}/{len(fail_flags)} integrity checks failed for {type_name}")
-        print(fail_flags)
-        print("")
+def compare_in_out(type_name: str, items_in: List[Any], items_out: List[Any]):
+    flags_list = []
+    fail_items = []
 
-        return False
+    for i, (item_in, item_out) in enumerate(zip(items_in, items_out)):
+        if item_in == item_out:
+            flags_list.append("O")
+        else:
+            flags_list.append("X")
+            fail_items.append((i, item_in, item_out))
 
-    print(f"All {len(fail_flags)} integrity checks succeeded for {type_name}\n")
-    return True
+    if fail_items:
+        flags = "".join(flags_list)
+
+        errors = [f"{flags.count('X')}/{len(flags)} integrity checks failed for {type_name}", flags, ""]
+
+        for i, item_in, item_out in fail_items:
+            errors.extend((f"Item {i} failed:", item_in, "=" * 20 + " vs " + "=" * 20, item_out, ""))
+
+        raise AssertionError("\n".join(errors))
+
+    print(f"All {len(flags_list)} integrity checks succeeded for {type_name}\n")
 
 
 fflate_path = Path(__file__).parent.absolute() / "fflate_inflate.js"
@@ -50,7 +61,7 @@ async def keystore_integrity(handle: API):
     keystore.encrypt(key)
     encrypted_keystore_out = [str(keystore.data)]
 
-    assert compare_in_out("keystore", encrypted_keystore_in, encrypted_keystore_out)
+    compare_in_out("keystore", encrypted_keystore_in, encrypted_keystore_out)
 
 
 async def test_keystore_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
@@ -78,7 +89,7 @@ async def stories_integrity(handle: API):
     encrypt_user_data(stories, keystore)
     encrypted_stories_out = [str(story) for story in stories]
 
-    assert compare_in_out("stories", encrypted_stories_in, encrypted_stories_out)
+    compare_in_out("stories", encrypted_stories_in, encrypted_stories_out)
 
 
 async def test_stories_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
@@ -112,7 +123,7 @@ async def storycontent_integrity(handle: API):
 
     decrypted_storycontent_out = [str(story_content) for story_content in story_contents]
 
-    assert compare_in_out("storycontent", decrypted_storycontent_in, decrypted_storycontent_out)
+    compare_in_out("storycontent", decrypted_storycontent_in, decrypted_storycontent_out)
 
 
 async def test_storycontent_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
@@ -137,7 +148,7 @@ async def presets_integrity(handle: API):
     compress_user_data(presets)
     encrypted_presets_out = [str(preset) for preset in presets]
 
-    assert compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
+    compare_in_out("presets", encrypted_presets_in, encrypted_presets_out)
 
 
 async def test_presets_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
@@ -165,7 +176,7 @@ async def aimodules_integrity(handle: API):
     encrypt_user_data(modules, keystore)
     encrypted_modules_out = [str(module) for module in modules]
 
-    assert compare_in_out("aimodules", encrypted_modules_in, encrypted_modules_out)
+    compare_in_out("aimodules", encrypted_modules_in, encrypted_modules_out)
 
 
 async def test_aimodules_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621
@@ -190,7 +201,7 @@ async def shelves_integrity(handle: API):
     compress_user_data(shelves)
     encrypted_shelves_out = [str(shelf) for shelf in shelves]
 
-    assert compare_in_out("shelves", encrypted_shelves_in, encrypted_shelves_out)
+    compare_in_out("shelves", encrypted_shelves_in, encrypted_shelves_out)
 
 
 async def test_shelves_integrity_sync(api_handle_sync):  # noqa: F811  # pylint: disable=W0621

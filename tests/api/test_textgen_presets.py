@@ -14,10 +14,12 @@ from novelai_api.utils import b64_to_tokens
 from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
 prompt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula."  # noqa: E501  # pylint: disable=C0301
-models = list(Model)
-# NOTE: uncomment that if you're not Opus
-# models.remove(Model.Genji)
-# models.remove(Model.Snek)
+models = [
+    Model.Clio,
+    Model.Kayra,
+    # NOTE: comment that if you're not Opus
+    Model.Erato,
+]
 
 models_presets = [(model, preset) for model in models for preset in Preset[model]]
 
@@ -35,10 +37,14 @@ async def test_presets(api_handle, model_preset: Tuple[Model, Preset]):  # noqa:
     logger = api.logger
     logger.info("Using model %s, preset %s\n", model.value, preset.name)
 
+    token_size = 4 if model is Model.Erato else 2
+
     global_settings = GlobalSettings()
     gen = await api.high_level.generate(prompt, model, preset, global_settings)
     logger.info(gen)
-    logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
+    logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"], token_size)))
+
+    await asyncio.sleep(5)
 
 
 @pytest.mark.parametrize("model", models)

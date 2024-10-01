@@ -131,6 +131,7 @@ class Tokenizer:
         Model.Inline: "gpt2",
         Model.Clio: "nerdstash_v1",
         Model.Kayra: "nerdstash_v2",
+        Model.Erato: "llama3",
         ImageModel.Anime_Curated: "clip",
         ImageModel.Anime_Full: "clip",
         ImageModel.Furry: "clip",
@@ -164,6 +165,9 @@ class Tokenizer:
     _NERDSTASH_TOKENIZER_v2_PATH = str(tokenizers_path / "nerdstash_v2.model")
     _NERDSTASH_TOKENIZER_v2 = SentencePiece(_NERDSTASH_TOKENIZER_v2_PATH)
 
+    _LLAMA3_TOKENIZER_PATH = str(tokenizers_path / "llama3.json")
+    _LLAMA3_TOKENIZER = tokenizers.Tokenizer.from_file(str(_LLAMA3_TOKENIZER_PATH))
+
     _tokenizers = {
         "gpt2": _GPT2_TOKENIZER,
         "gpt2-genji": _GENJI_TOKENIZER,
@@ -171,6 +175,7 @@ class Tokenizer:
         "clip": _CLIP_TOKENIZER,
         "nerdstash_v1": _NERDSTASH_TOKENIZER_v1,
         "nerdstash_v2": _NERDSTASH_TOKENIZER_v2,
+        "llama3": _LLAMA3_TOKENIZER,
     }
 
     @classmethod

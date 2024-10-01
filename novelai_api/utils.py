@@ -221,7 +221,11 @@ def decrypt_user_data(
 
         meta = item["meta"]
         if meta not in keystore:
-            raise NovelAIError("<UNKNOWN>", -1, f"Meta of item #{i} ({meta}) missing from keystore")
+            raise NovelAIError(
+                "<UNKNOWN>",
+                -1,
+                f"Meta of item #{i} ({meta}) missing from keystore (id: {item.get('id', '<UNKNOWN>')})",
+            )
 
         key = keystore[meta]
 
@@ -337,22 +341,32 @@ def get_decrypted_user_data(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]
     return [item for item in items if item.get("decrypted", False)]
 
 
-def tokens_to_b64(tokens: Iterable[int]) -> str:
+def tokens_to_b64(tokens: Iterable[int], token_size: int = 2) -> str:
     """
     Encode a list of tokens into a base64 string that can be sent to the API
+
+    :param tokens: List of tokens to encode
+    :param token_size: Size of each token in bytes (Erato: 4, other models: 2)
+
+    :return: Base64 string representing the tokens
     """
 
-    return b64encode(b"".join(t.to_bytes(2, "little") for t in tokens)).decode()
+    return b64encode(b"".join(t.to_bytes(token_size, "little") for t in tokens)).decode()
 
 
-def b64_to_tokens(b64: str) -> List[int]:
+def b64_to_tokens(b64: str, token_size: int = 2) -> List[int]:
     """
     Decode a base64 string returned by the API into a list of tokens
+
+    :param b64: Base64 string to decode
+    :param token_size: Size of each token in bytes (Erato: 4, other models: 2)
+
+    :return: List of tokens decoded from the base64 string
     """
 
     b = b64decode(b64)
 
-    return [int.from_bytes(b[i : i + 2], "little") for i in range(0, len(b), 2)]
+    return [int.from_bytes(b[i : i + token_size], "little") for i in range(0, len(b), token_size)]
 
 
 def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
@@ -371,6 +385,11 @@ def extract_preset_data(presets: List[Dict[str, Any]]) -> Dict[str, Preset]:
 def tokenize_if_not(model: Model, o: Union[str, List[int]]) -> List[int]:
     """
     Tokenize the string if it is not already tokenized
+
+    :param model: Model to use for tokenization
+    :param o: String to tokenize or list of tokens
+
+    :return: List of tokens if 'o' is a string, 'o' otherwise
     """
 
     if isinstance(o, list):

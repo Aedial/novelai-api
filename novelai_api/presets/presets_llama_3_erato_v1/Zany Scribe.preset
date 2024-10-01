@@ -1,0 +1,80 @@
+{
+  "presetVersion": 3,
+  "name": "Zany Scribe",
+  "id": "e907898a-471f-4cb9-82c1-538d3cbafed9",
+  "remoteId": "",
+  "parameters": {
+    "textGenerationSettingsVersion": 7,
+    "temperature": 1,
+    "max_length": 75,
+    "min_length": 1,
+    "top_k": 0,
+    "top_p": 0.98,
+    "top_a": 1,
+    "typical_p": 1,
+    "tail_free_sampling": 0.99,
+    "repetition_penalty": 1,
+    "repetition_penalty_range": 3024,
+    "repetition_penalty_slope": 1.1,
+    "repetition_penalty_frequency": 0,
+    "repetition_penalty_presence": 0.25,
+    "repetition_penalty_default_whitelist": true,
+    "cfg_scale": 1,
+    "cfg_uc": "",
+    "phrase_rep_pen": "medium",
+    "top_g": 0,
+    "mirostat_tau": 1,
+    "mirostat_lr": 1,
+    "math1_temp": -0.275,
+    "math1_quad": 0.35,
+    "math1_quad_entropy_scale": -0.2,
+    "min_p": 0.08,
+    "order": [
+      {
+        "id": "temperature",
+        "enabled": false
+      },
+      {
+        "id": "min_p",
+        "enabled": false
+      },
+      {
+        "id": "tfs",
+        "enabled": false
+      },
+      {
+        "id": "math1",
+        "enabled": true
+      },
+      {
+        "id": "top_p",
+        "enabled": true
+      },
+      {
+        "id": "mirostat",
+        "enabled": false
+      },
+      {
+        "id": "top_k",
+        "enabled": false
+      },
+      {
+        "id": "top_a",
+        "enabled": false
+      },
+      {
+        "id": "typical_p",
+        "enabled": false
+      },
+      {
+        "id": "cfg",
+        "enabled": false
+      },
+      {
+        "id": "top_g",
+        "enabled": false
+      }
+    ]
+  },
+  "model": "llama-3-erato-v1"
+}

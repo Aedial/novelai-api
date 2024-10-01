@@ -660,13 +660,14 @@ class LowLevel:
         if isinstance(prompt, str):
             prompt = Tokenizer.encode(model, prompt)
 
-        prompt = tokens_to_b64(prompt)
+        token_size = 4 if model is Model.Erato else 2
+        prompt = tokens_to_b64(prompt, token_size)
         data = {"input": prompt, "model": model.value, "parameters": params}
 
         endpoint = "/ai/generate-stream" if stream else "/ai/generate"
 
         # TODO: change that when they finally move the older models to the new API... sigh
-        if model is Model.Kayra:
+        if model in (Model.Kayra, Model.Erato):
             base_address = TEXT_API_ADDRESS
             status = 200
         else:
