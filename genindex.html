@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; NovelAI API 0.30.1 documentation</title>
+    <title>Index &#8212; NovelAI API 0.31.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>  
@@ -228,8 +228,6 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.cfg_scale">cfg_scale (Preset attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.cfg_uc">cfg_uc (Preset attribute)</a>
-</li>
       <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_access_key">change_access_key() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_subscription">change_subscription() (LowLevel method)</a>
@@ -244,10 +242,10 @@
 </li>
       <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.colorize">colorize() (HighLevel method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.compress_user_data">compress_user_data() (in module novelai_api.utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.context_size">context_size (NovelAIStory attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.controlnet_condition">controlnet_condition (ImagePreset attribute)</a>
@@ -385,6 +383,8 @@
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.enum_member_values">enum_member_values (Model attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.eos_token_id">eos_token_id (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Erato">Erato (Model attribute)</a>
 </li>
       <li><a href="tests/api/api.boilerplate.html#tests.api.boilerplate.error_handler">error_handler() (in module tests.api.boilerplate)</a>
 </li>
@@ -830,6 +830,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.mask">mask (ImagePreset attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.math1_quad">math1_quad (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.math1_quad_entropy_scale">math1_quad_entropy_scale (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.math1_temp">math1_temp (Preset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.max_length">max_length (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.max_time">max_time (Preset attribute)</a>
@@ -839,6 +845,10 @@
       <li><a href="novelai_api/novelai_api.NovelAIError.html#novelai_api.NovelAIError.NovelAIError.message">message (NovelAIError attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.min_length">min_length (Preset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Min_p">Min_p (Order attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.min_p">min_p (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Mirostat">Mirostat (Order attribute)</a>
 </li>
@@ -1409,8 +1419,6 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Top_G">Top_G (Order attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.top_g">top_g (Preset attribute)</a>
-</li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Top_K">Top_K (Order attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.top_k">top_k (Preset attribute)</a>
@@ -1448,6 +1456,8 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.uncond_scale">uncond_scale (ImagePreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.undo">undo() (NovelAIStory method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Order.Unified">Unified (Order attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.utils.html#novelai_api.utils.unlink_content_from_story">unlink_content_from_story() (in module novelai_api.utils)</a>
 </li>
@@ -1537,7 +1547,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>

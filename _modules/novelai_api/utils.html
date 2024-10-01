@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.utils &#8212; NovelAI API 0.30.1 documentation</title>
+    <title>novelai_api.utils &#8212; NovelAI API 0.31.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
       </ul>
@@ -278,7 +278,11 @@
 
         <span class="n">meta</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">meta</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keystore</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span><span class="s2">&quot;&lt;UNKNOWN&gt;&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Meta of item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">) missing from keystore&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span>
+                <span class="s2">&quot;&lt;UNKNOWN&gt;&quot;</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Meta of item #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">) missing from keystore (id: </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;UNKNOWN&gt;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="n">key</span> <span class="o">=</span> <span class="n">keystore</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span>
 
@@ -394,22 +398,32 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="tokens_to_b64"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.tokens_to_b64">[docs]</a><span class="k">def</span> <span class="nf">tokens_to_b64</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="tokens_to_b64"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.tokens_to_b64">[docs]</a><span class="k">def</span> <span class="nf">tokens_to_b64</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Encode a list of tokens into a base64 string that can be sent to the API</span>
+
+<span class="sd">    :param tokens: List of tokens to encode</span>
+<span class="sd">    :param token_size: Size of each token in bytes (Erato: 4, other models: 2)</span>
+
+<span class="sd">    :return: Base64 string representing the tokens</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">token_size</span><span class="p">,</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="b64_to_tokens"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.b64_to_tokens">[docs]</a><span class="k">def</span> <span class="nf">b64_to_tokens</span><span class="p">(</span><span class="n">b64</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="b64_to_tokens"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.b64_to_tokens">[docs]</a><span class="k">def</span> <span class="nf">b64_to_tokens</span><span class="p">(</span><span class="n">b64</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decode a base64 string returned by the API into a list of tokens</span>
+
+<span class="sd">    :param b64: Base64 string to decode</span>
+<span class="sd">    :param token_size: Size of each token in bytes (Erato: 4, other models: 2)</span>
+
+<span class="sd">    :return: List of tokens decoded from the base64 string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">b</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">b64</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">token_size</span><span class="p">],</span> <span class="s2">&quot;little&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">token_size</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="extract_preset_data"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.extract_preset_data">[docs]</a><span class="k">def</span> <span class="nf">extract_preset_data</span><span class="p">(</span><span class="n">presets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Preset</span><span class="p">]:</span>
@@ -428,6 +442,11 @@
 <div class="viewcode-block" id="tokenize_if_not"><a class="viewcode-back" href="../../novelai_api/novelai_api.utils.html#novelai_api.utils.tokenize_if_not">[docs]</a><span class="k">def</span> <span class="nf">tokenize_if_not</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tokenize the string if it is not already tokenized</span>
+
+<span class="sd">    :param model: Model to use for tokenization</span>
+<span class="sd">    :param o: String to tokenize or list of tokens</span>
+
+<span class="sd">    :return: List of tokens if &#39;o&#39; is a string, &#39;o&#39; otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -479,7 +498,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
       </ul>

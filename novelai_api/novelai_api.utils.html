@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.utils &#8212; NovelAI API 0.30.1 documentation</title>
+    <title>novelai_api.utils &#8212; NovelAI API 0.31.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="novelai_api.Tokenizer.html" title="novelai_api.Tokenizer"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
       </ul>
@@ -157,14 +157,36 @@ Must have been decrypted by decrypt_user_data()</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="novelai_api.utils.tokens_to_b64">
-<span class="sig-name descname"><span class="pre">tokens_to_b64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/novelai_api/utils.html#tokens_to_b64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.utils.tokens_to_b64" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tokens_to_b64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/novelai_api/utils.html#tokens_to_b64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.utils.tokens_to_b64" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode a list of tokens into a base64 string that can be sent to the API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokens</strong> – List of tokens to encode</p></li>
+<li><p><strong>token_size</strong> – Size of each token in bytes (Erato: 4, other models: 2)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Base64 string representing the tokens</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="novelai_api.utils.b64_to_tokens">
-<span class="sig-name descname"><span class="pre">b64_to_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b64</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/utils.html#b64_to_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.utils.b64_to_tokens" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">b64_to_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b64</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/utils.html#b64_to_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.utils.b64_to_tokens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode a base64 string returned by the API into a list of tokens</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b64</strong> – Base64 string to decode</p></li>
+<li><p><strong>token_size</strong> – Size of each token in bytes (Erato: 4, other models: 2)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tokens decoded from the base64 string</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -177,6 +199,17 @@ Must have been decrypted by decrypt_user_data()</p>
 <dt class="sig sig-object py" id="novelai_api.utils.tokenize_if_not">
 <span class="sig-name descname"><span class="pre">tokenize_if_not</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Preset.html#novelai_api.Preset.Model" title="novelai_api.Preset.Model"><span class="pre">novelai_api.Preset.Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/utils.html#tokenize_if_not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.utils.tokenize_if_not" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize the string if it is not already tokenized</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Model to use for tokenization</p></li>
+<li><p><strong>o</strong> – String to tokenize or list of tokens</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tokens if ‘o’ is a string, ‘o’ otherwise</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -266,7 +299,7 @@ Must have been decrypted by decrypt_user_data()</p>
         <li class="right" >
           <a href="novelai_api.Tokenizer.html" title="novelai_api.Tokenizer"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.utils</a></li> 
       </ul>

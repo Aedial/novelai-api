@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.Preset &#8212; NovelAI API 0.30.1 documentation</title>
+    <title>novelai_api.Preset &#8212; NovelAI API 0.31.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>
@@ -74,7 +74,9 @@
     <span class="n">Typical_P</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">CFG</span> <span class="o">=</span> <span class="mi">6</span>
     <span class="n">Top_G</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">Mirostat</span> <span class="o">=</span> <span class="mi">8</span></div>
+    <span class="n">Mirostat</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">Unified</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">Min_p</span> <span class="o">=</span> <span class="mi">10</span></div>
 
 
 <span class="n">NAME_TO_ORDER</span> <span class="o">=</span> <span class="p">{</span>
@@ -87,6 +89,8 @@
     <span class="s2">&quot;cfg&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">CFG</span><span class="p">,</span>
     <span class="s2">&quot;top_g&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Top_G</span><span class="p">,</span>
     <span class="s2">&quot;mirostat&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Mirostat</span><span class="p">,</span>
+    <span class="s2">&quot;math1&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Unified</span><span class="p">,</span>
+    <span class="s2">&quot;min_p&quot;</span><span class="p">:</span> <span class="n">Order</span><span class="o">.</span><span class="n">Min_p</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">ORDER_TO_NAME</span> <span class="o">=</span> <span class="p">{</span>
@@ -99,6 +103,8 @@
     <span class="n">Order</span><span class="o">.</span><span class="n">CFG</span><span class="p">:</span> <span class="s2">&quot;cfg&quot;</span><span class="p">,</span>
     <span class="n">Order</span><span class="o">.</span><span class="n">Top_G</span><span class="p">:</span> <span class="s2">&quot;top_g&quot;</span><span class="p">,</span>
     <span class="n">Order</span><span class="o">.</span><span class="n">Mirostat</span><span class="p">:</span> <span class="s2">&quot;mirostat&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Unified</span><span class="p">:</span> <span class="s2">&quot;math1&quot;</span><span class="p">,</span>
+    <span class="n">Order</span><span class="o">.</span><span class="n">Min_p</span><span class="p">:</span> <span class="s2">&quot;min_p&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -159,6 +165,7 @@
 
     <span class="n">Clio</span> <span class="o">=</span> <span class="s2">&quot;clio-v1&quot;</span>
     <span class="n">Kayra</span> <span class="o">=</span> <span class="s2">&quot;kayra-v1&quot;</span>
+    <span class="n">Erato</span> <span class="o">=</span> <span class="s2">&quot;llama-3-erato-v1&quot;</span>
 
     <span class="n">Genji</span> <span class="o">=</span> <span class="s2">&quot;genji-jp-6b-v2&quot;</span>
     <span class="n">Snek</span> <span class="o">=</span> <span class="s2">&quot;genji-python-6b&quot;</span>
@@ -186,6 +193,7 @@
     <span class="n">Model</span><span class="o">.</span><span class="n">Krake</span><span class="p">:</span> <span class="s2">&quot;&lt;|endoftext|&gt;[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Clio</span><span class="p">:</span> <span class="s2">&quot;[ Author: Various ]</span><span class="se">\n</span><span class="s2">[ Prologue ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">Model</span><span class="o">.</span><span class="n">Kayra</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># no preamble, it uses the &quot;special_openings&quot; module instead</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Erato</span><span class="p">:</span> <span class="s2">&quot;&lt;|endoftext|&gt;&quot;</span><span class="p">,</span>  <span class="c1"># &lt;|reserved_special_token_81|&gt; if context isn&#39;t full</span>
 <span class="p">}</span>
 
 
@@ -245,6 +253,10 @@
         <span class="s2">&quot;top_g&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;mirostat_lr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;mirostat_tau&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;math1_quad&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;math1_quad_entropy_scale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;math1_temp&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="s2">&quot;min_p&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
         <span class="s2">&quot;pad_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;bos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="s2">&quot;eos_token_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -264,6 +276,10 @@
         <span class="s2">&quot;top_a&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="s2">&quot;top_p&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s2">&quot;typical_p&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;math1_quad&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;math1_quad_entropy_scale&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;math1_temp&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;min_p&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s2">&quot;tail_free_sampling&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="s2">&quot;repetition_penalty&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="s2">&quot;repetition_penalty_range&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -325,14 +341,22 @@
         <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
         <span class="c1">#: https://docs.novelai.net/text/cfg.html</span>
         <span class="n">cfg_scale</span><span class="p">:</span> <span class="nb">float</span>
-        <span class="c1">#: https://docs.novelai.net/text/cfg.html</span>
-        <span class="n">cfg_uc</span><span class="p">:</span> <span class="nb">str</span>
-        <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options</span>
-        <span class="n">top_g</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="c1">#: [DEPRECATED] https://docs.novelai.net/text/cfg.html</span>
+        <span class="c1"># cfg_uc: str</span>
+        <span class="c1">#: [DEPRECATED] https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options</span>
+        <span class="c1"># top_g: int</span>
         <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options</span>
         <span class="n">mirostat_lr</span><span class="p">:</span> <span class="nb">float</span>
         <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options</span>
         <span class="n">mirostat_tau</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified quad)</span>
+        <span class="n">math1_quad</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified conf)</span>
+        <span class="n">math1_quad_entropy_scale</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options (Unified linear)</span>
+        <span class="n">math1_temp</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="c1">#: https://docs.novelai.net/text/Editor/slidersettings.html#advanced-options</span>
+        <span class="n">min_p</span><span class="p">:</span> <span class="nb">float</span>
 
         <span class="c1">#: https://huggingface.co/docs/transformers/main_classes/text_generation#transformers.GenerationConfig</span>
         <span class="n">pad_token_id</span><span class="p">:</span> <span class="nb">int</span>
@@ -471,8 +495,10 @@
                     <span class="n">name</span> <span class="o">=</span> <span class="n">ORDER_TO_NAME</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
 
                     <span class="c1"># special handling for samplers with multiple keys</span>
-                    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mirostat&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="n">Order</span><span class="o">.</span><span class="n">Mirostat</span><span class="p">:</span>
                         <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mirostat_tau&quot;</span><span class="p">,</span> <span class="s2">&quot;mirostat_lr&quot;</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">order</span> <span class="ow">is</span> <span class="n">Order</span><span class="o">.</span><span class="n">Unified</span><span class="p">:</span>
+                        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;math1_quad&quot;</span><span class="p">,</span> <span class="s2">&quot;math1_quad_entropy_scale&quot;</span><span class="p">,</span> <span class="s2">&quot;math1_temp&quot;</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
@@ -704,7 +730,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.Preset</a></li> 
       </ul>

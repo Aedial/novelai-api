@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tests.api.test_textgen_presets &#8212; NovelAI API 0.30.1 documentation</title>
+    <title>tests.api.test_textgen_presets &#8212; NovelAI API 0.31.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tests.api.test_textgen_presets</a></li> 
       </ul>
@@ -71,10 +71,12 @@
 <span class="kn">from</span> <span class="nn">tests.api.boilerplate</span> <span class="kn">import</span> <span class="n">API</span><span class="p">,</span> <span class="n">api_handle</span><span class="p">,</span> <span class="n">error_handler</span>  <span class="c1"># noqa: F401  # pylint: disable=W0611</span>
 
 <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at dolor dictum, interdum est sed, consequat arcu. Pellentesque in massa eget lorem fermentum placerat in pellentesque purus. Suspendisse potenti. Integer interdum, felis quis porttitor volutpat, est mi rutrum massa, venenatis viverra neque lectus semper metus. Pellentesque in neque arcu. Ut at arcu blandit purus aliquet finibus. Suspendisse laoreet risus a gravida semper. Aenean scelerisque et sem vitae feugiat. Quisque et interdum diam, eu vehicula felis. Ut tempus quam eros, et sollicitudin ligula auctor at. Integer at tempus dui, quis pharetra purus. Duis venenatis tincidunt tellus nec efficitur. Nam at malesuada ligula.&quot;</span>  <span class="c1"># noqa: E501  # pylint: disable=C0301</span>
-<span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
-<span class="c1"># NOTE: uncomment that if you&#39;re not Opus</span>
-<span class="c1"># models.remove(Model.Genji)</span>
-<span class="c1"># models.remove(Model.Snek)</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Clio</span><span class="p">,</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Kayra</span><span class="p">,</span>
+    <span class="c1"># NOTE: comment that if you&#39;re not Opus</span>
+    <span class="n">Model</span><span class="o">.</span><span class="n">Erato</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="n">models_presets</span> <span class="o">=</span> <span class="p">[(</span><span class="n">model</span><span class="p">,</span> <span class="n">preset</span><span class="p">)</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span> <span class="k">for</span> <span class="n">preset</span> <span class="ow">in</span> <span class="n">Preset</span><span class="p">[</span><span class="n">model</span><span class="p">]]</span>
 
@@ -92,10 +94,14 @@
     <span class="n">logger</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">logger</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using model </span><span class="si">%s</span><span class="s2">, preset </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">preset</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
+    <span class="n">token_size</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="n">Model</span><span class="o">.</span><span class="n">Erato</span> <span class="k">else</span> <span class="mi">2</span>
+
     <span class="n">global_settings</span> <span class="o">=</span> <span class="n">GlobalSettings</span><span class="p">()</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">preset</span><span class="p">,</span> <span class="n">global_settings</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">Tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">b64_to_tokens</span><span class="p">(</span><span class="n">gen</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])))</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">Tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">b64_to_tokens</span><span class="p">(</span><span class="n">gen</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span> <span class="n">token_size</span><span class="p">)))</span>
+
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="preset_from_default"><a class="viewcode-back" href="../../../tests/api/api.html#tests.api.test_textgen_presets.preset_from_default">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
@@ -163,7 +169,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.30.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tests.api.test_textgen_presets</a></li> 
       </ul>
