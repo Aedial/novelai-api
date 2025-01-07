@@ -33,6 +33,8 @@ class ImageModel(enum.Enum):
     Furry_v3 = "nai-diffusion-furry-3"
     Inpainting_Furry_v3 = "nai-diffusion-furry-3-inpainting"
 
+    Anime_v4_preview = "nai-diffusion-4-curated-preview"
+
 
 class ControlNetModel(enum.Enum):
     """
@@ -92,6 +94,19 @@ class ImageResolution(enum.Enum):
     Large_Portrait_v3 = (1024, 1536)
     Large_Landscape_v3 = (1536, 1024)
     Large_Square_v3 = (1472, 1472)
+
+    # v4
+    Small_Portrait_v4 = (512, 768)
+    Small_Landscape_v4 = (768, 512)
+    Small_Square_v4 = (640, 640)
+
+    Normal_Portrait_v4 = (832, 1216)
+    Normal_Landscape_v4 = (1216, 832)
+    Normal_Square_v4 = (1024, 1024)
+
+    Large_Portrait_v4 = (1024, 1536)
+    Large_Landscape_v4 = (1536, 1024)
+    Large_Square_v4 = (1472, 1472)
 
 
 class ImageSampler(enum.Enum):
@@ -199,6 +214,15 @@ class ImagePreset:
             "compression artifacts, unknown text",
             UCPreset.Preset_None: "lowres",
         },
+        # v4
+        ImageModel.Anime_v4_preview: {
+            UCPreset.Preset_Heavy: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, "
+            "jpeg artifacts, very displeasing, chromatic aberration, logo, dated, signature, multiple views, "
+            "gigantic breasts",
+            UCPreset.Preset_Light: "blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
+            "very displeasing, logo, dated, signature",
+            UCPreset.Preset_None: "lowres",
+        },
     }
 
     # inpainting presets are the same as the normal ones
@@ -221,6 +245,7 @@ class ImagePreset:
     }
 
     # type completion for __setitem__ and __getitem__
+
     #: https://docs.novelai.net/image/qualitytags.html
     quality_toggle: bool
     #: Automatically uses SMEA when image is above 1 megapixel
@@ -281,13 +306,23 @@ class ImagePreset:
     reference_information_extracted_multiple: List[float]
     #: reference_strength for multi-vibe transfer
     reference_strength_multiple: List[float]
-    #:
+    #: https://blog.novelai.net/summer-sampler-update-en-3a34eb32b613
     variety_plus: bool
+    #: Whether the AI should strictly follow the positions of the characters or have some freedom
+    use_coords: bool
+
+    #: https://docs.novelai.net/image/multiplecharacters.html#multi-character-prompting
+    #: layout = {"prompt": ..., "uc": ..., "position": ... ("A1" to "E5", "C3" is default)}
+    characters: List[Dict[str, str]]
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
     legacy_v3_extend: bool
-    #: ???
+    #: Revision of the default arguments
     params_version: int
+    #: Use the old behavior of noise scheduling with the k_euler_ancestral sampler
+    deliberate_euler_ancestral_bug: bool
+    #: ???
+    prefer_brownian: bool
 
     _settings: Dict[str, Any]
 
@@ -361,6 +396,14 @@ class ImagePreset:
         return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v3" / "default_furry.preset")
 
     @classmethod
+    def from_v4_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v4 config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v4" / "default.preset")
+
+    @classmethod
     def from_default_config(cls, model: ImageModel) -> "ImagePreset":
         """
         Create a new ImagePreset with the default settings inferring the version from the model
@@ -383,6 +426,8 @@ class ImagePreset:
             return cls.from_v3_config()
         elif model in (ImageModel.Furry_v3, ImageModel.Inpainting_Furry_v3):
             return cls.from_v3_furry_config()
+        elif model in (ImageModel.Anime_v4_preview,):
+            return cls.from_v4_config()
 
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:
@@ -466,6 +511,7 @@ class ImagePreset:
 
         settings = copy.deepcopy(self._settings)
 
+        # size
         resolution: Union[ImageResolution, Tuple[int, int]] = settings.pop("resolution")
         if isinstance(resolution, ImageResolution):
             resolution: Tuple[int, int] = resolution.value
@@ -480,6 +526,7 @@ class ImagePreset:
         settings["seed"] = seed
         settings["extra_noise_seed"] = seed
 
+        # UC
         uc_preset: Union[UCPreset, None] = settings.pop("uc_preset")
         if uc_preset is None:
             default_uc = ""
@@ -492,6 +539,7 @@ class ImagePreset:
         combined_uc = f"{default_uc}, {uc}" if default_uc and uc else default_uc if default_uc else uc
         settings["negative_prompt"] = combined_uc
 
+        # sampler
         sampler: ImageSampler = settings.pop("sampler")
         if sampler is ImageSampler.ddim and model in (ImageModel.Anime_v3,):
             sampler = ImageSampler.ddim_v3
@@ -507,6 +555,54 @@ class ImagePreset:
 
         settings["dynamic_thresholding"] = settings.pop("decrisper")
         settings["skip_cfg_above_sigma"] = 19 if settings.pop("variety_plus", False) else None
+
+        # character prompts
+        if model in (ImageModel.Anime_v4_preview,):
+            settings["v4_prompt"] = {
+                # base_caption is set later, in generate_image
+                "caption": {"base_caption": None, "char_captions": []},
+                "use_coords": self.use_coords,
+                "use_order": True,
+            }
+            settings["v4_negative_prompt"] = {"caption": {"base_caption": combined_uc, "char_captions": []}}
+
+            characters = settings.pop("characters", [])
+            if not isinstance(characters, list):
+                raise ValueError("characters must be a list of dictionaries")
+
+            settings["characterPrompts"] = []
+
+            for i, character in enumerate(characters):
+                if not isinstance(character, dict):
+                    raise ValueError(f"character #{i} must be a dictionary")
+
+                if "prompt" not in character:
+                    raise ValueError(f"character #{i} must have at least a 'prompt' key")
+
+                prompt = character["prompt"]
+                if not isinstance(prompt, str):
+                    raise ValueError(f"character #{i} prompt must be a string")
+
+                negative = character.get("uc", "")
+
+                character_position = character.get("position", "") or "C3"
+                if (
+                    len(character_position) != 2
+                    or character_position[0] not in "ABCDE"
+                    or character_position[1] not in "12345"
+                ):
+                    raise ValueError(f'character #{i} position must be a valid position ("", or "A1" to "E5")')
+
+                pos = {
+                    "x": round(0.5 + 0.2 * (ord(character_position[0]) - ord("C")), 1),
+                    "y": round(0.5 + 0.2 * (ord(character_position[1]) - ord("3")), 1),
+                }
+
+                settings["characterPrompts"].append({"center": pos, "prompt": prompt, "uc": negative})
+                settings["v4_prompt"]["caption"]["char_captions"].append({"centers": [pos], "char_caption": prompt})
+                settings["v4_negative_prompt"]["caption"]["char_captions"].append(
+                    {"centers": [pos], "char_caption": negative}
+                )
 
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")

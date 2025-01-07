@@ -27,10 +27,14 @@ async def main():
         # model = Model.Sigurd
         # model = Model.Euterpe
         # model = Model.Krake
-        model = Model.Clio
+        # model = Model.Clio
+        # model = Model.Kayra
+        model = Model.Erato
 
         # NOTE: plain text prompt
         prompt = PREAMBLE[model]
+        # NOTE: preamble should be the start. Look at the PREAMBLE variable in Preset.py for the correct preamble
+        # prompt = PREAMBLE[model] + "Suddenly,"
         # NOTE: prompt encoded in tokens
         # prompt = Tokenizer.encode(model, PREAMBLE[model])
 
@@ -38,15 +42,18 @@ async def main():
         preset = Preset("preset", model, {})
         # NOTE: instantiation from default (presets/presets_6B_v4/default.txt)
         # preset = Preset.from_default(model)
-        # NOTE: instantiation from official file (presets/presets_6B_v4)
+        # NOTE: instantiation from official file (in presets/ folder)
         # preset = Preset.from_official(model, "Storywriter")
-        # NOTE: instantiation from file
+        # NOTE: instantiation from file (note that each preset is for a specific model)
         # preset = Preset.from_file("novelai_api/presets/presets_6B_v4/Storywriter.txt")
         # NOTE: instantiation of a new reset
         # preset = Preset("new preset", model)
+
         # NOTE: modification of the preset
         preset.min_length = 1
-        preset.max_length = 20
+        # NOTE: context size is allowed_max_tokens - output_length - 20 (if generate_until_sentence is True)
+        # e.g. 8192 - 50 - 20 = 8122
+        preset.max_length = 50
 
         # NOTE: instantiate with arguments
         global_settings = GlobalSettings(num_logprobs=GlobalSettings.NO_LOGPROBS)
@@ -60,7 +67,7 @@ async def main():
         # bad_words = BanList()
         # NOTE: ban list with elements in it
         # bad_words = BanList(" cat", " dog", " boy")
-        # NOTE: disabled ban list with elements in it
+        # NOTE: disabled ban list with elements in it (if you want to control it with a condition)
         # bad_words = BanList(" cat", " dog", " boy", enabled = False)
         # NOTE: add elements to the bias list
         if bad_words is not None:
@@ -97,6 +104,11 @@ async def main():
         # NOTE: stop sequence as tokens
         # stop_sequence = Tokenizer.encode(model, ["The End", "THE END", "\n"])
 
+        # NOTE: for all models, but Erato
+        bytes_per_token = 2
+        # NOTE: for Erato (because of Llama 3)
+        # bytes_per_token = 4
+
         # NOTE: normal generation
         gen = await api.high_level.generate(
             prompt,
@@ -111,9 +123,9 @@ async def main():
         # NOTE: b64-encoded list of tokens ids
         logger.info(gen["output"])
         # NOTE: list of token ids
-        logger.info(b64_to_tokens(gen["output"]))
+        logger.info(b64_to_tokens(gen["output"], bytes_per_token))
         # NOTE: decoded response
-        logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"])))
+        logger.info(Tokenizer.decode(model, b64_to_tokens(gen["output"], bytes_per_token)))
 
         # NOTE: streamed generation
         async for token in api.high_level.generate_stream(
@@ -131,9 +143,9 @@ async def main():
                 # NOTE: b64-encoded token id
                 token["token"],
                 # NOTE: token id
-                b64_to_tokens(token["token"]),
-                # NOTE: decoded token
-                Tokenizer.decode(model, b64_to_tokens(token["token"])),
+                b64_to_tokens(token["token"], bytes_per_token),
+                # NOTE: decoded token (do note that decoding single tokens can yield broken unicode characters)
+                Tokenizer.decode(model, b64_to_tokens(token["token"], bytes_per_token)),
             )
 
         # ... and more examples can be found in tests/test_generate.py

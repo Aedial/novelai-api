@@ -503,6 +503,11 @@ class HighLevel:
                 ImageModel.Inpainting_Furry_v3,
             ):
                 prompt = f"{prompt}, best quality, amazing quality, very aesthetic, absurdres"
+            elif model is ImageModel.Anime_v4_preview:
+                prompt = f"{prompt}, rating:general, best quality, very aesthetic, absurdres"
+
+        if "v4_prompt" in settings:
+            settings["v4_prompt"]["caption"]["base_caption"] = prompt
 
         async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
             yield e

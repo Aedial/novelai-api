@@ -246,7 +246,7 @@ class Preset(metaclass=_PresetMetaclass):
         stop_sequences: List[List[int]]
         #: https://naidb.miraheze.org/wiki/Generation_Settings#Randomness_(Temperature)
         temperature: float
-        #: Response length, if no interrupted by a Stop Sequence
+        #: Response length, if not interrupted by a Stop Sequence
         max_length: int
         #: Minimum number of token, if interrupted by a Stop Sequence
         min_length: int
