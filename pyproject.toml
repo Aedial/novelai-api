@@ -41,7 +41,7 @@ pytest-asyncio = "^0.20.1"
 pytest-randomly = "^3.12.0"
 
 [tool.poetry.group.docs.dependencies]
-sphinx = "^5.3.0"
+sphinx = "^6.2.1"
 # patched repo to work with relative links
 myst_parser = {git = "https://github.com/Aedial/MyST-Parser", rev = "adcdb9a"}
 linkify-it-py = "^2.0.0"

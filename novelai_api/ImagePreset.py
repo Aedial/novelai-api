@@ -312,7 +312,7 @@ class ImagePreset:
     use_coords: bool
 
     #: https://docs.novelai.net/image/multiplecharacters.html#multi-character-prompting
-    #: layout = {"prompt": ..., "uc": ..., "position": ... ("A1" to "E5", "C3" is default)}
+    #: See examples/generate_image_v4.py for the format
     characters: List[Dict[str, str]]
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)

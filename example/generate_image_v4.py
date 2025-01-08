@@ -30,8 +30,8 @@ async def main():
         # even though we give positions, the model can ignore them
         preset.characters = [
             # prompt, uc, position
-            {"prompt": "1girl", "position": "A3"},
-            {"prompt": "1boy"},  # default position is "C3"
+            {"prompt": "girl", "position": "A3"},
+            {"prompt": "boy"},  # default position is "C3"
         ]
 
         # "1girl, 1boy" + quality tags without "rating:general"
