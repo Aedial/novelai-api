@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.16
+        uses: JRubics/poetry-publish@v2.0
         with:
-          ignore_dev_requirements: "yes"
+          poetry_install_options: "--without dev"
           pypi_token: ${{ secrets.PYPI_TOKEN }}
 
       - id: pypi-size
