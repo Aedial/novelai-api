@@ -18,10 +18,12 @@ jobs:
       with:
         python-version: "3.10"
 
-    - run: pip install poetry
+    - name: Install dependencies
+      run: |
+        pip install poetry==1.8.5
+        poetry install
     - name: Build HTML
       run: |
-        poetry install
         poetry run nai-build-docs
 
     - name: Deploy on Github Pages
