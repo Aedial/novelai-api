@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.NovelAI_API &#8212; NovelAI API 0.31.0 documentation</title>
+    <title>novelai_api.NovelAI_API &#8212; NovelAI API 0.32.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -18,10 +18,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
@@ -43,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.NovelAI_API</a></li> 
       </ul>
@@ -55,20 +54,20 @@
           <div class="body" role="main">
             
   <h1>Source code for novelai_api.NovelAI_API</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">http.cookies</span> <span class="kn">import</span> <span class="n">SimpleCookie</span>
-<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">dirname</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">http.cookies</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleCookie</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">dirname</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="kn">import</span> <span class="n">BasicAuth</span><span class="p">,</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">ClientTimeout</span>
-<span class="kn">from</span> <span class="nn">aiohttp.typedefs</span> <span class="kn">import</span> <span class="n">StrOrURL</span>
-<span class="kn">from</span> <span class="nn">multidict</span> <span class="kn">import</span> <span class="n">CIMultiDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicAuth</span><span class="p">,</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">ClientTimeout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp.typedefs</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOrURL</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multidict</span><span class="w"> </span><span class="kn">import</span> <span class="n">CIMultiDict</span>
 
-<span class="kn">from</span> <span class="nn">novelai_api._high_level</span> <span class="kn">import</span> <span class="n">HighLevel</span>
-<span class="kn">from</span> <span class="nn">novelai_api._low_level</span> <span class="kn">import</span> <span class="n">GENERAL_API_ADDRESS</span><span class="p">,</span> <span class="n">LowLevel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api._high_level</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighLevel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api._low_level</span><span class="w"> </span><span class="kn">import</span> <span class="n">GENERAL_API_ADDRESS</span><span class="p">,</span> <span class="n">LowLevel</span>
 
 
-<div class="viewcode-block" id="NovelAIAPI"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI">[docs]</a><span class="k">class</span> <span class="nc">NovelAIAPI</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIAPI"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NovelAIAPI</span><span class="p">:</span>
     <span class="c1"># Constants</span>
 
     <span class="c1"># TODO: might want to make the base endpoint configurable</span>
@@ -101,7 +100,7 @@
     <span class="c1">#: The high-level API (abstraction on top of low-level)</span>
     <span class="n">high_level</span><span class="p">:</span> <span class="n">HighLevel</span>
 
-<div class="viewcode-block" id="NovelAIAPI.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new NovelAIAPI object, which can be used to interact with the API.</span>
 <span class="sd">        Use the low_level and high_level attributes for this purpose</span>
@@ -132,7 +131,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">low_level</span> <span class="o">=</span> <span class="n">LowLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high_level</span> <span class="o">=</span> <span class="n">HighLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NovelAIAPI.attach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.attach_session">[docs]</a>    <span class="k">def</span> <span class="nf">attach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.attach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.attach_session">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">attach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attach a ClientSession, making the requests asynchronous</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -142,7 +141,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span></div>
 
-<div class="viewcode-block" id="NovelAIAPI.detach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.detach_session">[docs]</a>    <span class="k">def</span> <span class="nf">detach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIAPI.detach_session"><a class="viewcode-back" href="../../novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.detach_session">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detach_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detach the current ClientSession, making the requests synchronous</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -150,7 +149,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Timeout for a request (in seconds)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -158,7 +157,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="o">.</span><span class="n">total</span>
 
     <span class="nd">@timeout</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Timeout for a request (in seconds)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -195,14 +194,14 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.NovelAI_API</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, Aedial.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+        &#169; Copyright 2025, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

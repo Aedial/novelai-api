@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.StoryHandler &#8212; NovelAI API 0.31.0 documentation</title>
+    <title>novelai_api.StoryHandler &#8212; NovelAI API 0.32.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -19,10 +19,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/tooltipster-sideTip-borderless.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/micromodal.css" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
@@ -52,7 +51,7 @@
         <li class="right" >
           <a href="novelai_api.SchemaValidator.html" title="novelai_api.SchemaValidator"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.StoryHandler</a></li> 
       </ul>
@@ -208,7 +207,7 @@
 <p>General storage for the NovelAIStory objects. Instances of this class should be loaded or created from here.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.StoryHandler.NovelAIStoryStorage.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI" title="novelai_api.NovelAI_API.NovelAIAPI"><span class="pre">novelai_api.NovelAI_API.NovelAIAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keystore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Keystore.html#novelai_api.Keystore.Keystore" title="novelai_api.Keystore.Keystore"><span class="pre">novelai_api.Keystore.Keystore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings" title="novelai_api.GlobalSettings.GlobalSettings"><span class="pre">novelai_api.GlobalSettings.GlobalSettings</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/StoryHandler.html#NovelAIStoryStorage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.StoryHandler.NovelAIStoryStorage.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI" title="novelai_api.NovelAI_API.NovelAIAPI"><span class="pre">novelai_api.NovelAI_API.NovelAIAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keystore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.Keystore.html#novelai_api.Keystore.Keystore" title="novelai_api.Keystore.Keystore"><span class="pre">novelai_api.Keystore.Keystore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.GlobalSettings.html#novelai_api.GlobalSettings.GlobalSettings" title="novelai_api.GlobalSettings.GlobalSettings"><span class="pre">novelai_api.GlobalSettings.GlobalSettings</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/novelai_api/StoryHandler.html#NovelAIStoryStorage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.StoryHandler.NovelAIStoryStorage.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -254,7 +253,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.StoryHandler.NovelAIStoryStorage.select">
-<span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">story_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.StoryHandler.NovelAIStory" title="novelai_api.StoryHandler.NovelAIStory"><span class="pre">novelai_api.StoryHandler.NovelAIStory</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/StoryHandler.html#NovelAIStoryStorage.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.StoryHandler.NovelAIStoryStorage.select" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">story_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.StoryHandler.NovelAIStory" title="novelai_api.StoryHandler.NovelAIStory"><span class="pre">novelai_api.StoryHandler.NovelAIStory</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/novelai_api/StoryHandler.html#NovelAIStoryStorage.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.StoryHandler.NovelAIStoryStorage.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a story proxy from the previously created/loaded ones</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -381,14 +380,14 @@
         <li class="right" >
           <a href="novelai_api.SchemaValidator.html" title="novelai_api.SchemaValidator"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.StoryHandler</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, Aedial.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+        &#169; Copyright 2025, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._low_level &#8212; NovelAI API 0.31.0 documentation</title>
+    <title>novelai_api._low_level &#8212; NovelAI API 0.32.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -18,10 +18,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
@@ -43,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>
@@ -55,27 +54,27 @@
           <div class="body" role="main">
             
   <h1>Source code for novelai_api._low_level</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">enum</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">zipfile</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncIterator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">quote</span><span class="p">,</span> <span class="n">urlencode</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncIterator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">quote</span><span class="p">,</span> <span class="n">urlencode</span>
 
-<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="kn">import</span> <span class="n">ClientSession</span>
-<span class="kn">from</span> <span class="nn">aiohttp.client_reqrep</span> <span class="kn">import</span> <span class="n">ClientResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp.client_reqrep</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientResponse</span>
 
-<span class="kn">from</span> <span class="nn">novelai_api.DirectorToolsPreset</span> <span class="kn">import</span> <span class="n">DirectorToolsPreset</span><span class="p">,</span> <span class="n">RequestType</span>
-<span class="kn">from</span> <span class="nn">novelai_api.ImagePreset</span> <span class="kn">import</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">ImageModel</span>
-<span class="kn">from</span> <span class="nn">novelai_api.NovelAIError</span> <span class="kn">import</span> <span class="n">NovelAIError</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">novelai_api.python_utils</span> <span class="kn">import</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">assert_len</span><span class="p">,</span> <span class="n">assert_type</span>
-<span class="kn">from</span> <span class="nn">novelai_api.SchemaValidator</span> <span class="kn">import</span> <span class="n">SchemaValidator</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
-<span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">tokens_to_b64</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.DirectorToolsPreset</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectorToolsPreset</span><span class="p">,</span> <span class="n">RequestType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.ImagePreset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">ImageModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.NovelAIError</span><span class="w"> </span><span class="kn">import</span> <span class="n">NovelAIError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Preset</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.python_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">assert_len</span><span class="p">,</span> <span class="n">assert_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.SchemaValidator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SchemaValidator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">tokens_to_b64</span>
 
 <span class="n">PRINT_WITH_PARAMETERS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NAI_PRINT&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
@@ -88,7 +87,7 @@
 <span class="n">SSE_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;retry&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="print_with_parameters"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.print_with_parameters">[docs]</a><span class="k">def</span> <span class="nf">print_with_parameters</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<div class="viewcode-block" id="print_with_parameters"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.print_with_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">print_with_parameters</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Print the provided parameters in a nice way</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -112,7 +111,7 @@
 
 
 <span class="c1"># === API === #</span>
-<div class="viewcode-block" id="LowLevel"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel">[docs]</a><span class="k">class</span> <span class="nc">LowLevel</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LowLevel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Low level API for NovelAI. This class is not meant to be used directly,</span>
 <span class="sd">    but rather through :attr:`NovelAIAPI.low_level &lt;novelai_api.NovelAI_API.NovelAIAPI.low_level&gt;`.</span>
@@ -132,12 +131,12 @@
     <span class="c1">#: Enable or disable schema validation for responses. Default is ``True``.</span>
     <span class="n">is_schema_validation_enabled</span><span class="p">:</span> <span class="nb">bool</span>
 
-<div class="viewcode-block" id="LowLevel.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="s2">&quot;NovelAIAPI&quot;</span><span class="p">):</span>  <span class="c1"># noqa: F821</span>
+<div class="viewcode-block" id="LowLevel.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="s2">&quot;NovelAIAPI&quot;</span><span class="p">):</span>  <span class="c1"># noqa: F821</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_schema_validation_enabled</span> <span class="o">=</span> <span class="kc">True</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rsp</span><span class="o">.</span><span class="n">url</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rsp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">rsp</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">human_repr</span><span class="p">()</span>
 
         <span class="c1"># error is an unexpected fail and usually come with a success status</span>
@@ -158,7 +157,7 @@
 
         <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">rsp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="s2">&quot;Unknown error&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_treat_response_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_treat_response_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">rsp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">status</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
@@ -166,7 +165,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_parse_sse_stream</span><span class="p">(</span><span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_parse_sse_stream</span><span class="p">(</span><span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse a stream of Server Sent Event from an aiohttp ClientResponse</span>
 <span class="sd">        Specs: https://html.spec.whatwg.org/multipage/server-sent-events.html</span>
@@ -225,7 +224,7 @@
                     <span class="n">sse_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_parse_response</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_parse_response</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rsp</span><span class="p">:</span> <span class="n">ClientResponse</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the content of a ClientResponse depending on the content-type</span>
 
@@ -257,7 +256,7 @@
             <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rsp</span><span class="o">.</span><span class="n">url</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rsp</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">rsp</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">human_repr</span><span class="p">()</span>
             <span class="k">raise</span> <span class="n">NovelAIError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Unsupported type: </span><span class="si">{</span><span class="n">rsp</span><span class="o">.</span><span class="n">content_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LowLevel.request"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">request</span><span class="p">(</span>
+<div class="viewcode-block" id="LowLevel.request"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">request</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -307,7 +306,7 @@
             <span class="k">if</span> <span class="n">is_sync</span><span class="p">:</span>
                 <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="LowLevel.is_reachable"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.is_reachable">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">is_reachable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.is_reachable"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.is_reachable">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">is_reachable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the NovelAI API is reachable</span>
 
@@ -317,7 +316,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.register"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.register">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">register</span><span class="p">(</span>
+<div class="viewcode-block" id="LowLevel.register"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.register">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">recapcha</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">giftkey</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -351,7 +350,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.login"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.login">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.login"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.login">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Log in to the account</span>
 
@@ -371,7 +370,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.change_access_key"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_access_key">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">change_access_key</span><span class="p">(</span>
+<div class="viewcode-block" id="LowLevel.change_access_key"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_access_key">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">change_access_key</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">current_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -399,7 +398,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.send_email_verification"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.send_email_verification">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_email_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.send_email_verification"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.send_email_verification">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_email_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send the email for account verification</span>
 
@@ -411,7 +410,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/resend-email-verification&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">}):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.verify_email"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.verify_email">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">verify_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verification_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.verify_email"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.verify_email">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">verify_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verification_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the token sent for email verification</span>
 
@@ -424,7 +423,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/verify-email&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;verificationToken&quot;</span><span class="p">:</span> <span class="n">verification_token</span><span class="p">}):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_information"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_information">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_information"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_information">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get extensive information about the account</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -437,7 +436,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.request_account_recovery"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request_account_recovery">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">request_account_recovery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.request_account_recovery"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.request_account_recovery">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">request_account_recovery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send a recovery token to the provided email address, if the account has been lost</span>
 <span class="sd">        **WARNING**: the content will not be readable with a different encryption key</span>
@@ -450,7 +449,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/recovery/request&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">}):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">202</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.recover_account"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.recover_account">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">recover_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recovery_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete_content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.recover_account"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.recover_account">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">recover_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recovery_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete_content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recover the lost account</span>
 
@@ -478,7 +477,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.delete_account"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_account">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.delete_account"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_account">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the account</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -486,7 +485,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/delete&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_data"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_data">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_data"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_data">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get various data about the account</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -500,7 +499,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_priority"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_priority">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_priority"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_priority">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the priority information of the account</span>
 
@@ -515,7 +514,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.SubscriptionTier"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier">[docs]</a>    <span class="k">class</span> <span class="nc">SubscriptionTier</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="LowLevel.SubscriptionTier"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.SubscriptionTier">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">SubscriptionTier</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Index of the subscription tiers</span>
 
@@ -527,7 +526,7 @@
         <span class="n">SCROLL</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">OPUS</span> <span class="o">=</span> <span class="mi">3</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get various information about the account&#39;s subscription</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -540,7 +539,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the keystore</span>
 
@@ -556,7 +555,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.set_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.set_keystore"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_keystore">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the keystore</span>
 
@@ -569,7 +568,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/keystore&quot;</span><span class="p">,</span> <span class="n">keystore</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.download_objects"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_objects">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<div class="viewcode-block" id="LowLevel.download_objects"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_objects">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">download_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download all the objects of a given type from the account</span>
 
@@ -586,7 +585,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.upload_objects"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_objects">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.upload_objects"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_objects">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload multiple objects of the given type</span>
 
@@ -603,7 +602,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.download_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">download_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="LowLevel.download_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.download_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">download_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download the selected object of a given type from the account</span>
 
@@ -621,7 +620,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.upload_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upload_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.upload_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upload_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload an object of then given type</span>
 
@@ -640,7 +639,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.delete_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="LowLevel.delete_object"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download the selected object of a given type from the account</span>
 
@@ -653,7 +652,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/user/objects/</span><span class="si">{</span><span class="n">object_type</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">object_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_settings"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_settings">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.get_settings"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_settings">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the account settings. The format is arbitrary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -661,7 +660,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/clientsettings&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.set_settings"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_settings">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.set_settings"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.set_settings">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the account settings. The format is arbitrary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -673,7 +672,7 @@
 
     <span class="c1"># TODO: add submission endpoints</span>
 
-<div class="viewcode-block" id="LowLevel.bind_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.bind_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">bind_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_processor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.bind_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.bind_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">bind_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_processor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Bind payment information to the account to renew subscription monthly</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -685,7 +684,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/subscription/bind&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.change_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">change_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_plan</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.change_subscription"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.change_subscription">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">change_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_plan</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the subscription tier. Payment information should still be bound to the account</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -695,7 +694,7 @@
         <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/subscription/change&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;newSubscriptionPlan&quot;</span><span class="p">:</span> <span class="n">new_plan</span><span class="p">}):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_bool</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="LowLevel.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate text with streaming support. As the model accepts a complete prompt,</span>
 <span class="sd">        the context building must be done before calling this function.</span>
@@ -736,7 +735,7 @@
 
             <span class="k">yield</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_image</span><span class="p">(</span>
+<div class="viewcode-block" id="LowLevel.generate_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_image</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">ImageGenerationType</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -766,7 +765,7 @@
 
             <span class="k">yield</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate_prompt"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_prompt">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.generate_prompt"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_prompt">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a prompt</span>
 
@@ -795,7 +794,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate_controlnet_mask"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_controlnet_mask">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_controlnet_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.generate_controlnet_mask"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_controlnet_mask">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_controlnet_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ControlNetModel</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the ControlNet&#39;s mask for the given image. Used for ImageSampler.controlnet_condition</span>
 
@@ -815,7 +814,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.upscale_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upscale_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">upscale_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.upscale_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.upscale_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upscale_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upscale the given image. Afaik, the only allowed values for scale are 2 and 4.</span>
 
@@ -837,7 +836,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.augment_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.augment_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">augment_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">:</span> <span class="n">RequestType</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.augment_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.augment_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">augment_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">:</span> <span class="n">RequestType</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment the given image with the given preset</span>
 
@@ -857,14 +856,14 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.classify"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.classify">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="LowLevel.classify"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.classify">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Not implemented</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Function is not implemented yet&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LowLevel.suggest_tags"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.suggest_tags">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">suggest_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.suggest_tags"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.suggest_tags">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">suggest_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Suggest tags with a certain confidence, considering how much the tag is used in the dataset</span>
 
@@ -890,7 +889,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.generate_voice"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_voice">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">voice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.generate_voice"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.generate_voice">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">voice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the Text To Speech of the given text</span>
 
@@ -925,7 +924,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.train_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.train_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">train_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.train_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.train_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">train_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train a module for text gen</span>
 
@@ -956,7 +955,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_trained_modules"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_modules">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_trained_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="LowLevel.get_trained_modules"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_modules">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_trained_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the modules currently in training or that finished training</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -969,7 +968,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.get_trained_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_trained_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.get_trained_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.get_trained_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_trained_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a module currently in training or that finished training</span>
 
@@ -986,7 +985,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.delete_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LowLevel.delete_module"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.delete_module">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a module currently in training or that finished training</span>
 
@@ -1004,7 +1003,7 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
-<div class="viewcode-block" id="LowLevel.buy_steps"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.buy_steps">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">buy_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="LowLevel.buy_steps"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.buy_steps">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">buy_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">assert_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">amount</span><span class="p">}</span>
@@ -1046,14 +1045,14 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, Aedial.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+        &#169; Copyright 2025, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

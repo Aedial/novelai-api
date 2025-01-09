@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.StoryHandler &#8212; NovelAI API 0.31.0 documentation</title>
+    <title>novelai_api.StoryHandler &#8212; NovelAI API 0.32.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -18,10 +18,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/tooltipster-sideTip-borderless.min.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/micromodal.css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
@@ -43,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.StoryHandler</a></li> 
       </ul>
@@ -55,26 +54,26 @@
           <div class="body" role="main">
             
   <h1>Source code for novelai_api.StoryHandler</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">run</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="kn">import</span> <span class="n">ClientSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span>
 
-<span class="kn">from</span> <span class="nn">novelai_api</span> <span class="kn">import</span> <span class="n">NovelAIAPI</span>
-<span class="kn">from</span> <span class="nn">novelai_api.BanList</span> <span class="kn">import</span> <span class="n">BanList</span>
-<span class="kn">from</span> <span class="nn">novelai_api.BiasGroup</span> <span class="kn">import</span> <span class="n">BiasGroup</span>
-<span class="kn">from</span> <span class="nn">novelai_api.GlobalSettings</span> <span class="kn">import</span> <span class="n">GlobalSettings</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Idstore</span> <span class="kn">import</span> <span class="n">Idstore</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Keystore</span> <span class="kn">import</span> <span class="n">Keystore</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Preset</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
-<span class="kn">from</span> <span class="nn">novelai_api.Tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
-<span class="kn">from</span> <span class="nn">novelai_api.utils</span> <span class="kn">import</span> <span class="n">b64_to_tokens</span><span class="p">,</span> <span class="n">decrypt_user_data</span><span class="p">,</span> <span class="n">encrypt_user_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">NovelAIAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.BanList</span><span class="w"> </span><span class="kn">import</span> <span class="n">BanList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.BiasGroup</span><span class="w"> </span><span class="kn">import</span> <span class="n">BiasGroup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.GlobalSettings</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalSettings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Idstore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Idstore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Keystore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Keystore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Preset</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Preset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.Tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">novelai_api.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">b64_to_tokens</span><span class="p">,</span> <span class="n">decrypt_user_data</span><span class="p">,</span> <span class="n">encrypt_user_data</span>
 
 
-<span class="k">def</span> <span class="nf">_get_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the current time, as formatted for createdAt and lastUpdatedAt</span>
 
@@ -84,7 +83,7 @@
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_get_short_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_short_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Because some lastUpdatedAt only are precise to the second</span>
 
@@ -94,7 +93,7 @@
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">())</span>
 
 
-<span class="k">def</span> <span class="nf">_set_nested_item</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_nested_item</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">path</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
@@ -103,7 +102,7 @@
     <span class="n">item</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">val</span>
 
 
-<div class="viewcode-block" id="NovelAIStory"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory">[docs]</a><span class="k">class</span> <span class="nc">NovelAIStory</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIStory"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NovelAIStory</span><span class="p">:</span>
     <span class="n">TEXT_GENERATION_SETTINGS_VERSION</span> <span class="o">=</span> <span class="mi">2</span>
 
     <span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">Euterpe</span>
@@ -124,14 +123,14 @@
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">context_size</span><span class="p">:</span> <span class="nb">int</span>
 
-    <span class="k">def</span> <span class="nf">_handle_banlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_banlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="k">if</span> <span class="s2">&quot;bannedSequenceGroups&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;bannedSequenceGroups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">ban_seq</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;bannedSequenceGroups&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">banlists</span> <span class="o">=</span> <span class="p">[</span><span class="n">BanList</span><span class="p">(</span><span class="o">*</span><span class="n">seq</span><span class="p">[</span><span class="s2">&quot;sequences&quot;</span><span class="p">],</span> <span class="n">enabled</span><span class="o">=</span><span class="n">seq</span><span class="p">[</span><span class="s2">&quot;enabled&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">ban_seq</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_handle_biasgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_biasgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="k">if</span> <span class="s2">&quot;phraseBiasGroup&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;phraseBiasGroups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -139,7 +138,7 @@
         <span class="k">for</span> <span class="n">bias</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;phraseBiasGroups&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BiasGroup</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">bias</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_handle_preset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_preset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="n">settings</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;settings&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="s2">&quot;textGenerationSettingsVersion&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
@@ -171,7 +170,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">preset</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;preset&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">preset</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
 
-<div class="viewcode-block" id="NovelAIStory.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="NovelAIStory.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">api</span><span class="p">:</span> <span class="n">NovelAIAPI</span><span class="p">,</span>
         <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">,</span>
@@ -207,7 +206,7 @@
 
         <span class="c1"># TODO: Lorebook</span>
 
-    <span class="k">def</span> <span class="nf">_create_datablock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragment</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">end_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_datablock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragment</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">end_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;datablocks&quot;</span><span class="p">]</span>
         <span class="n">fragments</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;fragments&quot;</span><span class="p">]</span>
@@ -241,7 +240,7 @@
         <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_index</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">story_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">][</span><span class="s2">&quot;fragments&quot;</span><span class="p">]</span>
 
         <span class="n">story_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fragment</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">story_fragments</span><span class="p">)</span>
@@ -250,7 +249,7 @@
 
         <span class="k">return</span> <span class="n">story_content</span>
 
-<div class="viewcode-block" id="NovelAIStory.build_context"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.build_context">[docs]</a>    <span class="k">def</span> <span class="nf">build_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="NovelAIStory.build_context"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.build_context">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># TODO: Remember tokens</span>
@@ -286,7 +285,7 @@
 
         <span class="k">return</span> <span class="n">tokens</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.generate"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.generate">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">prompt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_context</span><span class="p">()</span>
         <span class="c1"># FIXME: find why the output is garbage</span>
         <span class="n">rsp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
@@ -306,14 +305,14 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.edit"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.edit">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">edit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.edit"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.edit">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">edit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># FIXME: redo edit implementation</span>
 
         <span class="n">fragment</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">replace</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="s2">&quot;edit&quot;</span><span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_datablock</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.undo"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.undo">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.undo"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.undo">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
 
         <span class="n">cur_index</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span>
@@ -322,7 +321,7 @@
         <span class="n">cur_block</span> <span class="o">=</span> <span class="n">blocks</span><span class="p">[</span><span class="n">cur_index</span><span class="p">]</span>
         <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_block</span><span class="p">[</span><span class="s2">&quot;prevBlock&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.redo"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.redo">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.redo"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.redo">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
 
         <span class="n">cur_index</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span>
@@ -331,7 +330,7 @@
         <span class="n">cur_block</span> <span class="o">=</span> <span class="n">blocks</span><span class="p">[</span><span class="n">cur_index</span><span class="p">]</span>
         <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_block</span><span class="p">[</span><span class="s2">&quot;nextBlock&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.save"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.save">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIStory.save"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.save">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">encrypted_story</span> <span class="o">=</span> <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">story</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystore</span><span class="p">)</span>
         <span class="n">encrypted_storycontent</span> <span class="o">=</span> <span class="n">encrypt_user_data</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystore</span><span class="p">)</span>
 
@@ -344,7 +343,7 @@
 
         <span class="k">return</span> <span class="n">success</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.choose"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.choose">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">choose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.choose"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.choose">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">choose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
 
         <span class="n">cur_index</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span>
@@ -357,7 +356,7 @@
 
         <span class="n">story</span><span class="p">[</span><span class="s2">&quot;currentBlock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_blocks</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.flatten"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.flatten">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.flatten"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.flatten">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
 
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;datablocks&quot;</span><span class="p">]</span>
@@ -365,17 +364,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_datablocks</span><span class="p">))]</span>
         <span class="n">story</span><span class="p">[</span><span class="s2">&quot;datablocks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_datablocks</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.delete"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.delete">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStory.delete"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.delete">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="NovelAIStory.get_current_tree"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.get_current_tree">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_current_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="NovelAIStory.get_current_tree"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.get_current_tree">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_current_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
         <span class="n">story</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storycontent</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
 
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">story</span><span class="p">[</span><span class="s2">&quot;datablocks&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="NovelAIStoryStorage"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage">[docs]</a><span class="k">class</span> <span class="nc">NovelAIStoryStorage</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NovelAIStoryStorage</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    General storage for the NovelAIStory objects. Instances of this class should be loaded or created from here.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -388,7 +387,7 @@
 
     <span class="n">global_settings</span><span class="p">:</span> <span class="n">GlobalSettings</span>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api</span><span class="p">:</span> <span class="n">NovelAIAPI</span><span class="p">,</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">,</span> <span class="n">global_settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GlobalSettings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.__init__"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api</span><span class="p">:</span> <span class="n">NovelAIAPI</span><span class="p">,</span> <span class="n">keystore</span><span class="p">:</span> <span class="n">Keystore</span><span class="p">,</span> <span class="n">global_settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GlobalSettings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">api</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keystore</span> <span class="o">=</span> <span class="n">keystore</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idstore</span> <span class="o">=</span> <span class="n">Idstore</span><span class="p">()</span>
@@ -397,16 +396,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_story_instances</span> <span class="o">=</span> <span class="p">{}</span></div>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_story_instances</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_story_instances</span><span class="p">[</span><span class="n">story_id</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_story_instances</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.load"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">storycontent</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.load"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">storycontent</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a story proxy from a story and storycontent object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -425,7 +424,7 @@
 
         <span class="k">return</span> <span class="n">story</span></div>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.loads"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.loads">[docs]</a>    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stories</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">storycontents</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.loads"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.loads">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stories</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">storycontents</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
         <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">story</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decrypted&quot;</span><span class="p">):</span>
@@ -449,7 +448,7 @@
 
         <span class="k">return</span> <span class="n">loaded</span></div>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.load_from_remote"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load_from_remote">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_from_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.load_from_remote"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.load_from_remote">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">load_from_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
         <span class="n">stories</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_stories</span><span class="p">()</span>
         <span class="n">storycontents</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">high_level</span><span class="o">.</span><span class="n">download_user_story_contents</span><span class="p">()</span>
 
@@ -458,7 +457,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">storycontents</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.create"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.create"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.create">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NovelAIStory</span><span class="p">:</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keystore</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
         <span class="n">current_time</span> <span class="o">=</span> <span class="n">_get_time</span><span class="p">()</span>
         <span class="n">current_time_short</span> <span class="o">=</span> <span class="n">_get_short_time</span><span class="p">()</span>
@@ -499,7 +498,7 @@
 
         <span class="k">return</span> <span class="n">proxy</span></div>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.select"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.select">[docs]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.select"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.select">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NovelAIStory</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select a story proxy from the previously created/loaded ones</span>
 
@@ -513,7 +512,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_story_instances</span><span class="p">[</span><span class="n">story_id</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="NovelAIStoryStorage.unload"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.unload">[docs]</a>    <span class="k">def</span> <span class="nf">unload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="NovelAIStoryStorage.unload"><a class="viewcode-back" href="../../novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStoryStorage.unload">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">unload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">story_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unload a previously created/loaded story, free&#39;ing the NovelAI_StoryProxy object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -551,14 +550,14 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.31.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.StoryHandler</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, Aedial.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+        &#169; Copyright 2025, Aedial.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>
