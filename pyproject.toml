@@ -104,6 +104,7 @@ addopts = "--tb=short -vv"
 nai-pre-commit = "novelai_api.poetry_scripts:pre_commit"
 nai-test-mock = "novelai_api.poetry_scripts:test_mock"
 nai-test-api = "novelai_api.poetry_scripts:test_api"
+nai-test-image-old = "tests.api.older_imagegen_samplers:main"
 nai-build-docs = "novelai_api.poetry_scripts:build_docs"
 nai-bump-version = "novelai_api.poetry_scripts:bump_version"
 

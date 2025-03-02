@@ -1,5 +1,5 @@
 """
-Test which samplers currently work
+Test which samplers currently work (including older models)
 """
 
 import asyncio
@@ -15,23 +15,11 @@ from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  
 
 sampler_xfail = pytest.mark.xfail(strict=False, raises=NovelAIError, reason="The sampler might not work")
 
-models = list(ImageModel)
-
-# remove outdated models
-models.remove(ImageModel.Anime_Full)
-models.remove(ImageModel.Anime_Curated)
-models.remove(ImageModel.Furry)
-models.remove(ImageModel.Anime_v2)
-models.remove(ImageModel.Anime_v3)
-models.remove(ImageModel.Furry_v3)
-models.remove(ImageModel.Anime_v4_preview)
-
-# remove inpainting models
-models.remove(ImageModel.Inpainting_Anime_Full)
-models.remove(ImageModel.Inpainting_Anime_Curated)
-models.remove(ImageModel.Inpainting_Furry)
-models.remove(ImageModel.Inpainting_Anime_v3)
-models.remove(ImageModel.Inpainting_Furry_v3)
+models = [
+    ImageModel.Anime_v2,
+    ImageModel.Anime_v3,
+    ImageModel.Furry_v3,
+]
 
 samplers = list(ImageSampler)
 model_samplers = list(itertools.product(models, samplers))
@@ -56,7 +44,7 @@ test_results_dir = Path(__file__).parent.parent.parent / "test_results"
     ],
 )
 @error_handler
-async def test_samplers(
+async def older_test_samplers(
     api_handle, model_sampler: Tuple[ImageModel, ImageSampler]  # noqa: F811  # pylint: disable=W0621
 ):
     api = api_handle.api
@@ -78,10 +66,14 @@ async def test_samplers(
             (test_results_dir / f"image_{model.name}_{sampler.name}.png").write_bytes(img)
 
 
+async def main():
+    async with API() as api:
+        await older_test_samplers(api, (ImageModel.Anime_v3, ImageSampler.ddim_v3))
+
+
+def main_sync():
+    asyncio.run(main())
+
+
 if __name__ == "__main__":
-
-    async def main():
-        async with API() as api:
-            await test_samplers(api, (ImageModel.Anime_v3, ImageSampler.ddim_v3))
-
     asyncio.run(main())

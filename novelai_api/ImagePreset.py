@@ -34,6 +34,8 @@ class ImageModel(enum.Enum):
     Inpainting_Furry_v3 = "nai-diffusion-furry-3-inpainting"
 
     Anime_v4_preview = "nai-diffusion-4-curated-preview"
+    Anime_v4_Curated = Anime_v4_preview  # alias as it has just been renamed
+    Anime_v4_Full = "nai-diffusion-4-full"
 
 
 class ControlNetModel(enum.Enum):
@@ -221,7 +223,14 @@ class ImagePreset:
             "gigantic breasts",
             UCPreset.Preset_Light: "blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
             "very displeasing, logo, dated, signature",
-            UCPreset.Preset_None: "lowres",
+            UCPreset.Preset_None: "",
+        },
+        ImageModel.Anime_v4_Full: {
+            UCPreset.Preset_Heavy: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, "
+            "jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks",
+            UCPreset.Preset_Light: "blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
+            "very displeasing",
+            UCPreset.Preset_None: "",
         },
     }
 
@@ -230,6 +239,7 @@ class ImagePreset:
     _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
     _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
     _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v3]
+    _UC_Presets[ImageModel.Anime_v4_Curated] = _UC_Presets[ImageModel.Anime_v4_preview]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
@@ -426,7 +436,7 @@ class ImagePreset:
             return cls.from_v3_config()
         elif model in (ImageModel.Furry_v3, ImageModel.Inpainting_Furry_v3):
             return cls.from_v3_furry_config()
-        elif model in (ImageModel.Anime_v4_preview,):
+        elif model in (ImageModel.Anime_v4_preview, ImageModel.Anime_v4_Curated, ImageModel.Anime_v4_Full):
             return cls.from_v4_config()
 
     def __setitem__(self, key: str, value: Any):
@@ -557,7 +567,7 @@ class ImagePreset:
         settings["skip_cfg_above_sigma"] = 19 if settings.pop("variety_plus", False) else None
 
         # character prompts
-        if model in (ImageModel.Anime_v4_preview,):
+        if model in (ImageModel.Anime_v4_preview, ImageModel.Anime_v4_Curated, ImageModel.Anime_v4_Full):
             settings["v4_prompt"] = {
                 # base_caption is set later, in generate_image
                 "caption": {"base_caption": None, "char_captions": []},
