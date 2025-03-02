@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.32.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.33.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -89,7 +89,9 @@
     <span class="n">Furry_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry-3&quot;</span>
     <span class="n">Inpainting_Furry_v3</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-furry-3-inpainting&quot;</span>
 
-    <span class="n">Anime_v4_preview</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-curated-preview&quot;</span></div>
+    <span class="n">Anime_v4_preview</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-curated-preview&quot;</span>
+    <span class="n">Anime_v4_Curated</span> <span class="o">=</span> <span class="n">Anime_v4_preview</span>  <span class="c1"># alias as it has just been renamed</span>
+    <span class="n">Anime_v4_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-full&quot;</span></div>
 
 
 <div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -277,7 +279,14 @@
             <span class="s2">&quot;gigantic breasts&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, worst quality, bad quality, jpeg artifacts, &quot;</span>
             <span class="s2">&quot;very displeasing, logo, dated, signature&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;lowres&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, worst quality, bad quality, jpeg artifacts, &quot;</span>
+            <span class="s2">&quot;very displeasing&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
 
@@ -286,6 +295,7 @@
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Full</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v3</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v3</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">]</span>
 
     <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Palette_Swap</span><span class="p">:</span> <span class="s2">&quot;hed&quot;</span><span class="p">,</span>
@@ -482,7 +492,7 @@
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_config</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry_v3</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry_v3</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_furry_config</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,):</span>
+        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v4_config</span><span class="p">()</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
@@ -613,7 +623,7 @@
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;skip_cfg_above_sigma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">19</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;variety_plus&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1"># character prompts</span>
-        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,):</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">):</span>
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;v4_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="c1"># base_caption is set later, in generate_image</span>
                 <span class="s2">&quot;caption&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;base_caption&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;char_captions&quot;</span><span class="p">:</span> <span class="p">[]},</span>
@@ -862,7 +872,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.32.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
