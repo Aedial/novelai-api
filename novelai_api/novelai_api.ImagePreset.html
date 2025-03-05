@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.33.0 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.33.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -137,6 +137,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Anime_v4_Full">
 <span class="sig-name descname"><span class="pre">Anime_v4_Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-4-full'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Anime_v4_Full" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Curated">
+<span class="sig-name descname"><span class="pre">Inpainting_Anime_v4_Curated</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-4-curated-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Curated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Full">
+<span class="sig-name descname"><span class="pre">Inpainting_Anime_v4_Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nai-diffusion-4-full-inpainting'</span></em><a class="headerlink" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Full" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -813,6 +823,83 @@ See examples/generate_image_v4.py for the format</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_v1">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_v1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_v1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_v1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a v1 model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_v2">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_v2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_v2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a v2 model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_v3">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_v3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_v3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_v3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a v3 model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_v4">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_v4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_v4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a v4 model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_inpainting">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_inpainting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_inpainting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_inpainting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is an inpainting model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_furry">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_furry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_furry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_furry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a furry model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.is_model_curated">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_model_curated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.is_model_curated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.is_model_curated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the model is a curated model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – Model to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="novelai_api.ImagePreset.ImagePreset.from_default_config">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_default_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="hxr-hoverxref hxr-modal reference internal" href="#novelai_api.ImagePreset.ImagePreset" title="novelai_api.ImagePreset.ImagePreset"><span class="pre">novelai_api.ImagePreset.ImagePreset</span></a></span></span><a class="reference internal" href="../_modules/novelai_api/ImagePreset.html#ImagePreset.from_default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api.ImagePreset.ImagePreset.from_default_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new ImagePreset with the default settings inferring the version from the model</p>
@@ -897,6 +984,8 @@ See examples/generate_image_v4.py for the format</p>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_v4_preview"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_v4_preview</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_v4_Curated"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_v4_Curated</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Anime_v4_Full"><code class="docutils literal notranslate"><span class="pre">ImageModel.Anime_v4_Full</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Curated"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Anime_v4_Curated</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_v4_Full"><code class="docutils literal notranslate"><span class="pre">ImageModel.Inpainting_Anime_v4_Full</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ControlNetModel"><code class="docutils literal notranslate"><span class="pre">ControlNetModel</span></code></a><ul>
@@ -1030,6 +1119,13 @@ See examples/generate_image_v4.py for the format</p>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v3_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v3_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v3_furry_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v3_furry_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_v4_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_v4_config()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_v1"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_v1()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_v2"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_v2()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_v3"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_v3()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_v4"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_v4()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_inpainting"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_inpainting()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_furry"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_furry()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.is_model_curated"><code class="docutils literal notranslate"><span class="pre">ImagePreset.is_model_curated()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.from_default_config"><code class="docutils literal notranslate"><span class="pre">ImagePreset.from_default_config()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.update"><code class="docutils literal notranslate"><span class="pre">ImagePreset.update()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api.ImagePreset.ImagePreset.copy"><code class="docutils literal notranslate"><span class="pre">ImagePreset.copy()</span></code></a></li>
@@ -1089,7 +1185,7 @@ See examples/generate_image_v4.py for the format</p>
         <li class="right" >
           <a href="novelai_api.Idstore.html" title="novelai_api.Idstore"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
