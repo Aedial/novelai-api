@@ -36,6 +36,8 @@ class ImageModel(enum.Enum):
     Anime_v4_preview = "nai-diffusion-4-curated-preview"
     Anime_v4_Curated = Anime_v4_preview  # alias as it has just been renamed
     Anime_v4_Full = "nai-diffusion-4-full"
+    Inpainting_Anime_v4_Curated = "nai-diffusion-4-curated-inpainting"
+    Inpainting_Anime_v4_Full = "nai-diffusion-4-full-inpainting"
 
 
 class ControlNetModel(enum.Enum):
@@ -239,7 +241,10 @@ class ImagePreset:
     _UC_Presets[ImageModel.Inpainting_Anime_Full] = _UC_Presets[ImageModel.Anime_Full]
     _UC_Presets[ImageModel.Inpainting_Furry] = _UC_Presets[ImageModel.Furry]
     _UC_Presets[ImageModel.Inpainting_Anime_v3] = _UC_Presets[ImageModel.Anime_v3]
+    _UC_Presets[ImageModel.Inpainting_Furry_v3] = _UC_Presets[ImageModel.Furry_v3]
     _UC_Presets[ImageModel.Anime_v4_Curated] = _UC_Presets[ImageModel.Anime_v4_preview]
+    _UC_Presets[ImageModel.Inpainting_Anime_v4_Curated] = _UC_Presets[ImageModel.Anime_v4_Curated]
+    _UC_Presets[ImageModel.Inpainting_Anime_v4_Full] = _UC_Presets[ImageModel.Anime_v4_Full]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
@@ -414,6 +419,102 @@ class ImagePreset:
         return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v4" / "default.preset")
 
     @classmethod
+    def is_model_v1(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a v1 model
+
+        :param model: Model to check
+        """
+
+        return model in (
+            ImageModel.Anime_Curated,
+            ImageModel.Anime_Full,
+            ImageModel.Furry,
+            ImageModel.Inpainting_Anime_Curated,
+            ImageModel.Inpainting_Anime_Full,
+            ImageModel.Inpainting_Furry,
+        )
+
+    @classmethod
+    def is_model_v2(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a v2 model
+
+        :param model: Model to check
+        """
+
+        return model in (ImageModel.Anime_v2,)
+
+    @classmethod
+    def is_model_v3(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a v3 model
+
+        :param model: Model to check
+        """
+
+        return model in (
+            ImageModel.Anime_v3,
+            ImageModel.Inpainting_Anime_v3,
+            ImageModel.Furry_v3,
+            ImageModel.Inpainting_Furry_v3,
+        )
+
+    @classmethod
+    def is_model_v4(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a v4 model
+
+        :param model: Model to check
+        """
+
+        return model in (
+            ImageModel.Anime_v4_preview,
+            ImageModel.Anime_v4_Curated,
+            ImageModel.Anime_v4_Full,
+            ImageModel.Inpainting_Anime_v4_Curated,
+            ImageModel.Inpainting_Anime_v4_Full,
+        )
+
+    @classmethod
+    def is_model_inpainting(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is an inpainting model
+
+        :param model: Model to check
+        """
+
+        return model in (
+            ImageModel.Inpainting_Anime_Curated,
+            ImageModel.Inpainting_Anime_Full,
+            ImageModel.Inpainting_Furry,
+            ImageModel.Inpainting_Anime_v3,
+            ImageModel.Inpainting_Furry_v3,
+            ImageModel.Inpainting_Anime_v4_Curated,
+            ImageModel.Inpainting_Anime_v4_Full,
+        )
+
+    @classmethod
+    def is_model_furry(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a furry model
+
+        :param model: Model to check
+        """
+
+        return model in (ImageModel.Furry, ImageModel.Furry_v3)
+
+    @classmethod
+    def is_model_curated(cls, model: ImageModel) -> bool:
+        """
+        Check if the model is a curated model
+
+        :param model: Model to check
+        """
+
+        return model in (ImageModel.Anime_Curated, ImageModel.Inpainting_Anime_Curated, ImageModel.Anime_v4_Curated)
+
+    @classmethod
     def from_default_config(cls, model: ImageModel) -> "ImagePreset":
         """
         Create a new ImagePreset with the default settings inferring the version from the model
@@ -421,22 +522,16 @@ class ImagePreset:
         :param model: Model to use
         """
 
-        if model in (
-            ImageModel.Anime_Curated,
-            ImageModel.Anime_Full,
-            ImageModel.Furry,
-            ImageModel.Inpainting_Anime_Curated,
-            ImageModel.Inpainting_Anime_Full,
-            ImageModel.Inpainting_Furry,
-        ):
+        if cls.is_model_v1(model):
             return cls.from_v1_config()
-        elif model in (ImageModel.Anime_v2,):
+        elif cls.is_model_v2(model):
             return cls.from_v2_config()
-        elif model in (ImageModel.Anime_v3, ImageModel.Inpainting_Anime_v3):
+        elif cls.is_model_v3(model):
+            if cls.is_model_furry(model):
+                return cls.from_v3_furry_config()
+
             return cls.from_v3_config()
-        elif model in (ImageModel.Furry_v3, ImageModel.Inpainting_Furry_v3):
-            return cls.from_v3_furry_config()
-        elif model in (ImageModel.Anime_v4_preview, ImageModel.Anime_v4_Curated, ImageModel.Anime_v4_Full):
+        elif cls.is_model_v4(model):
             return cls.from_v4_config()
 
     def __setitem__(self, key: str, value: Any):
@@ -567,7 +662,7 @@ class ImagePreset:
         settings["skip_cfg_above_sigma"] = 19 if settings.pop("variety_plus", False) else None
 
         # character prompts
-        if model in (ImageModel.Anime_v4_preview, ImageModel.Anime_v4_Curated, ImageModel.Anime_v4_Full):
+        if self.is_model_v4(model):
             settings["v4_prompt"] = {
                 # base_caption is set later, in generate_image
                 "caption": {"base_caption": None, "char_captions": []},

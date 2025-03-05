@@ -485,28 +485,17 @@ class HighLevel:
 
         quality_toggle = settings["qualityToggle"]
         if quality_toggle:
-            if model in (
-                ImageModel.Anime_Full,
-                ImageModel.Anime_Curated,
-                ImageModel.Furry,
-                ImageModel.Inpainting_Anime_Full,
-                ImageModel.Inpainting_Anime_Curated,
-                ImageModel.Inpainting_Furry,
-            ):
+            if ImagePreset.is_model_v1(model):
                 prompt = f"masterpiece, best quality, {prompt}"
-            elif model is ImageModel.Anime_v2:
+            elif ImagePreset.is_model_v2(model):
                 prompt = f"very aesthetic, best quality, absurdres, {prompt}"
-            elif model in (
-                ImageModel.Anime_v3,
-                ImageModel.Inpainting_Anime_v3,
-                ImageModel.Furry_v3,
-                ImageModel.Inpainting_Furry_v3,
-            ):
+            elif ImagePreset.is_model_v3(model):
                 prompt = f"{prompt}, best quality, amazing quality, very aesthetic, absurdres"
-            elif model in (ImageModel.Anime_v4_preview, ImageModel.Anime_v4_Curated):
-                prompt = f"{prompt}, rating:general, best quality, very aesthetic, absurdres"
-            elif model is ImageModel.Anime_v4_Full:
-                prompt = f"{prompt}, no text, best quality, very aesthetic, absurdres"
+            elif ImagePreset.is_model_v4(model):
+                if ImagePreset.is_model_curated(model):
+                    prompt = f"{prompt}, rating:general, best quality, very aesthetic, absurdres"
+                else:
+                    prompt = f"{prompt}, no text, best quality, very aesthetic, absurdres"
 
         if "v4_prompt" in settings:
             settings["v4_prompt"]["caption"]["base_caption"] = prompt

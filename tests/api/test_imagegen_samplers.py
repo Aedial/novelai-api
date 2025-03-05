@@ -10,7 +10,7 @@ from typing import Tuple
 import pytest
 
 from novelai_api import NovelAIError
-from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageSampler, UCPreset
+from novelai_api.ImagePreset import ImageModel, ImagePreset, ImageSampler
 from tests.api.boilerplate import API, api_handle, error_handler  # noqa: F401  # pylint: disable=W0611
 
 sampler_xfail = pytest.mark.xfail(strict=False, raises=NovelAIError, reason="The sampler might not work")
@@ -32,6 +32,8 @@ models.remove(ImageModel.Inpainting_Anime_Curated)
 models.remove(ImageModel.Inpainting_Furry)
 models.remove(ImageModel.Inpainting_Anime_v3)
 models.remove(ImageModel.Inpainting_Furry_v3)
+models.remove(ImageModel.Inpainting_Anime_v4_Curated)
+models.remove(ImageModel.Inpainting_Anime_v4_Full)
 
 samplers = list(ImageSampler)
 model_samplers = list(itertools.product(models, samplers))
