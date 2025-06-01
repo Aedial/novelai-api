@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>novelai_api.low_level &#8212; NovelAI API 0.33.1 documentation</title>
+    <title>novelai_api.low_level &#8212; NovelAI API 0.34.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" accesskey="U">novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>
@@ -484,6 +484,25 @@ Any content going beyond the tokens limit will be truncated, starting from the t
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.encode_vibe">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encode_vibe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="hxr-hoverxref hxr-modal reference internal" href="novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel" title="novelai_api.ImagePreset.ImageModel"><span class="pre">novelai_api.ImagePreset.ImageModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_extracted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.encode_vibe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.encode_vibe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode an image to a vibe, for model v4+.
+Note: the result is non-deterministic, this is the endpoint’s fault:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> – b64 encoded PNG image to encode</p></li>
+<li><p><strong>model</strong> – Model to use for the encoding</p></li>
+<li><p><strong>information_extracted</strong> – Amount of information extracted from the image (default: 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Encoded vibe (binary data)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="novelai_api._low_level.LowLevel.augment_image">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">augment_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.RequestType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">novelai_api.DirectorToolsPreset.DirectorToolsPreset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/novelai_api/_low_level.html#LowLevel.augment_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#novelai_api._low_level.LowLevel.augment_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Augment the given image with the given preset</p>
@@ -655,6 +674,7 @@ Any content going beyond the tokens limit will be truncated, starting from the t
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_prompt"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_prompt()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.generate_controlnet_mask"><code class="docutils literal notranslate"><span class="pre">LowLevel.generate_controlnet_mask()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.upscale_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.upscale_image()</span></code></a></li>
+<li><a class="reference internal" href="#novelai_api._low_level.LowLevel.encode_vibe"><code class="docutils literal notranslate"><span class="pre">LowLevel.encode_vibe()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.augment_image"><code class="docutils literal notranslate"><span class="pre">LowLevel.augment_image()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.classify"><code class="docutils literal notranslate"><span class="pre">LowLevel.classify()</span></code></a></li>
 <li><a class="reference internal" href="#novelai_api._low_level.LowLevel.suggest_tags"><code class="docutils literal notranslate"><span class="pre">LowLevel.suggest_tags()</span></code></a></li>
@@ -717,7 +737,7 @@ Any content going beyond the tokens limit will be truncated, starting from the t
         <li class="right" >
           <a href="novelai_api.html" title="novelai-api package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="novelai_api.html" >novelai-api package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.low_level</a></li> 
       </ul>

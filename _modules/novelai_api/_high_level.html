@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._high_level &#8212; NovelAI API 0.33.1 documentation</title>
+    <title>novelai_api._high_level &#8212; NovelAI API 0.34.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>
@@ -54,7 +54,8 @@
           <div class="body" role="main">
             
   <h1>Source code for novelai_api._high_level</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">sha256</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncIterable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -552,12 +553,36 @@
                     <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, rating:general, best quality, very aesthetic, absurdres&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, no text, best quality, very aesthetic, absurdres&quot;</span>
+            <span class="k">elif</span> <span class="n">ImagePreset</span><span class="o">.</span><span class="n">is_model_v45</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ImagePreset</span><span class="o">.</span><span class="n">is_model_curated</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+                    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, very aesthetic, location, masterpiece, no text, -0.8::feet::, rating:general&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">, location, very aesthetic, masterpiece, no text&quot;</span>
 
         <span class="k">if</span> <span class="s2">&quot;v4_prompt&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;v4_prompt&quot;</span><span class="p">][</span><span class="s2">&quot;caption&quot;</span><span class="p">][</span><span class="s2">&quot;base_caption&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prompt</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">generate_image</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="HighLevel.encode_vibe"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.encode_vibe">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">encode_vibe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">information_extracted</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encode an image to a vibe, for model v4+.</span>
+<span class="sd">        NOTE: does not seem to work</span>
+
+<span class="sd">        :param image: Image to encode (in bytes or base64-encoded string)</span>
+<span class="sd">        :param model: Model to use for the encoding</span>
+<span class="sd">        :param information_extracted: Amount of information extracted from the image (default: 1)</span>
+
+<span class="sd">        :return: Encoded vibe as a base64-encoded string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+        <span class="n">vibe_raw</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">low_level</span><span class="o">.</span><span class="n">encode_vibe</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">information_extracted</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">vibe_raw</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HighLevel.remove_background"><a class="viewcode-back" href="../../novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.remove_background">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">remove_background</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -677,7 +702,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._high_level</a></li> 
       </ul>

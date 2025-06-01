@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api._low_level &#8212; NovelAI API 0.33.1 documentation</title>
+    <title>novelai_api._low_level &#8212; NovelAI API 0.34.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>
@@ -54,7 +54,8 @@
           <div class="body" role="main">
             
   <h1>Source code for novelai_api._low_level</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -94,18 +95,21 @@
 
     <span class="n">a</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-        <span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="mi">30</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
+        <span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][:</span><span class="mi">40</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">40</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="mi">100</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
         <span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">,</span> <span class="s2">&quot;controlnet_condition&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;reference_image&quot;</span><span class="p">,</span> <span class="s2">&quot;reference_image_multiple&quot;</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">,</span> <span class="s2">&quot;controlnet_condition&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]:</span>
                 <span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="k">if</span> <span class="mi">30</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
                     <span class="k">else</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
                 <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;image&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="mi">30</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
 
@@ -236,8 +240,11 @@
         <span class="k">if</span> <span class="n">content_type</span> <span class="o">==</span> <span class="s2">&quot;application/json&quot;</span><span class="p">:</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">rsp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
+        <span class="k">elif</span> <span class="n">content_type</span> <span class="o">==</span> <span class="s2">&quot;application/binary&quot;</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="k">await</span> <span class="n">rsp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
         <span class="k">elif</span> <span class="n">content_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="s2">&quot;text/html&quot;</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="k">await</span> <span class="n">rsp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+            <span class="k">yield</span> <span class="k">await</span> <span class="n">rsp</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">content_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;audio/mpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;audio/webm&quot;</span><span class="p">):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">rsp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -836,6 +843,33 @@
 
             <span class="k">return</span> <span class="n">content</span></div>
 
+<div class="viewcode-block" id="LowLevel.encode_vibe"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.encode_vibe">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">encode_vibe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">,</span> <span class="n">information_extracted</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encode an image to a vibe, for model v4+.</span>
+<span class="sd">        Note: the result is non-deterministic, this is the endpoint&#39;s fault:</span>
+
+<span class="sd">        :param image: b64 encoded PNG image to encode</span>
+<span class="sd">        :param model: Model to use for the encoding</span>
+<span class="sd">        :param information_extracted: Amount of information extracted from the image (default: 1)</span>
+
+<span class="sd">        :return: Encoded vibe (binary data)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="n">ImageModel</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">assert_type</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">information_extracted</span><span class="o">=</span><span class="n">information_extracted</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;informationExtracted&quot;</span><span class="p">:</span> <span class="n">information_extracted</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">rsp</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/ai/encode-vibe&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">IMAGE_API_ADDRESS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_treat_response_object</span><span class="p">(</span><span class="n">rsp</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">content</span></div>
+
 <div class="viewcode-block" id="LowLevel.augment_image"><a class="viewcode-back" href="../../novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.augment_image">[docs]</a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">augment_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_type</span><span class="p">:</span> <span class="n">RequestType</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="n">DirectorToolsPreset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment the given image with the given preset</span>
@@ -1045,7 +1079,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api._low_level</a></li> 
       </ul>

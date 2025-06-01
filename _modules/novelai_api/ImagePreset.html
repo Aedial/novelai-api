@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.33.1 documentation</title>
+    <title>novelai_api.ImagePreset &#8212; NovelAI API 0.34.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>
@@ -93,7 +93,10 @@
     <span class="n">Anime_v4_Curated</span> <span class="o">=</span> <span class="n">Anime_v4_preview</span>  <span class="c1"># alias as it has just been renamed</span>
     <span class="n">Anime_v4_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-full&quot;</span>
     <span class="n">Inpainting_Anime_v4_Curated</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-curated-inpainting&quot;</span>
-    <span class="n">Inpainting_Anime_v4_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-full-inpainting&quot;</span></div>
+    <span class="n">Inpainting_Anime_v4_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-full-inpainting&quot;</span>
+
+    <span class="n">Anime_v45_Curated</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-5-curated&quot;</span>
+    <span class="n">Anime_v45_Full</span> <span class="o">=</span> <span class="s2">&quot;nai-diffusion-4-5-full&quot;</span></div>
 
 
 <div class="viewcode-block" id="ControlNetModel"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ControlNetModel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ControlNetModel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -206,7 +209,10 @@
     <span class="n">Preset_None</span> <span class="o">=</span> <span class="mi">3</span>
 
     <span class="n">Preset_Heavy</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">Preset_Light</span> <span class="o">=</span> <span class="mi">5</span></div>
+    <span class="n">Preset_Light</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="n">Preset_Human_Focus</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">Preset_Furry_Focus</span> <span class="o">=</span> <span class="mi">7</span></div>
 
 
 <div class="viewcode-block" id="ImageGenerationType"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ImageGenerationType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
@@ -278,16 +284,46 @@
         <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">:</span> <span class="p">{</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, &quot;</span>
             <span class="s2">&quot;jpeg artifacts, very displeasing, chromatic aberration, logo, dated, signature, multiple views, &quot;</span>
-            <span class="s2">&quot;gigantic breasts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gigantic breasts, white blank page, blank page&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, worst quality, bad quality, jpeg artifacts, &quot;</span>
             <span class="s2">&quot;very displeasing, logo, dated, signature&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, &quot;</span>
-            <span class="s2">&quot;jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks&quot;</span><span class="p">,</span>
-            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, error, worst quality, bad quality, jpeg artifacts, &quot;</span>
-            <span class="s2">&quot;very displeasing&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;nsfw, blurry, lowres, error, film grain, scan artifacts, worst quality, &quot;</span>
+            <span class="s2">&quot;bad quality, jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, &quot;</span>
+            <span class="s2">&quot;too many watermarks, white blank page, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;nsfw, blurry, lowres, error, worst quality, bad quality, jpeg artifacts, &quot;</span>
+            <span class="s2">&quot;very displeasing, white blank page, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="c1"># v4.5</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, upscaled, artistic error, film grain, scan artifacts, &quot;</span>
+            <span class="s2">&quot;worst quality, bad quality, jpeg artifacts, very displeasing, chromatic aberration, halftone, &quot;</span>
+            <span class="s2">&quot;multiple views, logo, too many watermarks, negative space, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, upscaled, artistic error, scan artifacts, jpeg artifacts, logo, &quot;</span>
+            <span class="s2">&quot;too many watermarks, negative space, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Human_Focus</span><span class="p">:</span> <span class="s2">&quot;blurry, lowres, upscaled, artistic error, film grain, scan artifacts, &quot;</span>
+            <span class="s2">&quot;bad anatomy, bad hands, worst quality, bad quality, jpeg artifacts, very displeasing, &quot;</span>
+            <span class="s2">&quot;chromatic aberration, halftone, multiple views, logo, too many watermarks, @_@, mismatched pupils, &quot;</span>
+            <span class="s2">&quot;glowing eyes, negative space, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Full</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Heavy</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, artistic error, film grain, scan artifacts, worst quality, &quot;</span>
+            <span class="s2">&quot;bad quality, jpeg artifacts, very displeasing, chromatic aberration, dithering, halftone, screentone, &quot;</span>
+            <span class="s2">&quot;multiple views, logo, too many watermarks, negative space, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Light</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, artistic error, scan artifacts, worst quality, bad quality, &quot;</span>
+            <span class="s2">&quot;jpeg artifacts, multiple views, very displeasing, too many watermarks, negative space, blank page&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Human_Focus</span><span class="p">:</span> <span class="s2">&quot;nsfw, lowres, artistic error, film grain, scan artifacts, worst quality, &quot;</span>
+            <span class="s2">&quot;bad quality, jpeg artifacts, very displeasing, chromatic aberration, dithering, halftone, screentone, &quot;</span>
+            <span class="s2">&quot;multiple views, logo, too many watermarks, negative space, blank page, @_@, mismatched pupils, &quot;</span>
+            <span class="s2">&quot;glowing eyes, bad anatomy&quot;</span><span class="p">,</span>
+            <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_Furry_Focus</span><span class="p">:</span> <span class="s2">&quot;nsfw, {worst quality}, distracting watermark, unfinished, bad quality, &quot;</span>
+            <span class="s2">&quot;</span><span class="si">{widescreen}</span><span class="s2">, upscale, </span><span class="si">{sequence}</span><span class="s2">, {{grandfathered content}}, blurred foreground, chromatic aberration, &quot;</span>
+            <span class="s2">&quot;sketch, everyone, [sketch background], simple, [flat colors], ych (character), outline, multiple scenes, &quot;</span>
+            <span class="s2">&quot;[[horror (theme)]], comic&quot;</span><span class="p">,</span>
             <span class="n">UCPreset</span><span class="o">.</span><span class="n">Preset_None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
@@ -301,6 +337,8 @@
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">]</span>
     <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">]</span>
+    <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Full</span><span class="p">]</span> <span class="o">=</span> <span class="n">_UC_Presets</span><span class="p">[</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Full</span><span class="p">]</span>
 
     <span class="n">_CONTROLNET_MODELS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">ControlNetModel</span><span class="o">.</span><span class="n">Palette_Swap</span><span class="p">:</span> <span class="s2">&quot;hed&quot;</span><span class="p">,</span>
@@ -347,6 +385,8 @@
     <span class="n">smea</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)</span>
     <span class="n">smea_dyn</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1">#: TODO</span>
+    <span class="n">autoSmea</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: b64-encoded png image for img2img</span>
     <span class="n">image</span><span class="p">:</span> <span class="nb">str</span>
     <span class="c1">#: Controlnet mask gotten by the generate_controlnet_mask method</span>
@@ -371,16 +411,20 @@
     <span class="n">reference_information_extracted</span><span class="p">:</span> <span class="nb">float</span>
     <span class="c1">#: https://docs.novelai.net/.image/vibetransfer.html#reference-strength</span>
     <span class="n">reference_strength</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="c1">#: reference_image for multi-vibe transfer</span>
+    <span class="c1">#: reference_image for multi-vibe transfer. For v4+ models, see examples/generate_image_v4_with_vibe.py</span>
     <span class="n">reference_image_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="c1">#: reference_information_extracted for multi-vibe transfer</span>
     <span class="n">reference_information_extracted_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="c1">#: reference_strength for multi-vibe transfer</span>
     <span class="n">reference_strength_multiple</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="c1">#: ???</span>
+    <span class="n">normalize_reference_strength_multiple</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: https://blog.novelai.net/summer-sampler-update-en-3a34eb32b613</span>
     <span class="n">variety_plus</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: Whether the AI should strictly follow the positions of the characters or have some freedom</span>
     <span class="n">use_coords</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1">#: ???</span>
+    <span class="n">inpaintImg2ImgStrength</span><span class="p">:</span> <span class="nb">float</span>
 
     <span class="c1">#: https://docs.novelai.net/image/multiplecharacters.html#multi-character-prompting</span>
     <span class="c1">#: See examples/generate_image_v4.py for the format</span>
@@ -388,6 +432,8 @@
 
     <span class="c1">#: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)</span>
     <span class="n">legacy_v3_extend</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1">#: ???</span>
+    <span class="n">legacy_uc</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="c1">#: Revision of the default arguments</span>
     <span class="n">params_version</span><span class="p">:</span> <span class="nb">int</span>
     <span class="c1">#: Use the old behavior of noise scheduling with the k_euler_ancestral sampler</span>
@@ -474,8 +520,16 @@
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v4&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_v1"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v1">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v1</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.from_v45_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v45_config">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_v45_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ImagePreset with the default settings from the v4 config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;image_presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;presets_v45&quot;</span> <span class="o">/</span> <span class="s2">&quot;default.preset&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.is_model_v1"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v1">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v1</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a v1 model</span>
 
@@ -491,8 +545,8 @@
             <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_v2"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v2">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v2</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_v2"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v2">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v2</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a v2 model</span>
 
@@ -501,8 +555,8 @@
 
         <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v2</span><span class="p">,)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_v3"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v3">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v3</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_v3"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v3">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v3</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a v3 model</span>
 
@@ -516,8 +570,8 @@
             <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Furry_v3</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_v4"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v4">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v4</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_v4"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v4">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v4</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a v4 model</span>
 
@@ -532,8 +586,18 @@
             <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Full</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_inpainting"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_inpainting">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_inpainting</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_v45"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v45">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_v45</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the model is a v4.5 model</span>
+
+<span class="sd">        :param model: Model to check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Full</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.is_model_inpainting"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_inpainting">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_inpainting</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is an inpainting model</span>
 
@@ -550,8 +614,8 @@
             <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Full</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_furry"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_furry">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_furry</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_furry"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_furry">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_furry</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a furry model</span>
 
@@ -560,15 +624,115 @@
 
         <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Furry_v3</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImagePreset.is_model_curated"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_curated">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_curated</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagePreset.is_model_curated"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_curated">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_model_curated</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is a curated model</span>
 
 <span class="sd">        :param model: Model to check</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Curated</span><span class="p">,</span> <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.model_supports_characters"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.model_supports_characters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model_supports_characters</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the model supports characters prompting</span>
+
+<span class="sd">        :param model: Model to check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_preview</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v4_Full</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Inpainting_Anime_v4_Full</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Curated</span><span class="p">,</span>
+            <span class="n">ImageModel</span><span class="o">.</span><span class="n">Anime_v45_Full</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagePreset.references_from_nai4vibe"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.references_from_nai4vibe">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">references_from_nai4vibe</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract the reference image and information extracted from a Vibe Transfer file</span>
+
+<span class="sd">        :param path: Path to the Vibe Transfer file</span>
+<span class="sd">        :param model: Model to check (optional, used for validation against the file&#39;s model version)</span>
+
+<span class="sd">        :return: Tuples of (reference_image, information_extracted)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not exist&quot;</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="s2">&quot;encodings&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain the required fields &#39;encodings&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;importInfo&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;importInfo&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;importInfo&quot;</span><span class="p">][</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; has model &#39;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;importInfo&#39;</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; but expected &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># TODO: might want to check if v4.5 changes this</span>
+        <span class="c1"># sigh... inconsistent keys (v4full vs v4curated). Wtf are you making things harder</span>
+        <span class="k">if</span> <span class="s2">&quot;v4full&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encodings&quot;</span><span class="p">]:</span>
+            <span class="n">references</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encodings&quot;</span><span class="p">][</span><span class="s2">&quot;v4full&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;v4curated&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encodings&quot;</span><span class="p">]:</span>
+            <span class="n">references</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encodings&quot;</span><span class="p">][</span><span class="s2">&quot;v4curated&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain the required fields &#39;encodings.v4full&#39; or &#39;encodings.v4curated&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">references</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain a valid &#39;v4full&#39; encoding: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">references</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">enconding_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ref_key</span><span class="p">,</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">references</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain a valid &#39;encodings&#39; key &#39;</span><span class="si">{</span><span class="n">ref_key</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;encoding&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reference</span>
+                <span class="ow">or</span> <span class="s2">&quot;params&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reference</span>
+                <span class="ow">or</span> <span class="s2">&quot;information_extracted&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain the required fields &#39;encoding&#39; or &#39;params.information_extracted&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;in the reference encoding for key &#39;</span><span class="si">{</span><span class="n">ref_key</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">image</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain a valid &#39;encoding&#39; in the reference encoding: expected str, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">information_extracted</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">][</span><span class="s2">&quot;information_extracted&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">information_extracted</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain a valid &#39;information_extracted&#39; in the reference encoding: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;expected float or int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">information_extracted</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">enconding_values</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">image</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">information_extracted</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">enconding_values</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; does not contain any valid references in &#39;encodings.v4full&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">enconding_values</span></div>
 
 <div class="viewcode-block" id="ImagePreset.from_default_config"><a class="viewcode-back" href="../../novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_default_config">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ImageModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImagePreset&quot;</span><span class="p">:</span>
@@ -588,7 +752,11 @@
 
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v3_config</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_model_v4</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v4_config</span><span class="p">()</span></div>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v4_config</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_model_v45</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_v45_config</span><span class="p">()</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is not supported for default configuration&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_MAPPING</span><span class="p">:</span>
@@ -615,10 +783,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is a default setting, set it instead of deleting&quot;</span><span class="p">)</span>
-
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -685,7 +850,7 @@
             <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="o">-</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;n_samples&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">last_seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
-        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;extra_noise_seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="c1"># settings[&quot;extra_noise_seed&quot;] = seed</span>
 
         <span class="c1"># UC</span>
         <span class="n">uc_preset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">UCPreset</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;uc_preset&quot;</span><span class="p">)</span>
@@ -699,6 +864,7 @@
         <span class="n">uc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;uc&quot;</span><span class="p">)</span>
         <span class="n">combined_uc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_uc</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">uc</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">default_uc</span> <span class="ow">and</span> <span class="n">uc</span> <span class="k">else</span> <span class="n">default_uc</span> <span class="k">if</span> <span class="n">default_uc</span> <span class="k">else</span> <span class="n">uc</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;negative_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">combined_uc</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;uc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">combined_uc</span>
 
         <span class="c1"># sampler</span>
         <span class="n">sampler</span><span class="p">:</span> <span class="n">ImageSampler</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;sampler&quot;</span><span class="p">)</span>
@@ -718,7 +884,7 @@
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;skip_cfg_above_sigma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">19</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;variety_plus&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1"># character prompts</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_model_v4</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_supports_characters</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
             <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;v4_prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="c1"># base_caption is set later, in generate_image</span>
                 <span class="s2">&quot;caption&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;base_caption&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;char_captions&quot;</span><span class="p">:</span> <span class="p">[]},</span>
@@ -764,6 +930,9 @@
                 <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;v4_negative_prompt&quot;</span><span class="p">][</span><span class="s2">&quot;caption&quot;</span><span class="p">][</span><span class="s2">&quot;char_captions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="p">{</span><span class="s2">&quot;centers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">pos</span><span class="p">],</span> <span class="s2">&quot;char_caption&quot;</span><span class="p">:</span> <span class="n">negative</span><span class="p">}</span>
                 <span class="p">)</span>
+
+                <span class="k">if</span> <span class="s2">&quot;legacy_uc&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+                    <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;v4_negative_prompt&quot;</span><span class="p">][</span><span class="s2">&quot;legacy_uc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;legacy_uc&quot;</span><span class="p">]</span>
 
         <span class="c1"># special arguments kept for metadata purposes (no effect on result)</span>
         <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;qualityToggle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;quality_toggle&quot;</span><span class="p">)</span>
@@ -967,7 +1136,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">novelai_api.ImagePreset</a></li> 
       </ul>

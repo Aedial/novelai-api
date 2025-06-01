@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; NovelAI API 0.33.1 documentation</title>
+    <title>Index &#8212; NovelAI API 0.34.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>  
@@ -147,6 +147,10 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Anime_v3">Anime_v3 (ImageModel attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Anime_v45_Curated">Anime_v45_Curated (ImageModel attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Anime_v45_Full">Anime_v45_Full (ImageModel attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Anime_v4_Curated">Anime_v4_Curated (ImageModel attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Anime_v4_Full">Anime_v4_Full (ImageModel attribute)</a>
@@ -180,6 +184,8 @@
       <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.augment_image">augment_image() (LowLevel method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.auto_smea">auto_smea (ImagePreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.autoSmea">autoSmea (ImagePreset attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -375,6 +381,12 @@
         <li><a href="novelai_api/novelai_api.Tokenizer.html#novelai_api.Tokenizer.Tokenizer.encode">(Tokenizer class method)</a>
 </li>
       </ul></li>
+      <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.encode_vibe">encode_vibe() (HighLevel method)</a>
+
+      <ul>
+        <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.encode_vibe">(LowLevel method)</a>
+</li>
+      </ul></li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.encoder_no_repeat_ngram_size">encoder_no_repeat_ngram_size (Preset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Keystore.html#novelai_api.Keystore.Keystore.encrypt">encrypt() (Keystore method)</a>
@@ -420,6 +432,8 @@
         <li><a href="example/example.html#module-example.download_presets">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     example.download_shelves
 
@@ -427,8 +441,6 @@
         <li><a href="example/example.html#module-example.download_shelves">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     example.download_stories_and_content
 
@@ -550,6 +562,8 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v3_config">from_v3_config() (ImagePreset class method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v3_furry_config">from_v3_furry_config() (ImagePreset class method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v45_config">from_v45_config() (ImagePreset class method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.from_v4_config">from_v4_config() (ImagePreset class method)</a>
 </li>
@@ -685,6 +699,8 @@
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Model.Inline">Inline (Model attribute)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.inpaintImg2ImgStrength">inpaintImg2ImgStrength (ImagePreset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageGenerationType.INPAINTING">INPAINTING (ImageGenerationType attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Anime_Curated">Inpainting_Anime_Curated (ImageModel attribute)</a>
@@ -703,19 +719,21 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageModel.Inpainting_Furry_v3">Inpainting_Furry_v3 (ImageModel attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_curated">is_model_curated() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_curated">is_model_curated() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_furry">is_model_furry() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_furry">is_model_furry() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_inpainting">is_model_inpainting() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_inpainting">is_model_inpainting() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v1">is_model_v1() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v1">is_model_v1() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v2">is_model_v2() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v2">is_model_v2() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v3">is_model_v3() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v3">is_model_v3() (ImagePreset static method)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v4">is_model_v4() (ImagePreset class method)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v4">is_model_v4() (ImagePreset static method)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.is_model_v45">is_model_v45() (ImagePreset static method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.low_level.html#novelai_api._low_level.LowLevel.is_reachable">is_reachable() (LowLevel method)</a>
 </li>
@@ -815,12 +833,14 @@
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.last_seed">last_seed (ImagePreset attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.legacy_v3_extend">legacy_v3_extend (ImagePreset attribute)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.legacy_uc">legacy_uc (ImagePreset attribute)</a>
 </li>
-      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.length_penalty">length_penalty (Preset attribute)</a>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.legacy_v3_extend">legacy_v3_extend (ImagePreset attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.Preset.length_penalty">length_penalty (Preset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.NovelAI_API.html#novelai_api.NovelAI_API.NovelAIAPI.LIB_ROOT">LIB_ROOT (NovelAIAPI attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.PhraseRepPen.Light">Light (PhraseRepPen attribute)</a>
@@ -901,6 +921,8 @@
         <li><a href="novelai_api/novelai_api.Preset.html#novelai_api.Preset.PresetView.model">(PresetView attribute)</a>
 </li>
       </ul></li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.model_supports_characters">model_supports_characters() (ImagePreset static method)</a>
+</li>
       <li>
     module
 
@@ -1025,6 +1047,8 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Normal_Square_v3">Normal_Square_v3 (ImageResolution attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImageResolution.Normal_Square_v4">Normal_Square_v4 (ImageResolution attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.normalize_reference_strength_multiple">normalize_reference_strength_multiple (ImagePreset attribute)</a>
 </li>
       <li>
     novelai_api._high_level
@@ -1191,15 +1215,19 @@
 </li>
       <li><a href="novelai_api/novelai_api.StoryHandler.html#novelai_api.StoryHandler.NovelAIStory.preset">preset (NovelAIStory attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset.Preset_Bad_Anatomy">Preset_Bad_Anatomy (UCPreset attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tests/api/api.html#tests.api.test_textgen_presets.preset_from_default">preset_from_default() (in module tests.api.test_textgen_presets)</a>
 </li>
       <li><a href="tests/api/api.html#tests.api.test_textgen_presets.preset_from_official">preset_from_official() (in module tests.api.test_textgen_presets)</a>
 </li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset.Preset_Furry_Focus">Preset_Furry_Focus (UCPreset attribute)</a>
+</li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset.Preset_Heavy">Preset_Heavy (UCPreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset.Preset_Human_Focus">Preset_Human_Focus (UCPreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.UCPreset.Preset_Light">Preset_Light (UCPreset attribute)</a>
 </li>
@@ -1248,6 +1276,8 @@
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.reference_strength">reference_strength (ImagePreset attribute)</a>
 </li>
       <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.reference_strength_multiple">reference_strength_multiple (ImagePreset attribute)</a>
+</li>
+      <li><a href="novelai_api/novelai_api.ImagePreset.html#novelai_api.ImagePreset.ImagePreset.references_from_nai4vibe">references_from_nai4vibe() (ImagePreset static method)</a>
 </li>
       <li><a href="novelai_api/novelai_api.high_level.html#novelai_api._high_level.HighLevel.register">register() (HighLevel method)</a>
 
@@ -1598,7 +1628,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.33.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NovelAI API 0.34.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>
