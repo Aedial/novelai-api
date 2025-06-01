@@ -39,6 +39,9 @@ class ImageModel(enum.Enum):
     Inpainting_Anime_v4_Curated = "nai-diffusion-4-curated-inpainting"
     Inpainting_Anime_v4_Full = "nai-diffusion-4-full-inpainting"
 
+    Anime_v45_Curated = "nai-diffusion-4-5-curated"
+    Anime_v45_Full = "nai-diffusion-4-5-full"
+
 
 class ControlNetModel(enum.Enum):
     """
@@ -152,6 +155,9 @@ class UCPreset(enum.Enum):
     Preset_Heavy = 4
     Preset_Light = 5
 
+    Preset_Human_Focus = 6
+    Preset_Furry_Focus = 7
+
 
 class ImageGenerationType(enum.Enum):
     """
@@ -222,16 +228,46 @@ class ImagePreset:
         ImageModel.Anime_v4_preview: {
             UCPreset.Preset_Heavy: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, "
             "jpeg artifacts, very displeasing, chromatic aberration, logo, dated, signature, multiple views, "
-            "gigantic breasts",
+            "gigantic breasts, white blank page, blank page",
             UCPreset.Preset_Light: "blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
             "very displeasing, logo, dated, signature",
             UCPreset.Preset_None: "",
         },
         ImageModel.Anime_v4_Full: {
-            UCPreset.Preset_Heavy: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, "
-            "jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks",
-            UCPreset.Preset_Light: "blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
-            "very displeasing",
+            UCPreset.Preset_Heavy: "nsfw, blurry, lowres, error, film grain, scan artifacts, worst quality, "
+            "bad quality, jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, "
+            "too many watermarks, white blank page, blank page",
+            UCPreset.Preset_Light: "nsfw, blurry, lowres, error, worst quality, bad quality, jpeg artifacts, "
+            "very displeasing, white blank page, blank page",
+            UCPreset.Preset_None: "",
+        },
+        # v4.5
+        ImageModel.Anime_v45_Curated: {
+            UCPreset.Preset_Heavy: "blurry, lowres, upscaled, artistic error, film grain, scan artifacts, "
+            "worst quality, bad quality, jpeg artifacts, very displeasing, chromatic aberration, halftone, "
+            "multiple views, logo, too many watermarks, negative space, blank page",
+            UCPreset.Preset_Light: "blurry, lowres, upscaled, artistic error, scan artifacts, jpeg artifacts, logo, "
+            "too many watermarks, negative space, blank page",
+            UCPreset.Preset_Human_Focus: "blurry, lowres, upscaled, artistic error, film grain, scan artifacts, "
+            "bad anatomy, bad hands, worst quality, bad quality, jpeg artifacts, very displeasing, "
+            "chromatic aberration, halftone, multiple views, logo, too many watermarks, @_@, mismatched pupils, "
+            "glowing eyes, negative space, blank page",
+            UCPreset.Preset_None: "",
+        },
+        ImageModel.Anime_v45_Full: {
+            UCPreset.Preset_Heavy: "nsfw, lowres, artistic error, film grain, scan artifacts, worst quality, "
+            "bad quality, jpeg artifacts, very displeasing, chromatic aberration, dithering, halftone, screentone, "
+            "multiple views, logo, too many watermarks, negative space, blank page",
+            UCPreset.Preset_Light: "nsfw, lowres, artistic error, scan artifacts, worst quality, bad quality, "
+            "jpeg artifacts, multiple views, very displeasing, too many watermarks, negative space, blank page",
+            UCPreset.Preset_Human_Focus: "nsfw, lowres, artistic error, film grain, scan artifacts, worst quality, "
+            "bad quality, jpeg artifacts, very displeasing, chromatic aberration, dithering, halftone, screentone, "
+            "multiple views, logo, too many watermarks, negative space, blank page, @_@, mismatched pupils, "
+            "glowing eyes, bad anatomy",
+            UCPreset.Preset_Furry_Focus: "nsfw, {worst quality}, distracting watermark, unfinished, bad quality, "
+            "{widescreen}, upscale, {sequence}, {{grandfathered content}}, blurred foreground, chromatic aberration, "
+            "sketch, everyone, [sketch background], simple, [flat colors], ych (character), outline, multiple scenes, "
+            "[[horror (theme)]], comic",
             UCPreset.Preset_None: "",
         },
     }
@@ -245,6 +281,8 @@ class ImagePreset:
     _UC_Presets[ImageModel.Anime_v4_Curated] = _UC_Presets[ImageModel.Anime_v4_preview]
     _UC_Presets[ImageModel.Inpainting_Anime_v4_Curated] = _UC_Presets[ImageModel.Anime_v4_Curated]
     _UC_Presets[ImageModel.Inpainting_Anime_v4_Full] = _UC_Presets[ImageModel.Anime_v4_Full]
+    _UC_Presets[ImageModel.Anime_v45_Curated] = _UC_Presets[ImageModel.Anime_v45_Curated]
+    _UC_Presets[ImageModel.Anime_v45_Full] = _UC_Presets[ImageModel.Anime_v45_Full]
 
     _CONTROLNET_MODELS = {
         ControlNetModel.Palette_Swap: "hed",
@@ -291,6 +329,8 @@ class ImagePreset:
     smea: bool
     #: Enable SMEA DYN for any sampler if SMEA is enabled (best for Large+, but not Wallpaper resolutions)
     smea_dyn: bool
+    #: TODO
+    autoSmea: bool
     #: b64-encoded png image for img2img
     image: str
     #: Controlnet mask gotten by the generate_controlnet_mask method
@@ -315,16 +355,20 @@ class ImagePreset:
     reference_information_extracted: float
     #: https://docs.novelai.net/.image/vibetransfer.html#reference-strength
     reference_strength: float
-    #: reference_image for multi-vibe transfer
+    #: reference_image for multi-vibe transfer. For v4+ models, see examples/generate_image_v4_with_vibe.py
     reference_image_multiple: List[str]
     #: reference_information_extracted for multi-vibe transfer
     reference_information_extracted_multiple: List[float]
     #: reference_strength for multi-vibe transfer
     reference_strength_multiple: List[float]
+    #: ???
+    normalize_reference_strength_multiple: bool
     #: https://blog.novelai.net/summer-sampler-update-en-3a34eb32b613
     variety_plus: bool
     #: Whether the AI should strictly follow the positions of the characters or have some freedom
     use_coords: bool
+    #: ???
+    inpaintImg2ImgStrength: float
 
     #: https://docs.novelai.net/image/multiplecharacters.html#multi-character-prompting
     #: See examples/generate_image_v4.py for the format
@@ -332,6 +376,8 @@ class ImagePreset:
 
     #: Use the old behavior of prompt separation at the 75 tokens mark (can cut words in half)
     legacy_v3_extend: bool
+    #: ???
+    legacy_uc: bool
     #: Revision of the default arguments
     params_version: int
     #: Use the old behavior of noise scheduling with the k_euler_ancestral sampler
@@ -419,7 +465,15 @@ class ImagePreset:
         return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v4" / "default.preset")
 
     @classmethod
-    def is_model_v1(cls, model: ImageModel) -> bool:
+    def from_v45_config(cls):
+        """
+        Create a new ImagePreset with the default settings from the v4 config
+        """
+
+        return cls.from_file(Path(__file__).parent / "image_presets" / "presets_v45" / "default.preset")
+
+    @staticmethod
+    def is_model_v1(model: ImageModel) -> bool:
         """
         Check if the model is a v1 model
 
@@ -435,8 +489,8 @@ class ImagePreset:
             ImageModel.Inpainting_Furry,
         )
 
-    @classmethod
-    def is_model_v2(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_v2(model: ImageModel) -> bool:
         """
         Check if the model is a v2 model
 
@@ -445,8 +499,8 @@ class ImagePreset:
 
         return model in (ImageModel.Anime_v2,)
 
-    @classmethod
-    def is_model_v3(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_v3(model: ImageModel) -> bool:
         """
         Check if the model is a v3 model
 
@@ -460,8 +514,8 @@ class ImagePreset:
             ImageModel.Inpainting_Furry_v3,
         )
 
-    @classmethod
-    def is_model_v4(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_v4(model: ImageModel) -> bool:
         """
         Check if the model is a v4 model
 
@@ -476,8 +530,18 @@ class ImagePreset:
             ImageModel.Inpainting_Anime_v4_Full,
         )
 
-    @classmethod
-    def is_model_inpainting(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_v45(model: ImageModel) -> bool:
+        """
+        Check if the model is a v4.5 model
+
+        :param model: Model to check
+        """
+
+        return model in (ImageModel.Anime_v45_Curated, ImageModel.Anime_v45_Full)
+
+    @staticmethod
+    def is_model_inpainting(model: ImageModel) -> bool:
         """
         Check if the model is an inpainting model
 
@@ -494,8 +558,8 @@ class ImagePreset:
             ImageModel.Inpainting_Anime_v4_Full,
         )
 
-    @classmethod
-    def is_model_furry(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_furry(model: ImageModel) -> bool:
         """
         Check if the model is a furry model
 
@@ -504,15 +568,115 @@ class ImagePreset:
 
         return model in (ImageModel.Furry, ImageModel.Furry_v3)
 
-    @classmethod
-    def is_model_curated(cls, model: ImageModel) -> bool:
+    @staticmethod
+    def is_model_curated(model: ImageModel) -> bool:
         """
         Check if the model is a curated model
 
         :param model: Model to check
         """
 
-        return model in (ImageModel.Anime_Curated, ImageModel.Inpainting_Anime_Curated, ImageModel.Anime_v4_Curated)
+        return model in (
+            ImageModel.Anime_Curated,
+            ImageModel.Inpainting_Anime_Curated,
+            ImageModel.Anime_v4_Curated,
+            ImageModel.Anime_v4_preview,
+            ImageModel.Inpainting_Anime_v4_Curated,
+            ImageModel.Anime_v45_Curated,
+        )
+
+    @staticmethod
+    def model_supports_characters(model: ImageModel) -> bool:
+        """
+        Check if the model supports characters prompting
+
+        :param model: Model to check
+        """
+
+        return model in (
+            ImageModel.Anime_v4_preview,
+            ImageModel.Anime_v4_Curated,
+            ImageModel.Anime_v4_Full,
+            ImageModel.Inpainting_Anime_v4_Curated,
+            ImageModel.Inpainting_Anime_v4_Full,
+            ImageModel.Anime_v45_Curated,
+            ImageModel.Anime_v45_Full,
+        )
+
+    @staticmethod
+    def references_from_nai4vibe(path: Path, model: ImageModel = None) -> List[Tuple[str, float]]:
+        """
+        Extract the reference image and information extracted from a Vibe Transfer file
+
+        :param path: Path to the Vibe Transfer file
+        :param model: Model to check (optional, used for validation against the file's model version)
+
+        :return: Tuples of (reference_image, information_extracted)
+        """
+
+        if not path.exists():
+            raise FileNotFoundError(f"File '{path}' does not exist")
+
+        data = json.loads(path.read_text("utf-8"))
+
+        if "encodings" not in data:
+            raise ValueError(f"File '{path}' does not contain the required fields 'encodings'")
+
+        if model is not None and "importInfo" in data and "model" in data["importInfo"]:
+            if data["importInfo"]["model"] != model.value:
+                raise ValueError(
+                    f"File '{path}' has model '{data['importInfo']['model']}' but expected '{model.value}'"
+                )
+
+        # TODO: might want to check if v4.5 changes this
+        # sigh... inconsistent keys (v4full vs v4curated). Wtf are you making things harder
+        if "v4full" in data["encodings"]:
+            references = data["encodings"]["v4full"]
+        elif "v4curated" in data["encodings"]:
+            references = data["encodings"]["v4curated"]
+        else:
+            raise ValueError(
+                f"File '{path}' does not contain the required fields 'encodings.v4full' or 'encodings.v4curated"
+            )
+
+        if not isinstance(references, dict):
+            raise ValueError(f"File '{path}' does not contain a valid 'v4full' encoding: {type(references)}")
+
+        enconding_values = []
+        for ref_key, reference in references.items():
+            if not isinstance(reference, dict):
+                raise ValueError(f"File '{path}' does not contain a valid 'encodings' key '{ref_key}'")
+
+            if (
+                "encoding" not in reference
+                or "params" not in reference
+                or "information_extracted" not in reference["params"]
+            ):
+                raise ValueError(
+                    f"File '{path}' does not contain the required fields 'encoding' or 'params.information_extracted' "
+                    f"in the reference encoding for key '{ref_key}'"
+                )
+
+            image = reference["encoding"]
+            if not isinstance(image, str):
+                raise ValueError(
+                    f"File '{path}' does not contain a valid 'encoding' in the reference encoding: expected str, "
+                    f"got {type(image)}"
+                )
+
+            information_extracted = reference["params"]["information_extracted"]
+            if not isinstance(information_extracted, (float, int)):
+                raise ValueError(
+                    f"File '{path}' does not contain a valid 'information_extracted' in the reference encoding: "
+                    f"expected float or int, got {type(information_extracted)}"
+                )
+
+            enconding_values.append((image, float(information_extracted)))
+
+        if not enconding_values:
+            raise ValueError(f"File '{path}' does not contain any valid references in 'encodings.v4full'")
+
+        return enconding_values
 
     @classmethod
     def from_default_config(cls, model: ImageModel) -> "ImagePreset":
@@ -533,6 +697,10 @@ class ImagePreset:
             return cls.from_v3_config()
         elif cls.is_model_v4(model):
             return cls.from_v4_config()
+        elif cls.is_model_v45(model):
+            return cls.from_v45_config()
+
+        raise ValueError(f"Model '{model.value}' is not supported for default configuration")
 
     def __setitem__(self, key: str, value: Any):
         if key not in self._TYPE_MAPPING:
@@ -559,10 +727,7 @@ class ImagePreset:
         return self._settings[key]
 
     def __delitem__(self, key):
-        if key in self._DEFAULT:
-            raise ValueError(f"'{key}' is a default setting, set it instead of deleting")
-
-        del self._settings[key]
+        self._settings.pop(key, None)
 
     def __contains__(self, key: str):
         return key in self._settings.keys()
@@ -629,7 +794,7 @@ class ImagePreset:
             seed = random.randint(1, 0xFFFFFFFF - settings["n_samples"] + 1)
             self.last_seed = seed
         settings["seed"] = seed
-        settings["extra_noise_seed"] = seed
+        # settings["extra_noise_seed"] = seed
 
         # UC
         uc_preset: Union[UCPreset, None] = settings.pop("uc_preset")
@@ -643,6 +808,7 @@ class ImagePreset:
         uc: str = settings.pop("uc")
         combined_uc = f"{default_uc}, {uc}" if default_uc and uc else default_uc if default_uc else uc
         settings["negative_prompt"] = combined_uc
+        settings["uc"] = combined_uc
 
         # sampler
         sampler: ImageSampler = settings.pop("sampler")
@@ -662,7 +828,7 @@ class ImagePreset:
         settings["skip_cfg_above_sigma"] = 19 if settings.pop("variety_plus", False) else None
 
         # character prompts
-        if self.is_model_v4(model):
+        if self.model_supports_characters(model):
             settings["v4_prompt"] = {
                 # base_caption is set later, in generate_image
                 "caption": {"base_caption": None, "char_captions": []},
@@ -708,6 +874,9 @@ class ImagePreset:
                 settings["v4_negative_prompt"]["caption"]["char_captions"].append(
                     {"centers": [pos], "char_caption": negative}
                 )
+
+                if "legacy_uc" in settings:
+                    settings["v4_negative_prompt"]["legacy_uc"] = settings["legacy_uc"]
 
         # special arguments kept for metadata purposes (no effect on result)
         settings["qualityToggle"] = settings.pop("quality_toggle")

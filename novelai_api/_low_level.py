@@ -1,3 +1,4 @@
+import base64
 import copy
 import enum
 import io
@@ -38,18 +39,21 @@ def print_with_parameters(args: Dict[str, Any]):
 
     a = copy.deepcopy(args)
     if "input" in a:
-        a["input"] = f"{a['input'][:10]}...{a['input'][-10:]}" if 30 < len(a["input"]) else a["input"]
+        a["input"] = f"{a['input'][:40]}...{a['input'][-40:]}" if 100 < len(a["input"]) else a["input"]
 
     if "parameters" in a:
         a["parameters"] = {k: str(v) for k, v in a["parameters"].items()}
 
-        for k in ["image", "mask", "controlnet_condition"]:
+        for k in ["image", "reference_image", "reference_image_multiple", "mask", "controlnet_condition"]:
             if k in a["parameters"]:
                 a["parameters"][k] = (
                     f"{a['parameters'][k][:10]}...{a['parameters'][k][-10:]}"
                     if 30 < len(a["parameters"][k])
                     else a["parameters"][k]
                 )
+
+    if "image" in a:
+        a["image"] = f"{a['image'][:10]}...{a['image'][-10:]}" if 30 < len(a["image"]) else a["image"]
 
     print(json.dumps(a, indent=4, sort_keys=True))
 
@@ -180,8 +184,11 @@ class LowLevel:
         if content_type == "application/json":
             yield await rsp.json()
 
+        elif content_type == "application/binary":
+            yield await rsp.read()
+
         elif content_type in ("text/plain", "text/html"):
-            yield await rsp.text()
+            yield await rsp.text("utf-8")
 
         elif content_type in ("audio/mpeg", "audio/webm"):
             yield await rsp.read()
@@ -776,6 +783,33 @@ class LowLevel:
         data = {"image": image, "width": width, "height": height, "scale": scale}
 
         async for rsp, content in self.request("post", "/ai/upscale", data):
+            self._treat_response_object(rsp, content, 200)
+
+            return content
+
+    async def encode_vibe(self, image: str, model: ImageModel, information_extracted: float) -> bytes:
+        """
+        Encode an image to a vibe, for model v4+.
+        Note: the result is non-deterministic, this is the endpoint's fault:
+
+        :param image: b64 encoded PNG image to encode
+        :param model: Model to use for the encoding
+        :param information_extracted: Amount of information extracted from the image (default: 1)
+
+        :return: Encoded vibe (binary data)
+        """
+
+        assert_type(str, image=image)
+        assert_type(ImageModel, model=model)
+        assert_type(float, information_extracted=information_extracted)
+
+        data = {
+            "image": image,
+            "model": model.value,
+            "informationExtracted": information_extracted,
+        }
+
+        async for rsp, content in self.request("post", "/ai/encode-vibe", data, IMAGE_API_ADDRESS):
             self._treat_response_object(rsp, content, 200)
 
             return content

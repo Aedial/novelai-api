@@ -1,3 +1,4 @@
+import base64
 import json
 from hashlib import sha256
 from typing import Any, AsyncIterable, Dict, Iterable, List, Optional, Tuple, Type, Union
@@ -496,12 +497,36 @@ class HighLevel:
                     prompt = f"{prompt}, rating:general, best quality, very aesthetic, absurdres"
                 else:
                     prompt = f"{prompt}, no text, best quality, very aesthetic, absurdres"
+            elif ImagePreset.is_model_v45(model):
+                if ImagePreset.is_model_curated(model):
+                    prompt = f"{prompt}, very aesthetic, location, masterpiece, no text, -0.8::feet::, rating:general"
+                else:
+                    prompt = f"{prompt}, location, very aesthetic, masterpiece, no text"
 
         if "v4_prompt" in settings:
             settings["v4_prompt"]["caption"]["base_caption"] = prompt
 
         async for e in self._parent.low_level.generate_image(prompt, model, action, settings):
             yield e
+
+    async def encode_vibe(self, image: Union[bytes, str], model: ImageModel, information_extracted: int):
+        """
+        Encode an image to a vibe, for model v4+.
+        NOTE: does not seem to work
+
+        :param image: Image to encode (in bytes or base64-encoded string)
+        :param model: Model to use for the encoding
+        :param information_extracted: Amount of information extracted from the image (default: 1)
+
+        :return: Encoded vibe as a base64-encoded string
+        """
+
+        if isinstance(image, bytes):
+            image = base64.b64encode(image).decode("utf-8")
+
+        vibe_raw = await self._parent.low_level.encode_vibe(image, model, information_extracted)
+
+        return base64.b64encode(vibe_raw).decode("utf-8")
 
     async def remove_background(self, preset: DirectorToolsPreset) -> bytes:
         """

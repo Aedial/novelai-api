@@ -1,6 +1,6 @@
 {
     "add_original_image": true,
-    "autoSmea": true,
+    "autoSmea": false,
     "cfg_rescale": 0,
     "controlnet_strength": 1,
     "decrisper": false,
@@ -17,11 +17,13 @@
     "quality_toggle": true,
     "resolution": "Normal_Portrait_v3",
     "sampler": "k_euler_ancestral",
-    "scale": 6,
+    "seed": 0,
+    "scale": 5,
     "smea": false,
     "smea_dyn": false,
     "steps": 23,
     "uc": "",
     "uc_preset": "Preset_Heavy",
+    "uncond_scale": 1,
     "use_coords": false
 }
