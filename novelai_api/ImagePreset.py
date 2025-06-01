@@ -789,7 +789,7 @@ class ImagePreset:
 
         # seed 0 = random seed for the backend, but it is not set in metadata, so we set it ourself to be safe
         # the seed of the ith image is seed + i, so we reserve space for them (makes valid images with invalid metadata)
-        seed = settings.pop("seed")
+        seed = settings.pop("seed", 0)
         if seed == 0:
             seed = random.randint(1, 0xFFFFFFFF - settings["n_samples"] + 1)
             self.last_seed = seed
